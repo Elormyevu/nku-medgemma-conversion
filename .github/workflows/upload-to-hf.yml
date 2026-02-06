@@ -1,0 +1,45 @@
+name: Upload GGUF to HuggingFace
+
+on:
+  workflow_dispatch:
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install huggingface_hub
+        run: pip install huggingface_hub
+        
+      - name: Download GGUF from Run #9
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Download artifact from Run #9
+          gh run download 21610576543 --name medgemma-gguf-int4 --dir ./model
+          ls -lh ./model/
+          
+      - name: Upload to HuggingFace Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          huggingface-cli login --token $HF_TOKEN
+          
+          # Create repo if doesn't exist and upload
+          huggingface-cli repo create Elormyevu/medgemma-4b-gguf-int4 --type model || true
+          
+          huggingface-cli upload Elormyevu/medgemma-4b-gguf-int4 \
+            ./model/medgemma-4b-q4_k_m.gguf \
+            medgemma-4b-q4_k_m.gguf \
+            --commit-message "Add MedGemma 4B Q4_K_M INT4 quantized model"
+          
+          echo "[SUCCESS] Model uploaded to https://huggingface.co/Elormyevu/medgemma-4b-gguf-int4"

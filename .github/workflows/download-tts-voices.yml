@@ -1,0 +1,172 @@
+name: Download Piper TTS Voices for Nku
+
+on:
+  workflow_dispatch:
+
+jobs:
+  download-voices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install Dependencies
+        run: |
+          pip install huggingface_hub requests
+          
+      - name: Download Piper Voices (Lowest Quality)
+        run: |
+          mkdir -p voices
+          
+          echo "[1/5] Downloading Piper TTS voices at lowest available quality..."
+          
+          # Base URL for Piper voices
+          BASE="https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0"
+          
+          # Swahili - Lanfrica (medium is lowest available)
+          echo "  Downloading Swahili..."
+          curl -L -o voices/sw_CD-lanfrica-medium.onnx "$BASE/sw/sw_CD/lanfrica/medium/sw_CD-lanfrica-medium.onnx?download=true"
+          curl -L -o voices/sw_CD-lanfrica-medium.onnx.json "$BASE/sw/sw_CD/lanfrica/medium/sw_CD-lanfrica-medium.onnx.json?download=true"
+          
+          # French - Gilles (low quality)
+          echo "  Downloading French..."
+          curl -L -o voices/fr_FR-gilles-low.onnx "$BASE/fr/fr_FR/gilles/low/fr_FR-gilles-low.onnx?download=true"
+          curl -L -o voices/fr_FR-gilles-low.onnx.json "$BASE/fr/fr_FR/gilles/low/fr_FR-gilles-low.onnx.json?download=true"
+          
+          # Portuguese - Edresson (low quality)
+          echo "  Downloading Portuguese..."
+          curl -L -o voices/pt_BR-edresson-low.onnx "$BASE/pt/pt_BR/edresson/low/pt_BR-edresson-low.onnx?download=true"
+          curl -L -o voices/pt_BR-edresson-low.onnx.json "$BASE/pt/pt_BR/edresson/low/pt_BR-edresson-low.onnx.json?download=true"
+          
+          # English - Amy (low quality)
+          echo "  Downloading English..."
+          curl -L -o voices/en_US-amy-low.onnx "$BASE/en/en_US/amy/low/en_US-amy-low.onnx?download=true"
+          curl -L -o voices/en_US-amy-low.onnx.json "$BASE/en/en_US/amy/low/en_US-amy-low.onnx.json?download=true"
+          
+          echo "[2/5] Checking file sizes..."
+          ls -lh voices/
+          
+          echo "[3/5] Creating manifest..."
+          cat > voices/MANIFEST.json << 'EOF'
+          {
+            "voices": [
+              {"lang": "sw", "name": "Swahili", "file": "sw_CD-lanfrica-medium.onnx", "quality": "medium", "source": "piper"},
+              {"lang": "fr", "name": "French", "file": "fr_FR-gilles-low.onnx", "quality": "low", "source": "piper"},
+              {"lang": "pt", "name": "Portuguese", "file": "pt_BR-edresson-low.onnx", "quality": "low", "source": "piper"},
+              {"lang": "en", "name": "English", "file": "en_US-amy-low.onnx", "quality": "low", "source": "piper"}
+            ],
+            "fallback_languages": [
+              "Twi/Akan (aka)", "Ewe (ewe)", "Ga (gaa)", "Hausa (hau)", "Yoruba (yor)",
+              "Igbo (ibo)", "Wolof (wol)", "Amharic (amh)", "Oromo (orm)", "Somali (som)",
+              "Tigrinya (tir)", "Zulu (zul)", "Xhosa (xho)", "Shona (sna)", "Afrikaans (afr)",
+              "Lingala (lin)", "Kinyarwanda (kin)"
+            ],
+            "fallback_note": "Use Android TTS or online Google TTS for fallback languages"
+          }
+          EOF
+          
+          echo "[4/5] Calculating total size..."
+          du -sh voices/
+          
+      - name: Upload to HuggingFace
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          echo "[5/5] Uploading to HuggingFace..."
+          python << 'EOF'
+          import os
+          from huggingface_hub import HfApi, create_repo, upload_folder
+          
+          token = os.environ['HF_TOKEN']
+          api = HfApi(token=token)
+          repo_id = "wredd/nku-tts-voices"
+          
+          try:
+              create_repo(repo_id, repo_type='model', exist_ok=True, token=token)
+              print(f'[OK] Repo {repo_id} ready')
+          except Exception as e:
+              print(f'Note: {e}')
+          
+          api.upload_folder(
+              folder_path='./voices',
+              repo_id=repo_id,
+              commit_message='Add Piper TTS voices (Swahili, French, Portuguese, English)'
+          )
+          print('[SUCCESS] Voices uploaded to HuggingFace!')
+          EOF
+          
+      - name: Create README
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          cat > README.md << 'CARD'
+          ---
+          license: apache-2.0
+          language:
+            - sw
+            - fr
+            - pt
+            - en
+          pipeline_tag: text-to-speech
+          tags:
+            - piper
+            - tts
+            - onnx
+            - pan-african
+            - mobile
+            - nku
+          ---
+
+          # Nku TTS Voice Packs
+
+          Offline text-to-speech voices for the Nku medical AI assistant.
+          Uses Piper TTS ONNX format for fast, low-memory inference on Android.
+
+          ## Available Voices
+
+          | Language | File | Quality | Size |
+          |----------|------|---------|------|
+          | Swahili | sw_CD-lanfrica-medium.onnx | medium | ~60MB |
+          | French | fr_FR-gilles-low.onnx | low | ~60MB |
+          | Portuguese | pt_BR-edresson-low.onnx | low | ~60MB |
+          | English | en_US-amy-low.onnx | low | ~60MB |
+
+          ## Fallback Languages
+
+          For Twi, Yoruba, Hausa, Amharic, Zulu, and other Pan-African languages,
+          use Android's built-in TTS or online Google TTS.
+
+          ## Usage
+
+          ```python
+          import onnxruntime
+          from piper import PiperVoice
+
+          voice = PiperVoice.load("sw_CD-lanfrica-medium.onnx")
+          audio = voice.synthesize("Habari yako?")
+          ```
+
+          ## Part of Project Nku
+
+          Offline medical triage AI for Pan-African healthcare.
+          CARD
+          
+          python -c "
+          import os
+          from huggingface_hub import HfApi
+          api = HfApi(token=os.environ['HF_TOKEN'])
+          api.upload_file(
+              path_or_fileobj='README.md',
+              path_in_repo='README.md',
+              repo_id='wredd/nku-tts-voices',
+              commit_message='Add README'
+          )
+          print('[SUCCESS] README uploaded!')
+          "

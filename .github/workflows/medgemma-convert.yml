@@ -1,0 +1,86 @@
+name: MedGemma GGUF Conversion
+
+on:
+  workflow_dispatch:
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Maximize disk and swap
+        run: |
+          # Free disk space
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost
+          
+          # Create 16GB swap
+          sudo swapoff -a || true
+          sudo rm -f /mnt/swapfile || true
+          sudo dd if=/dev/zero of=/mnt/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /mnt/swapfile
+          sudo mkswap /mnt/swapfile
+          sudo swapon /mnt/swapfile
+          
+          echo "=== Memory ==="
+          free -h
+          
+      - name: Setup llama.cpp
+        run: |
+          git clone https://github.com/ggml-org/llama.cpp
+          cd llama.cpp
+          cmake -B build
+          cmake --build build --config Release -j$(nproc)
+          pip install -r requirements.txt
+          
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install transformers accelerate sentencepiece huggingface_hub
+          
+      - name: Convert MedGemma to GGUF
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          # Login to HuggingFace
+          huggingface-cli login --token $HF_TOKEN
+          
+          echo "[1/4] Downloading MedGemma 4B to local directory..."
+          huggingface-cli download google/medgemma-1.5-4b-it --local-dir ./medgemma-model
+          
+          echo "[2/4] Converting to GGUF (F16)..."
+          cd llama.cpp
+          python convert_hf_to_gguf.py ../medgemma-model \
+            --outfile ../medgemma-4b-f16.gguf \
+            --outtype f16
+          
+          echo "[3/4] Quantizing to Q4_K_M (INT4)..."
+          ./build/bin/llama-quantize ../medgemma-4b-f16.gguf ../medgemma-4b-q4_k_m.gguf Q4_K_M
+          
+          echo "[4/4] Checking file sizes..."
+          cd ..
+          ls -lh *.gguf
+          
+          # Clean up large intermediate file
+          rm -f medgemma-4b-f16.gguf
+          rm -rf medgemma-model
+          
+          echo "[SUCCESS] GGUF INT4 conversion complete!"
+          
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: medgemma-gguf-int4
+          path: |
+            medgemma-4b-q4_k_m.gguf
+          retention-days: 30

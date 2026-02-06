@@ -1,0 +1,97 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Android
+.gradle
+local.properties
+.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+*.iml
+*.apk
+*.aab
+
+# Models & Data (large files)
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.onnx
+data/
+models/
+!data/.gitkeep
+!models/.gitkeep
+
+# Environment
+.env
+.venv/
+.nku_tflite_env/
+.hf_cache/
+
+# IDE
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+nohup.out
+h100_logs*.txt
+full_logs.txt
+help_output.txt
+h100_v4_error.txt
+
+# Large generated files
+*_b64.txt
+*.imatrix
+fitzpatrick17k.csv
+
+# Generated visuals (keep only docs/assets versions)
+nku_*.png
+nku_*.svg
+!docs/assets/*.png
+
+# Agent/AI directories
+.agent/
+.claude/
+
+# Legacy/temporary
+legacy_context/
+rescue_data/
+nku_mlx_optimized/
+conversion_native.log*
+
+# Temporary
+*.tmp
+*.temp
+
+# Job configs (may contain sensitive data)
+*_job.json
+

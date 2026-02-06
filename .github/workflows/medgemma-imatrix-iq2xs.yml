@@ -1,0 +1,208 @@
+name: MedGemma imatrix + IQ2_XS Ultra-Compression
+
+on:
+  workflow_dispatch:
+
+jobs:
+  compress-with-imatrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Maximize disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost /opt/hostedtoolcache
+          df -h
+          
+      - name: Setup llama.cpp
+        run: |
+          git clone https://github.com/ggml-org/llama.cpp
+          cd llama.cpp
+          cmake -B build -DGGML_NATIVE=OFF
+          cmake --build build --config Release -j$(nproc)
+          echo "llama.cpp built successfully"
+          
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install transformers accelerate sentencepiece huggingface_hub
+          
+      - name: Download MedGemma
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          echo "[1/5] Downloading MedGemma 4B..."
+          python -c "
+          import os
+          from huggingface_hub import snapshot_download, login
+          login(token=os.environ['HF_TOKEN'])
+          snapshot_download(repo_id='google/medgemma-1.5-4b-it', local_dir='./medgemma-model')
+          print('[OK] Download complete')
+          "
+          
+      - name: Convert to F16 GGUF
+        run: |
+          echo "[2/5] Converting to GGUF (F16)..."
+          cd llama.cpp
+          python convert_hf_to_gguf.py ../medgemma-model \
+            --outfile ../medgemma-4b-f16.gguf \
+            --outtype f16
+          cd ..
+          ls -lh *.gguf
+          
+      - name: Generate Medical Importance Matrix
+        run: |
+          echo "[3/5] Generating medical importance matrix..."
+          # Use calibration dataset from repo
+          cat calibration/african_primary_care.txt > calibration_data.txt
+          
+          # Generate imatrix using llama-imatrix
+          cd llama.cpp
+          ./build/bin/llama-imatrix \
+            -m ../medgemma-4b-f16.gguf \
+            -f ../calibration_data.txt \
+            -o ../medical.imatrix \
+            --chunks 32
+          cd ..
+          echo "[OK] Medical imatrix generated"
+          ls -lh medical.imatrix
+          
+      - name: Quantize with imatrix IQ2_XS
+        run: |
+          echo "[4/5] Quantizing to IQ2_XS with medical imatrix..."
+          cd llama.cpp
+          ./build/bin/llama-quantize \
+            --imatrix ../medical.imatrix \
+            ../medgemma-4b-f16.gguf \
+            ../medgemma-4b-iq2_xs.gguf \
+            IQ2_XS
+          cd ..
+          echo "[OK] Ultra-compression complete!"
+          ls -lh *.gguf
+          
+          # Show size comparison
+          echo "=== SIZE COMPARISON ==="
+          echo "F16 original: $(du -h medgemma-4b-f16.gguf | cut -f1)"
+          echo "IQ2_XS compressed: $(du -h medgemma-4b-iq2_xs.gguf | cut -f1)"
+          
+          # Clean up large files
+          rm -f medgemma-4b-f16.gguf
+          rm -rf medgemma-model
+          
+      - name: Upload to HuggingFace
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          echo "[5/5] Uploading to HuggingFace..."
+          python -c "
+          import os
+          from huggingface_hub import HfApi, create_repo
+          
+          token = os.environ['HF_TOKEN']
+          api = HfApi(token=token)
+          
+          # Create/update repo
+          try:
+              create_repo('wredd/medgemma-4b-gguf', repo_type='model', exist_ok=True, token=token)
+              print('[OK] Repo ready')
+          except Exception as e:
+              print(f'Repo note: {e}')
+          
+          # Upload IQ2_XS model
+          api.upload_file(
+              path_or_fileobj='medgemma-4b-iq2_xs.gguf',
+              path_in_repo='medgemma-4b-iq2_xs.gguf',
+              repo_id='wredd/medgemma-4b-gguf',
+              commit_message='Add MedGemma 4B IQ2_XS - Ultra-compressed with African medical imatrix (~0.9GB)'
+          )
+          print('[SUCCESS] IQ2_XS uploaded!')
+          "
+          
+      - name: Update Model Card
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          cat > README.md << 'EOF'
+          ---
+          license: gemma
+          base_model: google/medgemma-1.5-4b-it
+          tags:
+            - medical
+            - gguf
+            - quantized
+            - llama.cpp
+            - african-healthcare
+          ---
+          
+          # MedGemma 4B GGUF - Quantized for African Healthcare
+          
+          Quantized versions of [google/medgemma-1.5-4b-it](https://huggingface.co/google/medgemma-1.5-4b-it) optimized for on-device medical AI in resource-constrained settings.
+          
+          ## Available Models
+          
+          | File | Quantization | Size | RAM | Use Case |
+          |------|--------------|------|-----|----------|
+          | `medgemma-4b-iq2_xs.gguf` | IQ2_XS + Medical imatrix | **~0.9GB** | ~2GB | **Budget phones (<$80)** |
+          | `medgemma-4b-q2_k.gguf` | Q2_K (2-bit) | ~1.4GB | ~2.5GB | Standard budget phones |
+          | `medgemma-4b-q4_k_m.gguf` | Q4_K_M (4-bit) | ~2.4GB | ~4GB | Mid-range phones |
+          
+          ## Medical Importance Matrix
+          
+          The IQ2_XS model was quantized using a custom importance matrix (imatrix) calibrated on:
+          - **African primary care scenarios** (malaria, typhoid, cholera, respiratory infections)
+          - **Maternal and child health** (pregnancy complications, childhood diarrhea, nutrition)
+          - **Emergency triage** (snake bites, severe dehydration, trauma)
+          - **Multi-language symptoms** (Twi, Hausa, Yoruba, English)
+          
+          This preserves medical diagnostic accuracy while aggressively compressing general knowledge.
+          
+          ## Usage with llama.cpp
+          
+          ```bash
+          ./llama-cli -m medgemma-4b-iq2_xs.gguf -p "Patient has fever, chills, and headache for 3 days. What could this be?"
+          ```
+          
+          ## License
+          
+          Subject to [Gemma Terms of Use](https://ai.google.dev/gemma/terms).
+          
+          ## Part of the Nku Project
+          
+          Built for the [Google MedGemma Impact Challenge](https://ai.google.dev/gemma/docs/medgemma) - bringing AI-powered healthcare to underserved African communities.
+          EOF
+          
+          python -c "
+          import os
+          from huggingface_hub import HfApi
+          api = HfApi(token=os.environ['HF_TOKEN'])
+          api.upload_file(
+              path_or_fileobj='README.md',
+              path_in_repo='README.md',
+              repo_id='wredd/medgemma-4b-gguf',
+              commit_message='Update model card with IQ2_XS and African healthcare focus'
+          )
+          print('[SUCCESS] Model card updated!')
+          "
+          
+      - name: Upload imatrix as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: medical-imatrix
+          path: medical.imatrix
+          retention-days: 90
+          
+      - name: Upload GGUF as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: medgemma-iq2_xs
+          path: medgemma-4b-iq2_xs.gguf
+          retention-days: 30

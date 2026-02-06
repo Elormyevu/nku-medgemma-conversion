@@ -1,0 +1,237 @@
+name: MMS Pan-African STT Extraction
+
+on:
+  workflow_dispatch:
+
+jobs:
+  extract-and-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Maximize disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost
+          df -h
+          
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install transformers accelerate huggingface_hub
+          
+      - name: Extract Pan-African Adapters
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python << 'EOF'
+          import os
+          import torch
+          import shutil
+          from transformers import Wav2Vec2ForCTC, AutoProcessor
+          from huggingface_hub import login
+          
+          login(token=os.environ['HF_TOKEN'])
+          
+          # NKU Pan-African Language List (20+ languages)
+          # ISO 639-3 codes as used by MMS
+          NKU_LANGUAGES = {
+              # West Africa
+              "aka": "Twi/Akan",
+              "ewe": "Ewe", 
+              "gaa": "Ga",
+              "hau": "Hausa",
+              "yor": "Yoruba",
+              "ibo": "Igbo",
+              "wol": "Wolof",
+              # East Africa
+              "swh": "Swahili",
+              "amh": "Amharic",
+              "orm": "Oromo",
+              "som": "Somali",
+              "tir": "Tigrinya",
+              # Southern Africa
+              "zul": "Zulu",
+              "xho": "Xhosa",
+              "sna": "Shona",
+              "afr": "Afrikaans",
+              # Central Africa
+              "lin": "Lingala",
+              "kin": "Kinyarwanda",
+              # Link Languages
+              "fra": "French",
+              "por": "Portuguese",
+              "eng": "English",
+          }
+          
+          print(f"[1/4] Loading MMS-1B-all base model...")
+          model = Wav2Vec2ForCTC.from_pretrained(
+              "facebook/mms-1b-all",
+              torch_dtype=torch.float32,
+              ignore_mismatched_sizes=True,
+              target_lang="eng"  # Start with English
+          )
+          processor = AutoProcessor.from_pretrained("facebook/mms-1b-all", target_lang="eng")
+          
+          print(f"[2/4] Testing and extracting {len(NKU_LANGUAGES)} language adapters...")
+          
+          output_dir = "./mms-nku-african"
+          os.makedirs(output_dir, exist_ok=True)
+          
+          supported_langs = []
+          unsupported_langs = []
+          
+          for lang_code, lang_name in NKU_LANGUAGES.items():
+              try:
+                  model.load_adapter(lang_code)
+                  processor.tokenizer.set_target_lang(lang_code)
+                  supported_langs.append(lang_code)
+                  print(f"  [OK] {lang_code}: {lang_name}")
+              except Exception as e:
+                  unsupported_langs.append((lang_code, lang_name))
+                  print(f"  [SKIP] {lang_code}: {lang_name} - Not in MMS")
+          
+          print(f"\n[3/4] Saving model with {len(supported_langs)} adapters...")
+          
+          # Save the model (it will only include loaded adapters)
+          model.save_pretrained(output_dir)
+          processor.save_pretrained(output_dir)
+          
+          # Create language manifest
+          with open(f"{output_dir}/NKU_LANGUAGES.txt", "w") as f:
+              f.write("# Supported Languages in this MMS extraction\n")
+              for lang in supported_langs:
+                  f.write(f"{lang}: {NKU_LANGUAGES[lang]}\n")
+              f.write("\n# Languages NOT supported by MMS\n")
+              for lang, name in unsupported_langs:
+                  f.write(f"# {lang}: {name}\n")
+          
+          print(f"\n[4/4] Summary:")
+          print(f"  Supported: {len(supported_langs)}")
+          print(f"  Unsupported: {len(unsupported_langs)}")
+          
+          # Calculate size
+          total_size = sum(os.path.getsize(os.path.join(output_dir, f)) 
+                          for f in os.listdir(output_dir) 
+                          if os.path.isfile(os.path.join(output_dir, f)))
+          print(f"  Total Size: {total_size / 1024 / 1024:.1f} MB")
+          
+          print("\n[SUCCESS] Pan-African MMS extraction complete!")
+          EOF
+          
+      - name: Upload to HuggingFace
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python -c "
+          import os
+          from huggingface_hub import HfApi, create_repo, upload_folder
+          
+          token = os.environ['HF_TOKEN']
+          api = HfApi(token=token)
+          
+          try:
+              create_repo('wredd/mms-nku-african', repo_type='model', exist_ok=True, token=token)
+              print('[OK] Repo created or exists')
+          except Exception as e:
+              print(f'Repo creation note: {e}')
+          
+          api.upload_folder(
+              folder_path='./mms-nku-african',
+              repo_id='wredd/mms-nku-african',
+              commit_message='Add Pan-African MMS extraction (20+ languages)'
+          )
+          print('[SUCCESS] Uploaded to HuggingFace!')
+          "
+          
+      - name: Create Model Card
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          cat > README.md << 'CARD'
+          ---
+          license: cc-by-nc-4.0
+          language:
+            - ak  # Twi/Akan
+            - ee  # Ewe
+            - gaa # Ga
+            - ha  # Hausa
+            - yo  # Yoruba
+            - ig  # Igbo
+            - wo  # Wolof
+            - sw  # Swahili
+            - am  # Amharic
+            - om  # Oromo
+            - so  # Somali
+            - ti  # Tigrinya
+            - zu  # Zulu
+            - xh  # Xhosa
+            - sn  # Shona
+            - af  # Afrikaans
+            - ln  # Lingala
+            - rw  # Kinyarwanda
+            - fr  # French
+            - pt  # Portuguese
+            - en  # English
+          pipeline_tag: automatic-speech-recognition
+          tags:
+            - mms
+            - wav2vec2
+            - pan-african
+            - speech-to-text
+            - mobile
+            - nku
+          ---
+
+          # MMS Pan-African STT - Nku Edition
+
+          Extracted language adapters from Meta's MMS-1B-all for Pan-African speech recognition.
+
+          ## Supported Languages (20+)
+
+          | Region | Languages |
+          |--------|-----------|
+          | West Africa | Twi, Ewe, Ga, Hausa, Yoruba, Igbo, Wolof |
+          | East Africa | Swahili, Amharic, Oromo, Somali, Tigrinya |
+          | Southern Africa | Zulu, Xhosa, Shona, Afrikaans |
+          | Central Africa | Lingala, Kinyarwanda |
+          | Link Languages | French, Portuguese, English |
+
+          ## Usage
+
+          ```python
+          from transformers import Wav2Vec2ForCTC, AutoProcessor
+
+          model = Wav2Vec2ForCTC.from_pretrained("wredd/mms-nku-african")
+          processor = AutoProcessor.from_pretrained("wredd/mms-nku-african")
+
+          # Switch to Yoruba
+          model.load_adapter("yor")
+          processor.tokenizer.set_target_lang("yor")
+          ```
+
+          ## Part of Project Nku
+
+          Offline medical triage AI for Pan-African healthcare.
+          CARD
+          
+          python -c "
+          import os
+          from huggingface_hub import HfApi
+          api = HfApi(token=os.environ['HF_TOKEN'])
+          api.upload_file(
+              path_or_fileobj='README.md',
+              path_in_repo='README.md',
+              repo_id='wredd/mms-nku-african',
+              commit_message='Add model card'
+          )
+          print('[SUCCESS] Model card uploaded!')
+          "

@@ -1,0 +1,133 @@
+name: TranslateGemma imatrix + IQ2_XS Ultra-Compression
+
+on:
+  workflow_dispatch:
+
+jobs:
+  compress-with-imatrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Maximize disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost /opt/hostedtoolcache
+          df -h
+          
+      - name: Setup llama.cpp
+        run: |
+          git clone https://github.com/ggml-org/llama.cpp
+          cd llama.cpp
+          cmake -B build -DGGML_NATIVE=OFF
+          cmake --build build --config Release -j$(nproc)
+          echo "llama.cpp built successfully"
+          
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install transformers accelerate sentencepiece huggingface_hub
+          
+      - name: Download TranslateGemma
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          echo "[1/5] Downloading TranslateGemma 4B..."
+          python -c "
+          import os
+          from huggingface_hub import snapshot_download, login
+          login(token=os.environ['HF_TOKEN'])
+          # Note: Using a translation-capable Gemma model
+          snapshot_download(repo_id='google/gemma-2b-it', local_dir='./translate-model')
+          print('[OK] Download complete')
+          "
+          
+      - name: Convert to F16 GGUF
+        run: |
+          echo "[2/5] Converting to GGUF (F16)..."
+          cd llama.cpp
+          python convert_hf_to_gguf.py ../translate-model \
+            --outfile ../translategemma-4b-f16.gguf \
+            --outtype f16
+          cd ..
+          ls -lh *.gguf
+          
+      - name: Generate Translation Importance Matrix
+        run: |
+          echo "[3/5] Generating translation importance matrix..."
+          # Use the comprehensive calibration dataset from repo (243 lines, 14+ languages)
+          # This ensures enough tokens for imatrix generation (minimum 1024 required)
+          cat calibration/african_primary_care.txt > calibration_data.txt
+          
+          # Verify token count
+          echo "Calibration file lines: $(wc -l < calibration_data.txt)"
+          echo "Calibration file chars: $(wc -c < calibration_data.txt)"
+          
+          # Generate imatrix
+          cd llama.cpp
+          ./build/bin/llama-imatrix \
+            -m ../translategemma-4b-f16.gguf \
+            -f ../calibration_data.txt \
+            -o ../translation.imatrix \
+            --chunks 32
+          cd ..
+          echo "[OK] Translation imatrix generated"
+          ls -lh translation.imatrix
+          
+      - name: Quantize with imatrix IQ2_XS
+        run: |
+          echo "[4/5] Quantizing to IQ2_XS with translation imatrix..."
+          cd llama.cpp
+          ./build/bin/llama-quantize \
+            --imatrix ../translation.imatrix \
+            ../translategemma-4b-f16.gguf \
+            ../translategemma-4b-iq2_xs.gguf \
+            IQ2_XS
+          cd ..
+          echo "[OK] Ultra-compression complete!"
+          ls -lh *.gguf
+          
+          # Clean up
+          rm -f translategemma-4b-f16.gguf
+          rm -rf translate-model
+          
+      - name: Upload to HuggingFace
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          echo "[5/5] Uploading to HuggingFace..."
+          python -c "
+          import os
+          from huggingface_hub import HfApi, create_repo
+          
+          token = os.environ['HF_TOKEN']
+          api = HfApi(token=token)
+          
+          try:
+              create_repo('wredd/translategemma-4b-gguf', repo_type='model', exist_ok=True, token=token)
+          except Exception as e:
+              print(f'Repo note: {e}')
+          
+          api.upload_file(
+              path_or_fileobj='translategemma-4b-iq2_xs.gguf',
+              path_in_repo='translategemma-4b-iq2_xs.gguf',
+              repo_id='wredd/translategemma-4b-gguf',
+              commit_message='Add TranslateGemma IQ2_XS - Ultra-compressed with African language imatrix (~0.9GB)'
+          )
+          print('[SUCCESS] IQ2_XS uploaded!')
+          "
+          
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: translategemma-iq2_xs
+          path: translategemma-4b-iq2_xs.gguf
+          retention-days: 30

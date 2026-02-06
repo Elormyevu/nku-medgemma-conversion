@@ -1,0 +1,175 @@
+name: TranslateGemma Q2_K GGUF Conversion
+
+on:
+  workflow_dispatch:
+
+jobs:
+  convert-and-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Maximize disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost
+          df -h
+          
+      - name: Setup llama.cpp
+        run: |
+          git clone https://github.com/ggml-org/llama.cpp
+          cd llama.cpp
+          cmake -B build
+          cmake --build build --config Release -j$(nproc)
+          
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install transformers accelerate sentencepiece huggingface_hub
+          
+      - name: Download and Quantize to Q2_K
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          echo "[1/4] Downloading TranslateGemma 4B..."
+          python -c "
+          import os
+          from huggingface_hub import snapshot_download, login
+          login(token=os.environ['HF_TOKEN'])
+          snapshot_download(repo_id='google/translategemma-4b-it', local_dir='./translategemma-model')
+          print('[OK] Download complete')
+          "
+          
+          echo "[2/4] Converting to GGUF (F16)..."
+          cd llama.cpp
+          python convert_hf_to_gguf.py ../translategemma-model \
+            --outfile ../translategemma-4b-f16.gguf \
+            --outtype f16
+          
+          echo "[3/4] Quantizing to Q2_K (2-bit for budget phones)..."
+          ./build/bin/llama-quantize ../translategemma-4b-f16.gguf ../translategemma-4b-q2_k.gguf Q2_K
+          
+          echo "[4/4] Checking file sizes..."
+          cd ..
+          ls -lh *.gguf
+          
+          # Clean up FP16 intermediate
+          rm -f translategemma-4b-f16.gguf
+          rm -rf translategemma-model
+          
+          echo "[SUCCESS] Q2_K quantization complete!"
+          
+      - name: Upload Q2_K to HuggingFace
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          ls -lh translategemma-4b-q2_k.gguf
+          
+          python -c "
+          import os
+          from huggingface_hub import HfApi, create_repo
+          
+          token = os.environ['HF_TOKEN']
+          api = HfApi(token=token)
+          
+          # Create repo
+          try:
+              create_repo('wredd/translategemma-4b-gguf', repo_type='model', exist_ok=True, token=token)
+              print('[OK] Repo created or exists')
+          except Exception as e:
+              print(f'Repo creation note: {e}')
+          
+          # Upload Q2_K model
+          api.upload_file(
+              path_or_fileobj='translategemma-4b-q2_k.gguf',
+              path_in_repo='translategemma-4b-q2_k.gguf',
+              repo_id='wredd/translategemma-4b-gguf',
+              commit_message='Add TranslateGemma 4B Q2_K (2-bit) for Pan-African language translation'
+          )
+          print('[SUCCESS] Q2_K uploaded to HuggingFace!')
+          "
+          
+      - name: Upload Q2_K Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: translategemma-gguf-q2k
+          path: translategemma-4b-q2_k.gguf
+          retention-days: 30
+          
+      - name: Create Model Card
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          cat > README.md << 'EOF'
+          ---
+          license: gemma
+          language:
+            - en
+            - sw  # Swahili
+            - yo  # Yoruba
+            - ha  # Hausa
+            - ak  # Twi/Akan
+            - ee  # Ewe
+            - gaa # Ga
+          pipeline_tag: translation
+          tags:
+            - gguf
+            - llama.cpp
+            - pan-african
+            - translation
+            - mobile
+          ---
+
+          # TranslateGemma 4B GGUF - Pan-African Languages
+
+          Quantized version of Google's TranslateGemma 4B for mobile deployment with llama.cpp.
+
+          ## Model Files
+
+          | File | Size | Quantization | Use Case |
+          |------|------|--------------|----------|
+          | `translategemma-4b-q2_k.gguf` | ~1.7GB | Q2_K (2-bit) | Budget Android phones (2-3GB RAM) |
+
+          ## Supported Languages
+
+          - **West African**: Twi, Ewe, Ga, Yoruba, Hausa, Igbo
+          - **East African**: Swahili
+          - **Plus 15+ additional Pan-African languages**
+
+          ## Usage with llama.cpp
+
+          ```bash
+          ./llama-cli -m translategemma-4b-q2_k.gguf -p "Translate to Twi: How are you feeling today?"
+          ```
+
+          ## Part of Project Nku
+
+          This model is the "communicator" component of Nku - a medical triage system for West Africa.
+          - **MedGemma Q2_K**: Medical reasoning (brains)
+          - **TranslateGemma Q2_K**: Language translation (communicator)
+
+          ## Original Model
+
+          Based on [google/translategemma-4b-it](https://huggingface.co/google/translategemma-4b-it)
+          EOF
+          
+          python -c "
+          import os
+          from huggingface_hub import HfApi
+          api = HfApi(token=os.environ['HF_TOKEN'])
+          api.upload_file(
+              path_or_fileobj='README.md',
+              path_in_repo='README.md',
+              repo_id='wredd/translategemma-4b-gguf',
+              commit_message='Add model card'
+          )
+          print('[SUCCESS] Model card uploaded!')
+          "

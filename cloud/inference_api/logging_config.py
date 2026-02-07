@@ -36,9 +36,17 @@ class JSONFormatter(logging.Formatter):
         if request_id:
             log_data['request_id'] = request_id
         
-        # Add exception info if present
-        if record.exc_info:
-            log_data['exception'] = self.formatException(record.exc_info)
+        # Add exception info if present (H-4 fix: full stack traces)
+        if record.exc_info and record.exc_info[0] is not None:
+            log_data['exception'] = {
+                'type': record.exc_info[0].__name__,
+                'message': str(record.exc_info[1]),
+                'traceback': self.formatException(record.exc_info),
+            }
+        
+        # Add stack info if present
+        if record.stack_info:
+            log_data['stack_info'] = self.formatStack(record.stack_info)
         
         # Add extra fields
         if hasattr(record, 'extra_data'):
@@ -53,9 +61,9 @@ class RequestLogger:
     def __init__(self, logger: logging.Logger):
         self.logger = logger
     
-    def _log(self, level: int, message: str, extra_data: Dict[str, Any] = None):
+    def _log(self, level: int, message: str, extra_data: Dict[str, Any] = None, exc_info=None):
         record = self.logger.makeRecord(
-            self.logger.name, level, '', 0, message, (), None
+            self.logger.name, level, '', 0, message, (), exc_info
         )
         if extra_data:
             record.extra_data = extra_data
@@ -67,8 +75,8 @@ class RequestLogger:
     def warning(self, message: str, **kwargs):
         self._log(logging.WARNING, message, kwargs if kwargs else None)
     
-    def error(self, message: str, **kwargs):
-        self._log(logging.ERROR, message, kwargs if kwargs else None)
+    def error(self, message: str, exc_info=None, **kwargs):
+        self._log(logging.ERROR, message, kwargs if kwargs else None, exc_info=exc_info)
     
     def debug(self, message: str, **kwargs):
         self._log(logging.DEBUG, message, kwargs if kwargs else None)
@@ -142,11 +150,13 @@ def log_request(logger: logging.Logger):
                 return response
                 
             except Exception as e:
+                import traceback
                 duration_ms = (time.time() - g.request_start) * 1000
-                logger.error(f"Request failed: {str(e)}", extra={
+                logger.error(f"Request failed: {str(e)}", exc_info=True, extra={
                     'extra_data': {
                         'error': str(e),
                         'error_type': type(e).__name__,
+                        'traceback': traceback.format_exc(),
                         'duration_ms': round(duration_ms, 2)
                     }
                 })

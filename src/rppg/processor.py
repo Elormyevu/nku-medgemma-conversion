@@ -133,8 +133,10 @@ class RPPGProcessor:
             )
         except Exception as e:
             logger.error(f"Signal analysis failed: {e}")
+            # L-4 fix: Return None instead of stale _last_bpm
+            # In clinical context, stale data could mask tachycardia/bradycardia
             return RPPGResult(
-                bpm=self._last_bpm,
+                bpm=None,
                 confidence=0.0,
                 signal_quality='poor',
                 buffer_fill_percent=self._get_buffer_fill_percent()

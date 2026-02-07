@@ -6,6 +6,8 @@ Provides input validation, prompt injection protection, rate limiting, and CORS 
 import re
 import time
 import hashlib
+import base64
+import os
 from functools import wraps
 from typing import Optional, Tuple, Dict, Any, List
 from dataclasses import dataclass, field
@@ -64,6 +66,15 @@ class InputValidator:
         r'bypass\s+(your\s+)?safety',
         r'jailbreak',
         r'DAN\s+mode',
+        # L-3 fix: Additional patterns for advanced injection
+        r'what\s+(is|was|are)\s+your\s+(system\s+)?prompt',
+        r'reveal\s+(your|the)\s+(system\s+)?(prompt|instructions)',
+        r'repeat\s+(your|the)\s+(system\s+)?(prompt|instructions)',
+        r'translate\s+the\s+above',
+        r'output\s+(your|the)\s+initial',
+        r'\bbase64\b.*\bdecode\b',
+        r'eval\s*\(',
+        r'exec\s*\(',
     ]
     
     def __init__(self):
@@ -99,6 +110,12 @@ class InputValidator:
         if injection_detected:
             errors.append("Input contains potentially malicious patterns")
             logger.warning(f"Injection attempt detected: {sanitized[:100]}...")
+            return ValidationResult(False, "", errors)
+        
+        # L-3 fix: Check for base64-encoded injection payloads
+        if self._check_base64_injection(sanitized):
+            errors.append("Input contains potentially malicious patterns")
+            logger.warning(f"Base64 injection attempt detected")
             return ValidationResult(False, "", errors)
         
         # Remove potentially dangerous unicode
@@ -156,7 +173,38 @@ class InputValidator:
         ]
         for char in dangerous_chars:
             text = text.replace(char, '')
+        
+        # L-3 fix: Normalize Unicode homoglyphs for common Latin chars
+        # Map Cyrillic/Greek lookalikes to Latin equivalents before pattern check
+        homoglyph_map = {
+            '\u0410': 'A', '\u0412': 'B', '\u0421': 'C', '\u0415': 'E',
+            '\u041d': 'H', '\u041a': 'K', '\u041c': 'M', '\u041e': 'O',
+            '\u0420': 'P', '\u0422': 'T', '\u0425': 'X',
+            '\u0430': 'a', '\u0435': 'e', '\u043e': 'o', '\u0440': 'p',
+            '\u0441': 'c', '\u0443': 'y', '\u0445': 'x',
+        }
+        for homoglyph, replacement in homoglyph_map.items():
+            text = text.replace(homoglyph, replacement)
+        
         return text
+    
+    def _check_base64_injection(self, text: str) -> bool:
+        """L-3 fix: Detect base64-encoded injection payloads."""
+        # Find potential base64 strings (at least 20 chars of base64 alphabet)
+        b64_pattern = re.compile(r'[A-Za-z0-9+/]{20,}={0,2}')
+        matches = b64_pattern.findall(text)
+        
+        for match in matches:
+            try:
+                decoded = base64.b64decode(match).decode('utf-8', errors='ignore').lower()
+                # Check if decoded content contains injection patterns
+                for pattern in self._compiled_patterns:
+                    if pattern.search(decoded):
+                        return True
+            except Exception:
+                continue
+        
+        return False
 
 
 # =============================================================================
@@ -253,17 +301,44 @@ Assessment:""",
 # =============================================================================
 
 class RateLimiter:
-    """In-memory rate limiter for API endpoints."""
+    """Rate limiter with Redis support for multi-instance Cloud Run.
+    
+    Falls back to in-memory when Redis is unavailable.
+    M-2 fix: Shared state across Cloud Run instances via Redis.
+    """
     
     def __init__(self, requests_per_minute: int = 30, requests_per_hour: int = 500):
         self.requests_per_minute = requests_per_minute
         self.requests_per_hour = requests_per_hour
+        self._redis = self._connect_redis()
+        
+        # In-memory fallback
         self._minute_buckets: Dict[str, List[float]] = defaultdict(list)
         self._hour_buckets: Dict[str, List[float]] = defaultdict(list)
     
+    def _connect_redis(self):
+        """Attempt to connect to Redis (Cloud Memorystore or local)."""
+        redis_url = os.environ.get('REDIS_URL') or os.environ.get('REDISHOST')
+        if not redis_url:
+            logger.info("RateLimiter: No REDIS_URL set, using in-memory fallback")
+            return None
+        
+        try:
+            import redis
+            if redis_url.startswith('redis://'):
+                client = redis.from_url(redis_url, decode_responses=True)
+            else:
+                redis_port = int(os.environ.get('REDISPORT', 6379))
+                client = redis.Redis(host=redis_url, port=redis_port, decode_responses=True)
+            client.ping()
+            logger.info(f"RateLimiter: Connected to Redis at {redis_url}")
+            return client
+        except Exception as e:
+            logger.warning(f"RateLimiter: Redis connection failed ({e}), using in-memory fallback")
+            return None
+    
     def _get_client_id(self, request) -> str:
         """Get unique client identifier from request."""
-        # Try to get real IP behind proxy
         forwarded = request.headers.get('X-Forwarded-For', '')
         if forwarded:
             return forwarded.split(',')[0].strip()
@@ -274,15 +349,65 @@ class RateLimiter:
         cutoff = time.time() - window_seconds
         return [t for t in bucket if t > cutoff]
     
+    def _check_redis_rate_limit(self, client_id: str) -> Tuple[bool, Optional[Dict[str, Any]]]:
+        """Check rate limit using Redis sorted sets."""
+        current_time = time.time()
+        minute_key = f"nku:rl:min:{client_id}"
+        hour_key = f"nku:rl:hr:{client_id}"
+        
+        pipe = self._redis.pipeline()
+        
+        # Clean old entries and count current window
+        pipe.zremrangebyscore(minute_key, 0, current_time - 60)
+        pipe.zcard(minute_key)
+        pipe.zremrangebyscore(hour_key, 0, current_time - 3600)
+        pipe.zcard(hour_key)
+        
+        results = pipe.execute()
+        minute_count = results[1]
+        hour_count = results[3]
+        
+        if minute_count >= self.requests_per_minute:
+            return False, {
+                'error': 'rate_limit_exceeded',
+                'message': f'Rate limit exceeded: {self.requests_per_minute} requests per minute',
+                'retry_after': 60
+            }
+        
+        if hour_count >= self.requests_per_hour:
+            return False, {
+                'error': 'rate_limit_exceeded',
+                'message': f'Rate limit exceeded: {self.requests_per_hour} requests per hour',
+                'retry_after': 3600
+            }
+        
+        # Record request
+        pipe2 = self._redis.pipeline()
+        pipe2.zadd(minute_key, {str(current_time): current_time})
+        pipe2.expire(minute_key, 120)
+        pipe2.zadd(hour_key, {str(current_time): current_time})
+        pipe2.expire(hour_key, 7200)
+        pipe2.execute()
+        
+        return True, None
+    
     def check_rate_limit(self, request) -> Tuple[bool, Optional[Dict[str, Any]]]:
         """
         Check if request is within rate limits.
-        Returns (is_allowed, error_info or None)
+        Uses Redis if available, falls back to in-memory.
         """
         client_id = self._get_client_id(request)
+        
+        # Try Redis first
+        if self._redis:
+            try:
+                return self._check_redis_rate_limit(client_id)
+            except Exception as e:
+                logger.warning(f"Redis rate limit check failed: {e}, falling back to in-memory")
+        
+        # In-memory fallback
         current_time = time.time()
         
-        # Clean up and check minute limit
         self._minute_buckets[client_id] = self._cleanup_old_entries(
             self._minute_buckets[client_id], 60
         )
@@ -294,7 +419,6 @@ class RateLimiter:
                 'retry_after': 60
             }
         
-        # Clean up and check hour limit
         self._hour_buckets[client_id] = self._cleanup_old_entries(
             self._hour_buckets[client_id], 3600
         )
@@ -306,7 +430,6 @@ class RateLimiter:
                 'retry_after': 3600
             }
         
-        # Record this request
         self._minute_buckets[client_id].append(current_time)
         self._hour_buckets[client_id].append(current_time)
         

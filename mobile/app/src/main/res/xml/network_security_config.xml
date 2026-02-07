@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Nku Network Security Configuration
+    - Enforces HTTPS for all connections
+    - Pins Cloud Run backend certificate
+    - Blocks cleartext (HTTP) traffic
+-->
+<network-security-config>
+    <!-- Block all cleartext traffic by default -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Pin Cloud Run backend (update hash after deployment) -->
+    <domain-config>
+        <domain includeSubdomains="true">run.app</domain>
+        <pin-set expiration="2027-01-01">
+            <!-- Google Trust Services root CA (GTS Root R1) -->
+            <pin digest="SHA-256">hxqRlPTu1bMS/0DITB1SSu0vd4u/8l8TjPgfaAp63Gc=</pin>
+            <!-- Backup pin (GTS Root R2) -->
+            <pin digest="SHA-256">Vfd95BwDeSQo+NUYxVEEIGvv3el260gw0XoAkMFMNSg=</pin>
+        </pin-set>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

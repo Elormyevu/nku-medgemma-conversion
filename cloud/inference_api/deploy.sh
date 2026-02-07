@@ -2,8 +2,9 @@
 # Deploy Nku Inference API to Google Cloud Run
 # Requires: gcloud CLI configured with project access
 #
-# SECURITY: This script deploys WITH authentication enabled.
+# SECURITY: This script deploys WITH authentication enabled and restricted ingress.
 # Use --service-account or IAM to grant access to authorized clients.
+# Change --ingress to 'all' only if public access is explicitly required.
 
 set -e
 
@@ -31,17 +32,20 @@ if [ -z "${HF_TOKEN}" ]; then
 fi
 
 # Build deployment command
-DEPLOY_CMD="gcloud run deploy $SERVICE_NAME \
-    --project=$PROJECT_ID \
-    --region=$REGION \
-    --source=. \
-    --memory=8Gi \
-    --cpu=4 \
-    --timeout=300s \
-    --max-instances=3 \
-    --min-instances=0 \
-    --concurrency=1 \
-    --set-env-vars=LOG_LEVEL=INFO,LOG_JSON=true"
+DEPLOY_CMD="gcloud run deploy $SERVICE_NAME \\
+    --project=$PROJECT_ID \\
+    --region=$REGION \\
+    --source=. \\
+    --no-allow-unauthenticated \\
+    --ingress=internal-and-cloud-load-balancing \\
+    --memory=8Gi \\
+    --cpu=4 \\
+    --timeout=300s \\
+    --max-instances=3 \\
+    --min-instances=0 \\
+    --concurrency=1 \\
+    --cpu-boost \\
+    --set-env-vars=LOG_LEVEL=INFO,LOG_JSON=true,PYTHONUNBUFFERED=1"
 
 # Add service account if specified
 if [ -n "$SERVICE_ACCOUNT" ]; then

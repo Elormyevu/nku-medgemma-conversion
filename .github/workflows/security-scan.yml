@@ -30,17 +30,17 @@ jobs:
       - name: Run Safety Check (Root)
         run: |
           pip install -r requirements.txt
-          safety check --full-report || true
+          safety check --full-report
       
       - name: Run Safety Check (Cloud API)
         run: |
           pip install -r cloud/inference_api/requirements.txt
-          safety check --full-report || true
+          safety check --full-report
       
       - name: Run pip-audit
         run: |
-          pip-audit --requirement requirements.txt || true
-          pip-audit --requirement cloud/inference_api/requirements.txt || true
+          pip-audit --requirement requirements.txt
+          pip-audit --requirement cloud/inference_api/requirements.txt
   
   code-scanning:
     name: Code Security Analysis

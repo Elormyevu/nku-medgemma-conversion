@@ -27,7 +27,8 @@ data class PallorResult(
     val pallorScore: Float,           // 0.0 = healthy pink, 1.0 = severe pallor
     val confidence: Float,            // 0.0 - 1.0
     val severity: PallorSeverity,
-    val recommendation: String
+    val recommendation: String,
+    val hasBeenAnalyzed: Boolean = false
 )
 
 enum class PallorSeverity {
@@ -60,7 +61,7 @@ class PallorDetector {
     }
     
     private val _result = MutableStateFlow(
-        PallorResult(0f, 0f, PallorSeverity.NORMAL, "No analysis")
+        PallorResult(0f, 0f, PallorSeverity.NORMAL, "No analysis", hasBeenAnalyzed = false)
     )
     val result: StateFlow<PallorResult> = _result.asStateFlow()
     
@@ -182,7 +183,8 @@ class PallorDetector {
             pallorScore = pallorScore,
             confidence = confidence,
             severity = severity,
-            recommendation = recommendation
+            recommendation = recommendation,
+            hasBeenAnalyzed = true
         )
         
         _result.value = result
@@ -217,6 +219,6 @@ class PallorDetector {
     }
     
     fun reset() {
-        _result.value = PallorResult(0f, 0f, PallorSeverity.NORMAL, "No analysis")
+        _result.value = PallorResult(0f, 0f, PallorSeverity.NORMAL, "No analysis", hasBeenAnalyzed = false)
     }
 }

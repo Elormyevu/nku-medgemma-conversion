@@ -228,7 +228,9 @@ nku-medgemma-conversion/
 │       │   ├── SensorFusion.kt         # Vital signs aggregator
 │       │   ├── ClinicalReasoner.kt     # MedGemma + WHO fallback
 │       │   ├── ThermalManager.kt       # 42°C auto-throttle
-│       │   └── PiperTTS.kt            # Voice synthesis
+│       │   ├── LocalizedStrings.kt     # 47-language UI strings
+│       │   ├── PiperTTS.kt            # Voice synthesis
+│       │   └── CloudInferenceClient.kt # Cloud fallback (dev only)
 │       └── assets/           # Bundled GGUF models
 ├── scripts/
 │   ├── quantization/         # IQ1_M/IQ2_XS quantization

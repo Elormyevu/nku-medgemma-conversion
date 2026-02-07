@@ -1,0 +1,302 @@
+package com.nku.app
+
+import android.content.Context
+import android.util.Log
+import io.shubham0204.smollm.SmolLM
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import java.io.File
+
+/**
+ * NkuInferenceEngine — Core Model Orchestration
+ *
+ * Implements the "Nku Cycle": sequential mmap-based model swapping
+ * within a 2GB RAM budget.
+ *
+ * Flow:
+ *   1. Load TranslateGemma → translate local language → English
+ *   2. Unload TranslateGemma
+ *   3. Load MedGemma → clinical reasoning
+ *   4. Unload MedGemma
+ *   5. Load TranslateGemma → translate English → local language
+ *   6. Unload TranslateGemma
+ *
+ * Peak RAM: ~1.4GB (only one model loaded at a time)
+ */
+
+data class NkuResult(
+    val originalInput: String,
+    val englishTranslation: String?,
+    val clinicalResponse: String,
+    val localizedResponse: String?,
+    val tokensPerSecond: Float = 0f,
+    val totalTimeMs: Long = 0
+)
+
+enum class EngineState {
+    IDLE,
+    LOADING_MODEL,
+    TRANSLATING_TO_ENGLISH,
+    RUNNING_MEDGEMMA,
+    TRANSLATING_TO_LOCAL,
+    COMPLETE,
+    ERROR
+}
+
+class NkuInferenceEngine(private val context: Context) {
+
+    companion object {
+        private const val TAG = "NkuEngine"
+
+        // Model paths (extracted from APK assets on first run)
+        private const val MEDGEMMA_MODEL = "medgemma-4b-iq1_m.gguf"
+        private const val TRANSLATE_MODEL = "translategemma-4b-iq1_m.gguf"
+    }
+
+    private val _state = MutableStateFlow(EngineState.IDLE)
+    val state: StateFlow<EngineState> = _state.asStateFlow()
+
+    private val _progress = MutableStateFlow("")
+    val progress: StateFlow<String> = _progress.asStateFlow()
+
+    private var currentModel: SmolLM? = null
+    private val modelDir: File by lazy {
+        File(context.filesDir, "models").also { it.mkdirs() }
+    }
+
+    /**
+     * Check if GGUF model files are available on-device.
+     */
+    fun areModelsReady(): Boolean {
+        val medgemma = File(modelDir, MEDGEMMA_MODEL)
+        val translate = File(modelDir, TRANSLATE_MODEL)
+        return medgemma.exists() && translate.exists()
+    }
+
+    /**
+     * Get paths of available models (for status display).
+     */
+    fun getModelStatus(): Map<String, Boolean> = mapOf(
+        "MedGemma 4B (IQ1_M)" to File(modelDir, MEDGEMMA_MODEL).exists(),
+        "TranslateGemma 4B (IQ1_M)" to File(modelDir, TRANSLATE_MODEL).exists()
+    )
+
+    /**
+     * Load a GGUF model via SmolLM JNI.
+     * Uses mmap for efficient memory-mapped loading (~1.4s).
+     */
+    private suspend fun loadModel(modelFileName: String): SmolLM? = withContext(Dispatchers.IO) {
+        _state.value = EngineState.LOADING_MODEL
+        _progress.value = "Loading ${modelFileName}..."
+
+        val modelPath = File(modelDir, modelFileName).absolutePath
+        if (!File(modelPath).exists()) {
+            Log.w(TAG, "Model not found: $modelPath")
+            return@withContext null
+        }
+
+        try {
+            val smolLM = SmolLM()
+            smolLM.load(
+                modelPath = modelPath,
+                params = SmolLM.InferenceParams(
+                    temperature = 0.3f,    // Low temperature for clinical precision
+                    minP = 0.05f,
+                    contextSize = 2048,
+                    useMmap = true,         // Critical: memory-mapped for 2GB devices
+                    useMlock = false,       // Don't lock — allow OS to manage pages
+                    numThreads = Runtime.getRuntime().availableProcessors().coerceIn(2, 4)
+                )
+            )
+            Log.i(TAG, "Model loaded: $modelFileName")
+            smolLM
+        } catch (e: Exception) {
+            Log.e(TAG, "Model load error: ${e.message}", e)
+            null
+        }
+    }
+
+    /**
+     * Unload the current model to free RAM for the next stage.
+     */
+    private fun unloadModel() {
+        currentModel?.close()
+        currentModel = null
+        // Suggest GC to reclaim memory before next model load
+        System.gc()
+        Log.i(TAG, "Model unloaded, RAM freed")
+    }
+
+    /**
+     * Run the full Nku Cycle: Translate → Reason → Translate → Return
+     *
+     * @param patientInput Symptom description in any supported language
+     * @param language Target language code (e.g., "ee" for Ewe, "ha" for Hausa)
+     * @param thermalManager Optional thermal check before each stage
+     * @return NkuResult with clinical assessment
+     */
+    suspend fun runNkuCycle(
+        patientInput: String,
+        language: String,
+        thermalManager: ThermalManager? = null
+    ): NkuResult = withContext(Dispatchers.IO) {
+        val startTime = System.currentTimeMillis()
+        var englishText: String? = null
+        var clinicalResponse: String
+        var localizedResponse: String? = null
+
+        try {
+            // ── Stage 1: Translate to English (skip if already English) ──
+            if (language != "en") {
+                if (thermalManager?.canRunInference() == false) {
+                    return@withContext NkuResult(
+                        patientInput, null,
+                        "Device too hot. Please wait and try again.",
+                        null, 0f, 0
+                    )
+                }
+
+                _state.value = EngineState.TRANSLATING_TO_ENGLISH
+                _progress.value = "Translating to English..."
+
+                currentModel = loadModel(TRANSLATE_MODEL)
+                if (currentModel != null) {
+                    val langName = LocalizedStrings.getLanguageName(language)
+                    currentModel!!.addSystemPrompt(
+                        "You are a medical translator. Translate the following patient symptoms from $langName to English. " +
+                        "Preserve all medical details. Output ONLY the English translation."
+                    )
+                    englishText = currentModel!!.getResponse(patientInput)
+                    unloadModel()
+                } else {
+                    englishText = patientInput  // Fallback: use as-is
+                }
+            } else {
+                englishText = patientInput
+            }
+
+            // ── Stage 2: MedGemma Clinical Reasoning ──
+            if (thermalManager?.canRunInference() == false) {
+                return@withContext NkuResult(
+                    patientInput, englishText,
+                    "Device too hot. Please wait and try again.",
+                    null, 0f, 0
+                )
+            }
+
+            _state.value = EngineState.RUNNING_MEDGEMMA
+            _progress.value = "MedGemma analyzing..."
+
+            currentModel = loadModel(MEDGEMMA_MODEL)
+            if (currentModel != null) {
+                currentModel!!.addSystemPrompt(
+                    "You are a clinical triage AI for Community Health Workers in rural Africa. " +
+                    "Provide structured medical assessment with: SEVERITY (HIGH/MEDIUM/LOW), " +
+                    "URGENCY, PRIMARY_CONCERNS, and RECOMMENDATIONS. " +
+                    "Be specific and actionable. Always include safety disclaimers."
+                )
+                clinicalResponse = currentModel!!.getResponse(englishText ?: patientInput)
+                val speed = currentModel!!.getResponseGenerationSpeed()
+                unloadModel()
+
+                // ── Stage 3: Translate back to local language ──
+                if (language != "en") {
+                    _state.value = EngineState.TRANSLATING_TO_LOCAL
+                    _progress.value = "Translating result..."
+
+                    currentModel = loadModel(TRANSLATE_MODEL)
+                    if (currentModel != null) {
+                        val langName = LocalizedStrings.getLanguageName(language)
+                        currentModel!!.addSystemPrompt(
+                            "You are a medical translator. Translate the following clinical assessment " +
+                            "from English to $langName. Use simple, clear language appropriate for " +
+                            "a Community Health Worker. Preserve all medical terms."
+                        )
+                        localizedResponse = currentModel!!.getResponse(clinicalResponse)
+                        unloadModel()
+                    }
+                }
+
+                _state.value = EngineState.COMPLETE
+                _progress.value = "Assessment complete"
+
+                return@withContext NkuResult(
+                    originalInput = patientInput,
+                    englishTranslation = englishText,
+                    clinicalResponse = clinicalResponse,
+                    localizedResponse = localizedResponse,
+                    tokensPerSecond = speed,
+                    totalTimeMs = System.currentTimeMillis() - startTime
+                )
+            } else {
+                // MedGemma not available — use rule-based fallback
+                clinicalResponse = "Models not available on this device. Please use camera-based Nku Sentinel screening for triage."
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Nku Cycle error: ${e.message}", e)
+            _state.value = EngineState.ERROR
+            clinicalResponse = "Error during analysis: ${e.message}"
+        } finally {
+            unloadModel()  // Ensure cleanup
+        }
+
+        _state.value = EngineState.IDLE
+        return@withContext NkuResult(
+            originalInput = patientInput,
+            englishTranslation = englishText,
+            clinicalResponse = clinicalResponse,
+            localizedResponse = localizedResponse,
+            totalTimeMs = System.currentTimeMillis() - startTime
+        )
+    }
+
+    /**
+     * Run MedGemma only (skip translation) — used by ClinicalReasoner
+     * for interpreting Nku Sentinel sensor data.
+     */
+    suspend fun runMedGemmaOnly(prompt: String): String? = withContext(Dispatchers.IO) {
+        try {
+            _state.value = EngineState.RUNNING_MEDGEMMA
+            currentModel = loadModel(MEDGEMMA_MODEL)
+            if (currentModel != null) {
+                val response = currentModel!!.getResponse(prompt)
+                unloadModel()
+                _state.value = EngineState.COMPLETE
+                response
+            } else {
+                _state.value = EngineState.IDLE
+                null
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "MedGemma-only error", e)
+            unloadModel()
+            _state.value = EngineState.ERROR
+            null
+        }
+    }
+
+    /**
+     * Extract model files from APK assets to internal storage (first run only).
+     */
+    suspend fun extractModelsFromAssets() = withContext(Dispatchers.IO) {
+        listOf(MEDGEMMA_MODEL, TRANSLATE_MODEL).forEach { modelName ->
+            val outFile = File(modelDir, modelName)
+            if (!outFile.exists()) {
+                _progress.value = "Extracting $modelName..."
+                try {
+                    context.assets.open(modelName).use { input ->
+                        outFile.outputStream().use { output ->
+                            input.copyTo(output, bufferSize = 8192)
+                        }
+                    }
+                    Log.i(TAG, "Extracted: $modelName (${outFile.length() / 1024 / 1024}MB)")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Asset not bundled: $modelName (expected for dev builds)")
+                }
+            }
+        }
+    }
+}

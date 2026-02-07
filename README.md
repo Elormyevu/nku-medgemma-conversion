@@ -5,7 +5,7 @@
 <h1 align="center">Nku: Offline Medical AI for Pan-Africa</h1>
 
 <p align="center">
-  <strong>The Sensorless Sentinel — Clinical Triage on $50 Phones</strong>
+  <strong>Nku Sentinel — Clinical Triage on $50 Phones</strong>
 </p>
 
 <p align="center">
@@ -39,14 +39,15 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 ## 💡 The Solution
 
-**Nku** ("eye" in Twi) transforms any $50-100 Android phone into an offline clinical triage engine.
+**Nku** ("eye" in Ewe) transforms any $50-100 Android phone into an offline clinical triage engine. It is a **pure edge system** — 100% on-device, zero cloud dependency.
 
 | What | How |
 |:-----|:----|
-| **100% Offline** | Zero network dependency for core clinical path |
+| **100% Offline** | Zero network dependency — pure on-device inference |
 | **Ultra-Compressed** | 8GB models → 1.3GB via IQ1_M quantization |
-| **Pan-African Languages** | 47 languages including Twi, Hausa, Yoruba, Swahili |
+| **Pan-African Languages** | 47 languages including Ewe, Hausa, Yoruba, Swahili |
 | **Budget Hardware** | Runs on 2GB RAM devices (TECNO, Infinix) |
+| **Camera Screening** | Heart rate, anemia, & preeclampsia via phone camera |
 
 ---
 
@@ -57,6 +58,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 - 🔊 **Piper TTS** — Offline voice synthesis for low-literacy users
 - 💎 **Premium UI** — Glassmorphism design with localized strings
 - ⚡ **Nku Cycle** — Intelligent model swapping under 2GB RAM budget
+- 📷 **Nku Sentinel** — Camera-based screening for heart rate, anemia, & preeclampsia
 
 ---
 
@@ -67,7 +69,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 │                    THE NKU CYCLE                            │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│   [Patient Symptom in Twi]                                 │
+│   [Patient Symptom in Ewe / Camera Screening]              │
 │           ↓                                                 │
 │   ┌───────────────────┐                                    │
 │   │  TranslateGemma   │  ← IQ1_M (0.51GB)                  │
@@ -92,13 +94,31 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 └─────────────────────────────────────────────────────────────┘
 ```
 
+### Nku Sentinel — Camera-Based Screening
+
+| Screening | Module | Method | Output |
+|:----------|:-------|:-------|:-------|
+| **Cardio Check** | `RPPGProcessor.kt` | Green channel FFT (30fps) | Heart rate ±5 BPM |
+| **Anemia Screen** | `PallorDetector.kt` | Conjunctival HSV analysis | Pallor severity (0-1) |
+| **Preeclampsia** | `EdemaDetector.kt` | Facial geometry ratios | Edema severity (0-1) |
+| **Triage** | `ClinicalReasoner.kt` | MedGemma + WHO/IMCI fallback | Severity & recommendations |
+
+All screening uses **pure signal processing** (0 MB additional weights). Sensor outputs are aggregated by `SensorFusion.kt` and interpreted by MedGemma for clinical reasoning.
+
+### Fitzpatrick-Aware Design
+
+- **Pallor**: Conjunctiva-only analysis — consistent across all skin tones
+- **Edema**: Geometry-based ratios — skin-color independent
+- **Heart Rate**: Adaptive multi-frame averaging
+
 ### Tech Stack
 
 | Layer | Technology |
 |:------|:-----------|
 | **UI** | Jetpack Compose (Glassmorphism) |
-| **Orchestration** | Kotlin Coroutines + mmap swap |
-| **Inference** | llama.cpp via JNI (NDK 29) |
+| **Perception** | RPPGProcessor, PallorDetector, EdemaDetector |
+| **Orchestration** | ClinicalReasoner + SensorFusion + ThermalManager (42°C) |
+| **Inference** | llama.cpp via JNI (NDK 29, ARM64 NEON) |
 | **TTS** | Piper ONNX Runtime Mobile |
 | **Quantization** | IQ1_M + 64-chunk medical imatrix |
 
@@ -175,17 +195,17 @@ Medical accuracy is preserved through **64-chunk imatrix calibration** using 243
 
 ## 🌐 Languages
 
-### Verified Core (7)
-✅ English | ✅ Twi | ✅ Yoruba | ✅ Hausa | ✅ Swahili | ✅ Ewe | ✅ Ga
+### Verified Core (14)
+✅ English | ✅ French | ✅ Swahili | ✅ Hausa | ✅ Yoruba | ✅ Igbo | ✅ Amharic | ✅ Ewe | ✅ Twi | ✅ Wolof | ✅ Zulu | ✅ Xhosa | ✅ Oromo | ✅ Tigrinya
 
-### Extended Pan-African Suite (40+)
-French, Portuguese, Amharic, Zulu, Igbo, Wolof, Lingala, Xhosa, Shona, Kinyarwanda, Kirundi, Tigrinya, Oromo, Somali, Bambara, Fulani, Kanuri, Tswana, Sotho, Kikuyu, Luo, Chichewa, Bemba, Ndebele, Venda, Tsonga, Swati, and more...
+### Extended Pan-African Suite (33+)
+Afrikaans, Bambara, Chichewa, Dinka, Fula, Ga, Kikuyu, Kinyarwanda, Kongo, Lingala, Luo, Luganda, Malagasy, Ndebele, Nuer, Pidgin (Nigerian), Pidgin (Cameroonian), Rundi, Sesotho, Shona, Somali, Tswana, and more...
 
 ### Verified Triage Results
 
 | Language | Input | Diagnosis | Severity |
 |:---------|:------|:----------|:--------:|
-| Twi | "Me tirim ye me ya" | Malaria | Medium |
+| Ewe | "Ta me dɔ nam" (My head hurts) | Malaria screen | Medium |
 | Yoruba | Stomach/Head symptoms | Gastroenteritis | Medium |
 | Hausa | Fever/Body Aches | Malaria Suspected | High |
 | Swahili | Cough/Breathing | Pneumonia Suspected | High |
@@ -202,8 +222,13 @@ nku-medgemma-conversion/
 │       ├── java/com/nku/app/
 │       │   ├── MainActivity.kt         # UI + Compose
 │       │   ├── NkuInferenceEngine.kt   # Model orchestration
-│       │   ├── PiperTTS.kt             # Voice synthesis
-│       │   └── CloudInferenceClient.kt # Fallback API
+│       │   ├── RPPGProcessor.kt        # Heart rate (rPPG)
+│       │   ├── PallorDetector.kt       # Anemia (conjunctiva)
+│       │   ├── EdemaDetector.kt        # Preeclampsia (edema)
+│       │   ├── SensorFusion.kt         # Vital signs aggregator
+│       │   ├── ClinicalReasoner.kt     # MedGemma + WHO fallback
+│       │   ├── ThermalManager.kt       # 42°C auto-throttle
+│       │   └── PiperTTS.kt            # Voice synthesis
 │       └── assets/           # Bundled GGUF models
 ├── scripts/
 │   ├── quantization/         # IQ1_M/IQ2_XS quantization

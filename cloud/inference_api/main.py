@@ -81,6 +81,11 @@ translategemma: Optional[Llama] = None
 @app.errorhandler(Exception)
 def handle_exception(e):
     """Global exception handler."""
+    # Let Flask handle HTTP exceptions (404, 405, etc.) natively
+    from werkzeug.exceptions import HTTPException
+    if isinstance(e, HTTPException):
+        return e
+    
     request_logger.error(f"Unhandled exception: {str(e)}", 
                          error_type=type(e).__name__,
                          traceback=traceback.format_exc())

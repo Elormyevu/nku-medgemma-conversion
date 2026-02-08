@@ -17,19 +17,35 @@ from typing import Optional, Tuple, Dict, Any
 import traceback
 
 from huggingface_hub import hf_hub_download
-from llama_cpp import Llama
 
-# Local modules
-from config import get_config, MEDICAL_GLOSSARY
-from security import (
-    InputValidator, 
-    PromptProtector, 
-    RateLimiter, 
-    rate_limit,
-    configure_cors,
-    validate_json_request
-)
-from logging_config import setup_logging, log_request, get_logger
+try:
+    from llama_cpp import Llama
+except ImportError:
+    Llama = None  # Allow running tests without native library
+
+# Local modules — support both direct execution and package import
+try:
+    from config import get_config, MEDICAL_GLOSSARY
+    from security import (
+        InputValidator, 
+        PromptProtector, 
+        RateLimiter, 
+        rate_limit,
+        configure_cors,
+        validate_json_request
+    )
+    from logging_config import setup_logging, log_request, get_logger
+except ImportError:
+    from .config import get_config, MEDICAL_GLOSSARY
+    from .security import (
+        InputValidator, 
+        PromptProtector, 
+        RateLimiter, 
+        rate_limit,
+        configure_cors,
+        validate_json_request
+    )
+    from .logging_config import setup_logging, log_request, get_logger
 
 
 # =============================================================================

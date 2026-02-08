@@ -1,0 +1,68 @@
+name: MedGemma TFLite Conversion
+
+on:
+  workflow_dispatch:
+    inputs:
+      model_id:
+        description: 'HuggingFace model ID'
+        required: true
+        default: 'google/medgemma-1.5-4b-it'
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Free up disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          df -h
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install torch_xla
+          pip install "transformers>=4.44.0,<4.46.0" accelerate tqdm
+          pip install ai-edge-torch-nightly tf-nightly
+          pip install kagglehub sentencepiece protobuf
+          pip uninstall -y torchao 2>/dev/null || true
+
+      - name: Login to HuggingFace
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          pip install huggingface_hub
+          huggingface-cli login --token $HF_TOKEN
+
+      - name: Run TFLite Conversion
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          mkdir -p output
+          cd scripts/quantization
+          python convert_tflite_with_progress.py
+          mv medgemma_int4.tflite ../../output/ || mv /output/medgemma_int4.tflite ../../output/ || true
+
+      - name: Upload TFLite artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: medgemma-tflite
+          path: output/medgemma_int4.tflite
+          retention-days: 30
+
+      - name: Show artifact info
+        run: |
+          ls -lh output/
+          echo "Download the artifact from the Actions tab"

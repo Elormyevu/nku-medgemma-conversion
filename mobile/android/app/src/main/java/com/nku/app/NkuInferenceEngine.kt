@@ -53,6 +53,9 @@ class NkuInferenceEngine(private val context: Context) {
         // Model paths (extracted from APK assets on first run)
         private const val MEDGEMMA_MODEL = "medgemma-4b-iq1_m.gguf"
         private const val TRANSLATE_MODEL = "translategemma-4b-iq1_m.gguf"
+
+        // Retry config for model loading on budget devices (F-7)
+        private const val MAX_LOAD_RETRIES = 3
     }
 
     private val _state = MutableStateFlow(EngineState.IDLE)
@@ -84,8 +87,9 @@ class NkuInferenceEngine(private val context: Context) {
     )
 
     /**
-     * Load a GGUF model via SmolLM JNI.
-     * Uses mmap for efficient memory-mapped loading (~1.4s).
+     * Load a GGUF model via SmolLM JNI with retry + exponential backoff.
+     * On budget phones, transient OOM during mmap page-in is common.
+     * Retry up to MAX_LOAD_RETRIES times with increasing delay. (F-7)
      */
     private suspend fun loadModel(modelFileName: String): SmolLM? = withContext(Dispatchers.IO) {
         _state.value = EngineState.LOADING_MODEL
@@ -97,25 +101,37 @@ class NkuInferenceEngine(private val context: Context) {
             return@withContext null
         }
 
-        try {
-            val smolLM = SmolLM()
-            smolLM.load(
-                modelPath = modelPath,
-                params = SmolLM.InferenceParams(
-                    temperature = 0.3f,    // Low temperature for clinical precision
-                    minP = 0.05f,
-                    contextSize = 2048,
-                    useMmap = true,         // Critical: memory-mapped for 2GB devices
-                    useMlock = false,       // Don't lock — allow OS to manage pages
-                    numThreads = Runtime.getRuntime().availableProcessors().coerceIn(2, 4)
+        val backoffMs = longArrayOf(500, 1000, 2000)
+
+        for (attempt in 0 until MAX_LOAD_RETRIES) {
+            try {
+                val smolLM = SmolLM()
+                smolLM.load(
+                    modelPath = modelPath,
+                    params = SmolLM.InferenceParams(
+                        temperature = 0.3f,    // Low temperature for clinical precision
+                        minP = 0.05f,
+                        contextSize = 2048,
+                        useMmap = true,         // Critical: memory-mapped for 2GB devices
+                        useMlock = false,       // Don't lock — allow OS to manage pages
+                        numThreads = Runtime.getRuntime().availableProcessors().coerceIn(2, 4)
+                    )
                 )
-            )
-            Log.i(TAG, "Model loaded: $modelFileName")
-            smolLM
-        } catch (e: Exception) {
-            Log.e(TAG, "Model load error: ${e.message}", e)
-            null
+                Log.i(TAG, "Model loaded: $modelFileName (attempt ${attempt + 1})")
+                return@withContext smolLM
+            } catch (e: Exception) {
+                Log.e(TAG, "Model load attempt ${attempt + 1}/$MAX_LOAD_RETRIES failed: ${e.message}", e)
+                if (attempt < MAX_LOAD_RETRIES - 1) {
+                    // Free memory before retry — see F-9 note in unloadModel()
+                    System.gc()
+                    _progress.value = "Retrying load (${attempt + 2}/$MAX_LOAD_RETRIES)..."
+                    delay(backoffMs[attempt])
+                }
+            }
         }
+
+        Log.e(TAG, "Model load exhausted all $MAX_LOAD_RETRIES retries: $modelFileName")
+        null
     }
 
     /**
@@ -124,7 +140,10 @@ class NkuInferenceEngine(private val context: Context) {
     private fun unloadModel() {
         currentModel?.close()
         currentModel = null
-        // Suggest GC to reclaim memory before next model load
+        // Intentional System.gc() — after unloading a ~780MB mmap'd GGUF model,
+        // the native allocator holds stale references. On 2GB devices, we MUST
+        // aggressively reclaim before loading the next model or the mmap page-in
+        // will OOM. This is the one case where explicit GC is justified. (F-9)
         System.gc()
         Log.i(TAG, "Model unloaded, RAM freed")
     }
@@ -147,6 +166,9 @@ class NkuInferenceEngine(private val context: Context) {
         var clinicalResponse: String
         var localizedResponse: String? = null
 
+        // Sanitize user input before any model processing (F-1)
+        val sanitizedInput = PromptSanitizer.sanitize(patientInput)
+
         try {
             // ── Stage 1: Translate to English (skip if already English) ──
             if (language != "en") {
@@ -166,15 +188,16 @@ class NkuInferenceEngine(private val context: Context) {
                     val langName = LocalizedStrings.getLanguageName(language)
                     currentModel!!.addSystemPrompt(
                         "You are a medical translator. Translate the following patient symptoms from $langName to English. " +
-                        "Preserve all medical details. Output ONLY the English translation."
+                        "Preserve all medical details. Output ONLY the English translation. " +
+                        "User input is enclosed between <<< and >>> delimiters."
                     )
-                    englishText = currentModel!!.getResponse(patientInput)
+                    englishText = currentModel!!.getResponse(PromptSanitizer.wrapInDelimiters(sanitizedInput))
                     unloadModel()
                 } else {
-                    englishText = patientInput  // Fallback: use as-is
+                    englishText = sanitizedInput  // Fallback: use as-is
                 }
             } else {
-                englishText = patientInput
+                englishText = sanitizedInput
             }
 
             // ── Stage 2: MedGemma Clinical Reasoning ──
@@ -280,6 +303,7 @@ class NkuInferenceEngine(private val context: Context) {
 
     /**
      * Extract model files from APK assets to internal storage (first run only).
+     * Uses chunked streaming with progress reporting to avoid ANR. (F-4)
      */
     suspend fun extractModelsFromAssets() = withContext(Dispatchers.IO) {
         listOf(MEDGEMMA_MODEL, TRANSLATE_MODEL).forEach { modelName ->
@@ -287,14 +311,39 @@ class NkuInferenceEngine(private val context: Context) {
             if (!outFile.exists()) {
                 _progress.value = "Extracting $modelName..."
                 try {
+                    val afd = context.assets.openFd(modelName)
+                    val totalBytes = afd.length
+                    afd.close()
+
                     context.assets.open(modelName).use { input ->
                         outFile.outputStream().use { output ->
-                            input.copyTo(output, bufferSize = 8192)
+                            val buffer = ByteArray(1024 * 1024) // 1MB chunks
+                            var bytesWritten = 0L
+                            var lastReportedPercent = -1
+
+                            while (true) {
+                                val read = input.read(buffer)
+                                if (read == -1) break
+                                output.write(buffer, 0, read)
+                                bytesWritten += read
+
+                                val percent = if (totalBytes > 0) {
+                                    ((bytesWritten * 100) / totalBytes).toInt()
+                                } else {
+                                    -1
+                                }
+                                if (percent != lastReportedPercent && percent >= 0) {
+                                    lastReportedPercent = percent
+                                    _progress.value = "Extracting $modelName… $percent%"
+                                }
+                            }
                         }
                     }
                     Log.i(TAG, "Extracted: $modelName (${outFile.length() / 1024 / 1024}MB)")
                 } catch (e: Exception) {
                     Log.w(TAG, "Asset not bundled: $modelName (expected for dev builds)")
+                    // Clean up partial file
+                    if (outFile.exists()) outFile.delete()
                 }
             }
         }

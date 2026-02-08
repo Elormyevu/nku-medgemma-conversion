@@ -49,6 +49,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import java.util.Locale
+import com.nku.app.ui.NkuTheme
+import com.nku.app.ui.NkuColors
 
 /**
  * MainActivity - Nku Sentinel
@@ -116,6 +118,10 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         piperTTS.shutdown()
+        // F-8: Release camera executor and clear processor buffers
+        rppgProcessor.reset()
+        pallorDetector.reset()
+        edemaDetector.reset()
     }
 }
 
@@ -144,15 +150,8 @@ fun NkuSentinelApp(
     
     val tabs = listOf("Home", "Cardio", "Anemia", "Swelling", "Triage")
     
-    // Dark medical theme
-    MaterialTheme(
-        colorScheme = darkColorScheme(
-            primary = Color(0xFF4CAF50),
-            secondary = Color(0xFF2196F3),
-            surface = Color(0xFF1A1A2E),
-            background = Color(0xFF0F0F1A)
-        )
-    ) {
+    // Dark medical theme (F-10: extracted to NkuTheme.kt)
+    NkuTheme {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -160,7 +159,7 @@ fun NkuSentinelApp(
                         Text("Nku Sentinel", fontWeight = FontWeight.Bold) 
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color(0xFF1A1A2E)
+                        containerColor = NkuColors.Surface
                     ),
                     actions = {
                         // Thermal status kept invisible to user (avoid confusion with body temp)
@@ -169,7 +168,7 @@ fun NkuSentinelApp(
                 )
             },
             bottomBar = {
-                NavigationBar(containerColor = Color(0xFF1A1A2E)) {
+                NavigationBar(containerColor = NkuColors.Surface) {
                     tabs.forEachIndexed { index, title ->
                         NavigationBarItem(
                             icon = {
@@ -226,6 +225,8 @@ fun NkuSentinelApp(
                         sensorFusion = sensorFusion,
                         piperTTS = piperTTS,
                         ttsState = ttsState,
+                        engineState = EngineState.IDLE,  // F-5: rule-based path uses IDLE
+                        engineProgress = "",
                         onRunTriage = {
                             sensorFusion.updateVitalSigns()
                             clinicalReasoner.createRuleBasedAssessment(sensorFusion.vitalSigns.value)
@@ -1238,6 +1239,8 @@ fun TriageScreen(
     sensorFusion: SensorFusion,
     piperTTS: PiperTTS,
     ttsState: TTSState,
+    engineState: EngineState = EngineState.IDLE,    // F-5: loading state
+    engineProgress: String = "",                     // F-5: progress text
     onRunTriage: () -> Unit
 ) {
     val context = LocalContext.current
@@ -1475,9 +1478,9 @@ fun TriageScreen(
         
         Button(
             onClick = onRunTriage,
-            enabled = hasAnyData,
+            enabled = hasAnyData && engineState == EngineState.IDLE,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF4CAF50),
+                containerColor = NkuColors.Primary,
                 disabledContainerColor = Color(0xFF333344)
             ),
             modifier = Modifier
@@ -1488,6 +1491,50 @@ fun TriageScreen(
             Icon(Icons.Default.CheckCircle, contentDescription = null, modifier = Modifier.size(24.dp))
             Spacer(Modifier.width(8.dp))
             Text("Run Triage Assessment", fontSize = 16.sp)
+        }
+        
+        // ── F-5: Loading overlay during Nku Cycle ──
+        if (engineState != EngineState.IDLE && engineState != EngineState.COMPLETE) {
+            Spacer(Modifier.height(16.dp))
+            Card(
+                colors = CardDefaults.cardColors(containerColor = NkuColors.SurfaceVariant),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator(
+                        color = NkuColors.Primary,
+                        modifier = Modifier.size(40.dp),
+                        strokeWidth = 3.dp
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        text = when (engineState) {
+                            EngineState.LOADING_MODEL -> "Loading AI model…"
+                            EngineState.TRANSLATING_TO_ENGLISH -> "Translating to English…"
+                            EngineState.RUNNING_MEDGEMMA -> "MedGemma analyzing…"
+                            EngineState.TRANSLATING_TO_LOCAL -> "Translating result…"
+                            EngineState.ERROR -> "Error occurred"
+                            else -> "Processing…"
+                        },
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontSize = 15.sp
+                    )
+                    if (engineProgress.isNotEmpty()) {
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            engineProgress,
+                            color = NkuColors.OnSurfaceMuted,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+            }
         }
         
         Spacer(Modifier.height(24.dp))

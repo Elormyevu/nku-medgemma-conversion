@@ -9,14 +9,12 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 /**
- * CloudInferenceClient — Cloud Fallback for Emulators & Development
+ * CloudInferenceClient — Cloud Fallback for Emulators & Development ONLY
  *
- * When GGUF models cannot be loaded (e.g., on emulators without ARM64 native
- * libraries, or during development), this client sends inference requests to
- * the Nku Cloud Inference API instead.
- *
- * In production, this is NEVER used — 100% offline via NkuInferenceEngine.
- * This exists solely for development/demo purposes.
+ * ⚠️ GATED BEHIND BuildConfig.DEBUG (F-2)
+ * All public methods return null/false in release builds.
+ * Nku is 100% offline in production — this class exists solely for
+ * development and emulator testing.
  *
  * Endpoint: Nku Cloud Run API (cloud/inference_api/)
  */
@@ -29,10 +27,14 @@ class CloudInferenceClient(
         private const val TAG = "NkuCloud"
     }
 
+    /** Returns true only in debug builds — blocks all cloud access in release. */
+    private fun isDebugBuild(): Boolean = BuildConfig.DEBUG
+
     /**
      * Check if the cloud API is reachable.
      */
     suspend fun isAvailable(): Boolean = withContext(Dispatchers.IO) {
+        if (!isDebugBuild()) return@withContext false  // F-2: offline-only in release
         try {
             val url = URL("$baseUrl/health")
             val conn = url.openConnection() as HttpURLConnection
@@ -55,6 +57,7 @@ class CloudInferenceClient(
      * @return The clinical assessment text, or null if the request failed
      */
     suspend fun runInference(prompt: String): String? = withContext(Dispatchers.IO) {
+        if (!isDebugBuild()) return@withContext null  // F-2: offline-only in release
         try {
             val url = URL("$baseUrl/v1/triage")
             val conn = url.openConnection() as HttpURLConnection
@@ -110,6 +113,7 @@ class CloudInferenceClient(
      */
     suspend fun translate(text: String, sourceLang: String, targetLang: String): String? =
         withContext(Dispatchers.IO) {
+            if (!isDebugBuild()) return@withContext null  // F-2: offline-only in release
             try {
                 val url = URL("$baseUrl/v1/translate")
                 val conn = url.openConnection() as HttpURLConnection

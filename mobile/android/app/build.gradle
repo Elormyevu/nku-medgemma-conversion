@@ -26,8 +26,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true                  // F-3: Enable R8 code shrinking
+            shrinkResources true                // F-3: Remove unused resources
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             debuggable false
         }
         debug {
@@ -82,8 +83,8 @@ dependencies {
     // Coroutines for async inference (1.9.0 required for SmolLM)
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
     
-    // OkHttp for model downloading
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    // OkHttp — debug-only for emulator/dev cloud fallback (F-2: offline purity)
+    debugImplementation 'com.squareup.okhttp3:okhttp:4.12.0'
     
     // ONNX Runtime for Piper TTS
     implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.16.3'

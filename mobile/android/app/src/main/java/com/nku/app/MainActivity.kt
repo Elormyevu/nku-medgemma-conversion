@@ -1,10 +1,15 @@
 package com.nku.app
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
@@ -43,6 +48,7 @@ import androidx.core.content.ContextCompat
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
+import java.util.Locale
 
 /**
  * MainActivity - Nku Sentinel
@@ -69,6 +75,9 @@ class MainActivity : ComponentActivity() {
     private lateinit var sensorFusion: SensorFusion
     private lateinit var clinicalReasoner: ClinicalReasoner
     
+    // Voice I/O
+    private lateinit var piperTTS: PiperTTS
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
@@ -77,13 +86,19 @@ class MainActivity : ComponentActivity() {
         sensorFusion = SensorFusion(rppgProcessor, pallorDetector, edemaDetector)
         clinicalReasoner = ClinicalReasoner()
         
-        // Request camera permission
+        // Initialize TTS for spoken results
+        piperTTS = PiperTTS(this)
+        piperTTS.initialize()
+        
+        // Request camera + audio permissions
         val permissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { granted ->
-            // Camera permission result handled
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            // Permissions result handled — camera & mic
         }
-        permissionLauncher.launch(Manifest.permission.CAMERA)
+        permissionLauncher.launch(
+            arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
+        )
         
         setContent {
             NkuSentinelApp(
@@ -92,9 +107,15 @@ class MainActivity : ComponentActivity() {
                 pallorDetector = pallorDetector,
                 edemaDetector = edemaDetector,
                 sensorFusion = sensorFusion,
-                clinicalReasoner = clinicalReasoner
+                clinicalReasoner = clinicalReasoner,
+                piperTTS = piperTTS
             )
         }
+    }
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        piperTTS.shutdown()
     }
 }
 
@@ -106,7 +127,8 @@ fun NkuSentinelApp(
     pallorDetector: PallorDetector,
     edemaDetector: EdemaDetector,
     sensorFusion: SensorFusion,
-    clinicalReasoner: ClinicalReasoner
+    clinicalReasoner: ClinicalReasoner,
+    piperTTS: PiperTTS
 ) {
     val thermalStatus by thermalManager.thermalStatus.collectAsState()
     val rppgResult by rppgProcessor.result.collectAsState()
@@ -114,6 +136,7 @@ fun NkuSentinelApp(
     val edemaResult by edemaDetector.result.collectAsState()
     val vitalSigns by sensorFusion.vitalSigns.collectAsState()
     val assessment by clinicalReasoner.assessment.collectAsState()
+    val ttsState by piperTTS.state.collectAsState()
     
     var selectedTab by remember { mutableIntStateOf(0) }
     var isPregnant by remember { mutableStateOf(false) }
@@ -201,6 +224,8 @@ fun NkuSentinelApp(
                         edemaResult = edemaResult,
                         assessment = assessment,
                         sensorFusion = sensorFusion,
+                        piperTTS = piperTTS,
+                        ttsState = ttsState,
                         onRunTriage = {
                             sensorFusion.updateVitalSigns()
                             clinicalReasoner.createRuleBasedAssessment(sensorFusion.vitalSigns.value)
@@ -1211,13 +1236,33 @@ fun TriageScreen(
     edemaResult: EdemaResult,
     assessment: ClinicalAssessment?,
     sensorFusion: SensorFusion,
+    piperTTS: PiperTTS,
+    ttsState: TTSState,
     onRunTriage: () -> Unit
 ) {
+    val context = LocalContext.current
     val hasAnyData = (rppgResult.bpm != null && rppgResult.confidence > 0.4f) ||
                      pallorResult.hasBeenAnalyzed ||
                      edemaResult.hasBeenAnalyzed
     var symptomText by remember { mutableStateOf("") }
+    var isListening by remember { mutableStateOf(false) }
     val symptoms by sensorFusion.symptoms.collectAsState()
+    
+    // Speech-to-text launcher
+    val speechLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        isListening = false
+        if (result.resultCode == Activity.RESULT_OK) {
+            val spokenText = result.data
+                ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                ?.firstOrNull()
+            if (!spokenText.isNullOrBlank()) {
+                // Add spoken text directly as a symptom
+                sensorFusion.addSymptom(spokenText.trim())
+            }
+        }
+    }
     
     Column(
         modifier = Modifier
@@ -1260,7 +1305,7 @@ fun TriageScreen(
         
         Spacer(Modifier.height(12.dp))
         
-        // ── Symptom Input ──
+        // ── Symptom Input (Voice OR Text) ──
         Card(
             colors = CardDefaults.cardColors(containerColor = Color(0xFF252540)),
             modifier = Modifier.fillMaxWidth()
@@ -1273,7 +1318,7 @@ fun TriageScreen(
                     fontSize = 14.sp
                 )
                 Text(
-                    "What is the patient experiencing?",
+                    "Type or tap the mic to speak symptoms",
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
@@ -1284,6 +1329,46 @@ fun TriageScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    // 🎤 Voice input button
+                    IconButton(
+                        onClick = {
+                            val hasAudioPermission = ContextCompat.checkSelfPermission(
+                                context, Manifest.permission.RECORD_AUDIO
+                            ) == PackageManager.PERMISSION_GRANTED
+                            
+                            if (hasAudioPermission) {
+                                isListening = true
+                                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                                    putExtra(
+                                        RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                                    )
+                                    putExtra(RecognizerIntent.EXTRA_PROMPT, "Describe symptoms...")
+                                    // Allow recognition in any language the device supports
+                                    putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+                                }
+                                speechLauncher.launch(intent)
+                            }
+                        },
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(
+                                if (isListening) Color(0xFFFF5722).copy(alpha = 0.3f)
+                                else Color(0xFF3D3D5C)
+                            )
+                    ) {
+                        Icon(
+                            if (isListening) Icons.Default.Hearing else Icons.Default.Mic,
+                            contentDescription = "Voice input",
+                            tint = if (isListening) Color(0xFFFF5722) else Color(0xFF00D4FF),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    
+                    Spacer(Modifier.width(8.dp))
+                    
+                    // ⌨️ Text input field
                     OutlinedTextField(
                         value = symptomText,
                         onValueChange = { symptomText = it },
@@ -1313,6 +1398,16 @@ fun TriageScreen(
                             modifier = Modifier.size(28.dp)
                         )
                     }
+                }
+                
+                // Listening indicator
+                if (isListening) {
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        "🎤 Listening... speak now",
+                        fontSize = 12.sp,
+                        color = Color(0xFFFF5722)
+                    )
                 }
                 
                 // Show added symptoms
@@ -1429,6 +1524,53 @@ fun TriageScreen(
                         color = Color.White.copy(alpha = 0.8f)
                     )
                 }
+            }
+            
+            Spacer(Modifier.height(12.dp))
+            
+            // ── 🔊 Listen Button — Speak the triage result aloud ──
+            val speakableText = buildString {
+                append("Severity: ${result.overallSeverity.name}. ")
+                append("Urgency: ${result.urgency.name.replace("_", " ")}. ")
+                if (result.primaryConcerns.isNotEmpty()) {
+                    append("Concerns: ")
+                    result.primaryConcerns.forEach { append("$it. ") }
+                }
+                if (result.recommendations.isNotEmpty()) {
+                    append("Recommendations: ")
+                    result.recommendations.forEach { append("$it. ") }
+                }
+            }
+            
+            Button(
+                onClick = {
+                    if (ttsState == TTSState.SPEAKING) {
+                        piperTTS.stop()
+                    } else {
+                        piperTTS.speak(speakableText, "en")
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (ttsState == TTSState.SPEAKING)
+                        Color(0xFFFF5722) else Color(0xFF00D4FF)
+                ),
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .height(48.dp),
+                shape = RoundedCornerShape(24.dp)
+            ) {
+                Icon(
+                    if (ttsState == TTSState.SPEAKING) Icons.Default.Stop
+                    else Icons.Default.VolumeUp,
+                    contentDescription = if (ttsState == TTSState.SPEAKING) "Stop" else "Listen",
+                    modifier = Modifier.size(22.dp)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    if (ttsState == TTSState.SPEAKING) "Stop" else "🔊 Listen",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
             
             Spacer(Modifier.height(16.dp))

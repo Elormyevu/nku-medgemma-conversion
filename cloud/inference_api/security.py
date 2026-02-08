@@ -283,8 +283,9 @@ Assessment:""",
             return False, "Empty response"
         
         # Check output length
+        # Truncate overlong output but still treat as valid
         if len(output) > 5000:
-            return False, output[:5000]
+            output = output[:5000]
         
         # Remove any potential system prompt leakage
         cleaned = output.strip()

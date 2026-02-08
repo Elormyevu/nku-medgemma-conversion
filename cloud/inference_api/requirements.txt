@@ -8,7 +8,7 @@ gunicorn==22.0.0
 # Web framework
 flask==3.1.1
 flask-cors==6.0.0
-Werkzeug==3.1.6
+Werkzeug==3.1.5
 
 # LLM inference
 llama-cpp-python==0.3.4

@@ -660,39 +660,60 @@ fun CameraPreview(
                         .build()
                         .also { it.setSurfaceProvider(previewView.surfaceProvider) }
                     
-                    val cameraSelector = CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_FRONT)
-                        .build()
+                    // Try front camera first, fall back to back camera
+                    val frontSelector = try {
+                        CameraSelector.Builder()
+                            .requireLensFacing(CameraSelector.LENS_FACING_FRONT)
+                            .build()
+                    } catch (e: Exception) { null }
+                    
+                    val backSelector = try {
+                        CameraSelector.Builder()
+                            .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                            .build()
+                    } catch (e: Exception) { null }
                     
                     cameraProvider.unbindAll()
                     
-                    if (enableAnalysis && onFrameAnalyzed != null) {
-                        val imageAnalysis = ImageAnalysis.Builder()
+                    val imageAnalysis = if (enableAnalysis && onFrameAnalyzed != null) {
+                        ImageAnalysis.Builder()
                             .setTargetResolution(android.util.Size(320, 240))
                             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                            .build()
-                        
-                        imageAnalysis.setAnalyzer(cameraExecutor) { imageProxy ->
-                            val bitmap = imageProxy.toBitmap()
-                            onFrameAnalyzed(bitmap)
-                            imageProxy.close()
+                            .build().also { analysis ->
+                                analysis.setAnalyzer(cameraExecutor) { imageProxy ->
+                                    val bitmap = imageProxy.toBitmap()
+                                    onFrameAnalyzed(bitmap)
+                                    imageProxy.close()
+                                }
+                            }
+                    } else null
+                    
+                    // Try front camera first
+                    var bound = false
+                    for (selector in listOfNotNull(frontSelector, backSelector)) {
+                        try {
+                            if (imageAnalysis != null) {
+                                cameraProvider.bindToLifecycle(
+                                    lifecycleOwner, selector, preview, imageAnalysis
+                                )
+                            } else {
+                                cameraProvider.bindToLifecycle(
+                                    lifecycleOwner, selector, preview
+                                )
+                            }
+                            Log.i("NkuCamera", "Camera bound with ${if (selector == frontSelector) "FRONT" else "BACK"} lens")
+                            bound = true
+                            break
+                        } catch (e: Exception) {
+                            Log.w("NkuCamera", "Failed with selector, trying next: ${e.message}")
+                            cameraProvider.unbindAll()
                         }
-                        
-                        cameraProvider.bindToLifecycle(
-                            lifecycleOwner,
-                            cameraSelector,
-                            preview,
-                            imageAnalysis
-                        )
-                    } else {
-                        cameraProvider.bindToLifecycle(
-                            lifecycleOwner,
-                            cameraSelector,
-                            preview
-                        )
+                    }
+                    if (!bound) {
+                        Log.e("NkuCamera", "No camera available on this device")
                     }
                 } catch (e: Exception) {
-                    Log.e("NkuCamera", "Camera bind failed", e)
+                    Log.e("NkuCamera", "Camera init failed", e)
                 }
             }, ContextCompat.getMainExecutor(context))
         }

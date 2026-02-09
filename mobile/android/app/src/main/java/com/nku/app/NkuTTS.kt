@@ -9,11 +9,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.util.Locale
 
 /**
- * PiperTTS — Offline Voice Synthesis
+ * NkuTTS — Offline Voice Synthesis
  *
- * Wraps text-to-speech for spoken clinical results.
- * Primary: Android built-in TTS (available on all devices)
- * Future: Piper ONNX voices for higher-quality offline African language TTS
+ * Wraps Android's built-in TextToSpeech engine for spoken clinical results.
+ * Uses the system TTS which is pre-installed on all Android devices.
+ *
+ * Language support depends on the device's installed TTS voices.
+ * English is guaranteed on all devices; African languages vary by device/region.
  *
  * For Community Health Workers supporting low-literacy patients,
  * spoken results are essential for accessibility.
@@ -27,19 +29,10 @@ enum class TTSState {
     ERROR
 }
 
-class PiperTTS(private val context: Context) : TextToSpeech.OnInitListener {
+class NkuTTS(private val context: Context) : TextToSpeech.OnInitListener {
 
     companion object {
-        private const val TAG = "PiperTTS"
-
-        // Piper ONNX voice models (for future integration)
-        // These provide higher-quality offline voices for African languages
-        private val PIPER_VOICES = mapOf(
-            "sw" to "swahili-medium.onnx",
-            "en" to "english-medium.onnx",
-            "fr" to "french-medium.onnx",
-            "pt" to "portuguese-medium.onnx"
-        )
+        private const val TAG = "NkuTTS"
     }
 
     private var tts: TextToSpeech? = null
@@ -130,22 +123,6 @@ class PiperTTS(private val context: Context) : TextToSpeech.OnInitListener {
         val locale = getLocaleForLanguage(languageCode)
         val result = engine.isLanguageAvailable(locale)
         return result >= TextToSpeech.LANG_AVAILABLE
-    }
-
-    /**
-     * Get the voice for a given language.
-     * Selects the best available voice (prefers Piper ONNX when available).
-     */
-    fun getVoiceForLanguage(languageCode: String): String {
-        // Check if Piper ONNX voice is available
-        if (PIPER_VOICES.containsKey(languageCode)) {
-            val piperPath = "${context.filesDir}/piper/${PIPER_VOICES[languageCode]}"
-            if (java.io.File(piperPath).exists()) {
-                return "piper:$languageCode"
-            }
-        }
-        // Fallback to system TTS
-        return "system:$languageCode"
     }
 
     /**

@@ -57,6 +57,9 @@ class EdemaDetector {
         
         // Minimum face coverage for valid analysis
         private const val MIN_FACE_RATIO = 0.2f
+        
+        // Padding around landmarks for region analysis (fraction of face width)
+        private const val LANDMARK_REGION_PADDING = 0.06f
     }
     
     private val _result = MutableStateFlow(
@@ -65,8 +68,103 @@ class EdemaDetector {
     val result: StateFlow<EdemaResult> = _result.asStateFlow()
     
     /**
-     * Analyze face image for edema indicators
-     * Best results with front-facing, well-lit photo
+     * Analyze face image for edema using MediaPipe landmarks.
+     * This is the primary method — uses precise eye/cheek coordinates.
+     *
+     * @param bitmap The captured face image
+     * @param landmarks FaceLandmarks from FaceDetectorHelper
+     * @return EdemaResult with accurate geometry-based scoring
+     */
+    fun analyzeFaceWithLandmarks(bitmap: Bitmap, landmarks: FaceLandmarks): EdemaResult {
+        val w = bitmap.width.toFloat()
+        val h = bitmap.height.toFloat()
+        val pad = (landmarks.faceBounds.width * LANDMARK_REGION_PADDING).toInt().coerceAtLeast(4)
+        
+        // ── Eye Aspect Ratio (EAR) from landmarks ──
+        // EAR = |eyeTop - eyeBottom| / |eyeLeft - eyeRight|
+        // Lower EAR = more closed/puffy eyes
+        val leftEAR = computeEAR(landmarks.leftEyeTop, landmarks.leftEyeBottom,
+                                  landmarks.leftEyeLeft, landmarks.leftEyeRight, w, h)
+        val rightEAR = computeEAR(landmarks.rightEyeTop, landmarks.rightEyeBottom,
+                                   landmarks.rightEyeLeft, landmarks.rightEyeRight, w, h)
+        val avgEAR = (leftEAR + rightEAR) / 2f
+        
+        // Map EAR to periorbital score: NORMAL_EAR→0, EDEMA_EAR→1
+        val earScore = when {
+            avgEAR >= NORMAL_EYE_ASPECT_RATIO -> 0f
+            avgEAR <= EDEMA_EYE_ASPECT_RATIO -> 1f
+            else -> 1f - ((avgEAR - EDEMA_EYE_ASPECT_RATIO) / 
+                         (NORMAL_EYE_ASPECT_RATIO - EDEMA_EYE_ASPECT_RATIO))
+        }
+        
+        // Also analyze brightness gradient around eyes (landmark-guided region)
+        val leftEyeCenterX = ((landmarks.leftEyeLeft[0] + landmarks.leftEyeRight[0]) / 2f * w).toInt()
+        val leftEyeCenterY = ((landmarks.leftEyeTop[1] + landmarks.leftEyeBottom[1]) / 2f * h).toInt()
+        val eyeRegionW = ((landmarks.leftEyeRight[0] - landmarks.leftEyeLeft[0]) * w).toInt() + pad * 2
+        val eyeRegionH = ((landmarks.leftEyeBottom[1] - landmarks.leftEyeTop[1]) * h).toInt() + pad * 4
+        
+        val gradientScore = analyzeEyeRegion(bitmap,
+            (leftEyeCenterX - eyeRegionW / 2).coerceAtLeast(0),
+            (leftEyeCenterX + eyeRegionW / 2).coerceAtMost(bitmap.width),
+            (leftEyeCenterY - eyeRegionH).coerceAtLeast(0),
+            (leftEyeCenterY + eyeRegionH).coerceAtMost(bitmap.height)
+        )
+        
+        // Combine EAR and gradient for periorbital score
+        val periorbitalScore = (earScore * 0.5f + gradientScore * 0.5f).coerceIn(0f, 1f)
+        
+        // ── Cheek swelling from landmarks ──
+        val leftCheekX = (landmarks.leftCheek[0] * w).toInt()
+        val leftCheekY = (landmarks.leftCheek[1] * h).toInt()
+        val rightCheekX = (landmarks.rightCheek[0] * w).toInt()
+        val rightCheekY = (landmarks.rightCheek[1] * h).toInt()
+        val cheekSize = ((rightCheekX - leftCheekX) * 0.25f).toInt().coerceAtLeast(10)
+        
+        val leftCheekScore = analyzeCheekRegion(bitmap,
+            (leftCheekX - cheekSize).coerceAtLeast(0),
+            (leftCheekX + cheekSize).coerceAtMost(bitmap.width),
+            (leftCheekY - cheekSize).coerceAtLeast(0),
+            (leftCheekY + cheekSize).coerceAtMost(bitmap.height)
+        )
+        val rightCheekScore = analyzeCheekRegion(bitmap,
+            (rightCheekX - cheekSize).coerceAtLeast(0),
+            (rightCheekX + cheekSize).coerceAtMost(bitmap.width),
+            (rightCheekY - cheekSize).coerceAtLeast(0),
+            (rightCheekY + cheekSize).coerceAtMost(bitmap.height)
+        )
+        val facialScore = ((leftCheekScore + rightCheekScore) / 2f).coerceIn(0f, 1f)
+        
+        // Combined score
+        val edemaScore = (periorbitalScore * 0.6f + facialScore * 0.4f).coerceIn(0f, 1f)
+        
+        // Landmark-based = higher confidence than heuristic
+        val confidence = estimateImageQuality(bitmap,
+            landmarks.faceBounds.x,
+            landmarks.faceBounds.x + landmarks.faceBounds.width,
+            landmarks.faceBounds.y,
+            landmarks.faceBounds.y + landmarks.faceBounds.height
+        ) * 1.15f  // Boost confidence since we have landmarks
+        
+        return buildResult(edemaScore, confidence.coerceAtMost(1f), periorbitalScore, facialScore)
+    }
+    
+    /**
+     * Compute Eye Aspect Ratio from landmark coordinates.
+     * EAR measures how "open" the eye is — puffy/edematous eyes have lower EAR.
+     */
+    private fun computeEAR(
+        top: List<Float>, bottom: List<Float>,
+        left: List<Float>, right: List<Float>,
+        imgW: Float, imgH: Float
+    ): Float {
+        val verticalDist = abs((bottom[1] * imgH) - (top[1] * imgH))
+        val horizontalDist = abs((right[0] * imgW) - (left[0] * imgW))
+        return if (verticalDist > 0) horizontalDist / verticalDist else NORMAL_EYE_ASPECT_RATIO
+    }
+    
+    /**
+     * Fallback: Analyze face image for edema indicators using fixed regions.
+     * Used when MediaPipe landmarks are not available.
      */
     fun analyzeFace(bitmap: Bitmap): EdemaResult {
         // Estimate face region (center 60% of image, upper 70%)
@@ -88,10 +186,19 @@ class EdemaDetector {
         // Combined edema score (periorbital weighted more heavily for preeclampsia)
         val edemaScore = (periorbitalScore * 0.6f + facialScore * 0.4f).coerceIn(0f, 1f)
         
-        // Estimate confidence based on image quality
-        val confidence = estimateImageQuality(bitmap, faceLeft, faceRight, faceTop, faceBottom)
+        // Confidence is lower without landmarks
+        val confidence = estimateImageQuality(bitmap, faceLeft, faceRight, faceTop, faceBottom) * 0.8f
         
-        // Determine severity
+        return buildResult(edemaScore, confidence, periorbitalScore, facialScore)
+    }
+    
+    /**
+     * Build EdemaResult from scores (shared by both analysis paths).
+     */
+    private fun buildResult(
+        edemaScore: Float, confidence: Float,
+        periorbitalScore: Float, facialScore: Float
+    ): EdemaResult {
         val severity = when {
             edemaScore < 0.25f -> EdemaSeverity.NORMAL
             edemaScore < 0.5f -> EdemaSeverity.MILD
@@ -99,12 +206,10 @@ class EdemaDetector {
             else -> EdemaSeverity.SIGNIFICANT
         }
         
-        // Identify risk factors
         val riskFactors = mutableListOf<String>()
         if (periorbitalScore > 0.5f) riskFactors.add("Periorbital puffiness detected")
         if (facialScore > 0.5f) riskFactors.add("Facial swelling detected")
         
-        // Generate recommendation
         val recommendation = when (severity) {
             EdemaSeverity.NORMAL -> 
                 "No significant facial edema detected. Continue routine prenatal monitoring."

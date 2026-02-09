@@ -77,8 +77,14 @@ class MainActivity : ComponentActivity() {
     private lateinit var sensorFusion: SensorFusion
     private lateinit var clinicalReasoner: ClinicalReasoner
     
-    // Voice I/O
-    private lateinit var piperTTS: PiperTTS
+    // Voice I/O (Android system TTS)
+    private lateinit var nkuTTS: NkuTTS
+    
+    // MediaPipe face detection (for rPPG ROI + edema landmarks)
+    private lateinit var faceDetectorHelper: FaceDetectorHelper
+    
+    // On-device MedGemma inference (used when models are sideloaded)
+    private lateinit var nkuEngine: NkuInferenceEngine
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,8 +95,16 @@ class MainActivity : ComponentActivity() {
         clinicalReasoner = ClinicalReasoner()
         
         // Initialize TTS for spoken results
-        piperTTS = PiperTTS(this)
-        piperTTS.initialize()
+        nkuTTS = NkuTTS(this)
+        nkuTTS.initialize()
+        
+        // Initialize MediaPipe face detection
+        faceDetectorHelper = FaceDetectorHelper(this)
+        faceDetectorHelper.initializeDetector()
+        faceDetectorHelper.initializeLandmarker()
+        
+        // Initialize MedGemma engine
+        nkuEngine = NkuInferenceEngine(this)
         
         // Request camera + audio permissions
         val permissionLauncher = registerForActivityResult(
@@ -110,14 +124,17 @@ class MainActivity : ComponentActivity() {
                 edemaDetector = edemaDetector,
                 sensorFusion = sensorFusion,
                 clinicalReasoner = clinicalReasoner,
-                piperTTS = piperTTS
+                nkuTTS = nkuTTS,
+                faceDetectorHelper = faceDetectorHelper,
+                nkuEngine = nkuEngine
             )
         }
     }
     
     override fun onDestroy() {
         super.onDestroy()
-        piperTTS.shutdown()
+        nkuTTS.shutdown()
+        faceDetectorHelper.close()
         // F-8: Release camera executor and clear processor buffers
         rppgProcessor.reset()
         pallorDetector.reset()
@@ -134,7 +151,9 @@ fun NkuSentinelApp(
     edemaDetector: EdemaDetector,
     sensorFusion: SensorFusion,
     clinicalReasoner: ClinicalReasoner,
-    piperTTS: PiperTTS
+    nkuTTS: NkuTTS,
+    faceDetectorHelper: FaceDetectorHelper,
+    nkuEngine: NkuInferenceEngine
 ) {
     val thermalStatus by thermalManager.thermalStatus.collectAsState()
     val rppgResult by rppgProcessor.result.collectAsState()
@@ -142,13 +161,18 @@ fun NkuSentinelApp(
     val edemaResult by edemaDetector.result.collectAsState()
     val vitalSigns by sensorFusion.vitalSigns.collectAsState()
     val assessment by clinicalReasoner.assessment.collectAsState()
-    val ttsState by piperTTS.state.collectAsState()
+    val ttsState by nkuTTS.state.collectAsState()
+    val engineState by nkuEngine.state.collectAsState()
+    val engineProgress by nkuEngine.progress.collectAsState()
     
     var selectedTab by remember { mutableIntStateOf(0) }
     var isPregnant by remember { mutableStateOf(false) }
     var gestationalWeeks by remember { mutableStateOf("") }
+    var selectedLanguage by remember { mutableStateOf("en") }
+    val strings = LocalizedStrings.forLanguage(selectedLanguage)
+    val scope = rememberCoroutineScope()
     
-    val tabs = listOf("Home", "Cardio", "Anemia", "Swelling", "Triage")
+    val tabs = listOf(strings.tabHome, strings.tabCardio, strings.tabAnemia, strings.tabPreE, strings.tabTriage)
     
     // Dark medical theme (F-10: extracted to NkuTheme.kt)
     NkuTheme {
@@ -202,14 +226,33 @@ fun NkuSentinelApp(
                     )
             ) {
                 when (selectedTab) {
-                    0 -> HomeScreen(rppgResult, pallorResult, edemaResult)
-                    1 -> CardioScreen(rppgResult, rppgProcessor, thermalStatus.safe)
-                    2 -> AnemiaScreen(pallorResult, pallorDetector)
+                    0 -> HomeScreen(
+                        rppgResult = rppgResult,
+                        pallorResult = pallorResult,
+                        edemaResult = edemaResult,
+                        strings = strings,
+                        selectedLanguage = selectedLanguage,
+                        onLanguageChange = { selectedLanguage = it }
+                    )
+                    1 -> CardioScreen(
+                        rppgResult = rppgResult,
+                        rppgProcessor = rppgProcessor,
+                        canRun = thermalStatus.safe,
+                        faceDetectorHelper = faceDetectorHelper,
+                        strings = strings
+                    )
+                    2 -> AnemiaScreen(
+                        pallorResult = pallorResult,
+                        pallorDetector = pallorDetector,
+                        strings = strings
+                    )
                     3 -> PreeclampsiaScreen(
                         edemaResult = edemaResult,
                         edemaDetector = edemaDetector,
+                        faceDetectorHelper = faceDetectorHelper,
                         isPregnant = isPregnant,
                         gestationalWeeks = gestationalWeeks,
+                        strings = strings,
                         onPregnancyChange = { pregnant, weeks ->
                             isPregnant = pregnant
                             gestationalWeeks = weeks
@@ -223,13 +266,31 @@ fun NkuSentinelApp(
                         edemaResult = edemaResult,
                         assessment = assessment,
                         sensorFusion = sensorFusion,
-                        piperTTS = piperTTS,
+                        nkuTTS = nkuTTS,
                         ttsState = ttsState,
-                        engineState = EngineState.IDLE,  // F-5: rule-based path uses IDLE
-                        engineProgress = "",
+                        engineState = engineState,
+                        engineProgress = engineProgress,
+                        strings = strings,
                         onRunTriage = {
                             sensorFusion.updateVitalSigns()
-                            clinicalReasoner.createRuleBasedAssessment(sensorFusion.vitalSigns.value)
+                            val currentVitals = sensorFusion.vitalSigns.value
+                            if (nkuEngine.areModelsReady()) {
+                                // MedGemma available — run full Nku Cycle
+                                scope.launch {
+                                    val prompt = clinicalReasoner.generatePrompt(currentVitals)
+                                    val result = nkuEngine.runNkuCycle(
+                                        patientInput = prompt,
+                                        language = selectedLanguage,
+                                        thermalManager = thermalManager
+                                    )
+                                    clinicalReasoner.parseMedGemmaResponse(
+                                        result.clinicalResponse, currentVitals
+                                    )
+                                }
+                            } else {
+                                // Models not sideloaded — use rule-based triage
+                                clinicalReasoner.createRuleBasedAssessment(currentVitals)
+                            }
                         }
                     )
                 }
@@ -243,7 +304,14 @@ fun NkuSentinelApp(
 // ============================================================
 
 @Composable
-fun HomeScreen(rppgResult: RPPGResult, pallorResult: PallorResult, edemaResult: EdemaResult) {
+fun HomeScreen(
+    rppgResult: RPPGResult,
+    pallorResult: PallorResult,
+    edemaResult: EdemaResult,
+    strings: LocalizedStrings.UiStrings,
+    selectedLanguage: String,
+    onLanguageChange: (String) -> Unit
+) {
     // Progress tracking
     val hasHR = rppgResult.bpm != null && rppgResult.confidence > 0.4f
     val hasAnemia = pallorResult.hasBeenAnalyzed
@@ -258,18 +326,82 @@ fun HomeScreen(rppgResult: RPPGResult, pallorResult: PallorResult, edemaResult: 
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            "Nku Sentinel",
+            strings.appTitle,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
         
         Text(
-            "Camera-based vital signs screening",
+            strings.appSubtitle,
             fontSize = 14.sp,
             color = Color.Gray,
             modifier = Modifier.padding(bottom = 12.dp)
         )
+        
+        // ── Language Selector ──
+        var languageExpanded by remember { mutableStateOf(false) }
+        Card(
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF252540)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Default.Language,
+                    contentDescription = null,
+                    tint = NkuColors.Primary,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text("Language", color = Color.White, fontSize = 13.sp)
+                Spacer(Modifier.weight(1f))
+                Box {
+                    TextButton(onClick = { languageExpanded = true }) {
+                        Text(
+                            LocalizedStrings.getLanguageName(selectedLanguage),
+                            color = NkuColors.Primary,
+                            fontSize = 13.sp
+                        )
+                        Icon(
+                            Icons.Default.ArrowDropDown,
+                            contentDescription = null,
+                            tint = NkuColors.Primary
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = languageExpanded,
+                        onDismissRequest = { languageExpanded = false }
+                    ) {
+                        LocalizedStrings.supportedLanguages.forEach { (code, name) ->
+                            DropdownMenuItem(
+                                text = { Text(name) },
+                                onClick = {
+                                    onLanguageChange(code)
+                                    languageExpanded = false
+                                },
+                                leadingIcon = {
+                                    if (code == selectedLanguage) {
+                                        Icon(
+                                            Icons.Default.Check,
+                                            contentDescription = null,
+                                            tint = NkuColors.Primary,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        
+        Spacer(Modifier.height(12.dp))
         
         // ── Progress Indicator ──
         Card(
@@ -325,8 +457,8 @@ fun HomeScreen(rppgResult: RPPGResult, pallorResult: PallorResult, edemaResult: 
         // ── Step 1: Heart Rate ──
         GuidedStepCard(
             stepNumber = 1,
-            title = "Heart Rate",
-            value = if (hasHR) "${rppgResult.bpm!!.toInt()} BPM" else "—",
+            title = strings.heartRate,
+            value = if (hasHR) "${rppgResult.bpm!!.toInt()} ${strings.bpm}" else "—",
             subtitle = when {
                 !hasHR -> "Tap \"Cardio\" tab to measure"
                 rppgResult.bpm!! > 100 -> "⚠ Elevated — may indicate stress or anemia"
@@ -346,7 +478,7 @@ fun HomeScreen(rppgResult: RPPGResult, pallorResult: PallorResult, edemaResult: 
         // ── Step 2: Anemia ──
         GuidedStepCard(
             stepNumber = 2,
-            title = "Anemia Screen",
+            title = strings.anemiaScreen,
             value = if (hasAnemia) pallorResult.severity.name else "—",
             subtitle = when {
                 !hasAnemia -> "Tap \"Anemia\" tab to capture eyelid"
@@ -372,7 +504,7 @@ fun HomeScreen(rppgResult: RPPGResult, pallorResult: PallorResult, edemaResult: 
         // ── Step 3: Preeclampsia ──
         GuidedStepCard(
             stepNumber = 3,
-            title = "Swelling Check",
+            title = strings.preeclampsiaScreen,
             value = if (hasPreE) edemaResult.severity.name else "—",
             subtitle = when {
                 !hasPreE -> "Tap \"Pre-E\" tab to capture face"
@@ -403,7 +535,7 @@ fun HomeScreen(rppgResult: RPPGResult, pallorResult: PallorResult, edemaResult: 
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                "⚕ This is an AI-assisted screening tool. Always consult a healthcare professional for diagnosis and treatment.",
+                "⚕ ${strings.disclaimer}",
                 fontSize = 12.sp,
                 color = Color.Gray,
                 textAlign = TextAlign.Center,
@@ -572,7 +704,13 @@ fun CameraPreview(
 // ============================================================
 
 @Composable
-fun CardioScreen(rppgResult: RPPGResult, rppgProcessor: RPPGProcessor, canRun: Boolean) {
+fun CardioScreen(
+    rppgResult: RPPGResult,
+    rppgProcessor: RPPGProcessor,
+    canRun: Boolean,
+    faceDetectorHelper: FaceDetectorHelper,
+    strings: LocalizedStrings.UiStrings
+) {
     var isMeasuring by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     
@@ -582,15 +720,15 @@ fun CardioScreen(rppgResult: RPPGResult, rppgProcessor: RPPGProcessor, canRun: B
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Cardio Check", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        Text("Heart rate via camera (rPPG)", fontSize = 14.sp, color = Color.Gray)
+        Text(strings.cardioTitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
+        Text(strings.cardioSubtitle, fontSize = 14.sp, color = Color.Gray)
         
         Spacer(Modifier.height(16.dp))
         
         if (!canRun) {
             Card(colors = CardDefaults.cardColors(containerColor = Color(0xFFFF5722).copy(alpha = 0.2f))) {
                 Text(
-                    "Device cooling down — AI paused",
+                    strings.deviceCooling,
                     modifier = Modifier.padding(16.dp),
                     color = Color(0xFFFF5722)
                 )
@@ -612,7 +750,9 @@ fun CardioScreen(rppgResult: RPPGResult, rppgProcessor: RPPGProcessor, canRun: B
                         modifier = Modifier.fillMaxSize(),
                         enableAnalysis = true,
                         onFrameAnalyzed = { bitmap ->
-                            rppgProcessor.processFrame(bitmap)
+                            // Use MediaPipe face detection for ROI
+                            val faceROI = faceDetectorHelper.detectFace(bitmap)
+                            rppgProcessor.processFrame(bitmap, faceROI?.toIntArray())
                         }
                     )
                     
@@ -711,7 +851,7 @@ fun CardioScreen(rppgResult: RPPGResult, rppgProcessor: RPPGProcessor, canRun: B
                 modifier = Modifier.size(24.dp)
             )
             Spacer(Modifier.width(8.dp))
-            Text(if (isMeasuring) "Stop Measurement" else "Start Measurement", fontSize = 16.sp)
+            Text(if (isMeasuring) strings.stopMeasurement else strings.startMeasurement, fontSize = 16.sp)
         }
         
         Spacer(Modifier.height(16.dp))
@@ -742,7 +882,11 @@ fun CardioScreen(rppgResult: RPPGResult, rppgProcessor: RPPGProcessor, canRun: B
 // ============================================================
 
 @Composable
-fun AnemiaScreen(pallorResult: PallorResult, pallorDetector: PallorDetector) {
+fun AnemiaScreen(
+    pallorResult: PallorResult,
+    pallorDetector: PallorDetector,
+    strings: LocalizedStrings.UiStrings
+) {
     var isCapturing by remember { mutableStateOf(false) }
     var lastCapturedBitmap by remember { mutableStateOf<Bitmap?>(null) }
     val scope = rememberCoroutineScope()
@@ -754,8 +898,8 @@ fun AnemiaScreen(pallorResult: PallorResult, pallorDetector: PallorDetector) {
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Anemia Screening", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        Text("Conjunctival pallor detection", fontSize = 14.sp, color = Color.Gray)
+        Text(strings.anemiaTitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
+        Text(strings.anemiaSubtitle, fontSize = 14.sp, color = Color.Gray)
         
         Spacer(Modifier.height(20.dp))
         
@@ -777,7 +921,7 @@ fun AnemiaScreen(pallorResult: PallorResult, pallorDetector: PallorDetector) {
                     )
                     Spacer(Modifier.height(12.dp))
                     Text(
-                        "Not yet screened",
+                        strings.notYetScreened,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -843,7 +987,7 @@ fun AnemiaScreen(pallorResult: PallorResult, pallorDetector: PallorDetector) {
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Cancel")
+                    Text(strings.cancel)
                 }
                 
                 Button(
@@ -859,7 +1003,7 @@ fun AnemiaScreen(pallorResult: PallorResult, pallorDetector: PallorDetector) {
                 ) {
                     Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(6.dp))
-                    Text("Analyze")
+                    Text(strings.analyze)
                 }
             }
             
@@ -924,7 +1068,7 @@ fun AnemiaScreen(pallorResult: PallorResult, pallorDetector: PallorDetector) {
                 Icon(Icons.Default.Face, contentDescription = null, modifier = Modifier.size(24.dp))
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    if (pallorResult.hasBeenAnalyzed) "Re-capture Eyelid" else "Capture Inner Eyelid",
+                    if (pallorResult.hasBeenAnalyzed) strings.recapture else strings.captureConjunctiva,
                     fontSize = 16.sp
                 )
             }
@@ -954,7 +1098,7 @@ fun AnemiaScreen(pallorResult: PallorResult, pallorDetector: PallorDetector) {
         Spacer(Modifier.height(12.dp))
         
         Text(
-            "Conjunctival analysis works across all skin tones",
+            strings.worksAllSkinTones,
             textAlign = TextAlign.Center,
             color = Color.Gray,
             fontSize = 12.sp
@@ -970,8 +1114,10 @@ fun AnemiaScreen(pallorResult: PallorResult, pallorDetector: PallorDetector) {
 fun PreeclampsiaScreen(
     edemaResult: EdemaResult,
     edemaDetector: EdemaDetector,
+    faceDetectorHelper: FaceDetectorHelper,
     isPregnant: Boolean,
     gestationalWeeks: String,
+    strings: LocalizedStrings.UiStrings,
     onPregnancyChange: (Boolean, String) -> Unit
 ) {
     var isCapturing by remember { mutableStateOf(false) }
@@ -984,8 +1130,8 @@ fun PreeclampsiaScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Preeclampsia Screen", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        Text("Facial edema detection", fontSize = 14.sp, color = Color.Gray)
+        Text(strings.preETitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
+        Text(strings.preESubtitle, fontSize = 14.sp, color = Color.Gray)
         
         Spacer(Modifier.height(16.dp))
         
@@ -996,7 +1142,7 @@ fun PreeclampsiaScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Pregnant?", color = Color.White)
+                    Text(strings.pregnant, color = Color.White)
                     Spacer(Modifier.weight(1f))
                     Switch(
                         checked = isPregnant,
@@ -1009,7 +1155,7 @@ fun PreeclampsiaScreen(
                     OutlinedTextField(
                         value = gestationalWeeks,
                         onValueChange = { onPregnancyChange(isPregnant, it) },
-                        label = { Text("Gestational weeks") },
+                        label = { Text(strings.gestationalWeeks) },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -1036,7 +1182,7 @@ fun PreeclampsiaScreen(
                     )
                     Spacer(Modifier.height(12.dp))
                     Text(
-                        "Not yet screened",
+                        strings.notYetScreened,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -1099,13 +1245,20 @@ fun PreeclampsiaScreen(
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Cancel")
+                    Text(strings.cancel)
                 }
                 
                 Button(
                     onClick = {
                         lastCapturedBitmap?.let { bmp ->
-                            edemaDetector.analyzeFace(bmp)
+                            // Use MediaPipe landmarks for precise edema analysis
+                            val landmarks = faceDetectorHelper.detectLandmarks(bmp)
+                            if (landmarks != null) {
+                                edemaDetector.analyzeFaceWithLandmarks(bmp, landmarks)
+                            } else {
+                                // Fallback to heuristic if no face detected
+                                edemaDetector.analyzeFace(bmp)
+                            }
                             isCapturing = false
                         }
                     },
@@ -1115,7 +1268,7 @@ fun PreeclampsiaScreen(
                 ) {
                     Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(6.dp))
-                    Text("Analyze")
+                    Text(strings.analyze)
                 }
             }
             
@@ -1202,7 +1355,7 @@ fun PreeclampsiaScreen(
                 Icon(Icons.Default.Face, contentDescription = null, modifier = Modifier.size(24.dp))
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    if (edemaResult.hasBeenAnalyzed) "Re-capture Face" else "Capture Face Photo",
+                    if (edemaResult.hasBeenAnalyzed) strings.recapture else strings.captureFace,
                     fontSize = 16.sp
                 )
             }
@@ -1237,10 +1390,11 @@ fun TriageScreen(
     edemaResult: EdemaResult,
     assessment: ClinicalAssessment?,
     sensorFusion: SensorFusion,
-    piperTTS: PiperTTS,
+    nkuTTS: NkuTTS,
     ttsState: TTSState,
-    engineState: EngineState = EngineState.IDLE,    // F-5: loading state
-    engineProgress: String = "",                     // F-5: progress text
+    engineState: EngineState = EngineState.IDLE,
+    engineProgress: String = "",
+    strings: LocalizedStrings.UiStrings = LocalizedStrings.englishStrings,
     onRunTriage: () -> Unit
 ) {
     val context = LocalContext.current
@@ -1274,8 +1428,8 @@ fun TriageScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Clinical Triage", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        Text("AI-assisted severity assessment", fontSize = 14.sp, color = Color.Gray)
+        Text(strings.triageTitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
+        Text(strings.triageSubtitle, fontSize = 14.sp, color = Color.Gray)
         
         Spacer(Modifier.height(20.dp))
         
@@ -1490,7 +1644,7 @@ fun TriageScreen(
         ) {
             Icon(Icons.Default.CheckCircle, contentDescription = null, modifier = Modifier.size(24.dp))
             Spacer(Modifier.width(8.dp))
-            Text("Run Triage Assessment", fontSize = 16.sp)
+            Text(strings.runTriage, fontSize = 16.sp)
         }
         
         // ── F-5: Loading overlay during Nku Cycle ──
@@ -1592,9 +1746,9 @@ fun TriageScreen(
             Button(
                 onClick = {
                     if (ttsState == TTSState.SPEAKING) {
-                        piperTTS.stop()
+                        nkuTTS.stop()
                     } else {
-                        piperTTS.speak(speakableText, "en")
+                        nkuTTS.speak(speakableText, "en")
                     }
                 },
                 colors = ButtonDefaults.buttonColors(

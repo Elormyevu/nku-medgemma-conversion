@@ -636,7 +636,9 @@ fun CameraPreview(
     modifier: Modifier = Modifier,
     onFrameAnalyzed: ((Bitmap) -> Unit)? = null,
     onImageCaptured: ((Bitmap) -> Unit)? = null,
-    enableAnalysis: Boolean = false
+    enableAnalysis: Boolean = false,
+    lensFacing: Int = CameraSelector.LENS_FACING_FRONT,
+    enableTorch: Boolean = false
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -660,16 +662,20 @@ fun CameraPreview(
                         .build()
                         .also { it.setSurfaceProvider(previewView.surfaceProvider) }
                     
-                    // Try front camera first, fall back to back camera
-                    val frontSelector = try {
+                    // Build selectors: preferred lens first, then fallback
+                    val preferredFacing = lensFacing
+                    val fallbackFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK)
+                        CameraSelector.LENS_FACING_FRONT else CameraSelector.LENS_FACING_BACK
+                    
+                    val preferredSelector = try {
                         CameraSelector.Builder()
-                            .requireLensFacing(CameraSelector.LENS_FACING_FRONT)
+                            .requireLensFacing(preferredFacing)
                             .build()
                     } catch (e: Exception) { null }
                     
-                    val backSelector = try {
+                    val fallbackSelector = try {
                         CameraSelector.Builder()
-                            .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                            .requireLensFacing(fallbackFacing)
                             .build()
                     } catch (e: Exception) { null }
                     
@@ -688,11 +694,11 @@ fun CameraPreview(
                             }
                     } else null
                     
-                    // Try front camera first
+                    // Try preferred lens first, then fallback
                     var bound = false
-                    for (selector in listOfNotNull(frontSelector, backSelector)) {
+                    for (selector in listOfNotNull(preferredSelector, fallbackSelector)) {
                         try {
-                            if (imageAnalysis != null) {
+                            val camera = if (imageAnalysis != null) {
                                 cameraProvider.bindToLifecycle(
                                     lifecycleOwner, selector, preview, imageAnalysis
                                 )
@@ -701,7 +707,15 @@ fun CameraPreview(
                                     lifecycleOwner, selector, preview
                                 )
                             }
-                            Log.i("NkuCamera", "Camera bound with ${if (selector == frontSelector) "FRONT" else "BACK"} lens")
+                            val facing = if (selector == preferredSelector) "PREFERRED" else "FALLBACK"
+                            Log.i("NkuCamera", "Camera bound ($facing) with lens ${if (selector == preferredSelector) preferredFacing else fallbackFacing}")
+                            
+                            // Enable torch/flashlight if requested
+                            if (enableTorch && camera.cameraInfo.hasFlashUnit()) {
+                                camera.cameraControl.enableTorch(true)
+                                Log.i("NkuCamera", "Torch enabled")
+                            }
+                            
                             bound = true
                             break
                         } catch (e: Exception) {
@@ -770,10 +784,11 @@ fun CardioScreen(
                     CameraPreview(
                         modifier = Modifier.fillMaxSize(),
                         enableAnalysis = true,
+                        lensFacing = CameraSelector.LENS_FACING_BACK,
+                        enableTorch = true,
                         onFrameAnalyzed = { bitmap ->
-                            // Use MediaPipe face detection for ROI
-                            val faceROI = faceDetectorHelper.detectFace(bitmap)
-                            rppgProcessor.processFrame(bitmap, faceROI?.toIntArray())
+                            // Finger-on-lens PPG: analyze entire frame (no face ROI needed)
+                            rppgProcessor.processFrame(bitmap)
                         }
                     )
                     
@@ -887,9 +902,10 @@ fun CardioScreen(
                 Spacer(Modifier.height(4.dp))
                 Text(
                     "1. Tap \"Start Measurement\" above\n" +
-                    "2. Face the front camera in good lighting\n" +
-                    "3. Hold still for 10 seconds\n" +
-                    "4. Your heart rate appears when the buffer fills",
+                    "2. Place your fingertip over the back camera\n" +
+                    "3. The flashlight turns on automatically\n" +
+                    "4. Hold still for 10 seconds\n" +
+                    "5. Your heart rate appears when the buffer fills",
                     color = Color.Gray,
                     fontSize = 12.sp
                 )

@@ -637,7 +637,7 @@ fun CameraPreview(
     onFrameAnalyzed: ((Bitmap) -> Unit)? = null,
     onImageCaptured: ((Bitmap) -> Unit)? = null,
     enableAnalysis: Boolean = false,
-    lensFacing: Int = CameraSelector.LENS_FACING_FRONT,
+    lensFacing: Int = CameraSelector.LENS_FACING_BACK,
     enableTorch: Boolean = false
 ) {
     val context = LocalContext.current
@@ -989,6 +989,7 @@ fun AnemiaScreen(
                     CameraPreview(
                         modifier = Modifier.fillMaxSize(),
                         enableAnalysis = true,
+                        lensFacing = CameraSelector.LENS_FACING_BACK,
                         onFrameAnalyzed = { bitmap ->
                             lastCapturedBitmap = bitmap
                         }
@@ -1226,7 +1227,7 @@ fun PreeclampsiaScreen(
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Capture a front-facing photo to check for facial edema",
+                        "Capture a photo to check for facial edema",
                         fontSize = 13.sp,
                         color = Color.Gray,
                         textAlign = TextAlign.Center
@@ -1250,6 +1251,7 @@ fun PreeclampsiaScreen(
                     CameraPreview(
                         modifier = Modifier.fillMaxSize(),
                         enableAnalysis = true,
+                        lensFacing = CameraSelector.LENS_FACING_BACK,
                         onFrameAnalyzed = { bitmap ->
                             lastCapturedBitmap = bitmap
                         }
@@ -1406,7 +1408,7 @@ fun PreeclampsiaScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                "Uses geometry-based analysis (facial proportions). Works across all skin tones. Best with front-facing photos in consistent lighting.",
+                "Uses geometry-based analysis (facial proportions). Works across all skin tones. Best with photos in consistent lighting.",
                 color = Color.Gray,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(12.dp)

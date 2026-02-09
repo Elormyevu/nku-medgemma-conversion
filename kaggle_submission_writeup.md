@@ -51,7 +51,7 @@ Patient Symptom (Ewe)
 └───────────────────────────────────────┘
         ↓
 ┌───────────────────────────────────────┐
-│      Piper TTS (ONNX, ~20MB)         │  ← Spoken Result
+│      Android System TTS               │  ← Spoken Result
 └───────────────────────────────────────┘
 ```
 
@@ -63,7 +63,7 @@ Models are sequentially loaded and unloaded via memory-mapping (`mmap`), keeping
 |:--------|:---:|:------------------------:|
 | **Offline Operation** | 100% | 0% |
 | **2GB RAM Devices** | ✅ | ❌ |
-| **Pan-African Languages** | 47 | ~5 |
+| **Pan-African Languages** | 46 | ~5 |
 | **Model Footprint** | 1.3GB | N/A (cloud) |
 | **Per-Query Cost** | $0 | ~$0.01-0.10 |
 
@@ -89,7 +89,7 @@ We achieve **90% size reduction** from the original MedGemma weights while prese
 ```
 ┌─────────────────────────────────────────────────┐
 │      Jetpack Compose UI (Glassmorphism)         │
-│         47-Language LocalizedStrings            │
+│         46-Language LocalizedStrings            │
 ├─────────────────────────────────────────────────┤
 │        NkuInferenceEngine.kt                    │
 │    Kotlin Coroutines + mmap Model Swapping      │
@@ -97,12 +97,12 @@ We achieve **90% size reduction** from the original MedGemma weights while prese
 │         llama.cpp JNI (SmolLM Module)           │
 │       NDK 29 | ARM64 NEON/SME Kernels           │
 ├─────────────────────────────────────────────────┤
-│         Piper TTS (ONNX Runtime Mobile)         │
-│           Offline Voice Synthesis               │
+│         Android System TTS Engine               │
+│    Device-native voice synthesis (46 languages) │
 └─────────────────────────────────────────────────┘
 ```
 
-- **APK Size**: 2.7GB (with bundled models) → ~180MB (R8 optimized, models downloaded)
+- **APK Size**: ~60MB base (models sideloaded separately: MedGemma 0.78GB + TranslateGemma 0.51GB)
 - **Inference Speed**: 4-6 tokens/second on ARM Cortex-A76
 - **Model Load Time**: ~1.4 seconds via memory-mapped GGUF
 
@@ -211,9 +211,9 @@ VITAL SIGNS:
 
 | Layer | Implementation | Coverage |
 |:------|:---------------|:---------|
-| UI | `LocalizedStrings.kt` | 47 languages (see Appendix B) |
+| UI | `LocalizedStrings.kt` | 46 languages (see Appendix B) |
 | Clinical | Medical Glossary Prompting | 14+ verified |
-| Voice | Piper ONNX voices | 8 languages |
+| Voice | Android System TTS | Device-installed language packs |
 
 **Verified Triage Results** (emulator + device testing):
 
@@ -257,7 +257,7 @@ MedGemma 4B is **not optional**—it is the irreplaceable core of the Nku system
 | Target Population | **450M+** (rural Sub-Saharan Africa) [5] |
 | Device Compatibility | $50-100 phones (2GB RAM) |
 | Network Requirement | **None** (100% offline) |
-| Language Coverage | **47** (14+ verified clinically) |
+| Language Coverage | **46** (14+ verified clinically) |
 | Total Model Footprint | **~1.3GB** |
 | End-to-End Latency | <30 seconds |
 
@@ -366,7 +366,7 @@ Representative sample from `african_primary_care.txt`:
 
 ---
 
-## Appendix B: Supported Languages (47 Total)
+## Appendix B: Supported Languages (46 Total)
 
 ### Tier 1: Clinically Verified (14 languages)
 
@@ -471,4 +471,4 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 
 ---
 
-*Nku: 450M+ lives • $50 phones • 100% offline • 47 languages*
+*Nku: 450M+ lives • $50 phones • 100% offline • 46 languages*

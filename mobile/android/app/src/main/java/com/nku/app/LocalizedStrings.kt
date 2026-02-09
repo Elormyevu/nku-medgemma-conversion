@@ -55,7 +55,6 @@ object LocalizedStrings {
         "tn" to "Tswana",
         "pt" to "Portuguese",
         "ar" to "Arabic",
-        "mg" to "Malagasy",
         "ts" to "Tsonga",
         "ve" to "Venda",
         "ss" to "Swati",

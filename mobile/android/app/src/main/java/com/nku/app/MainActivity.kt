@@ -38,6 +38,8 @@ import java.util.concurrent.Executors
 import com.nku.app.ui.NkuTheme
 import com.nku.app.ui.NkuColors
 import com.nku.app.screens.*
+import com.nku.app.data.NkuDatabase
+import com.nku.app.data.ScreeningEntity
 
 /**
  * MainActivity - Nku Sentinel
@@ -160,6 +162,10 @@ fun NkuSentinelApp(
     var selectedLanguage by remember { mutableStateOf("en") }
     val strings = LocalizedStrings.forLanguage(selectedLanguage)
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val db = remember { NkuDatabase.getInstance(context) }
+    val screeningDao = remember { db.screeningDao() }
+    val screeningCount by screeningDao.getCount().collectAsState(initial = 0)
     
     val tabs = listOf(strings.tabHome, strings.tabCardio, strings.tabAnemia, strings.tabPreE, strings.tabTriage)
     
@@ -222,7 +228,8 @@ fun NkuSentinelApp(
                         strings = strings,
                         selectedLanguage = selectedLanguage,
                         onLanguageChange = { selectedLanguage = it },
-                        onNavigateToTab = { selectedTab = it }
+                        onNavigateToTab = { selectedTab = it },
+                        savedScreeningCount = screeningCount
                     )
                     1 -> CardioScreen(
                         rppgResult = rppgResult,
@@ -276,10 +283,34 @@ fun NkuSentinelApp(
                                     clinicalReasoner.parseMedGemmaResponse(
                                         result.clinicalResponse, currentVitals
                                     )
+                                    // Auto-save screening
+                                    screeningDao.insert(ScreeningEntity(
+                                        heartRateBpm = rppgResult.bpm?.toFloat(),
+                                        heartRateConfidence = rppgResult.confidence,
+                                        pallorSeverity = pallorResult.severity.name,
+                                        edemaSeverity = edemaResult.severity.name,
+                                        triageLevel = result.clinicalResponse.take(200),
+                                        language = selectedLanguage,
+                                        isPregnant = isPregnant,
+                                        gestationalWeeks = gestationalWeeks.toIntOrNull()
+                                    ))
                                 }
                             } else {
                                 // Models not sideloaded — use rule-based triage
                                 clinicalReasoner.createRuleBasedAssessment(currentVitals)
+                                // Auto-save screening
+                                scope.launch {
+                                    screeningDao.insert(ScreeningEntity(
+                                        heartRateBpm = rppgResult.bpm?.toFloat(),
+                                        heartRateConfidence = rppgResult.confidence,
+                                        pallorSeverity = pallorResult.severity.name,
+                                        edemaSeverity = edemaResult.severity.name,
+                                        triageLevel = "Rule-based",
+                                        language = selectedLanguage,
+                                        isPregnant = isPregnant,
+                                        gestationalWeeks = gestationalWeeks.toIntOrNull()
+                                    ))
+                                }
                             }
                         }
                     )

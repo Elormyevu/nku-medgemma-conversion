@@ -21,6 +21,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nku.app.*
 import com.nku.app.ui.NkuColors
+import android.Manifest
+import android.content.pm.PackageManager
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 
 /**
  * AnemiaScreen — Conjunctival pallor detection for anemia screening.
@@ -35,7 +44,20 @@ fun AnemiaScreen(
 ) {
     var isCapturing by remember { mutableStateOf(false) }
     var lastCapturedBitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var cameraPermissionDenied by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            isCapturing = true
+            cameraPermissionDenied = false
+        } else {
+            cameraPermissionDenied = true
+        }
+    }
     
     Column(
         modifier = Modifier
@@ -47,7 +69,48 @@ fun AnemiaScreen(
         Text(strings.anemiaTitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
         Text(strings.anemiaSubtitle, fontSize = 14.sp, color = Color.Gray)
         
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(12.dp))
+
+        // Camera permission denied feedback
+        if (cameraPermissionDenied) {
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = NkuColors.Warning.copy(alpha = 0.15f)
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "⚠ Camera permission required",
+                        fontWeight = FontWeight.Bold,
+                        color = NkuColors.Warning
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        "Anemia screening needs camera access. Please enable in Settings.",
+                        fontSize = 12.sp,
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(
+                        onClick = {
+                            context.startActivity(
+                                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                    data = Uri.fromParts("package", context.packageName, null)
+                                }
+                            )
+                        }
+                    ) {
+                        Text("Open Settings", fontSize = 13.sp)
+                    }
+                }
+            }
+            Spacer(Modifier.height(8.dp))
+        }
         
         if (!pallorResult.hasBeenAnalyzed && !isCapturing) {
             // ---- NOT YET SCREENED STATE ----
@@ -205,7 +268,18 @@ fun AnemiaScreen(
         // Capture / Re-capture button (when not in capture mode)
         if (!isCapturing) {
             Button(
-                onClick = { isCapturing = true },
+                onClick = {
+                    // Check camera permission before starting capture
+                    val hasPermission = ContextCompat.checkSelfPermission(
+                        context, Manifest.permission.CAMERA
+                    ) == PackageManager.PERMISSION_GRANTED
+                    if (hasPermission) {
+                        isCapturing = true
+                        cameraPermissionDenied = false
+                    } else {
+                        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = NkuColors.Secondary),
                 modifier = Modifier
                     .fillMaxWidth(0.8f)

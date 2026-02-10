@@ -25,6 +25,15 @@ import androidx.compose.ui.unit.sp
 import com.nku.app.*
 import com.nku.app.ui.NkuColors
 import kotlinx.coroutines.launch
+import android.Manifest
+import android.content.pm.PackageManager
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 
 /**
  * CardioScreen — rPPG heart rate measurement via camera (finger-on-lens PPG).
@@ -40,7 +49,21 @@ fun CardioScreen(
     strings: LocalizedStrings.UiStrings
 ) {
     var isMeasuring by remember { mutableStateOf(false) }
+    var cameraPermissionDenied by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            rppgProcessor.reset()
+            isMeasuring = true
+            cameraPermissionDenied = false
+        } else {
+            cameraPermissionDenied = true
+        }
+    }
     
     Column(
         modifier = Modifier
@@ -60,6 +83,47 @@ fun CardioScreen(
                     modifier = Modifier.padding(16.dp),
                     color = NkuColors.ListeningIndicator
                 )
+            }
+            Spacer(Modifier.height(16.dp))
+        }
+
+        // Camera permission denied feedback
+        if (cameraPermissionDenied) {
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = NkuColors.Warning.copy(alpha = 0.15f)
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "⚠ Camera permission required",
+                        fontWeight = FontWeight.Bold,
+                        color = NkuColors.Warning
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        "Heart rate measurement needs camera access. Please enable in Settings.",
+                        fontSize = 12.sp,
+                        color = Color.Gray,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(
+                        onClick = {
+                            context.startActivity(
+                                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                    data = Uri.fromParts("package", context.packageName, null)
+                                }
+                            )
+                        }
+                    ) {
+                        Text("Open Settings", fontSize = 13.sp)
+                    }
+                }
             }
             Spacer(Modifier.height(16.dp))
         }
@@ -160,8 +224,17 @@ fun CardioScreen(
                 if (isMeasuring) {
                     isMeasuring = false
                 } else {
-                    rppgProcessor.reset()
-                    isMeasuring = true
+                    // Check camera permission before starting
+                    val hasPermission = ContextCompat.checkSelfPermission(
+                        context, Manifest.permission.CAMERA
+                    ) == PackageManager.PERMISSION_GRANTED
+                    if (hasPermission) {
+                        rppgProcessor.reset()
+                        isMeasuring = true
+                        cameraPermissionDenied = false
+                    } else {
+                        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
                 }
             },
             colors = ButtonDefaults.buttonColors(

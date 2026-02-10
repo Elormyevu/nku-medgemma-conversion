@@ -35,7 +35,8 @@ fun HomeScreen(
     strings: LocalizedStrings.UiStrings,
     selectedLanguage: String,
     onLanguageChange: (String) -> Unit,
-    onNavigateToTab: (Int) -> Unit = {}
+    onNavigateToTab: (Int) -> Unit = {},
+    savedScreeningCount: Int = 0
 ) {
     // Progress tracking
     val hasHR = rppgResult.bpm != null && rppgResult.confidence > 0.4f
@@ -175,6 +176,16 @@ fun HomeScreen(
                     )
                 }
             }
+        }
+
+        // Saved screenings count
+        if (savedScreeningCount > 0) {
+            Text(
+                "💾 $savedScreeningCount screening${if (savedScreeningCount != 1) "s" else ""} saved",
+                fontSize = 11.sp,
+                color = NkuColors.InactiveText,
+                modifier = Modifier.padding(top = 4.dp)
+            )
         }
         
         Spacer(Modifier.height(16.dp))

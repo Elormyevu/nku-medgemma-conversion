@@ -17,7 +17,7 @@ class ClinicalReasonerTest {
     @Test
     fun `normal vitals produce GREEN triage`() {
         val vitals = VitalSigns(
-            heartRate = 72f,
+            heartRateBpm = 72f,
             heartRateConfidence = 0.9f,
             pallorSeverity = PallorSeverity.NORMAL,
             pallorScore = 0.1f,
@@ -33,7 +33,7 @@ class ClinicalReasonerTest {
     @Test
     fun `tachycardia elevates triage to YELLOW or higher`() {
         val vitals = VitalSigns(
-            heartRate = 115f,
+            heartRateBpm = 115f,
             heartRateConfidence = 0.9f,
             pallorSeverity = PallorSeverity.NORMAL,
             pallorScore = 0.1f,
@@ -49,7 +49,7 @@ class ClinicalReasonerTest {
     @Test
     fun `severe pallor produces ORANGE or RED triage`() {
         val vitals = VitalSigns(
-            heartRate = 80f,
+            heartRateBpm = 80f,
             heartRateConfidence = 0.8f,
             pallorSeverity = PallorSeverity.SEVERE,
             pallorScore = 0.9f,
@@ -66,7 +66,7 @@ class ClinicalReasonerTest {
     @Test
     fun `significant edema produces ORANGE or RED triage`() {
         val vitals = VitalSigns(
-            heartRate = 80f,
+            heartRateBpm = 80f,
             heartRateConfidence = 0.8f,
             pallorSeverity = PallorSeverity.NORMAL,
             pallorScore = 0.1f,
@@ -85,7 +85,7 @@ class ClinicalReasonerTest {
     @Test
     fun `generatePrompt includes vital signs`() {
         val vitals = VitalSigns(
-            heartRate = 90f,
+            heartRateBpm = 90f,
             heartRateConfidence = 0.85f,
             pallorSeverity = PallorSeverity.MILD,
             pallorScore = 0.35f,
@@ -100,7 +100,7 @@ class ClinicalReasonerTest {
     @Test
     fun `assessment includes disclaimer`() {
         val vitals = VitalSigns(
-            heartRate = 72f,
+            heartRateBpm = 72f,
             heartRateConfidence = 0.9f,
             pallorSeverity = PallorSeverity.NORMAL,
             pallorScore = 0.1f,

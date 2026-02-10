@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.plugin.compose' version '2.1.0'
+    id 'com.google.devtools.ksp' version '2.1.0-1.0.29'
 }
 
 // Force all modules to use the same coroutines version
@@ -91,9 +92,18 @@ dependencies {
     // Coroutines for async inference (1.9.0 required for SmolLM)
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
     
+    // Room — offline screening data persistence
+    implementation 'androidx.room:room-runtime:2.6.1'
+    implementation 'androidx.room:room-ktx:2.6.1'
+    ksp 'androidx.room:room-compiler:2.6.1'
     
     // F-TC-1: Unit testing
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.11.0'
     testImplementation 'org.mockito.kotlin:mockito-kotlin:5.3.1'
+
+    // Compose UI testing
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
 }

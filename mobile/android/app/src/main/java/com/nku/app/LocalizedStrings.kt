@@ -30,7 +30,7 @@ object LocalizedStrings {
         "xh" to "Xhosa",
         "om" to "Oromo",
         "ti" to "Tigrinya",
-        // Tier 2: UI Localized (33)
+        // Tier 2: UI Localized (32)
         "af" to "Afrikaans",
         "bm" to "Bambara",
         "ny" to "Chichewa",

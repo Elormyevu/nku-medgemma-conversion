@@ -47,7 +47,12 @@ enum class TriageCategory {
 }
 
 class ClinicalReasoner {
-    
+
+    companion object {
+        /** Minimum confidence threshold for sensor data to be included in triage.
+         *  Sensors below this threshold are excluded (abstention). */
+        const val CONFIDENCE_THRESHOLD = 0.75f
+    }
     private val _assessment = MutableStateFlow<ClinicalAssessment?>(null)
     val assessment: StateFlow<ClinicalAssessment?> = _assessment.asStateFlow()
     
@@ -148,9 +153,49 @@ class ClinicalReasoner {
         val recommendations = mutableListOf<String>()
         var maxSeverity = Severity.LOW
         var maxUrgency = Urgency.ROUTINE
+
+        // Abstention logic: track which sensors have sufficient confidence
+        val hrConfident = vitals.heartRateConfidence >= CONFIDENCE_THRESHOLD
+        val pallorConfident = vitals.pallorConfidence >= CONFIDENCE_THRESHOLD
+        val edemaConfident = vitals.edemaConfidence >= CONFIDENCE_THRESHOLD
+        val hasSymptoms = vitals.reportedSymptoms.isNotEmpty()
+
+        // If ALL sensor data is below confidence threshold and no symptoms, abstain
+        val hasHR = vitals.heartRateBpm != null
+        val hasPallor = vitals.pallorSeverity != null
+        val hasEdema = vitals.edemaSeverity != null
+        val allBelowThreshold = (!hasHR || !hrConfident) && (!hasPallor || !pallorConfident) && (!hasEdema || !edemaConfident)
+
+        if (allBelowThreshold && !hasSymptoms) {
+            val assessment = ClinicalAssessment(
+                triageCategory = TriageCategory.GREEN,
+                overallSeverity = Severity.LOW,
+                urgency = Urgency.ROUTINE,
+                primaryConcerns = listOf("Insufficient data confidence for triage — all sensors below 75% threshold"),
+                recommendations = listOf(
+                    "Re-capture readings in better conditions (lighting, steadier hold)",
+                    "Ensure finger covers camera lens fully for heart rate",
+                    "Use natural daylight for conjunctiva capture"
+                ),
+                prompt = "[ABSTAINED — confidence below threshold]"
+            )
+            _assessment.value = assessment
+            return assessment
+        }
+
+        // Log low-confidence sensors as advisory notes
+        if (hasHR && !hrConfident) {
+            concerns.add("Heart rate reading low confidence (${(vitals.heartRateConfidence * 100).toInt()}%) — excluded from triage")
+        }
+        if (hasPallor && !pallorConfident) {
+            concerns.add("Pallor reading low confidence (${(vitals.pallorConfidence * 100).toInt()}%) — excluded from triage")
+        }
+        if (hasEdema && !edemaConfident) {
+            concerns.add("Edema reading low confidence (${(vitals.edemaConfidence * 100).toInt()}%) — excluded from triage")
+        }
         
-        // Analyze heart rate
-        vitals.heartRateBpm?.let { hr ->
+        // Analyze heart rate (only if confidence >= threshold)
+        if (hrConfident) vitals.heartRateBpm?.let { hr ->
             when {
                 hr < 50 -> {
                     concerns.add("Bradycardia (low heart rate: ${hr.toInt()} bpm)")
@@ -173,8 +218,8 @@ class ClinicalReasoner {
             }
         }
         
-        // Analyze pallor (anemia)
-        when (vitals.pallorSeverity) {
+        // Analyze pallor (anemia) — only if confidence >= threshold
+        if (pallorConfident) when (vitals.pallorSeverity) {
             PallorSeverity.MILD -> {
                 concerns.add("Mild pallor detected - possible mild anemia")
                 recommendations.add("Encourage iron-rich foods (leafy greens, beans, meat)")
@@ -197,8 +242,8 @@ class ClinicalReasoner {
             else -> {}
         }
         
-        // Analyze edema (preeclampsia risk)
-        if (vitals.isPregnant && vitals.gestationalWeeks?.let { it >= 20 } == true) {
+        // Analyze edema (preeclampsia risk) — only if confidence >= threshold
+        if (edemaConfident && vitals.isPregnant && vitals.gestationalWeeks?.let { it >= 20 } == true) {
             when (vitals.edemaSeverity) {
                 EdemaSeverity.MILD -> {
                     concerns.add("Mild facial edema in pregnancy")
@@ -223,7 +268,7 @@ class ClinicalReasoner {
                 }
                 else -> {}
             }
-        } else if (vitals.edemaSeverity in listOf(EdemaSeverity.MODERATE, EdemaSeverity.SIGNIFICANT)) {
+        } else if (edemaConfident && vitals.edemaSeverity in listOf(EdemaSeverity.MODERATE, EdemaSeverity.SIGNIFICANT)) {
             concerns.add("Facial edema detected (non-pregnant)")
             recommendations.add("Consider kidney function check")
             recommendations.add("Evaluate for other causes of edema")

@@ -102,8 +102,8 @@ We achieve **90% size reduction** from the original MedGemma weights while prese
 └─────────────────────────────────────────────────┘
 ```
 
-- **APK Size**: ~60MB base (models sideloaded separately: MedGemma 0.78GB + TranslateGemma 0.51GB)
-- **Inference Speed**: 4-6 tokens/second on ARM Cortex-A76
+- **APK Size**: Base APK includes llama.cpp native libraries (~40MB per ABI); models delivered separately via Play Asset Delivery (MedGemma 0.78GB + TranslateGemma 0.51GB)
+- **Inference Speed**: Approximately 4-6 tokens/second on ARM Cortex-A76 (based on llama.cpp IQ1_M benchmarks for similar architectures [7])
 - **Model Load Time**: ~1.4 seconds via memory-mapped GGUF
 
 ### 3.3 Nku Sentinel: Camera-Based Screening
@@ -155,9 +155,9 @@ To minimize footprint, we use **pure signal processing** for feature extraction 
 
 | Screening | Method | Evidence | Output |
 |:----------|:-------|:---------|:-------|
-| **Cardio Check** | rPPG (green channel FFT) | 96.2% accuracy vs ECG [9] | Heart rate ±5 BPM |
-| **Anemia Screen** | Conjunctival HSV analysis | 80% sensitivity, 82% specificity [10] | Pallor severity |
-| **Preeclampsia** | Facial geometry ratios | Facial edema is key warning sign [11] | Edema severity |
+| **Cardio Check** | rPPG (green channel FFT) | Literature reports 96.2% accuracy vs ECG [9]; Nku implements this approach | Heart rate ±5 BPM |
+| **Anemia Screen** | Conjunctival HSV analysis | Clinical conjunctival pallor assessment achieves 80% sensitivity, 82% specificity [10]; Nku automates this method | Pallor severity |
+| **Preeclampsia** | Facial geometry ratios | Facial edema is a key clinical warning sign [11] | Edema severity |
 
 #### Fitzpatrick-Aware Design
 
@@ -169,7 +169,7 @@ A critical gap in medical AI: most models are trained on predominantly light-ski
 | **Edema** | Geometry-based analysis | Uses ratios and gradients, independent of skin color |
 | **Heart Rate** | Multi-frame averaging | Adaptive thresholds handle varying absorption |
 
-**Why Conjunctiva?** Clinical research confirms conjunctival pallor achieves 80% sensitivity and 82% specificity for moderate anemia across all skin tones, making it the preferred method over palm inspection which is less reliable for Fitzpatrick V-VI [10].
+**Why Conjunctiva?** Clinical research confirms conjunctival pallor assessment achieves 80% sensitivity and 82% specificity for moderate anemia across all skin tones [10]. Nku's `PallorDetector.kt` automates this clinical assessment using HSV color analysis of the palpebral conjunctiva, making it the preferred method over palm inspection which is less reliable for Fitzpatrick V-VI.
 
 #### Clinical Reasoning Pipeline
 
@@ -225,10 +225,10 @@ VITAL SIGNS:
 
 ### 3.5 Safety & Clinical Guardrails
 
-- **Abstention Logic**: Model abstains when confidence <75%
+- **Abstention Logic**: Sensors with confidence <75% are excluded from triage; if all sensors are below threshold, the system abstains entirely with re-capture guidance (`ClinicalReasoner.CONFIDENCE_THRESHOLD`)
 - **Severity Classification**: High/Medium/Low with escalation guidance
 - **Always-On Disclaimer**: "Consult a healthcare professional"
-- **Thermal Protection**: Auto-pause at 42°C to prevent device damage
+- **Thermal Protection**: Auto-pause at 42°C to prevent device damage (`ThermalManager.kt`)
 - **Privacy-First**: All processing on-device; zero data transmission
 
 ---
@@ -266,7 +266,7 @@ MedGemma 4B is **not optional**—it is the irreplaceable core of the Nku system
 1. **Field Testing**: Small-scale pilot with 5-10 CHWs, gathering real-world accuracy data
 2. **Iteration**: Refine thresholds and UX based on pilot feedback
 3. **Community Partnerships**: Engage local health organizations for validation
-4. **Open Distribution**: APK available via GitHub for any CHW to sideload
+4. **Distribution**: Models delivered via Play Asset Delivery (install-time), or APK+models available via GitHub for sideloading
 
 ### Why This Matters
 
@@ -387,21 +387,27 @@ Representative sample from `african_primary_care.txt`:
 | Oromo | om | Ethiopia | 35M+ |
 | Tigrinya | ti | Ethiopia/Eritrea | 7M+ |
 
-### Tier 2: UI Localized (33 additional languages)
+### Tier 2: UI Localized (32 additional languages)
 
 | Language | ISO | Language | ISO |
 |:---------|:----|:---------|:----|
 | Afrikaans | af | Luganda | lg |
-| Bambara | bm | Malagasy | mg |
-| Chichewa | ny | Ndebele | nd |
-| Dinka | din | Nuer | nus |
-| Fula | ff | Pidgin (Nigerian) | pcm |
-| Ga | gaa | Pidgin (Cameroonian) | wes |
+| Arabic | ar | Malagasy | mg |
+| Bambara | bm | Ndebele | nd |
+| Bemba | bem | Northern Sotho | nso |
+| Chichewa | ny | Nuer | nus |
+| Dinka | din | Pidgin (Nigerian) | pcm |
+| Fula | ff | Pidgin (Cameroonian) | wes |
+| Ga | gaa | Portuguese | pt |
 | Kikuyu | ki | Rundi | rn |
 | Kinyarwanda | rw | Sesotho | st |
 | Kongo | kg | Shona | sn |
-| Lingala | ln | Somali | so |
+| Kuanyama | kj | Somali | so |
+| Lingala | ln | Swati | ss |
+| Luba-Kasai | lua | Tsonga | ts |
 | Luo | luo | Tswana | tn |
+| | | Tumbuka | tum |
+| | | Venda | ve |
 
 ---
 

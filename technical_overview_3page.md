@@ -21,7 +21,7 @@ Our core innovation is a memory-efficient orchestration pattern that runs MedGem
 | 1 | TranslateGemma 4B (IQ1_M) | 0.51GB | Local language → English |
 | 2 | **MedGemma 4B (IQ1_M)** | 0.78GB | Clinical reasoning & triage |
 | 3 | TranslateGemma 4B (IQ1_M) | 0.51GB | English → Local language |
-| 4 | Piper TTS (ONNX) | ~20MB | Spoken output |
+| 4 | Android System TTS | ~0MB | Spoken output |
 
 **Peak RAM: ~1.4GB** (well within the 2GB device budget). Total on-disk footprint: **~1.3GB**.
 
@@ -33,8 +33,8 @@ CHWs lack diagnostic equipment. Nku Sentinel extracts vital signs using **only t
 
 | Screening | Method | Key Evidence |
 |:----------|:-------|:-------------|
-| **Cardio Check** | rPPG (green channel FFT, 30fps) | 96.2% accuracy vs ECG |
-| **Anemia Screen** | **Conjunctival** HSV analysis | 80% sens / 82% spec across all Fitzpatrick types |
+| **Cardio Check** | rPPG (green channel FFT, 30fps) | Literature reports 96.2% accuracy vs ECG [9] |
+| **Anemia Screen** | **Conjunctival** HSV analysis | Clinical pallor assessment achieves 80% sens / 82% spec [10] |
 | **Preeclampsia** | Facial geometry ratios | Edema is a key warning sign (ACOG) |
 
 **Fitzpatrick-Aware Design**: Pallor uses conjunctiva-only analysis (skin-tone agnostic). Edema uses geometry ratios (skin-color independent). These explicit design choices ensure diagnostic parity for Fitzpatrick V-VI—the primary target demographic.
@@ -43,7 +43,7 @@ CHWs lack diagnostic equipment. Nku Sentinel extracts vital signs using **only t
 
 ### 2.3 Localization
 
-47 Pan-African languages (14 clinically verified). All UI strings, diagnostic card tooltips, and clinical instructions are localized via `LocalizedStrings.kt`. Offline voice output via Piper TTS (ONNX Runtime).
+46 Pan-African languages (14 clinically verified). All UI strings, diagnostic card tooltips, and clinical instructions are localized via `LocalizedStrings.kt`. Offline voice output via Android System TTS.
 
 ## 3. Effective Use of MedGemma
 
@@ -63,11 +63,11 @@ MedGemma 4B is **irreplaceable** in this system. It performs the clinical reason
 | Target population | **450M+** (rural Sub-Saharan Africa) |
 | Device requirement | $50 Android, 2GB RAM |
 | Network requirement | **None** (100% offline) |
-| Languages | 47 (14 clinically verified) |
+| Languages | 46 (14 clinically verified) |
 | Per-query cost | **$0** |
 | Additional hardware | **None** (camera-only screening) |
 
-**Deployment Pathway**: Field testing with 5-10 CHWs → iterative threshold refinement → community health organization partnerships → open APK distribution via GitHub.
+**Deployment Pathway**: Field testing with 5-10 CHWs → iterative threshold refinement → community health organization partnerships → Play Asset Delivery or APK+model distribution via GitHub.
 
 ## 5. Reproducibility
 
@@ -80,4 +80,4 @@ MedGemma 4B is **irreplaceable** in this system. It performs the clinical reason
 
 ---
 
-*Nku: 450M+ lives • $50 phones • 100% offline • 47 languages*
+*Nku: 450M+ lives • $50 phones • 100% offline • 46 languages*

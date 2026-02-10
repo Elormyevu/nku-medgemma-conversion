@@ -23,7 +23,7 @@ Nku is an **offline-first Android application** that provides medical triage in 
 ├─────────────────────────────────────────────────────────────┤
 │  MainActivity.kt                                             │
 │  ├── NkuSentinelApp()         (Jetpack Compose)             │
-│  ├── LocalizedStrings.kt      (47 languages)                │
+│  ├── LocalizedStrings.kt      (46 languages)                │
 │  └── GlassCard/VitalCard      (Premium UI components)       │
 ├─────────────────────────────────────────────────────────────┤
 │                      BUSINESS LOGIC LAYER                    │
@@ -36,7 +36,7 @@ Nku is an **offline-first Android application** that provides medical triage in 
 ├─────────────────────────────────────────────────────────────┤
 │  CloudInferenceClient.kt      (Cloud fallback for emulators) │
 ├─────────────────────────────────────────────────────────────┤
-│  PiperTTS.kt                                                 │
+│  NkuTTS.kt                                                    │
 │  ├── speak()                  (Text-to-speech)              │
 │  └── getVoiceForLanguage()    (Language selection)          │
 ├─────────────────────────────────────────────────────────────┤
@@ -63,7 +63,7 @@ The core innovation is the **Nku Cycle** — a memory-efficient orchestration pa
 2. **Translation**: TranslateGemma converts to English
 3. **Reasoning**: MedGemma performs clinical triage
 4. **Localization**: TranslateGemma converts result back to local language
-5. **Output**: Piper TTS speaks the result
+5. **Output**: Android System TTS speaks the result
 
 ### Memory Management
 
@@ -105,11 +105,11 @@ fun runNkuCycleLocal(patientInput: String, language: String): NkuResult {
 - **Size**: 0.51 GB
 - **Purpose**: Bi-directional Pan-African language translation
 
-### Piper TTS
+### Android System TTS (NkuTTS.kt)
 
-- **Format**: ONNX Runtime Mobile
-- **Size**: ~20 MB per voice
-- **Voices**: Swahili, English, French, Portuguese (expandable)
+- **Format**: Android platform TextToSpeech API
+- **Size**: 0 MB (uses device-installed TTS engine)
+- **Languages**: All languages supported by device Google TTS
 
 ## Quantization Pipeline
 
@@ -147,12 +147,10 @@ mobile/android/app/src/main/
 │   ├── SensorFusion.kt         # Vital signs aggregation
 │   ├── ClinicalReasoner.kt     # MedGemma prompts + WHO/IMCI fallback
 │   ├── ThermalManager.kt       # 42°C auto-throttle
-│   ├── LocalizedStrings.kt     # 47-language UI strings
-│   ├── PiperTTS.kt             # Voice synthesis
+│   ├── LocalizedStrings.kt     # 46-language UI strings
+│   ├── NkuTTS.kt               # Android System TTS wrapper
 │   └── CloudInferenceClient.kt # Cloud fallback (dev/emulator only)
-├── assets/
-│   ├── medgemma-4b-iq1_m.gguf  # Clinical model (bundled or downloaded)
-│   └── translategemma-4b-iq1_m.gguf # Translation model
+├── assets/                      # (models loaded from device storage)
 └── jniLibs/
     ├── arm64-v8a/libsmollm.so  # ARM64 native library
     └── x86_64/libsmollm.so     # Emulator native library
@@ -166,11 +164,11 @@ mobile/android/app/src/main/
 | **Inference** | 4-6 tok/s | Pure ARM CPU |
 | **Full Cycle** | 15-30s | End-to-end triage |
 | **Peak RAM** | ~1.4 GB | Single model active |
-| **APK Size** | 2.7 GB | Debug with bundled models |
+| **APK Size** | ~60 MB base | + models via PAD or sideloading |
 
 ## Safety Guardrails
 
-1. **Abstention**: Model abstains if confidence < 75%
+1. **Abstention**: Sensors below 75% confidence excluded from triage (`ClinicalReasoner.CONFIDENCE_THRESHOLD`)
 2. **Severity Classification**: High/Medium/Low with escalation guidance
 3. **Disclaimer**: "Consult a healthcare professional" always shown
 4. **Privacy**: All processing on-device, no data transmission

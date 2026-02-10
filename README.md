@@ -231,7 +231,7 @@ nku-medgemma-conversion/
 │       │   ├── LocalizedStrings.kt     # 46-language UI strings
 │       │   ├── NkuTTS.kt              # Android System TTS wrapper
 │       │   └── CloudInferenceClient.kt # Cloud fallback (dev only)
-│       └── assets/           # Bundled GGUF models
+│       └── assets/           # App resources (models loaded from device storage)
 ├── scripts/
 │   ├── quantization/         # IQ1_M/IQ2_XS quantization
 │   ├── calibration/          # Medical imatrix generation

@@ -20,7 +20,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/MedGemma-4B-blue?style=flat-square" alt="MedGemma" />
   <img src="https://img.shields.io/badge/Offline-100%25-green?style=flat-square" alt="Offline" />
-  <img src="https://img.shields.io/badge/Languages-47+-orange?style=flat-square" alt="Languages" />
+  <img src="https://img.shields.io/badge/Languages-46-orange?style=flat-square" alt="Languages" />
   <img src="https://img.shields.io/badge/RAM-2GB-purple?style=flat-square" alt="RAM" />
   <img src="https://img.shields.io/badge/License-Apache%202.0-lightgrey?style=flat-square" alt="License" />
 </p>
@@ -45,7 +45,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 |:-----|:----|
 | **100% Offline** | Zero network dependency — pure on-device inference |
 | **Ultra-Compressed** | 8GB models → 1.3GB via IQ1_M quantization |
-| **Pan-African Languages** | 47 languages including Ewe, Hausa, Yoruba, Swahili |
+| **Pan-African Languages** | 46 languages including Ewe, Hausa, Yoruba, Swahili |
 | **Budget Hardware** | Runs on 2GB RAM devices (TECNO, Infinix) |
 | **Camera Screening** | Heart rate, anemia, & preeclampsia via phone camera |
 
@@ -55,7 +55,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 - 🧠 **MedGemma 4B** — Google's clinical reasoning model, quantized to 0.78GB
 - 🌐 **TranslateGemma 4B** — Bi-directional Pan-African language bridge
-- 🔊 **Piper TTS** — Offline voice synthesis for low-literacy users
+- 🔊 **Android System TTS** — Device-native voice synthesis for spoken clinical results
 - 💎 **Premium UI** — Glassmorphism design with localized strings
 - ⚡ **Nku Cycle** — Intelligent model swapping under 2GB RAM budget
 - 📷 **Nku Sentinel** — Camera-based screening for heart rate, anemia, & preeclampsia
@@ -87,7 +87,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 │   └────────┬──────────┘                                    │
 │            ↓                                                │
 │   ┌───────────────────┐                                    │
-│   │    Piper TTS      │  ← ONNX (~20MB/voice)              │
+│   │  Android System TTS │                                    │
 │   │  Spoken Result    │                                    │
 │   └───────────────────┘                                    │
 │                                                             │
@@ -119,7 +119,7 @@ All screening uses **pure signal processing** (0 MB additional weights). Sensor 
 | **Perception** | RPPGProcessor, PallorDetector, EdemaDetector |
 | **Orchestration** | ClinicalReasoner + SensorFusion + ThermalManager (42°C) |
 | **Inference** | llama.cpp via JNI (NDK 29, ARM64 NEON) |
-| **TTS** | Piper ONNX Runtime Mobile |
+| **TTS** | Android System TTS (NkuTTS.kt) |
 | **Quantization** | IQ1_M + 64-chunk medical imatrix |
 
 ---
@@ -149,16 +149,16 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 ### Download Models
 
-Models are automatically extracted from APK assets on first launch, or can be pushed manually for development:
+Models are loaded from device storage. For production, see `MODEL_DISTRIBUTION.md` for Play Asset Delivery integration.
 
 ```bash
 # Download IQ1_M models from HuggingFace
 huggingface-cli download wredd/medgemma-4b-gguf medgemma-4b-iq1_m.gguf
 huggingface-cli download wredd/translategemma-4b-gguf translategemma-4b-iq1_m.gguf
 
-# Push to device (development only)
-adb push medgemma-4b-iq1_m.gguf /data/local/tmp/nku_models/
-adb push translategemma-4b-iq1_m.gguf /data/local/tmp/nku_models/
+# Push to device (development)
+adb push medgemma-4b-iq1_m.gguf /sdcard/Download/
+adb push translategemma-4b-iq1_m.gguf /sdcard/Download/
 ```
 
 ---
@@ -198,8 +198,8 @@ Medical accuracy is preserved through **64-chunk imatrix calibration** using 243
 ### Verified Core (14)
 ✅ English | ✅ French | ✅ Swahili | ✅ Hausa | ✅ Yoruba | ✅ Igbo | ✅ Amharic | ✅ Ewe | ✅ Twi | ✅ Wolof | ✅ Zulu | ✅ Xhosa | ✅ Oromo | ✅ Tigrinya
 
-### Extended Pan-African Suite (33+)
-Afrikaans, Bambara, Chichewa, Dinka, Fula, Ga, Kikuyu, Kinyarwanda, Kongo, Lingala, Luo, Luganda, Malagasy, Ndebele, Nuer, Pidgin (Nigerian), Pidgin (Cameroonian), Rundi, Sesotho, Shona, Somali, Tswana, and more...
+### Extended Pan-African Suite (32)
+Afrikaans, Arabic, Bambara, Bemba, Chichewa, Dinka, Fula, Ga, Kikuyu, Kinyarwanda, Kongo, Kuanyama, Lingala, Luba-Kasai, Luo, Luganda, Malagasy, Ndebele, Northern Sotho, Nuer, Pidgin (Nigerian), Pidgin (Cameroonian), Portuguese, Rundi, Sesotho, Shona, Somali, Swati, Tsonga, Tswana, Tumbuka, Venda
 
 ### Verified Triage Results
 
@@ -228,8 +228,8 @@ nku-medgemma-conversion/
 │       │   ├── SensorFusion.kt         # Vital signs aggregator
 │       │   ├── ClinicalReasoner.kt     # MedGemma + WHO fallback
 │       │   ├── ThermalManager.kt       # 42°C auto-throttle
-│       │   ├── LocalizedStrings.kt     # 47-language UI strings
-│       │   ├── PiperTTS.kt            # Voice synthesis
+│       │   ├── LocalizedStrings.kt     # 46-language UI strings
+│       │   ├── NkuTTS.kt              # Android System TTS wrapper
 │       │   └── CloudInferenceClient.kt # Cloud fallback (dev only)
 │       └── assets/           # Bundled GGUF models
 ├── scripts/
@@ -284,13 +284,12 @@ This project is licensed under the Apache License 2.0 — see the [LICENSE](./LI
 
 - [MedGemma Model Card](https://huggingface.co/google/medgemma-4b)
 - [llama.cpp](https://github.com/ggerganov/llama.cpp)
-- [Piper TTS](https://github.com/rhasspy/piper)
 - [African Languages Dataset](https://huggingface.co/datasets/masakhane/masakhane)
 
 ---
 
 <p align="center">
-  <strong>🌍 450M+ lives • 💰 $50 phones • 📵 100% offline • 🗣️ 47 languages</strong>
+  <strong>🌍 450M+ lives • 💰 $50 phones • 📵 100% offline • 🗣️ 46 languages</strong>
 </p>
 
 <p align="center">

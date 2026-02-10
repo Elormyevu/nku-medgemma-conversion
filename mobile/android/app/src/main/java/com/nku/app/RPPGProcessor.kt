@@ -92,16 +92,28 @@ class RPPGProcessor(
     private fun extractGreenChannelMean(bitmap: Bitmap, faceROI: IntArray?): Float {
         val startX = faceROI?.getOrNull(0) ?: 0
         val startY = faceROI?.getOrNull(1) ?: 0
-        val width = faceROI?.getOrNull(2) ?: bitmap.width
-        val height = faceROI?.getOrNull(3) ?: bitmap.height
+        val roiWidth = faceROI?.getOrNull(2) ?: bitmap.width
+        val roiHeight = faceROI?.getOrNull(3) ?: bitmap.height
+        
+        val endX = minOf(startX + roiWidth, bitmap.width)
+        val endY = minOf(startY + roiHeight, bitmap.height)
+        val actualWidth = endX - startX
+        val actualHeight = endY - startY
+        
+        if (actualWidth <= 0 || actualHeight <= 0) return 0f
+        
+        // F-PF-1: Batch pixel copy — orders of magnitude faster than per-pixel getPixel()
+        val pixels = IntArray(actualWidth * actualHeight)
+        bitmap.getPixels(pixels, 0, actualWidth, startX, startY, actualWidth, actualHeight)
         
         var greenSum = 0L
         var pixelCount = 0
         
-        // Sample every 4th pixel for performance
-        for (x in startX until minOf(startX + width, bitmap.width) step 4) {
-            for (y in startY until minOf(startY + height, bitmap.height) step 4) {
-                val pixel = bitmap.getPixel(x, y)
+        // Sample every 4th pixel for performance (stride across the batch array)
+        for (y in 0 until actualHeight step 4) {
+            val rowOffset = y * actualWidth
+            for (x in 0 until actualWidth step 4) {
+                val pixel = pixels[rowOffset + x]
                 val green = (pixel shr 8) and 0xFF
                 greenSum += green
                 pixelCount++

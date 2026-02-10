@@ -65,6 +65,11 @@ class PallorDetector {
     )
     val result: StateFlow<PallorResult> = _result.asStateFlow()
     
+    // F-PF-3: Reusable pixel buffer to avoid per-call allocations
+    private var pixelBuffer: IntArray = IntArray(0)
+    private var lastBufferWidth = 0
+    private var lastBufferHeight = 0
+    
     /**
      * Analyze conjunctiva (lower eyelid) for pallor
      * 
@@ -89,9 +94,18 @@ class PallorDetector {
         
         val hsv = FloatArray(3)
         
+        // F-PF-3: Reuse pixel buffer if dimensions match, otherwise resize lazily
+        val totalPixelCount = bitmap.width * bitmap.height
+        if (bitmap.width != lastBufferWidth || bitmap.height != lastBufferHeight) {
+            pixelBuffer = IntArray(totalPixelCount)
+            lastBufferWidth = bitmap.width
+            lastBufferHeight = bitmap.height
+        }
+        bitmap.getPixels(pixelBuffer, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+        
         for (x in 0 until bitmap.width step stepSize) {
             for (y in 0 until bitmap.height step stepSize) {
-                val pixel = bitmap.getPixel(x, y)
+                val pixel = pixelBuffer[y * bitmap.width + x]
                 Color.colorToHSV(pixel, hsv)
                 
                 val hue = hsv[0]

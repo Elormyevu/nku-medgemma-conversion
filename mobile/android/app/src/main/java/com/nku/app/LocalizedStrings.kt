@@ -160,6 +160,39 @@ object LocalizedStrings {
         val recapture: String = "Re-capture",
         val howTo: String = "How to Capture",
 
+        // F-UI-1: Formerly hardcoded strings now localized
+        val language: String = "Language",
+        val howItWorks: String = "How it works",
+        val howToCapture: String = "How to Capture",
+        val captureForEdema: String = "Capture a photo to check for facial edema",
+        val centerFaceKeepNeutral: String = "Center your face, keep neutral expression",
+        val riskFactors: String = "Risk Factors",
+        val recommendationsTitle: String = "Recommendation",
+        val screeningData: String = "Screening Data",
+
+        // Instruction card steps (F-1 fix)
+        val cardioInstructions: String = "1. Tap \"Start Measurement\" above\n" +
+            "2. Place fingertip over the back camera\n" +
+            "3. The flashlight turns on automatically\n" +
+            "4. Hold still for 10 seconds\n" +
+            "5. Heart rate appears when the buffer fills",
+        val anemiaInstructions: String = "1. Gently pull down the patient's lower eyelid\n" +
+            "2. Point camera at the inner surface (conjunctiva)\n" +
+            "3. Ensure good lighting (daylight preferred)\n" +
+            "4. Tap \"Analyze\" when the image is clear",
+
+        // Progress text (F-2 fix)
+        val screeningsProgress: String = "%d of 3 screenings complete",
+        val readyForTriage: String = "✓ Ready for triage — go to Triage tab",
+
+        // Triage data labels (F-3 fix)
+        val swellingCheck: String = "Swelling Check",
+
+        // Symptom input labels
+        val patientSymptoms: String = "Patient-Reported Symptoms",
+        val micOrType: String = "Type or tap the mic to speak symptoms",
+        val micPermissionRequired: String = "⚠ Microphone permission required for voice input. Please enable in Settings.",
+
         // Safety
         val disclaimer: String = "This is an AI-assisted screening tool. Always consult a healthcare professional for diagnosis and treatment.",
         val deviceCooling: String = "Device cooling down — AI paused"

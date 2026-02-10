@@ -49,6 +49,17 @@ object NkuColors {
     val HeartRate = Color(0xFFE91E63)       // Pink — cardiac
     val Pallor = Color(0xFFFF5722)          // Deep orange — anemia
     val Edema = Color(0xFF9C27B0)           // Purple — preeclampsia
+
+    // ── UI Components (F-UI-2: Replace hardcoded hex colors) ──
+    val CardBackground = Color(0xFF252540)  // Standard card background
+    val InstructionCard = Color(0xFF2D2D44) // How-it-works / instruction cards
+    val InactiveElement = Color(0xFF3D3D5C) // Inactive buttons, unfocused borders
+    val InactiveText = Color(0xFF666666)    // Disabled/incomplete text
+    val ProgressBackground = Color(0xFF1E1E38) // Progress indicator card
+    val CompletedCard = Color(0xFF1A2A1A)   // Green-tinted completed item card
+    val AccentCyan = Color(0xFF00D4FF)      // Bright cyan for TTS/voice buttons
+    val ListeningIndicator = Color(0xFFFF5722) // Recording/listening state
+    val MutedBlue = Color(0xFF90CAF9)       // Secondary text highlight
 }
 
 private val NkuDarkColorScheme = darkColorScheme(

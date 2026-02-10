@@ -190,13 +190,27 @@ def require_models(f):
 
 @app.route('/health', methods=['GET'])
 def health():
-    """Health check endpoint."""
+    """Liveness probe — is the process alive?"""
     return jsonify({
         "status": "ok", 
         "service": "nku-inference",
-        "version": "2.0.0",
-        "models_loaded": medgemma is not None and translategemma is not None
+        "version": "2.0.0"
     })
+
+
+@app.route('/ready', methods=['GET'])
+def ready():
+    """Readiness probe — can this instance serve inference requests?"""
+    models_ready = medgemma is not None and translategemma is not None
+    status_code = 200 if models_ready else 503
+    return jsonify({
+        "status": "ready" if models_ready else "not_ready",
+        "service": "nku-inference",
+        "models": {
+            "medgemma": medgemma is not None,
+            "translategemma": translategemma is not None
+        }
+    }), status_code
 
 
 # =============================================================================

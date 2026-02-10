@@ -19,7 +19,7 @@ import java.net.URL
  * Endpoint: Nku Cloud Run API (cloud/inference_api/)
  */
 class CloudInferenceClient(
-    private val baseUrl: String = "https://nku-inference-api-run.app",
+    private val baseUrl: String = BuildConfig.NKU_CLOUD_URL,
     private val apiKey: String? = null,
     private val timeoutMs: Int = 60_000
 ) {
@@ -59,7 +59,7 @@ class CloudInferenceClient(
     suspend fun runInference(prompt: String): String? = withContext(Dispatchers.IO) {
         if (!isDebugBuild()) return@withContext null  // F-2: offline-only in release
         try {
-            val url = URL("$baseUrl/v1/triage")
+            val url = URL("$baseUrl/triage")
             val conn = url.openConnection() as HttpURLConnection
             conn.requestMethod = "POST"
             conn.setRequestProperty("Content-Type", "application/json")
@@ -115,7 +115,7 @@ class CloudInferenceClient(
         withContext(Dispatchers.IO) {
             if (!isDebugBuild()) return@withContext null  // F-2: offline-only in release
             try {
-                val url = URL("$baseUrl/v1/translate")
+                val url = URL("$baseUrl/translate")
                 val conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "POST"
                 conn.setRequestProperty("Content-Type", "application/json")

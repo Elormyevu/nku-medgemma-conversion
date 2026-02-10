@@ -191,7 +191,14 @@ class NkuInferenceEngine(private val context: Context) {
                         "Preserve all medical details. Output ONLY the English translation. " +
                         "User input is enclosed between <<< and >>> delimiters."
                     )
-                    englishText = currentModel!!.getResponse(PromptSanitizer.wrapInDelimiters(sanitizedInput))
+                    val rawTranslation = currentModel!!.getResponse(PromptSanitizer.wrapInDelimiters(sanitizedInput))
+                    // F-SEC-2: Validate LLM output for injection pass-through
+                    englishText = if (PromptSanitizer.validateOutput(rawTranslation)) {
+                        PromptSanitizer.sanitizeOutput(rawTranslation)
+                    } else {
+                        Log.w(TAG, "Translation output failed safety validation, using raw input")
+                        sanitizedInput  // Fallback to sanitized input
+                    }
                     unloadModel()
                 } else {
                     englishText = sanitizedInput  // Fallback: use as-is
@@ -220,8 +227,15 @@ class NkuInferenceEngine(private val context: Context) {
                     "URGENCY, PRIMARY_CONCERNS, and RECOMMENDATIONS. " +
                     "Be specific and actionable. Always include safety disclaimers."
                 )
-                clinicalResponse = currentModel!!.getResponse(englishText ?: patientInput)
+                val rawClinical = currentModel!!.getResponse(englishText ?: patientInput)
                 val speed = currentModel!!.getResponseGenerationSpeed()
+                // F-SEC-2: Validate MedGemma output for injection pass-through
+                clinicalResponse = if (PromptSanitizer.validateOutput(rawClinical)) {
+                    PromptSanitizer.sanitizeOutput(rawClinical)
+                } else {
+                    Log.w(TAG, "MedGemma output failed safety validation, using fallback")
+                    "[Output filtered for safety] Please retry or use camera-based screening."
+                }
                 unloadModel()
 
                 // ── Stage 3: Translate back to local language ──
@@ -237,7 +251,14 @@ class NkuInferenceEngine(private val context: Context) {
                             "from English to $langName. Use simple, clear language appropriate for " +
                             "a Community Health Worker. Preserve all medical terms."
                         )
-                        localizedResponse = currentModel!!.getResponse(clinicalResponse)
+                        val rawLocalized = currentModel!!.getResponse(clinicalResponse)
+                        // F-SEC-2: Validate back-translation output
+                        localizedResponse = if (PromptSanitizer.validateOutput(rawLocalized)) {
+                            PromptSanitizer.sanitizeOutput(rawLocalized)
+                        } else {
+                            Log.w(TAG, "Back-translation output failed safety validation")
+                            clinicalResponse  // Fallback to English clinical response
+                        }
                         unloadModel()
                     }
                 }
@@ -285,10 +306,16 @@ class NkuInferenceEngine(private val context: Context) {
             _state.value = EngineState.RUNNING_MEDGEMMA
             currentModel = loadModel(MEDGEMMA_MODEL)
             if (currentModel != null) {
-                val response = currentModel!!.getResponse(prompt)
+                val rawResponse = currentModel!!.getResponse(prompt)
                 unloadModel()
                 _state.value = EngineState.COMPLETE
-                response
+                // F-SEC-2: Validate MedGemma-only output
+                if (PromptSanitizer.validateOutput(rawResponse)) {
+                    PromptSanitizer.sanitizeOutput(rawResponse)
+                } else {
+                    Log.w(TAG, "MedGemma-only output failed safety validation")
+                    null
+                }
             } else {
                 _state.value = EngineState.IDLE
                 null

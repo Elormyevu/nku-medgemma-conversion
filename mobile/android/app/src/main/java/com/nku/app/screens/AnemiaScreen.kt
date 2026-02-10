@@ -1,0 +1,251 @@
+package com.nku.app.screens
+
+import android.graphics.Bitmap
+import androidx.camera.core.CameraSelector
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.nku.app.*
+import com.nku.app.ui.NkuColors
+
+/**
+ * AnemiaScreen — Conjunctival pallor detection for anemia screening.
+ * Extracted from MainActivity.kt (F-UI-3 / F-CQ-1).
+ */
+
+@Composable
+fun AnemiaScreen(
+    pallorResult: PallorResult,
+    pallorDetector: PallorDetector,
+    strings: LocalizedStrings.UiStrings
+) {
+    var isCapturing by remember { mutableStateOf(false) }
+    var lastCapturedBitmap by remember { mutableStateOf<Bitmap?>(null) }
+    val scope = rememberCoroutineScope()
+    
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(strings.anemiaTitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
+        Text(strings.anemiaSubtitle, fontSize = 14.sp, color = Color.Gray)
+        
+        Spacer(Modifier.height(20.dp))
+        
+        if (!pallorResult.hasBeenAnalyzed && !isCapturing) {
+            // ---- NOT YET SCREENED STATE ----
+            Card(
+                colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        Icons.Default.Face,
+                        contentDescription = null,
+                        modifier = Modifier.size(48.dp),
+                        tint = Color.Gray
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        strings.notYetScreened,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        strings.pointAtConjunctiva,
+                        fontSize = 13.sp,
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+            
+            Spacer(Modifier.height(20.dp))
+        }
+        
+        // Camera viewfinder for capture
+        if (isCapturing) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(280.dp)
+                    .clip(RoundedCornerShape(16.dp)),
+                colors = CardDefaults.cardColors(containerColor = Color.Black)
+            ) {
+                Box {
+                    CameraPreview(
+                        modifier = Modifier.fillMaxSize(),
+                        enableAnalysis = true,
+                        lensFacing = CameraSelector.LENS_FACING_BACK,
+                        onFrameAnalyzed = { bitmap ->
+                            lastCapturedBitmap = bitmap
+                        }
+                    )
+                    
+                    // Capture overlay guide
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(8.dp)
+                            .background(Color.Black.copy(alpha = 0.7f), RoundedCornerShape(8.dp))
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            strings.pointAtConjunctiva,
+                            fontSize = 11.sp,
+                            color = Color.White,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+            
+            Spacer(Modifier.height(12.dp))
+            
+            // Analyze button
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedButton(
+                    onClick = { isCapturing = false },
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(strings.cancel)
+                }
+                
+                Button(
+                    onClick = {
+                        lastCapturedBitmap?.let { bmp ->
+                            pallorDetector.analyzeConjunctiva(bmp)
+                            isCapturing = false
+                        }
+                    },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(containerColor = NkuColors.Success),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Spacer(Modifier.width(6.dp))
+                    Text(strings.analyze)
+                }
+            }
+            
+            Spacer(Modifier.height(16.dp))
+        }
+        
+        // Results (only show after analysis)
+        if (pallorResult.hasBeenAnalyzed) {
+            val scoreColor = when (pallorResult.severity) {
+                PallorSeverity.NORMAL -> NkuColors.Success
+                PallorSeverity.MILD -> NkuColors.TriageYellow
+                PallorSeverity.MODERATE -> NkuColors.TriageOrange
+                PallorSeverity.SEVERE -> NkuColors.ListeningIndicator
+            }
+            
+            Text(
+                pallorResult.severity.name,
+                fontSize = 36.sp,
+                fontWeight = FontWeight.Bold,
+                color = scoreColor
+            )
+            
+            Text(
+                "Pallor Score: ${(pallorResult.pallorScore * 100).toInt()}%",
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+            
+            Text(
+                "Confidence: ${(pallorResult.confidence * 100).toInt()}%",
+                fontSize = 13.sp,
+                color = Color.Gray
+            )
+            
+            Spacer(Modifier.height(20.dp))
+            
+            // Recommendation
+            Card(
+                colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(strings.recommendationsTitle, fontWeight = FontWeight.Bold, color = Color.White)
+                    Spacer(Modifier.height(8.dp))
+                    Text(pallorResult.recommendation, color = Color.Gray, fontSize = 14.sp)
+                }
+            }
+            
+            Spacer(Modifier.height(16.dp))
+        }
+        
+        // Capture / Re-capture button (when not in capture mode)
+        if (!isCapturing) {
+            Button(
+                onClick = { isCapturing = true },
+                colors = ButtonDefaults.buttonColors(containerColor = NkuColors.Secondary),
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(56.dp),
+                shape = RoundedCornerShape(28.dp)
+            ) {
+                Icon(Icons.Default.Face, contentDescription = null, modifier = Modifier.size(24.dp))
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    if (pallorResult.hasBeenAnalyzed) strings.recapture else strings.captureConjunctiva,
+                    fontSize = 16.sp
+                )
+            }
+            
+            Spacer(Modifier.height(20.dp))
+        }
+        
+        // How to capture guide
+        Card(
+            colors = CardDefaults.cardColors(containerColor = NkuColors.InstructionCard),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(strings.howToCapture, fontWeight = FontWeight.Bold, color = NkuColors.Secondary)
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    strings.anemiaInstructions,
+                    color = Color.Gray,
+                    fontSize = 12.sp
+                )
+            }
+        }
+        
+        Spacer(Modifier.height(12.dp))
+        
+        Text(
+            strings.worksAllSkinTones,
+            textAlign = TextAlign.Center,
+            color = Color.Gray,
+            fontSize = 12.sp
+        )
+    }
+}

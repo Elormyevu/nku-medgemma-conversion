@@ -184,6 +184,25 @@ object LocalizedStrings {
         // Progress text (F-2 fix)
         val screeningsProgress: String = "%d of 3 screenings complete",
         val readyForTriage: String = "✓ Ready for triage — go to Triage tab",
+        val followSteps: String = "Follow the steps below to screen a patient",
+
+        // Step card prompts (HCD: tappable cards)
+        val tapToMeasureHR: String = "Tap here to measure heart rate",
+        val tapToCaptureEyelid: String = "Tap here to capture eyelid",
+        val tapToCaptureFace: String = "Tap here to capture face",
+
+        // Step card clinical status
+        val hrElevated: String = "⚠ Elevated — may indicate stress or anemia",
+        val hrLow: String = "⚠ Low — monitor closely",
+        val hrNormal: String = "✓ Within normal range",
+        val noPallor: String = "✓ No pallor detected",
+        val mildPallor: String = "Mild pallor — monitor weekly",
+        val moderatePallor: String = "⚠ Moderate — get hemoglobin test",
+        val severePallor: String = "🚨 Severe — urgent referral",
+        val noSwelling: String = "✓ No facial swelling",
+        val mildSwelling: String = "Mild swelling — check blood pressure",
+        val moderateSwelling: String = "⚠ Check BP and urine protein",
+        val significantSwelling: String = "🚨 Urgent evaluation needed",
 
         // Triage data labels (F-3 fix)
         val swellingCheck: String = "Swelling Check",

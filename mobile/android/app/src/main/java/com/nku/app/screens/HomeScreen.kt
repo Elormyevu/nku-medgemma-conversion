@@ -34,7 +34,8 @@ fun HomeScreen(
     edemaResult: EdemaResult,
     strings: LocalizedStrings.UiStrings,
     selectedLanguage: String,
-    onLanguageChange: (String) -> Unit
+    onLanguageChange: (String) -> Unit,
+    onNavigateToTab: (Int) -> Unit = {}
 ) {
     // Progress tracking
     val hasHR = rppgResult.bpm != null && rppgResult.confidence > 0.4f
@@ -168,7 +169,7 @@ fun HomeScreen(
                 } else if (completedCount == 0) {
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "Follow the steps below to screen a patient",
+                        strings.followSteps,
                         fontSize = 12.sp,
                         color = Color.Gray
                     )
@@ -184,17 +185,18 @@ fun HomeScreen(
             title = strings.heartRate,
             value = if (hasHR) "${rppgResult.bpm!!.toInt()} ${strings.bpm}" else "—",
             subtitle = when {
-                !hasHR -> "Tap \"Cardio\" tab to measure"
-                rppgResult.bpm!! > 100 -> "⚠ Elevated — may indicate stress or anemia"
-                rppgResult.bpm!! < 60 -> "⚠ Low — monitor closely"
-                else -> "✓ Within normal range"
+                !hasHR -> strings.tapToMeasureHR
+                rppgResult.bpm!! > 100 -> strings.hrElevated
+                rppgResult.bpm!! < 60 -> strings.hrLow
+                else -> strings.hrNormal
             },
             isComplete = hasHR,
             statusColor = when {
                 !hasHR -> Color.Gray
                 rppgResult.bpm!! > 100 || rppgResult.bpm!! < 50 -> NkuColors.ListeningIndicator
                 else -> NkuColors.Success
-            }
+            },
+            onClick = { onNavigateToTab(1) }
         )
         
         Spacer(Modifier.height(10.dp))
@@ -205,11 +207,11 @@ fun HomeScreen(
             title = strings.anemiaScreen,
             value = if (hasAnemia) pallorResult.severity.name else "—",
             subtitle = when {
-                !hasAnemia -> "Tap \"Anemia\" tab to capture eyelid"
-                pallorResult.severity == PallorSeverity.NORMAL -> "✓ No pallor detected"
-                pallorResult.severity == PallorSeverity.MILD -> "Mild pallor — monitor weekly"
-                pallorResult.severity == PallorSeverity.MODERATE -> "⚠ Moderate — get hemoglobin test"
-                pallorResult.severity == PallorSeverity.SEVERE -> "🚨 Severe — urgent referral"
+                !hasAnemia -> strings.tapToCaptureEyelid
+                pallorResult.severity == PallorSeverity.NORMAL -> strings.noPallor
+                pallorResult.severity == PallorSeverity.MILD -> strings.mildPallor
+                pallorResult.severity == PallorSeverity.MODERATE -> strings.moderatePallor
+                pallorResult.severity == PallorSeverity.SEVERE -> strings.severePallor
                 else -> "—"
             },
             isComplete = hasAnemia,
@@ -220,7 +222,8 @@ fun HomeScreen(
                 pallorResult.severity == PallorSeverity.MODERATE -> NkuColors.TriageOrange
                 pallorResult.severity == PallorSeverity.SEVERE -> NkuColors.ListeningIndicator
                 else -> Color.Gray
-            }
+            },
+            onClick = { onNavigateToTab(2) }
         )
         
         Spacer(Modifier.height(10.dp))
@@ -231,11 +234,11 @@ fun HomeScreen(
             title = strings.preeclampsiaScreen,
             value = if (hasPreE) edemaResult.severity.name else "—",
             subtitle = when {
-                !hasPreE -> "Tap \"Pre-E\" tab to capture face"
-                edemaResult.severity == EdemaSeverity.NORMAL -> "✓ No facial swelling"
-                edemaResult.severity == EdemaSeverity.MILD -> "Mild swelling — check blood pressure"
-                edemaResult.severity == EdemaSeverity.MODERATE -> "⚠ Check BP and urine protein"
-                edemaResult.severity == EdemaSeverity.SIGNIFICANT -> "🚨 Urgent evaluation needed"
+                !hasPreE -> strings.tapToCaptureFace
+                edemaResult.severity == EdemaSeverity.NORMAL -> strings.noSwelling
+                edemaResult.severity == EdemaSeverity.MILD -> strings.mildSwelling
+                edemaResult.severity == EdemaSeverity.MODERATE -> strings.moderateSwelling
+                edemaResult.severity == EdemaSeverity.SIGNIFICANT -> strings.significantSwelling
                 else -> "—"
             },
             isComplete = hasPreE,
@@ -246,7 +249,8 @@ fun HomeScreen(
                 edemaResult.severity == EdemaSeverity.MODERATE -> NkuColors.TriageOrange
                 edemaResult.severity == EdemaSeverity.SIGNIFICANT -> NkuColors.ListeningIndicator
                 else -> Color.Gray
-            }
+            },
+            onClick = { onNavigateToTab(3) }
         )
         
         Spacer(Modifier.height(20.dp))
@@ -276,9 +280,11 @@ fun GuidedStepCard(
     value: String,
     subtitle: String,
     isComplete: Boolean,
-    statusColor: Color
+    statusColor: Color,
+    onClick: () -> Unit = {}
 ) {
     Card(
+        onClick = onClick,
         colors = CardDefaults.cardColors(
             containerColor = if (isComplete)
                 NkuColors.CompletedCard.copy(alpha = 0.8f)

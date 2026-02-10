@@ -221,7 +221,8 @@ fun NkuSentinelApp(
                         edemaResult = edemaResult,
                         strings = strings,
                         selectedLanguage = selectedLanguage,
-                        onLanguageChange = { selectedLanguage = it }
+                        onLanguageChange = { selectedLanguage = it },
+                        onNavigateToTab = { selectedTab = it }
                     )
                     1 -> CardioScreen(
                         rppgResult = rppgResult,

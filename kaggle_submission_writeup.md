@@ -102,7 +102,7 @@ We achieve **90% size reduction** from the original MedGemma weights while prese
 └─────────────────────────────────────────────────┘
 ```
 
-- **APK Size**: Base APK includes llama.cpp native libraries (~40MB per ABI); models delivered separately via Play Asset Delivery (MedGemma 0.78GB + TranslateGemma 0.51GB)
+- **APK Size**: 733MB universal (all 4 ABIs); ~90MB per-device via AAB ABI splitting (arm64-only). Models delivered separately via Play Asset Delivery (MedGemma 0.78GB + TranslateGemma 0.51GB)
 - **Inference Speed**: Approximately 4-6 tokens/second on ARM Cortex-A76 (based on llama.cpp IQ1_M benchmarks for similar architectures [7])
 - **Model Load Time**: ~1.4 seconds via memory-mapped GGUF
 

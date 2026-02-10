@@ -22,7 +22,7 @@
 -keep class com.google.mediapipe.** { *; }
 -dontwarn com.google.mediapipe.**
 
-# ── ONNX Runtime (Piper TTS) ──
+# ── ONNX Runtime (kept for future use) ──
 -keep class ai.onnxruntime.** { *; }
 -dontwarn ai.onnxruntime.**
 
@@ -51,3 +51,9 @@
 # Don't warn about missing optional dependencies
 -dontwarn javax.annotation.**
 -dontwarn kotlin.reflect.jvm.**
+
+# ── AutoValue / MediaPipe annotation processor (not needed at runtime) ──
+-dontwarn javax.lang.model.**
+-dontwarn autovalue.shaded.**
+-dontwarn com.google.auto.value.**
+

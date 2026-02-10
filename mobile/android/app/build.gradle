@@ -5,6 +5,9 @@ plugins {
     id 'com.google.devtools.ksp' version '2.1.0-1.0.29'
 }
 
+// Play Asset Delivery — model packs (see MODEL_DISTRIBUTION.md)
+android.assetPacks = [":medgemma", ":translategemma"]
+
 // Force all modules to use the same coroutines version
 configurations.all {
     resolutionStrategy {

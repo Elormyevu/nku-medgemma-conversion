@@ -209,4 +209,60 @@ class HomeScreenTest {
 
         composeTestRule.onNodeWithText("💾", substring = true).assertDoesNotExist()
     }
+
+    // ── Export Button Tests ───────────────────────────────────────
+
+    @Test
+    fun homeScreen_showsExportButton_whenScreeningsSaved() {
+        composeTestRule.setContent {
+            HomeScreen(
+                rppgResult = RPPGResult(),
+                pallorResult = PallorResult(),
+                edemaResult = EdemaResult(),
+                strings = defaultStrings,
+                selectedLanguage = "en",
+                onLanguageChange = {},
+                savedScreeningCount = 3
+            )
+        }
+
+        composeTestRule.onNodeWithText(defaultStrings.exportData).assertIsDisplayed()
+    }
+
+    @Test
+    fun homeScreen_hidesExportButton_whenNoScreeningsSaved() {
+        composeTestRule.setContent {
+            HomeScreen(
+                rppgResult = RPPGResult(),
+                pallorResult = PallorResult(),
+                edemaResult = EdemaResult(),
+                strings = defaultStrings,
+                selectedLanguage = "en",
+                onLanguageChange = {},
+                savedScreeningCount = 0
+            )
+        }
+
+        composeTestRule.onNodeWithText(defaultStrings.exportData).assertDoesNotExist()
+    }
+
+    @Test
+    fun homeScreen_exportButton_triggersCallback() {
+        var exportCalled = false
+        composeTestRule.setContent {
+            HomeScreen(
+                rppgResult = RPPGResult(),
+                pallorResult = PallorResult(),
+                edemaResult = EdemaResult(),
+                strings = defaultStrings,
+                selectedLanguage = "en",
+                onLanguageChange = {},
+                savedScreeningCount = 2,
+                onExportData = { exportCalled = true }
+            )
+        }
+
+        composeTestRule.onNodeWithText(defaultStrings.exportData).performClick()
+        assert(exportCalled) { "Expected onExportData callback to be triggered" }
+    }
 }

@@ -1,11 +1,11 @@
 package com.nku.app
 
 /**
- * LocalizedStrings — Pan-African Language Support (47 Languages)
+ * LocalizedStrings — Pan-African Language Support (46 Languages)
  *
- * Provides UI strings and clinical text in 47 African languages.
+ * Provides UI strings and clinical text in 46 African languages.
  * Tier 1 (14 languages): Full clinical vocabulary verified
- * Tier 2 (33 languages): UI labels localized
+ * Tier 2 (32 languages): UI labels localized
  *
  * Usage:
  *   val strings = LocalizedStrings.forLanguage("ee")  // Ewe

@@ -60,6 +60,21 @@ fun TriageScreen(
     var micPermissionDenied by remember { mutableStateOf(false) }
     val symptoms by sensorFusion.symptoms.collectAsState()
     
+    // S-3 Fix: Speech recognition launcher
+    val speechLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        isListening = false
+        if (result.resultCode == Activity.RESULT_OK) {
+            val spokenText = result.data
+                ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                ?.firstOrNull()
+            if (!spokenText.isNullOrBlank()) {
+                sensorFusion.addSymptom(spokenText.trim())
+            }
+        }
+    }
+    
     // S-3 Fix: Runtime permission request for RECORD_AUDIO
     val micPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -76,20 +91,6 @@ fun TriageScreen(
             speechLauncher.launch(intent)
         } else {
             micPermissionDenied = true
-        }
-    }
-    
-    val speechLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        isListening = false
-        if (result.resultCode == Activity.RESULT_OK) {
-            val spokenText = result.data
-                ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                ?.firstOrNull()
-            if (!spokenText.isNullOrBlank()) {
-                sensorFusion.addSymptom(spokenText.trim())
-            }
         }
     }
     

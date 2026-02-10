@@ -36,7 +36,8 @@ fun HomeScreen(
     selectedLanguage: String,
     onLanguageChange: (String) -> Unit,
     onNavigateToTab: (Int) -> Unit = {},
-    savedScreeningCount: Int = 0
+    savedScreeningCount: Int = 0,
+    onExportData: () -> Unit = {}
 ) {
     // Progress tracking
     val hasHR = rppgResult.bpm != null && rppgResult.confidence > 0.4f
@@ -180,12 +181,31 @@ fun HomeScreen(
 
         // Saved screenings count
         if (savedScreeningCount > 0) {
-            Text(
-                "💾 $savedScreeningCount screening${if (savedScreeningCount != 1) "s" else ""} saved",
-                fontSize = 11.sp,
-                color = NkuColors.InactiveText,
-                modifier = Modifier.padding(top = 4.dp)
-            )
+            Row(
+                modifier = Modifier.padding(top = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    "💾 $savedScreeningCount screening${if (savedScreeningCount != 1) "s" else ""} saved",
+                    fontSize = 11.sp,
+                    color = NkuColors.InactiveText
+                )
+                OutlinedButton(
+                    onClick = onExportData,
+                    modifier = Modifier.height(28.dp),
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
+                    shape = RoundedCornerShape(14.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Share,
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(strings.exportData, fontSize = 10.sp)
+                }
+            }
         }
         
         Spacer(Modifier.height(16.dp))

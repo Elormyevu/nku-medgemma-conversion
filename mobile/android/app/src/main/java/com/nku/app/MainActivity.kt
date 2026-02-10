@@ -229,7 +229,16 @@ fun NkuSentinelApp(
                         selectedLanguage = selectedLanguage,
                         onLanguageChange = { selectedLanguage = it },
                         onNavigateToTab = { selectedTab = it },
-                        savedScreeningCount = screeningCount
+                        savedScreeningCount = screeningCount,
+                        onExportData = {
+                            scope.launch {
+                                val screenings = screeningDao.getAllScreeningsSnapshot()
+                                if (screenings.isNotEmpty()) {
+                                    val (_, intent) = com.nku.app.data.ScreeningExporter.exportToCsv(context, screenings)
+                                    context.startActivity(intent)
+                                }
+                            }
+                        }
                     )
                     1 -> CardioScreen(
                         rppgResult = rppgResult,

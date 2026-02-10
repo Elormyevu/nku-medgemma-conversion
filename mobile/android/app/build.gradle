@@ -61,6 +61,10 @@ android {
     aaptOptions {
         noCompress 'gguf', 'tflite', 'task'
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {

@@ -84,13 +84,13 @@ fun AnemiaScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "⚠ Camera permission required",
+                        strings.cameraPermissionTitle,
                         fontWeight = FontWeight.Bold,
                         color = NkuColors.Warning
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Anemia screening needs camera access. Please enable in Settings.",
+                        strings.cameraPermissionAnemia,
                         fontSize = 12.sp,
                         color = Color.Gray,
                         textAlign = TextAlign.Center
@@ -105,7 +105,7 @@ fun AnemiaScreen(
                             )
                         }
                     ) {
-                        Text("Open Settings", fontSize = 13.sp)
+                        Text(strings.openSettings, fontSize = 13.sp)
                     }
                 }
             }

@@ -21,6 +21,9 @@ interface ScreeningDao {
     @Query("SELECT COUNT(*) FROM screenings")
     fun getCount(): Flow<Int>
 
+    @Query("SELECT * FROM screenings ORDER BY timestamp DESC")
+    suspend fun getAllScreeningsSnapshot(): List<ScreeningEntity>
+
     @Query("DELETE FROM screenings WHERE timestamp < :olderThan")
     suspend fun deleteOlderThan(olderThan: Long)
 }

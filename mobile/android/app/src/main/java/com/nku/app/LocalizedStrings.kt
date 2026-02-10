@@ -214,7 +214,16 @@ object LocalizedStrings {
 
         // Safety
         val disclaimer: String = "This is an AI-assisted screening tool. Always consult a healthcare professional for diagnosis and treatment.",
-        val deviceCooling: String = "Device cooling down — AI paused"
+        val deviceCooling: String = "Device cooling down — AI paused",
+
+        // Camera permission (F-CAM fix)
+        val cameraPermissionTitle: String = "⚠ Camera permission required",
+        val cameraPermissionCardio: String = "Heart rate measurement needs camera access. Please enable in Settings.",
+        val cameraPermissionAnemia: String = "Anemia screening needs camera access. Please enable in Settings.",
+        val openSettings: String = "Open Settings",
+
+        // Data export
+        val exportData: String = "Export Screening Data"
     )
 
     // ─── Tier 1 Languages ───────────────────────────────────────
@@ -408,7 +417,12 @@ object LocalizedStrings {
         micOrType = "Rubuta ko matsa makirufo don yin magana",
         micPermissionRequired = "⚠ Ana buƙatar izinin makirufo. Don Allah a kunna a Saituna.",
         disclaimer = "Wannan kayan aikin bincike ne na AI. Koyaushe ka tuntuɓi likita.",
-        deviceCooling = "Na'urar tana hucewa — AI ya tsaya"
+        deviceCooling = "Na'urar tana hucewa — AI ya tsaya",
+        cameraPermissionTitle = "⚠ Ana buƙatar izinin kyamara",
+        cameraPermissionCardio = "Gwajin bugun zuciya yana buƙatar kyamara. Don Allah a kunna a Saituna.",
+        cameraPermissionAnemia = "Gwajin rashin jini yana buƙatar kyamara. Don Allah a kunna a Saituna.",
+        openSettings = "Buɗe Saituna",
+        exportData = "Fitar da bayanan bincike"
     )
 
     val yorubaStrings = UiStrings(
@@ -498,7 +512,12 @@ object LocalizedStrings {
         micOrType = "Tẹ̀ tàbí tẹ maikirofóònù láti sọ àmì àìsàn",
         micPermissionRequired = "⚠ A nílò àṣẹ maikirofóònù. Jọ̀wọ́ mú ṣiṣẹ́ ní Ètò.",
         disclaimer = "Ohun èlò àyẹ̀wò AI ni èyí. Máa bá dókítà sọ̀rọ̀ nígbà gbogbo.",
-        deviceCooling = "Ẹ̀rọ ń tutù — AI ti dúró"
+        deviceCooling = "Ẹ̀rọ ń tutù — AI ti dúró",
+        cameraPermissionTitle = "⚠ A nílò àṣẹ kámẹ́rà",
+        cameraPermissionCardio = "Wíwọn ìlù ọkàn nílò kámẹ́rà. Jọ̀wọ́ mú ṣiṣẹ́ ní Ètò.",
+        cameraPermissionAnemia = "Àyẹ̀wò ẹ̀jẹ̀ nílò kámẹ́rà. Jọ̀wọ́ mú ṣiṣẹ́ ní Ètò.",
+        openSettings = "Ṣí Ètò",
+        exportData = "Gbejàde dátà àyẹ̀wò"
     )
 
     val igboStrings = UiStrings(

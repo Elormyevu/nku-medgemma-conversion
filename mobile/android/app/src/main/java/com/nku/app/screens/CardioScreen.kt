@@ -100,13 +100,13 @@ fun CardioScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "⚠ Camera permission required",
+                        strings.cameraPermissionTitle,
                         fontWeight = FontWeight.Bold,
                         color = NkuColors.Warning
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Heart rate measurement needs camera access. Please enable in Settings.",
+                        strings.cameraPermissionCardio,
                         fontSize = 12.sp,
                         color = Color.Gray,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -121,7 +121,7 @@ fun CardioScreen(
                             )
                         }
                     ) {
-                        Text("Open Settings", fontSize = 13.sp)
+                        Text(strings.openSettings, fontSize = 13.sp)
                     }
                 }
             }

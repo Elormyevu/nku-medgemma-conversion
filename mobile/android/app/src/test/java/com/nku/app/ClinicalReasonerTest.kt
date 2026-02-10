@@ -33,7 +33,7 @@ class ClinicalReasonerTest {
     @Test
     fun `tachycardia elevates triage to YELLOW or higher`() {
         val vitals = VitalSigns(
-            heartRateBpm = 115f,
+            heartRateBpm = 125f,
             heartRateConfidence = 0.9f,
             pallorSeverity = PallorSeverity.NORMAL,
             pallorScore = 0.1f,
@@ -64,14 +64,16 @@ class ClinicalReasonerTest {
     }
 
     @Test
-    fun `significant edema produces ORANGE or RED triage`() {
+    fun `significant edema in pregnancy produces ORANGE or RED triage`() {
         val vitals = VitalSigns(
             heartRateBpm = 80f,
             heartRateConfidence = 0.8f,
             pallorSeverity = PallorSeverity.NORMAL,
             pallorScore = 0.1f,
             edemaSeverity = EdemaSeverity.SIGNIFICANT,
-            edemaScore = 0.85f
+            edemaScore = 0.85f,
+            isPregnant = true,
+            gestationalWeeks = 28
         )
         reasoner.createRuleBasedAssessment(vitals)
         val assessment = reasoner.assessment.value

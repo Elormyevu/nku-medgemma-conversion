@@ -1,6 +1,6 @@
 package com.nku.app
 
-import android.util.Base64
+import java.util.Base64 as JBase64
 import android.util.Log
 
 /**
@@ -103,7 +103,7 @@ object PromptSanitizer {
 
         BASE64_CANDIDATE_REGEX.findAll(input).forEach { match ->
             try {
-                val decoded = String(Base64.decode(match.value, Base64.DEFAULT), Charsets.UTF_8)
+                val decoded = String(JBase64.getDecoder().decode(match.value), Charsets.UTF_8)
                 // Check if the decoded content contains injection patterns
                 for (pattern in INJECTION_PATTERNS) {
                     if (pattern.containsMatchIn(decoded)) {

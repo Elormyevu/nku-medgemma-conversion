@@ -6,7 +6,7 @@
 
 In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people—far below the WHO's recommended 44.5 per 10,000. Over **450 million people** lack accessible primary care. Community Health Workers (CHWs), the frontline of healthcare delivery, operate in "equipment deserts" with no diagnostic tools.
 
-Yet nearly all CHWs carry smartphones. Powerful clinical AI models like MedGemma exist, but require cloud connectivity. In rural Ghana, Nigeria, and Kenya, <2G connectivity is the norm—making cloud-based AI **medically useless** precisely where it is needed most.
+Yet nearly all CHWs carry smartphones. Powerful clinical AI models like MedGemma exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, while 3G accounts for ~54% of mobile connections, network coverage is unreliable and intermittent — 25% of rural Africans lack mobile broadband entirely (ITU 2024). This makes cloud-based AI **impractical** precisely where it is needed most.
 
 **Nku** (Ewe: "eye") is a **proof-of-concept prototype** demonstrating that MedGemma can run **entirely on-device** on $50 Android phones with 2GB RAM. No cloud. No internet. No compromise. Nku's sensor thresholds and clinical workflows require field validation with real CHWs before deployment, but the core technical challenge — fitting a medical-grade LLM on a budget phone — is solved.
 

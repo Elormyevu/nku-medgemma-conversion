@@ -10,7 +10,7 @@
 
 In Sub-Saharan Africa, the physician-to-population ratio is critically low—averaging fewer than 2.3 physicians per 10,000 population [1], far below the WHO-recommended threshold of 44.5 health professionals per 10,000 [2]. Community Health Workers (CHWs)—the frontline of primary care—operate in "equipment deserts" with no diagnostic tools. Yet a remarkable fact remains: **nearly all CHWs carry smartphones** [3].
 
-The disconnect is stark: powerful AI models like MedGemma exist, but they require cloud connectivity. In rural Ghana, Nigeria, and Kenya, **<2G connectivity is the norm**—making cloud-based AI medically useless precisely where it's needed most [4].
+The disconnect is stark: powerful AI models like MedGemma exist, but they require reliable cloud connectivity. In rural Sub-Saharan Africa, while 3G accounts for ~54% of mobile connections (GSMA 2023), network coverage is unreliable and intermittent — 25% of rural Africans lack mobile broadband access entirely, and only 23% regularly use the internet (ITU 2024) [4]. This makes cloud-based AI **impractical** precisely where it is needed most.
 
 ### The Unmet Need
 
@@ -23,7 +23,7 @@ The disconnect is stark: powerful AI models like MedGemma exist, but they requir
 
 ### Our Target User
 
-A Community Health Worker conducting home visits in rural Ghana. She carries a $60 TECNO phone with 2GB RAM, has no internet access, and speaks Ewe. When a patient describes symptoms, she needs immediate triage guidance—in her language, offline, on her existing device.
+A Community Health Worker conducting home visits in rural Ghana. She carries a $60 TECNO phone with 2GB RAM, lacks stable internet access, and speaks Ewe. When a patient describes symptoms, she needs immediate triage guidance—in her language, offline, on her existing device.
 
 ---
 

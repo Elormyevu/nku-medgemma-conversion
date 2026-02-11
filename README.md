@@ -32,7 +32,7 @@
 In rural Sub-Saharan Africa:
 - **Physician-to-patient ratio exceeds 1:10,000**
 - **450M+ people** lack accessible primary care screening
-- **<2G connectivity** is the norm — cloud AI is useless
+- **Unreliable rural connectivity** — cloud AI is impractical where 25% lack mobile broadband (ITU 2024)
 - **Representation bias**: AI models perform poorly on Fitzpatrick V-VI skin tones
 
 Yet **nearly all Community Health Workers (CHWs) carry smartphones**.

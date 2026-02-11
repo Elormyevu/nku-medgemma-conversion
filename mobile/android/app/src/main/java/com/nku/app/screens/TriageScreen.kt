@@ -48,6 +48,7 @@ fun TriageScreen(
     ttsState: TTSState,
     engineState: EngineState = EngineState.IDLE,
     engineProgress: String = "",
+    selectedLanguage: String = "en",  // F-11 fix: pass actual language for TTS
     strings: LocalizedStrings.UiStrings = LocalizedStrings.UiStrings(),
     onRunTriage: () -> Unit
 ) {
@@ -275,7 +276,7 @@ fun TriageScreen(
                 if (result.recommendations.isNotEmpty()) { append("Recommendations: "); result.recommendations.forEach { append("$it. ") } }
             }
             Button(
-                onClick = { if (ttsState == TTSState.SPEAKING) nkuTTS.stop() else nkuTTS.speak(speakableText, "en") },
+                onClick = { if (ttsState == TTSState.SPEAKING) nkuTTS.stop() else nkuTTS.speak(speakableText, selectedLanguage) },
                 colors = ButtonDefaults.buttonColors(containerColor = if (ttsState == TTSState.SPEAKING) NkuColors.ListeningIndicator else NkuColors.AccentCyan),
                 modifier = Modifier.fillMaxWidth(0.7f).height(48.dp),
                 shape = RoundedCornerShape(24.dp)

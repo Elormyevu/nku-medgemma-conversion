@@ -32,10 +32,11 @@ object ScreeningExporter {
         val csvFile = File(exportDir, filename)
 
         csvFile.bufferedWriter().use { writer ->
-            // Header row
+            // Header row (F-8 fix: include recommendations and edema_risk_factors)
             writer.appendLine(
                 "id,timestamp,heart_rate_bpm,hr_confidence,pallor_severity," +
                 "edema_severity,triage_level,symptoms," +
+                "recommendations,edema_risk_factors," +
                 "language,is_pregnant,gestational_weeks"
             )
 
@@ -47,6 +48,7 @@ object ScreeningExporter {
                     "${escapeCsv(s.pallorSeverity ?: "")}," +
                     "${escapeCsv(s.edemaSeverity ?: "")}," +
                     "${escapeCsv(s.triageLevel ?: "")},${escapeCsv(s.symptoms ?: "")}," +
+                    "${escapeCsv(s.recommendations ?: "")},${escapeCsv(s.edemaRiskFactors ?: "")}," +
                     "${s.language},${s.isPregnant},${s.gestationalWeeks ?: ""}"
                 )
             }

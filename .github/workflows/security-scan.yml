@@ -28,11 +28,12 @@ jobs:
           pip install pip-audit
       
       - name: Audit Root Dependencies
+        continue-on-error: true  # CI-2 fix: visible but non-blocking
         run: |
           # Root requirements.txt contains --index-url (for PyTorch CPU) which
           # pip-audit cannot parse directly. Strip it before auditing.
           grep -v '^--' requirements.txt > /tmp/root-requirements-clean.txt
-          pip-audit --requirement /tmp/root-requirements-clean.txt --strict || true
+          pip-audit --requirement /tmp/root-requirements-clean.txt --strict
       
       - name: Audit Cloud API Dependencies
         run: |

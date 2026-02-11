@@ -193,12 +193,13 @@ class SensorFusion(
             PallorSeverity.MODERATE, PallorSeverity.SEVERE
         )
         
-        // Moderate+ edema (especially concerning if pregnant)
-        val significantEdema = vitals.edemaSeverity in listOf(
-            EdemaSeverity.MODERATE, EdemaSeverity.SIGNIFICANT
-        )
+        // F-5 fix: SIGNIFICANT edema always flags high risk regardless of pregnancy.
+        // MODERATE edema remains pregnancy-gated. Significant facial swelling
+        // warrants referral even without confirmed pregnancy status.
+        val significantEdema = vitals.edemaSeverity == EdemaSeverity.SIGNIFICANT
+        val moderateEdemaPregnant = vitals.edemaSeverity == EdemaSeverity.MODERATE && isPregnant
         
-        return highHR || significantPallor || (significantEdema && isPregnant)
+        return highHR || significantPallor || significantEdema || moderateEdemaPregnant
     }
     
     /**

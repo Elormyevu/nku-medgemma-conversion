@@ -276,6 +276,7 @@ fun NkuSentinelApp(
                         ttsState = ttsState,
                         engineState = engineState,
                         engineProgress = engineProgress,
+                        selectedLanguage = selectedLanguage,  // F-11 fix
                         strings = strings,
                         onRunTriage = {
                             sensorFusion.updateVitalSigns()

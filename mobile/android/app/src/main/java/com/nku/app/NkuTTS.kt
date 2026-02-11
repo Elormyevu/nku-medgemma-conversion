@@ -56,6 +56,19 @@ class NkuTTS(private val context: Context) : TextToSpeech.OnInitListener {
             _state.value = TTSState.READY
             _isReady.value = true
             Log.i(TAG, "TTS initialized successfully")
+            
+            // F-6 fix: Register listener once at init, not per-speak() call
+            tts?.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
+                override fun onStart(utteranceId: String?) {
+                    _state.value = TTSState.SPEAKING
+                }
+                override fun onDone(utteranceId: String?) {
+                    _state.value = TTSState.READY
+                }
+                override fun onError(utteranceId: String?) {
+                    _state.value = TTSState.ERROR
+                }
+            })
         } else {
             _state.value = TTSState.ERROR
             _isReady.value = false
@@ -92,19 +105,6 @@ class NkuTTS(private val context: Context) : TextToSpeech.OnInitListener {
 
         _state.value = TTSState.SPEAKING
         engine.speak(text, TextToSpeech.QUEUE_FLUSH, null, "nku_tts_${System.currentTimeMillis()}")
-
-        // Monitor completion
-        engine.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
-            override fun onStart(utteranceId: String?) {
-                _state.value = TTSState.SPEAKING
-            }
-            override fun onDone(utteranceId: String?) {
-                _state.value = TTSState.READY
-            }
-            override fun onError(utteranceId: String?) {
-                _state.value = TTSState.ERROR
-            }
-        })
     }
 
     /**

@@ -33,7 +33,12 @@ class RPPGProcessor(
     private val bufferSize = (fps * bufferSeconds).toInt()
     private val minAnalysisFrames = (fps * 5).toInt()  // Need 5 seconds minimum
     
-    private val signalBuffer = mutableListOf<Float>()
+    // F-1 fix: ArrayDeque for O(1) removeFirst() instead of O(n) removeAt(0)
+    private val signalBuffer = ArrayDeque<Float>(bufferSize)
+    
+    // F-2/P-1 fix: Throttle DFT to every 5th frame (80% CPU reduction)
+    private var frameCounter = 0
+    private var cachedBpmResult: Pair<Float, Float>? = null  // (bpm, confidence)
     
     private val _result = MutableStateFlow(RPPGResult(null, 0f, "insufficient", 0f))
     val result: StateFlow<RPPGResult> = _result.asStateFlow()
@@ -54,12 +59,14 @@ class RPPGProcessor(
         
         // Extract green channel mean from the frame (or face ROI)
         val greenMean = extractGreenChannelMean(bitmap, faceROI)
-        signalBuffer.add(greenMean)
+        signalBuffer.addLast(greenMean)
         
-        // Maintain buffer size
+        // F-1 fix: O(1) removeFirst() instead of O(n) removeAt(0)
         while (signalBuffer.size > bufferSize) {
-            signalBuffer.removeAt(0)
+            signalBuffer.removeFirst()
         }
+        
+        frameCounter++
         
         val fillPercent = 100f * signalBuffer.size / bufferSize
         
@@ -70,8 +77,12 @@ class RPPGProcessor(
             return result
         }
         
-        // Estimate heart rate using FFT-like peak detection
-        val (bpm, confidence) = estimateBPM()
+        // F-2/P-1 fix: Only run DFT every 5th frame (BPM changes slowly)
+        val (bpm, confidence) = if (frameCounter % 5 == 0 || cachedBpmResult == null) {
+            estimateBPM().also { cachedBpmResult = it }
+        } else {
+            cachedBpmResult!!
+        }
         
         val quality = when {
             confidence >= 0.8f -> "excellent"
@@ -128,7 +139,7 @@ class RPPGProcessor(
      * Finds dominant frequency in the 40-200 BPM (0.67-3.33 Hz) range.
      */
     private fun estimateBPM(): Pair<Float, Float> {
-        val data = signalBuffer.toFloatArray()
+        val data = signalBuffer.toList().toFloatArray()
         
         // Detrend (remove DC component and linear trend)
         val mean = data.average().toFloat()
@@ -187,6 +198,8 @@ class RPPGProcessor(
      */
     fun reset() {
         signalBuffer.clear()
+        frameCounter = 0
+        cachedBpmResult = null
         _result.value = RPPGResult(null, 0f, "insufficient", 0f)
     }
 }

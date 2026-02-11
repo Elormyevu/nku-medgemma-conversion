@@ -162,6 +162,21 @@ object PromptSanitizer {
             Log.w(TAG, "Prompt injection patterns detected and stripped from user input")
         }
 
+        // S-1 fix: Medical character allowlist — warn on unexpected Unicode codepoints
+        // Allows: Latin, Latin Extended, African scripts (Ethiopic, Tifinagh, Vai, etc.),
+        // Arabic, Devanagari, Bengali, CJK, punctuation, digits, whitespace
+        val unexpectedChars = cleaned.filter { ch ->
+            !ch.isLetterOrDigit() &&
+            !ch.isWhitespace() &&
+            ch !in ".,;:!?'-/()[]{}@#&*+=\"" &&
+            ch != '[' && ch != ']'  // Allow [filtered] markers
+        }
+        if (unexpectedChars.isNotEmpty()) {
+            Log.w(TAG, "S-1: Unexpected characters detected after sanitization: " +
+                "count=${unexpectedChars.length}, " +
+                "codepoints=${unexpectedChars.take(10).map { "U+%04X".format(it.code) }}")
+        }
+
         // 6. Length cap — symptoms should not exceed 500 chars
         if (cleaned.length > 500) {
             cleaned = cleaned.take(500)

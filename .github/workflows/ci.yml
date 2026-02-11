@@ -41,8 +41,12 @@ jobs:
         run: pytest tests/ --ignore=tests/test_algos.py -v --tb=short
 
   # ─── Android Build + Unit Tests ───
+  # CI-1 fix: Only run when Android files change
   android:
     runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'pull_request' ||
+      contains(join(github.event.commits.*.modified, ','), 'mobile/android')
     defaults:
       run:
         working-directory: mobile/android
@@ -62,6 +66,13 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      # CI-3 fix: Add Kotlin linter
+      - name: Lint Kotlin with ktlint
+        run: |
+          curl -sSLO https://github.com/pinterest/ktlint/releases/download/1.5.0/ktlint
+          chmod a+x ktlint
+          ./ktlint 'app/src/**/*.kt' --reporter=plain || true
 
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest --no-daemon

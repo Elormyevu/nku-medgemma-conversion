@@ -29,6 +29,10 @@ data class ScreeningEntity(
     val triageLevel: String? = null,       // AI triage result summary
     val symptoms: String? = null,          // Patient-reported symptoms
 
+    // F-8 fix: Include recommendations and edema risk factors for richer CSV export
+    val recommendations: String? = null,       // AI-generated clinical recommendations
+    val edemaRiskFactors: String? = null,       // Edema risk factors (e.g., "hypertension,proteinuria")
+
     // Context
     val language: String = "en",
     val isPregnant: Boolean = false,

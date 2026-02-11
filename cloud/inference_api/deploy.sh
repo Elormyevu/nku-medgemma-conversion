@@ -40,40 +40,42 @@ if [ -z "${HF_TOKEN_SECRET}" ]; then
     echo ""
 fi
 
-# Build deployment command
-DEPLOY_CMD="gcloud run deploy $SERVICE_NAME \\
-    --project=$PROJECT_ID \\
-    --region=$REGION \\
-    --source=. \\
-    --no-allow-unauthenticated \\
-    --ingress=internal-and-cloud-load-balancing \\
-    --memory=8Gi \\
-    --cpu=4 \\
-    --timeout=300s \\
-    --max-instances=3 \\
-    --min-instances=0 \\
-    --concurrency=1 \\
-    --cpu-boost \\
-    --set-env-vars=LOG_LEVEL=INFO,LOG_JSON=true,PYTHONUNBUFFERED=1"
+# Build deployment command as array (B-4 fix: avoid eval)
+DEPLOY_ARGS=(
+    "run" "deploy" "$SERVICE_NAME"
+    "--project=$PROJECT_ID"
+    "--region=$REGION"
+    "--source=."
+    "--no-allow-unauthenticated"
+    "--ingress=internal-and-cloud-load-balancing"
+    "--memory=8Gi"
+    "--cpu=4"
+    "--timeout=300s"
+    "--max-instances=3"
+    "--min-instances=0"
+    "--concurrency=1"
+    "--cpu-boost"
+    "--set-env-vars=LOG_LEVEL=INFO,LOG_JSON=true,PYTHONUNBUFFERED=1"
+)
 
 # Add service account if specified
 if [ -n "$SERVICE_ACCOUNT" ]; then
-    DEPLOY_CMD="$DEPLOY_CMD --service-account=$SERVICE_ACCOUNT"
+    DEPLOY_ARGS+=("--service-account=$SERVICE_ACCOUNT")
 fi
 
 # Use Secret Manager for HF_TOKEN if available, otherwise use env var
 if gcloud secrets describe hf-token --project="$PROJECT_ID" &>/dev/null; then
     echo "📦 Using Secret Manager for HF_TOKEN"
-    DEPLOY_CMD="$DEPLOY_CMD --set-secrets=HF_TOKEN=hf-token:latest"
+    DEPLOY_ARGS+=("--set-secrets=HF_TOKEN=hf-token:latest")
 else
     echo "📦 Using environment variable for HF_TOKEN"
-    DEPLOY_CMD="$DEPLOY_CMD --set-env-vars=HF_TOKEN=${HF_TOKEN}"
+    DEPLOY_ARGS+=("--set-env-vars=HF_TOKEN=${HF_TOKEN}")
 fi
 
-# Execute deployment
+# Execute deployment (B-4 fix: direct execution instead of eval)
 echo ""
 echo "🔧 Running deployment..."
-eval $DEPLOY_CMD
+gcloud "${DEPLOY_ARGS[@]}"
 
 echo ""
 echo "✅ Deployment complete!"

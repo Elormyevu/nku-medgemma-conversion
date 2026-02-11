@@ -308,14 +308,17 @@ class RateLimiter:
     Falls back to in-memory when Redis is unavailable.
     M-2 fix: Shared state across Cloud Run instances via Redis.
     S-02 fix: Max tracked clients cap to prevent memory exhaustion.
+    B-2 fix: Periodic TTL sweep purges stale in-memory entries.
     """
 
     MAX_TRACKED_CLIENTS = 10000  # S-02: Evict oldest if exceeded
+    SWEEP_INTERVAL = 100  # B-2: Sweep every N calls
 
     def __init__(self, requests_per_minute: int = 30, requests_per_hour: int = 500):
         self.requests_per_minute = requests_per_minute
         self.requests_per_hour = requests_per_hour
         self._redis = self._connect_redis()
+        self._sweep_counter = 0  # B-2: Track calls for periodic sweep
 
         # In-memory fallback
         self._minute_buckets: Dict[str, List[float]] = defaultdict(list)
@@ -355,13 +358,42 @@ class RateLimiter:
 
     @staticmethod
     def _is_valid_ip(ip: str) -> bool:
-        """S-03: Basic IP format validation to prevent header injection."""
+        """S-03/S-2: IP format validation + reject private/loopback behind Cloud Run LB."""
         parts = ip.split('.')
         if len(parts) == 4:  # IPv4
-            return all(p.isdigit() and 0 <= int(p) <= 255 for p in parts)
+            if not all(p.isdigit() and 0 <= int(p) <= 255 for p in parts):
+                return False
+            # S-2 fix: Reject private/loopback IPs (should never appear behind Cloud Run LB)
+            first_octet = int(parts[0])
+            if first_octet == 127:  # loopback
+                return False
+            if first_octet == 10:  # 10.0.0.0/8
+                return False
+            if first_octet == 172 and 16 <= int(parts[1]) <= 31:  # 172.16.0.0/12
+                return False
+            if first_octet == 192 and int(parts[1]) == 168:  # 192.168.0.0/16
+                return False
+            if ip == '0.0.0.0':
+                return False
+            return True
         if ':' in ip:  # IPv6 (basic check)
+            if ip == '::1':  # loopback
+                return False
             return len(ip) <= 45 and all(c in '0123456789abcdefABCDEF:' for c in ip)
         return False
+
+    def _sweep_stale_clients(self):
+        """B-2 fix: Purge clients with no requests in the last hour."""
+        cutoff = time.time() - 3600
+        stale_keys = [
+            k for k, v in self._hour_buckets.items()
+            if not v or max(v) < cutoff
+        ]
+        for k in stale_keys:
+            self._minute_buckets.pop(k, None)
+            self._hour_buckets.pop(k, None)
+        if stale_keys:
+            logger.debug(f"RateLimiter: swept {len(stale_keys)} stale clients")
 
     def _cleanup_old_entries(self, bucket: List[float], window_seconds: int) -> List[float]:
         """Remove entries older than the window."""
@@ -416,6 +448,12 @@ class RateLimiter:
         Uses Redis if available, falls back to in-memory.
         """
         client_id = self._get_client_id(request)
+
+        # B-2 fix: Periodic TTL sweep of stale in-memory entries
+        self._sweep_counter += 1
+        if self._sweep_counter >= self.SWEEP_INTERVAL:
+            self._sweep_counter = 0
+            self._sweep_stale_clients()
 
         # Try Redis first
         if self._redis:

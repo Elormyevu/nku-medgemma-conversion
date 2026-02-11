@@ -32,19 +32,35 @@ class ThermalManager(
     private var cooldownStartTime: Long = 0
     
     /**
-     * Get current device temperature from battery sensor.
-     * Android provides battery temperature in tenths of degrees Celsius.
+     * Get current device temperature (in °C).
+     * P-3 fix: Uses the higher of battery temperature and CPU thermal zone
+     * for more responsive detection (battery sensor can lag 10-30s behind CPU).
      */
     fun getTemperature(): Float {
-        return try {
+        val batteryTemp = try {
             val intentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
             val batteryStatus = context.registerReceiver(null, intentFilter)
             val tempTenths = batteryStatus?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 350) ?: 350
             tempTenths / 10.0f
         } catch (e: Exception) {
-            // Fallback to safe default if sensor unavailable
             35.0f
         }
+        
+        // P-3 fix: Read CPU thermal zone for more responsive temperature tracking
+        val cpuTemp = try {
+            val thermalDir = java.io.File("/sys/class/thermal/")
+            if (thermalDir.exists()) {
+                thermalDir.listFiles { f -> f.name.startsWith("thermal_zone") }
+                    ?.mapNotNull { zone ->
+                        try {
+                            java.io.File(zone, "temp").readText().trim().toFloatOrNull()?.let { it / 1000f }
+                        } catch (_: Exception) { null }
+                    }?.maxOrNull()
+            } else null
+        } catch (_: Exception) { null }
+        
+        // Use the higher of battery and CPU temperatures
+        return maxOf(batteryTemp, cpuTemp ?: batteryTemp)
     }
     
     /**

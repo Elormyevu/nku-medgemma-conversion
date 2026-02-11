@@ -186,11 +186,17 @@ def _timeout_handler(signum, frame):
 
 
 def with_timeout(timeout_seconds: int = 120):
-    """Decorator: abort LLM call if it exceeds timeout_seconds (B-06)."""
+    """Decorator: abort LLM call if it exceeds timeout_seconds (B-06).
+
+    B-1 fix: Primary mechanism is SIGALRM (main thread only).
+    Fallback uses threading.Timer + ctypes for worker threads.
+    """
     def decorator(f):
         @wraps(f)
         def wrapped(*args, **kwargs):
-            # signal.alarm only works on main thread; skip in workers
+            import ctypes
+
+            # Try SIGALRM first (works on main thread under gunicorn)
             try:
                 old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
                 signal.alarm(timeout_seconds)
@@ -200,8 +206,32 @@ def with_timeout(timeout_seconds: int = 120):
                     signal.alarm(0)
                     signal.signal(signal.SIGALRM, old_handler)
             except (ValueError, OSError):
-                # Not on main thread — run without timeout
-                return f(*args, **kwargs)
+                # B-1 fix: Not on main thread — use threading.Timer fallback
+                # This raises an async exception in the target thread as best-effort
+                target_tid = threading.current_thread().ident
+                timed_out = threading.Event()
+
+                def _timeout_callback():
+                    timed_out.set()
+                    if target_tid is not None:
+                        ctypes.pythonapi.PyThreadState_SetAsyncExc(
+                            ctypes.c_ulong(target_tid),
+                            ctypes.py_object(InferenceTimeout)
+                        )
+
+                timer = threading.Timer(timeout_seconds, _timeout_callback)
+                timer.daemon = True
+                timer.start()
+                try:
+                    result = f(*args, **kwargs)
+                    timer.cancel()
+                    if timed_out.is_set():
+                        raise InferenceTimeout("LLM inference timed out")
+                    return result
+                except InferenceTimeout:
+                    raise
+                finally:
+                    timer.cancel()
         return wrapped
     return decorator
 

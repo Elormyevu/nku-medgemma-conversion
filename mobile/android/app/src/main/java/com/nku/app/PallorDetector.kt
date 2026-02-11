@@ -214,9 +214,13 @@ class PallorDetector {
         var totalPixels = 0
         val hsv = FloatArray(3)
         
+        // F-3 fix: Batch getPixels() for consistency with main analysis path
+        val pixels = IntArray(bitmap.width * bitmap.height)
+        bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+        
         for (x in 0 until bitmap.width step stepSize) {
             for (y in 0 until bitmap.height step stepSize) {
-                Color.colorToHSV(bitmap.getPixel(x, y), hsv)
+                Color.colorToHSV(pixels[y * bitmap.width + x], hsv)
                 totalPixels++
                 
                 val hue = hsv[0]

@@ -337,16 +337,27 @@ class EdemaDetector {
         bitmap: Bitmap,
         left: Int, right: Int, top: Int, bottom: Int
     ): Float {
-        // Check if face region has reasonable brightness range
+        // P-2 fix: Batch getPixels() instead of per-pixel getBrightness()
+        val roiWidth = right - left
+        val roiHeight = bottom - top
+        if (roiWidth <= 0 || roiHeight <= 0) return 0.5f
+        
+        val pixels = IntArray(roiWidth * roiHeight)
+        bitmap.getPixels(pixels, 0, roiWidth, left, top, roiWidth, roiHeight)
+        
         var minBrightness = 1f
         var maxBrightness = 0f
         val stepSize = 8
         
-        for (x in left until right step stepSize) {
-            for (y in top until bottom step stepSize) {
-                val b = getBrightness(bitmap, x, y)
-                minBrightness = minOf(minBrightness, b)
-                maxBrightness = maxOf(maxBrightness, b)
+        for (y in 0 until roiHeight step stepSize) {
+            for (x in 0 until roiWidth step stepSize) {
+                val pixel = pixels[y * roiWidth + x]
+                val r = (pixel shr 16) and 0xFF
+                val g = (pixel shr 8) and 0xFF
+                val b = pixel and 0xFF
+                val brightness = (0.299f * r + 0.587f * g + 0.114f * b) / 255f
+                minBrightness = minOf(minBrightness, brightness)
+                maxBrightness = maxOf(maxBrightness, brightness)
             }
         }
         
@@ -365,34 +376,54 @@ class EdemaDetector {
      * Check if image appears to be a forward-facing face
      */
     fun isValidFaceImage(bitmap: Bitmap): Boolean {
-        // Simple check: center region should have skin-tone colors
+        // F-4 fix: HSV-based skin detection works across all skin tones
+        // Previous r>g&&r>b heuristic under-detected very dark/reddish tones
         val centerX = bitmap.width / 2
         val centerY = bitmap.height / 2
         val sampleRadius = minOf(bitmap.width, bitmap.height) / 6
         
+        // Batch pixel read for the sample region
+        val sampleLeft = (centerX - sampleRadius).coerceIn(0, bitmap.width - 1)
+        val sampleTop = (centerY - sampleRadius).coerceIn(0, bitmap.height - 1)
+        val sampleRight = (centerX + sampleRadius).coerceIn(0, bitmap.width - 1)
+        val sampleBottom = (centerY + sampleRadius).coerceIn(0, bitmap.height - 1)
+        val sampleW = sampleRight - sampleLeft
+        val sampleH = sampleBottom - sampleTop
+        
+        if (sampleW <= 0 || sampleH <= 0) return false
+        
+        val pixels = IntArray(sampleW * sampleH)
+        bitmap.getPixels(pixels, 0, sampleW, sampleLeft, sampleTop, sampleW, sampleH)
+        
         var skinPixels = 0
         var totalPixels = 0
+        val hsv = FloatArray(3)
         
-        for (dx in -sampleRadius..sampleRadius step 4) {
-            for (dy in -sampleRadius..sampleRadius step 4) {
-                val x = (centerX + dx).coerceIn(0, bitmap.width - 1)
-                val y = (centerY + dy).coerceIn(0, bitmap.height - 1)
-                
-                val pixel = bitmap.getPixel(x, y)
-                val r = (pixel shr 16) and 0xFF
-                val g = (pixel shr 8) and 0xFF
-                val b = pixel and 0xFF
-                
+        for (y in 0 until sampleH step 4) {
+            for (x in 0 until sampleW step 4) {
+                val pixel = pixels[y * sampleW + x]
+                android.graphics.Color.colorToHSV(pixel, hsv)
                 totalPixels++
                 
-                // Simplified skin tone detection
-                if (r > 60 && g > 40 && b > 20 && r > g && r > b) {
+                val hue = hsv[0]
+                val sat = hsv[1]
+                val value = hsv[2]
+                
+                // HSV-based skin detection: covers all skin tones
+                // Hue: 0-50° (warm skin tones) or 330-360° (reddish)
+                // Saturation: 0.1-0.8 (avoids pure gray/white/saturated)
+                // Value: 0.15-0.95 (avoids pure black/white)
+                val isSkinHue = (hue in 0f..50f) || (hue >= 330f)
+                val isSkinSat = sat in 0.1f..0.8f
+                val isSkinVal = value in 0.15f..0.95f
+                
+                if (isSkinHue && isSkinSat && isSkinVal) {
                     skinPixels++
                 }
             }
         }
         
-        return (skinPixels.toFloat() / totalPixels) > 0.4f
+        return (skinPixels.toFloat() / totalPixels) > 0.3f
     }
     
     fun reset() {

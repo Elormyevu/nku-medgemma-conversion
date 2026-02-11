@@ -8,7 +8,7 @@ import json
 import sys
 import uuid
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional, Dict, Any
 from functools import wraps
 from contextvars import ContextVar
@@ -22,7 +22,7 @@ class JSONFormatter(logging.Formatter):
     
     def format(self, record: logging.LogRecord) -> str:
         log_data = {
-            'timestamp': datetime.utcnow().isoformat() + 'Z',
+            'timestamp': datetime.now(timezone.utc).isoformat(),
             'level': record.levelname,
             'logger': record.name,
             'message': record.getMessage(),

@@ -36,7 +36,6 @@ jobs:
 
       - name: Run cloud API tests
         # Note: test_algos.py requires opencv/mediapipe/scipy (not in cloud deps)
-        # Those are covered by cloud-api-tests.yml Docker build verification
         env:
           PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/cloud/inference_api
         run: pytest tests/ --ignore=tests/test_algos.py -v --tb=short
@@ -56,6 +55,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'gradle'
+
+      # Accept all Android SDK licenses (NDK requires this)
+      - name: Accept Android SDK licenses
+        run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -84,7 +87,9 @@ jobs:
         with:
           extra_args: --only-verified
 
-      - name: pip-audit (Python dependencies)
+      - name: pip-audit (Cloud API dependencies)
         run: |
           pip install pip-audit
-          pip-audit -r cloud/inference_api/requirements.txt --ignore-vuln PYSEC-2024-* || true
+          # Audit only the cloud API requirements (root requirements.txt has
+          # --index-url that pip-audit cannot parse)
+          pip-audit -r cloud/inference_api/requirements.txt || true

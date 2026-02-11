@@ -19,7 +19,7 @@ request_id_var: ContextVar[Optional[str]] = ContextVar('request_id', default=Non
 
 class JSONFormatter(logging.Formatter):
     """Custom JSON formatter for structured logging."""
-    
+
     def format(self, record: logging.LogRecord) -> str:
         log_data = {
             'timestamp': datetime.now(timezone.utc).isoformat(),
@@ -30,12 +30,12 @@ class JSONFormatter(logging.Formatter):
             'function': record.funcName,
             'line': record.lineno,
         }
-        
+
         # Add request ID if available
         request_id = request_id_var.get()
         if request_id:
             log_data['request_id'] = request_id
-        
+
         # Add exception info if present (H-4 fix: full stack traces)
         if record.exc_info and record.exc_info[0] is not None:
             log_data['exception'] = {
@@ -43,24 +43,24 @@ class JSONFormatter(logging.Formatter):
                 'message': str(record.exc_info[1]),
                 'traceback': self.formatException(record.exc_info),
             }
-        
+
         # Add stack info if present
         if record.stack_info:
             log_data['stack_info'] = self.formatStack(record.stack_info)
-        
+
         # Add extra fields
         if hasattr(record, 'extra_data'):
             log_data.update(record.extra_data)
-        
+
         return json.dumps(log_data)
 
 
 class RequestLogger:
     """Logger adapter for request-scoped logging."""
-    
+
     def __init__(self, logger: logging.Logger):
         self.logger = logger
-    
+
     def _log(self, level: int, message: str, extra_data: Dict[str, Any] = None, exc_info=None):
         record = self.logger.makeRecord(
             self.logger.name, level, '', 0, message, (), exc_info
@@ -68,45 +68,45 @@ class RequestLogger:
         if extra_data:
             record.extra_data = extra_data
         self.logger.handle(record)
-    
+
     def info(self, message: str, **kwargs):
         self._log(logging.INFO, message, kwargs if kwargs else None)
-    
+
     def warning(self, message: str, **kwargs):
         self._log(logging.WARNING, message, kwargs if kwargs else None)
-    
+
     def error(self, message: str, exc_info=None, **kwargs):
         self._log(logging.ERROR, message, kwargs if kwargs else None, exc_info=exc_info)
-    
+
     def debug(self, message: str, **kwargs):
         self._log(logging.DEBUG, message, kwargs if kwargs else None)
 
 
 def setup_logging(level: str = 'INFO', json_format: bool = True) -> logging.Logger:
     """Configure application logging."""
-    
+
     log_level = getattr(logging, level.upper(), logging.INFO)
-    
+
     # Create root logger
     logger = logging.getLogger('nku')
     logger.setLevel(log_level)
-    
+
     # Remove existing handlers
     logger.handlers.clear()
-    
+
     # Create console handler
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(log_level)
-    
+
     if json_format:
         handler.setFormatter(JSONFormatter())
     else:
         handler.setFormatter(logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         ))
-    
+
     logger.addHandler(handler)
-    
+
     return logger
 
 
@@ -116,13 +116,13 @@ def log_request(logger: logging.Logger):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             from flask import request, g
-            
+
             # Generate request ID
             request_id = str(uuid.uuid4())[:8]
             request_id_var.set(request_id)
             g.request_id = request_id
             g.request_start = time.time()
-            
+
             # Log request
             logger.info(f"Request started: {request.method} {request.path}", extra={
                 'extra_data': {
@@ -132,23 +132,23 @@ def log_request(logger: logging.Logger):
                     'user_agent': request.headers.get('User-Agent', '')[:100]
                 }
             })
-            
+
             try:
                 response = f(*args, **kwargs)
-                
+
                 # Log response
                 duration_ms = (time.time() - g.request_start) * 1000
                 status_code = response.status_code if hasattr(response, 'status_code') else 200
-                
+
                 logger.info(f"Request completed: {status_code}", extra={
                     'extra_data': {
                         'status_code': status_code,
                         'duration_ms': round(duration_ms, 2)
                     }
                 })
-                
+
                 return response
-                
+
             except Exception as e:
                 import traceback
                 duration_ms = (time.time() - g.request_start) * 1000
@@ -161,7 +161,7 @@ def log_request(logger: logging.Logger):
                     }
                 })
                 raise
-        
+
         return decorated_function
     return decorator
 

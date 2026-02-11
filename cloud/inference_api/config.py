@@ -6,7 +6,6 @@ Centralized, type-safe configuration with environment variable loading.
 import os
 from dataclasses import dataclass, field
 from typing import List, Optional
-from pathlib import Path
 
 
 @dataclass
@@ -59,28 +58,28 @@ class AppConfig:
     port: int = 8080
     log_level: str = "INFO"
     log_json: bool = True
-    
+
     # Sub-configurations
     model: ModelConfig = field(default_factory=ModelConfig)
     rate_limit: RateLimitConfig = field(default_factory=RateLimitConfig)
     security: SecurityConfig = field(default_factory=SecurityConfig)
     inference: InferenceConfig = field(default_factory=InferenceConfig)
-    
+
     @classmethod
     def from_env(cls) -> 'AppConfig':
         """Load configuration from environment variables."""
-        
+
         # Parse allowed origins from comma-separated list
         allowed_origins_str = os.environ.get('ALLOWED_ORIGINS', '')
         allowed_origins = [o.strip() for o in allowed_origins_str.split(',') if o.strip()]
-        
+
         return cls(
             env=os.environ.get('APP_ENV', 'production'),
             debug=os.environ.get('DEBUG', '').lower() == 'true',
             port=int(os.environ.get('PORT', 8080)),
             log_level=os.environ.get('LOG_LEVEL', 'INFO'),
             log_json=os.environ.get('LOG_JSON', 'true').lower() == 'true',
-            
+
             model=ModelConfig(
                 medgemma_repo=os.environ.get('MEDGEMMA_REPO', 'wredd/MedGemma-1.5-4B-PT-GGUF'),
                 medgemma_file=os.environ.get('MEDGEMMA_FILE', 'MedGemma-1.5-4B-PT-Q2_K.gguf'),
@@ -89,19 +88,19 @@ class AppConfig:
                 context_size=int(os.environ.get('MODEL_CONTEXT_SIZE', 2048)),
                 n_threads=int(os.environ.get('MODEL_THREADS', 4)),
             ),
-            
+
             rate_limit=RateLimitConfig(
                 requests_per_minute=int(os.environ.get('RATE_LIMIT_PER_MINUTE', 30)),
                 requests_per_hour=int(os.environ.get('RATE_LIMIT_PER_HOUR', 500)),
             ),
-            
+
             security=SecurityConfig(
                 allowed_origins=allowed_origins,
                 max_text_length=int(os.environ.get('MAX_TEXT_LENGTH', 2000)),
                 max_symptom_length=int(os.environ.get('MAX_SYMPTOM_LENGTH', 1000)),
                 enable_rate_limiting=os.environ.get('ENABLE_RATE_LIMITING', 'true').lower() == 'true',
             ),
-            
+
             inference=InferenceConfig(
                 translation_temperature=float(os.environ.get('TRANSLATION_TEMPERATURE', 0.3)),
                 triage_temperature=float(os.environ.get('TRIAGE_TEMPERATURE', 0.2)),

@@ -5,7 +5,6 @@ Provides input validation, prompt injection protection, rate limiting, and CORS 
 
 import re
 import time
-import hashlib
 import base64
 import os
 from functools import wraps
@@ -32,18 +31,18 @@ class ValidationResult:
 
 class InputValidator:
     """Validates and sanitizes user inputs for medical AI endpoints."""
-    
+
     # Maximum lengths for different input types
     MAX_TEXT_LENGTH = 2000
     MAX_SYMPTOM_LENGTH = 1000
     MAX_LANGUAGE_CODE_LENGTH = 10
-    
+
     # Allowed language codes for translation
     ALLOWED_LANGUAGES = {
         'en', 'twi', 'yo', 'ha', 'sw', 'ewe', 'ga', 'ig', 'zu', 'xh',
         'am', 'or', 'ti', 'so', 'fr', 'pt', 'ar'
     }
-    
+
     # Suspicious patterns that might indicate injection attempts
     INJECTION_PATTERNS = [
         r'ignore\s+(all\s+)?(previous|above|prior)',
@@ -76,90 +75,90 @@ class InputValidator:
         r'eval\s*\(',
         r'exec\s*\(',
     ]
-    
+
     def __init__(self):
         self._compiled_patterns = [
-            re.compile(pattern, re.IGNORECASE) 
+            re.compile(pattern, re.IGNORECASE)
             for pattern in self.INJECTION_PATTERNS
         ]
-    
+
     def validate_text(self, text: Optional[str], max_length: int = None) -> ValidationResult:
         """Validate and sanitize text input."""
         errors = []
         warnings = []
-        
+
         if text is None:
             return ValidationResult(False, "", ["Text input is required"])
-        
+
         if not isinstance(text, str):
             return ValidationResult(False, "", ["Text must be a string"])
-        
+
         # Strip and check empty
         sanitized = text.strip()
         if not sanitized:
             return ValidationResult(False, "", ["Text cannot be empty"])
-        
+
         # Check length
         max_len = max_length or self.MAX_TEXT_LENGTH
         if len(sanitized) > max_len:
             warnings.append(f"Text truncated from {len(sanitized)} to {max_len} characters")
             sanitized = sanitized[:max_len]
-        
+
         # Check for injection patterns
         injection_detected = self._check_injection_patterns(sanitized)
         if injection_detected:
             errors.append("Input contains potentially malicious patterns")
             logger.warning(f"Injection attempt detected: {sanitized[:100]}...")
             return ValidationResult(False, "", errors)
-        
+
         # L-3 fix: Check for base64-encoded injection payloads
         if self._check_base64_injection(sanitized):
             errors.append("Input contains potentially malicious patterns")
-            logger.warning(f"Base64 injection attempt detected")
+            logger.warning("Base64 injection attempt detected")
             return ValidationResult(False, "", errors)
-        
+
         # Remove potentially dangerous unicode
         sanitized = self._sanitize_unicode(sanitized)
-        
+
         return ValidationResult(True, sanitized, errors, warnings)
-    
+
     def validate_symptoms(self, symptoms: Optional[str]) -> ValidationResult:
         """Validate medical symptom input."""
         result = self.validate_text(symptoms, self.MAX_SYMPTOM_LENGTH)
         if not result.is_valid:
             return result
-        
+
         # Additional medical-specific validation
         if len(result.sanitized_value.split()) < 2:
             result.warnings.append("Very short symptom description may yield less accurate results")
-        
+
         return result
-    
+
     def validate_language(self, lang: Optional[str]) -> ValidationResult:
         """Validate language code."""
         if lang is None:
             return ValidationResult(False, "", ["Language code is required"])
-        
+
         sanitized = lang.strip().lower()
-        
+
         if len(sanitized) > self.MAX_LANGUAGE_CODE_LENGTH:
             return ValidationResult(False, "", ["Invalid language code length"])
-        
+
         if sanitized not in self.ALLOWED_LANGUAGES:
             return ValidationResult(
-                False, "", 
+                False, "",
                 [f"Unsupported language code: {sanitized}. Allowed: {', '.join(sorted(self.ALLOWED_LANGUAGES))}"]
             )
-        
+
         return ValidationResult(True, sanitized)
-    
+
     def _check_injection_patterns(self, text: str) -> bool:
         """Check for prompt injection patterns."""
         for pattern in self._compiled_patterns:
             if pattern.search(text):
                 return True
         return False
-    
+
     def _sanitize_unicode(self, text: str) -> str:
         """Remove potentially dangerous unicode characters."""
         # Remove zero-width characters that could be used for injection
@@ -173,7 +172,7 @@ class InputValidator:
         ]
         for char in dangerous_chars:
             text = text.replace(char, '')
-        
+
         # L-3 fix: Normalize Unicode homoglyphs for common Latin chars
         # Map Cyrillic/Greek lookalikes to Latin equivalents before pattern check
         homoglyph_map = {
@@ -185,15 +184,15 @@ class InputValidator:
         }
         for homoglyph, replacement in homoglyph_map.items():
             text = text.replace(homoglyph, replacement)
-        
+
         return text
-    
+
     def _check_base64_injection(self, text: str) -> bool:
         """L-3 fix: Detect base64-encoded injection payloads."""
         # Find potential base64 strings (at least 20 chars of base64 alphabet)
         b64_pattern = re.compile(r'[A-Za-z0-9+/]{20,}={0,2}')
         matches = b64_pattern.findall(text)
-        
+
         for match in matches:
             try:
                 decoded = base64.b64decode(match).decode('utf-8', errors='ignore').lower()
@@ -203,7 +202,7 @@ class InputValidator:
                         return True
             except Exception:
                 continue
-        
+
         return False
 
 
@@ -213,10 +212,10 @@ class InputValidator:
 
 class PromptProtector:
     """Protects LLM prompts from injection attacks."""
-    
+
     # Delimiter to separate system content from user content
     DELIMITER = "<<<USER_INPUT>>>"
-    
+
     # Safe medical prompt templates
     TEMPLATES = {
         'translate_to_english': """You are a medical translator. Translate the following text from {source_lang} to English.
@@ -251,9 +250,9 @@ Patient symptoms: {symptoms}
 
 Assessment:""",
     }
-    
+
     @classmethod
-    def build_translation_prompt(cls, text: str, source_lang: str = "twi", 
+    def build_translation_prompt(cls, text: str, source_lang: str = "twi",
                                   target_lang: str = "en", glossary: str = "") -> str:
         """Build a safe translation prompt with optional medical glossary (B-05)."""
         glossary_section = f"\nReference glossary:\n{glossary}\n" if glossary else ""
@@ -269,7 +268,7 @@ Assessment:""",
                 text=text,
                 delimiter=cls.DELIMITER
             ) + glossary_section
-    
+
     @classmethod
     def build_triage_prompt(cls, symptoms: str) -> str:
         """Build a safe triage prompt."""
@@ -277,25 +276,25 @@ Assessment:""",
             symptoms=symptoms,
             delimiter=cls.DELIMITER
         )
-    
+
     @classmethod
     def validate_output(cls, output: str, expected_format: str = None) -> Tuple[bool, str]:
         """Validate LLM output for safety."""
         if not output or not output.strip():
             return False, "Empty response"
-        
+
         # Check output length
         # Truncate overlong output but still treat as valid
         if len(output) > 5000:
             output = output[:5000]
-        
+
         # Remove any potential system prompt leakage
         cleaned = output.strip()
-        
+
         # Check for delimiter leakage
         if cls.DELIMITER in cleaned:
             cleaned = cleaned.replace(cls.DELIMITER, "")
-        
+
         return True, cleaned
 
 
@@ -305,30 +304,30 @@ Assessment:""",
 
 class RateLimiter:
     """Rate limiter with Redis support for multi-instance Cloud Run.
-    
+
     Falls back to in-memory when Redis is unavailable.
     M-2 fix: Shared state across Cloud Run instances via Redis.
     S-02 fix: Max tracked clients cap to prevent memory exhaustion.
     """
-    
+
     MAX_TRACKED_CLIENTS = 10000  # S-02: Evict oldest if exceeded
-    
+
     def __init__(self, requests_per_minute: int = 30, requests_per_hour: int = 500):
         self.requests_per_minute = requests_per_minute
         self.requests_per_hour = requests_per_hour
         self._redis = self._connect_redis()
-        
+
         # In-memory fallback
         self._minute_buckets: Dict[str, List[float]] = defaultdict(list)
         self._hour_buckets: Dict[str, List[float]] = defaultdict(list)
-    
+
     def _connect_redis(self):
         """Attempt to connect to Redis (Cloud Memorystore or local)."""
         redis_url = os.environ.get('REDIS_URL') or os.environ.get('REDISHOST')
         if not redis_url:
             logger.info("RateLimiter: No REDIS_URL set, using in-memory fallback")
             return None
-        
+
         try:
             import redis
             if redis_url.startswith('redis://'):
@@ -342,7 +341,7 @@ class RateLimiter:
         except Exception as e:
             logger.warning(f"RateLimiter: Redis connection failed ({e}), using in-memory fallback")
             return None
-    
+
     def _get_client_id(self, request) -> str:
         """Get unique client identifier from request (S-03: validated)."""
         forwarded = request.headers.get('X-Forwarded-For', '')
@@ -353,7 +352,7 @@ class RateLimiter:
                 return ip
             logger.warning(f"Invalid X-Forwarded-For value: {ip[:50]}")
         return request.remote_addr or 'unknown'
-    
+
     @staticmethod
     def _is_valid_ip(ip: str) -> bool:
         """S-03: Basic IP format validation to prevent header injection."""
@@ -363,44 +362,44 @@ class RateLimiter:
         if ':' in ip:  # IPv6 (basic check)
             return len(ip) <= 45 and all(c in '0123456789abcdefABCDEF:' for c in ip)
         return False
-    
+
     def _cleanup_old_entries(self, bucket: List[float], window_seconds: int) -> List[float]:
         """Remove entries older than the window."""
         cutoff = time.time() - window_seconds
         return [t for t in bucket if t > cutoff]
-    
+
     def _check_redis_rate_limit(self, client_id: str) -> Tuple[bool, Optional[Dict[str, Any]]]:
         """Check rate limit using Redis sorted sets."""
         current_time = time.time()
         minute_key = f"nku:rl:min:{client_id}"
         hour_key = f"nku:rl:hr:{client_id}"
-        
+
         pipe = self._redis.pipeline()
-        
+
         # Clean old entries and count current window
         pipe.zremrangebyscore(minute_key, 0, current_time - 60)
         pipe.zcard(minute_key)
         pipe.zremrangebyscore(hour_key, 0, current_time - 3600)
         pipe.zcard(hour_key)
-        
+
         results = pipe.execute()
         minute_count = results[1]
         hour_count = results[3]
-        
+
         if minute_count >= self.requests_per_minute:
             return False, {
                 'error': 'rate_limit_exceeded',
                 'message': f'Rate limit exceeded: {self.requests_per_minute} requests per minute',
                 'retry_after': 60
             }
-        
+
         if hour_count >= self.requests_per_hour:
             return False, {
                 'error': 'rate_limit_exceeded',
                 'message': f'Rate limit exceeded: {self.requests_per_hour} requests per hour',
                 'retry_after': 3600
             }
-        
+
         # Record request
         pipe2 = self._redis.pipeline()
         pipe2.zadd(minute_key, {str(current_time): current_time})
@@ -408,60 +407,60 @@ class RateLimiter:
         pipe2.zadd(hour_key, {str(current_time): current_time})
         pipe2.expire(hour_key, 7200)
         pipe2.execute()
-        
+
         return True, None
-    
+
     def check_rate_limit(self, request) -> Tuple[bool, Optional[Dict[str, Any]]]:
         """
         Check if request is within rate limits.
         Uses Redis if available, falls back to in-memory.
         """
         client_id = self._get_client_id(request)
-        
+
         # Try Redis first
         if self._redis:
             try:
                 return self._check_redis_rate_limit(client_id)
             except Exception as e:
                 logger.warning(f"Redis rate limit check failed: {e}, falling back to in-memory")
-        
+
         # In-memory fallback
         current_time = time.time()
-        
+
         # S-02: Evict oldest clients if we exceed cap
         if len(self._minute_buckets) > self.MAX_TRACKED_CLIENTS:
-            oldest_keys = sorted(self._minute_buckets.keys(), 
+            oldest_keys = sorted(self._minute_buckets.keys(),
                                  key=lambda k: self._minute_buckets[k][-1] if self._minute_buckets[k] else 0
                                  )[:len(self._minute_buckets) - self.MAX_TRACKED_CLIENTS]
             for k in oldest_keys:
                 del self._minute_buckets[k]
                 self._hour_buckets.pop(k, None)
-        
+
         self._minute_buckets[client_id] = self._cleanup_old_entries(
             self._minute_buckets[client_id], 60
         )
-        
+
         if len(self._minute_buckets[client_id]) >= self.requests_per_minute:
             return False, {
                 'error': 'rate_limit_exceeded',
                 'message': f'Rate limit exceeded: {self.requests_per_minute} requests per minute',
                 'retry_after': 60
             }
-        
+
         self._hour_buckets[client_id] = self._cleanup_old_entries(
             self._hour_buckets[client_id], 3600
         )
-        
+
         if len(self._hour_buckets[client_id]) >= self.requests_per_hour:
             return False, {
                 'error': 'rate_limit_exceeded',
                 'message': f'Rate limit exceeded: {self.requests_per_hour} requests per hour',
                 'retry_after': 3600
             }
-        
+
         self._minute_buckets[client_id].append(current_time)
         self._hour_buckets[client_id].append(current_time)
-        
+
         return True, None
 
 
@@ -471,7 +470,7 @@ def rate_limit(limiter: RateLimiter):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             from flask import request, jsonify
-            
+
             is_allowed, error_info = limiter.check_rate_limit(request)
             if not is_allowed:
                 # S-08: Structured audit logging for blocked requests
@@ -484,7 +483,7 @@ def rate_limit(limiter: RateLimiter):
                 response.status_code = 429
                 response.headers['Retry-After'] = str(error_info.get('retry_after', 60))
                 return response
-            
+
             return f(*args, **kwargs)
         return decorated_function
     return decorator
@@ -497,13 +496,13 @@ def rate_limit(limiter: RateLimiter):
 def configure_cors(app, allowed_origins: List[str] = None):
     """Configure CORS with secure defaults."""
     from flask_cors import CORS
-    
+
     if allowed_origins is None:
         # Default to no cross-origin in production
         # For development, explicitly set allowed origins
         allowed_origins = []
-    
-    CORS(app, 
+
+    CORS(app,
          origins=allowed_origins,
          methods=['GET', 'POST', 'OPTIONS'],
          allow_headers=['Content-Type', 'Authorization'],
@@ -520,14 +519,14 @@ def validate_json_request(required_fields: List[str] = None):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             from flask import request, jsonify
-            
+
             # Check content type
             if not request.is_json:
                 return jsonify({
                     'error': 'invalid_content_type',
                     'message': 'Content-Type must be application/json'
                 }), 400
-            
+
             # Parse JSON
             try:
                 data = request.get_json(force=False)
@@ -536,13 +535,13 @@ def validate_json_request(required_fields: List[str] = None):
                     'error': 'invalid_json',
                     'message': 'Request body must be valid JSON'
                 }), 400
-            
+
             if data is None:
                 return jsonify({
                     'error': 'empty_body',
                     'message': 'Request body cannot be empty'
                 }), 400
-            
+
             # Check required fields
             if required_fields:
                 missing = [f for f in required_fields if f not in data]
@@ -551,7 +550,7 @@ def validate_json_request(required_fields: List[str] = None):
                         'error': 'missing_fields',
                         'message': f'Missing required fields: {", ".join(missing)}'
                     }), 400
-            
+
             return f(*args, **kwargs)
         return decorated_function
     return decorator

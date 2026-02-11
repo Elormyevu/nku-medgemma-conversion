@@ -11,9 +11,9 @@ SECURITY NOTES:
 - Structured logging for observability
 """
 
-from flask import Flask, request, jsonify, g
+from flask import Flask, request, jsonify
 from functools import wraps
-from typing import Optional, Tuple, Dict, Any
+from typing import Optional, Tuple
 import os
 import traceback
 import threading
@@ -30,9 +30,9 @@ except ImportError:
 try:
     from config import get_config, MEDICAL_GLOSSARY
     from security import (
-        InputValidator, 
-        PromptProtector, 
-        RateLimiter, 
+        InputValidator,
+        PromptProtector,
+        RateLimiter,
         rate_limit,
         configure_cors,
         validate_json_request
@@ -41,9 +41,9 @@ try:
 except ImportError:
     from .config import get_config, MEDICAL_GLOSSARY
     from .security import (
-        InputValidator, 
-        PromptProtector, 
-        RateLimiter, 
+        InputValidator,
+        PromptProtector,
+        RateLimiter,
         rate_limit,
         configure_cors,
         validate_json_request
@@ -132,11 +132,11 @@ def handle_exception(e):
     from werkzeug.exceptions import HTTPException
     if isinstance(e, HTTPException):
         return e
-    
-    request_logger.error(f"Unhandled exception: {str(e)}", 
+
+    request_logger.error(f"Unhandled exception: {str(e)}",
                          error_type=type(e).__name__,
                          traceback=traceback.format_exc())
-    
+
     # Don't expose internal errors in production (B-04: include request_id)
     rid = _get_request_id()
     if config.debug:
@@ -213,11 +213,11 @@ def load_models() -> Tuple[bool, Optional[str]]:
     Returns (success, error_message).
     """
     global medgemma, translategemma
-    
+
     # Fast path: already loaded
     if medgemma is not None and translategemma is not None:
         return True, None
-    
+
     with _model_lock:
         # Double-check inside lock
         try:
@@ -227,7 +227,7 @@ def load_models() -> Tuple[bool, Optional[str]]:
                 # but huggingface_hub expects HF_TOKEN. Support both.
                 hf_token = os.environ.get('HF_TOKEN') or os.environ.get('HUGGINGFACE_TOKEN')
                 med_path = hf_hub_download(
-                    config.model.medgemma_repo, 
+                    config.model.medgemma_repo,
                     config.model.medgemma_file,
                     token=hf_token
                 )
@@ -239,12 +239,12 @@ def load_models() -> Tuple[bool, Optional[str]]:
                     verbose=False
                 )
                 request_logger.info("MedGemma loaded successfully")
-            
+
             if translategemma is None:
                 request_logger.info("Downloading TranslateGemma...")
                 hf_token = os.environ.get('HF_TOKEN') or os.environ.get('HUGGINGFACE_TOKEN')
                 trans_path = hf_hub_download(
-                    config.model.translategemma_repo, 
+                    config.model.translategemma_repo,
                     config.model.translategemma_file,
                     token=hf_token
                 )
@@ -256,9 +256,9 @@ def load_models() -> Tuple[bool, Optional[str]]:
                     verbose=False
                 )
                 request_logger.info("TranslateGemma loaded successfully")
-            
+
             return True, None
-            
+
         except Exception as e:
             error_msg = f"Failed to load models: {str(e)}"
             request_logger.error(error_msg, error_type=type(e).__name__)
@@ -287,7 +287,7 @@ def require_models(f):
 def health():
     """Liveness probe — is the process alive? (S-01: version hidden)"""
     return jsonify({
-        "status": "ok", 
+        "status": "ok",
         "service": "nku-inference"
     })
 
@@ -321,17 +321,17 @@ def ready():
 def translate():
     """
     Translate between Twi and English.
-    
+
     Request body:
         - text (required): Text to translate
         - source (optional): Source language code (default: 'twi')
         - target (optional): Target language code (default: 'en')
     """
     data = request.get_json()
-    
+
     # Validate text input
     text_result = input_validator.validate_text(
-        data.get('text'), 
+        data.get('text'),
         max_length=config.security.max_text_length
     )
     if not text_result.is_valid:
@@ -339,23 +339,23 @@ def translate():
             'error': 'validation_error',
             'message': text_result.errors[0]
         }), 400
-    
+
     # Validate language codes
     source_lang = data.get('source', 'twi')
     target_lang = data.get('target', 'en')
-    
+
     source_result = input_validator.validate_language(source_lang)
     if not source_result.is_valid:
         source_lang = 'twi'  # Default to Twi if invalid
     else:
         source_lang = source_result.sanitized_value
-    
+
     target_result = input_validator.validate_language(target_lang)
     if not target_result.is_valid:
         target_lang = 'en'  # Default to English if invalid
     else:
         target_lang = target_result.sanitized_value
-    
+
     # Build safe prompt (B-05: include MEDICAL_GLOSSARY for Twi translations)
     glossary_hint = MEDICAL_GLOSSARY if source_lang == 'twi' or target_lang == 'twi' else ''
     prompt = PromptProtector.build_translation_prompt(
@@ -364,7 +364,7 @@ def translate():
         target_lang=target_lang,
         glossary=glossary_hint
     )
-    
+
     try:
         result = translategemma(
             prompt,
@@ -372,24 +372,24 @@ def translate():
             temperature=config.inference.translation_temperature,
             stop=["\n\n", "<<<USER_INPUT>>>"]
         )
-        
+
         raw_translation = result['choices'][0]['text'].strip()
         is_valid, translation = PromptProtector.validate_output(raw_translation)
-        
+
         if not is_valid:
             request_logger.warning("Translation output validation failed")
             return jsonify({
                 'error': 'generation_error',
                 'message': 'Failed to generate valid translation'
             }), 500
-        
+
         return jsonify({
             "translation": translation,
             "source_lang": source_lang,
             "target_lang": target_lang,
             "warnings": text_result.warnings if text_result.warnings else None
         })
-        
+
     except Exception as e:
         request_logger.error(f"Translation inference failed: {str(e)}")
         return jsonify({
@@ -412,12 +412,12 @@ def translate():
 def triage():
     """
     Medical triage analysis.
-    
+
     Request body:
         - symptoms (required): Patient symptoms description
     """
     data = request.get_json()
-    
+
     # Validate symptom input
     symptoms_result = input_validator.validate_symptoms(data.get('symptoms'))
     if not symptoms_result.is_valid:
@@ -425,10 +425,10 @@ def triage():
             'error': 'validation_error',
             'message': symptoms_result.errors[0]
         }), 400
-    
+
     # Build safe prompt
     prompt = PromptProtector.build_triage_prompt(symptoms_result.sanitized_value)
-    
+
     try:
         result = medgemma(
             prompt,
@@ -436,22 +436,22 @@ def triage():
             temperature=config.inference.triage_temperature,
             stop=["<<<USER_INPUT>>>", "Patient symptoms:"]
         )
-        
+
         raw_assessment = result['choices'][0]['text'].strip()
         is_valid, assessment = PromptProtector.validate_output(raw_assessment)
-        
+
         if not is_valid:
             request_logger.warning("Triage output validation failed")
             return jsonify({
                 'error': 'generation_error',
                 'message': 'Failed to generate valid assessment'
             }), 500
-        
+
         return jsonify({
             "assessment": assessment,
             "warnings": symptoms_result.warnings if symptoms_result.warnings else None
         })
-        
+
     except Exception as e:
         request_logger.error(f"Triage inference failed: {str(e)}")
         return jsonify({
@@ -474,12 +474,12 @@ def triage():
 def nku_cycle():
     """
     Full Nku Cycle: Twi → English → Triage → Twi.
-    
+
     Request body:
         - text (required): Patient symptoms in Twi
     """
     data = request.get_json()
-    
+
     # Validate input
     text_result = input_validator.validate_text(
         data.get('text'),
@@ -490,9 +490,9 @@ def nku_cycle():
             'error': 'validation_error',
             'message': text_result.errors[0]
         }), 400
-    
+
     twi_input = text_result.sanitized_value
-    
+
     try:
         # Step 1: Translate Twi to English
         trans_prompt = PromptProtector.build_translation_prompt(
@@ -500,7 +500,7 @@ def nku_cycle():
             glossary=MEDICAL_GLOSSARY
         )
         trans_result = translategemma(
-            trans_prompt, 
+            trans_prompt,
             max_tokens=config.inference.max_translation_tokens,
             temperature=config.inference.translation_temperature,
             stop=["\n\n", "<<<USER_INPUT>>>"]
@@ -508,7 +508,7 @@ def nku_cycle():
         _, english = PromptProtector.validate_output(
             trans_result['choices'][0]['text'].strip()
         )
-        
+
         # Step 2: Medical triage
         triage_prompt = PromptProtector.build_triage_prompt(english)
         triage_result = medgemma(
@@ -520,7 +520,7 @@ def nku_cycle():
         _, assessment = PromptProtector.validate_output(
             triage_result['choices'][0]['text'].strip()
         )
-        
+
         # Step 3: Translate response back to Twi
         back_prompt = PromptProtector.build_translation_prompt(
             assessment, source_lang='en', target_lang='twi',
@@ -535,14 +535,14 @@ def nku_cycle():
         _, twi_output = PromptProtector.validate_output(
             back_result['choices'][0]['text'].strip()
         )
-        
+
         return jsonify({
             "english_translation": english,
             "triage_assessment": assessment,
             "twi_output": twi_output,
             "warnings": text_result.warnings if text_result.warnings else None
         })
-        
+
     except Exception as e:
         request_logger.error(f"Nku cycle failed: {str(e)}")
         return jsonify({

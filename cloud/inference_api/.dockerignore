@@ -1,0 +1,39 @@
+# Nku Cloud API — Docker build context exclusions
+# Keeps the build context small and prevents stale bytecode
+
+# Python bytecode cache (can cause stale module issues)
+__pycache__/
+*.pyc
+*.pyo
+
+# Development/deployment files not needed in image
+Dockerfile
+.dockerignore
+deploy.sh
+*.md
+*.txt.bak
+
+# Version control
+.git/
+.gitignore
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Model files (should be downloaded at runtime, not baked into image)
+*.gguf
+*.bin
+*.safetensors
+
+# Test files
+tests/
+test_*.py
+
+# Environment files (secrets!)
+.env
+.env.*
+!.env.example

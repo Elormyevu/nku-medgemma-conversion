@@ -73,10 +73,11 @@ h100_v4_error.txt
 *.imatrix
 fitzpatrick17k.csv
 
-# Generated visuals (keep only docs/assets versions)
+# Generated visuals (keep only docs/assets and logo)
 nku_*.png
 nku_*.svg
 !docs/assets/*.png
+!video_assets/nku_logo.png
 
 # Agent/AI directories
 .agent/

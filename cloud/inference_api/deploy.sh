@@ -64,10 +64,10 @@ fi
 # Use Secret Manager for HF_TOKEN if available, otherwise use env var
 if gcloud secrets describe hf-token --project="$PROJECT_ID" &>/dev/null; then
     echo "📦 Using Secret Manager for HF_TOKEN"
-    DEPLOY_CMD="$DEPLOY_CMD --set-secrets=HUGGINGFACE_TOKEN=hf-token:latest"
+    DEPLOY_CMD="$DEPLOY_CMD --set-secrets=HF_TOKEN=hf-token:latest"
 else
     echo "📦 Using environment variable for HF_TOKEN"
-    DEPLOY_CMD="$DEPLOY_CMD --set-env-vars=HUGGINGFACE_TOKEN=${HF_TOKEN}"
+    DEPLOY_CMD="$DEPLOY_CMD --set-env-vars=HF_TOKEN=${HF_TOKEN}"
 fi
 
 # Execute deployment

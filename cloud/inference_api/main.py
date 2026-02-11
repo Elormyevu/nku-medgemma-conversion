@@ -317,6 +317,7 @@ def ready():
 @require_api_key
 @validate_json_request(required_fields=['text'])
 @require_models
+@with_timeout(120)
 def translate():
     """
     Translate between Twi and English.
@@ -407,6 +408,7 @@ def translate():
 @require_api_key
 @validate_json_request(required_fields=['symptoms'])
 @require_models
+@with_timeout(120)
 def triage():
     """
     Medical triage analysis.
@@ -468,6 +470,7 @@ def triage():
 @require_api_key
 @validate_json_request(required_fields=['text'])
 @require_models
+@with_timeout(300)
 def nku_cycle():
     """
     Full Nku Cycle: Twi → English → Triage → Twi.
@@ -493,7 +496,8 @@ def nku_cycle():
     try:
         # Step 1: Translate Twi to English
         trans_prompt = PromptProtector.build_translation_prompt(
-            twi_input, source_lang='twi', target_lang='en'
+            twi_input, source_lang='twi', target_lang='en',
+            glossary=MEDICAL_GLOSSARY
         )
         trans_result = translategemma(
             trans_prompt, 
@@ -519,7 +523,8 @@ def nku_cycle():
         
         # Step 3: Translate response back to Twi
         back_prompt = PromptProtector.build_translation_prompt(
-            assessment, source_lang='en', target_lang='twi'
+            assessment, source_lang='en', target_lang='twi',
+            glossary=MEDICAL_GLOSSARY
         )
         back_result = translategemma(
             back_prompt,

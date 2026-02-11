@@ -21,6 +21,11 @@ RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 # --- Stage 2: Production ---
 FROM python:3.11-slim
 
+# Runtime dependency: llama-cpp-python requires libgomp (OpenMP)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy installed Python packages from builder
 COPY --from=builder /install /usr/local
 
@@ -40,6 +45,8 @@ COPY --chown=nku:nku logging_config.py .
 ENV PORT=8080
 ENV PYTHONUNBUFFERED=1
 ENV LOG_JSON=true
+
+EXPOSE 8080
 
 # Health check for container orchestrators
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \

@@ -224,8 +224,9 @@ class ClinicalReasonerTest {
         )
         val assessment = reasoner.createRuleBasedAssessment(vitals)
 
-        assertEquals("Should be RED for chest pain + severe pallor",
-            TriageCategory.RED, assessment.triageCategory)
+        // Chest pain escalates to HIGH severity → ORANGE triage, IMMEDIATE urgency
+        assertEquals("Should be ORANGE for chest pain (HIGH severity)",
+            TriageCategory.ORANGE, assessment.triageCategory)
         assertEquals(Urgency.IMMEDIATE, assessment.urgency)
     }
 

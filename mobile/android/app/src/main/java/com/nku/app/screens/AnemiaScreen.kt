@@ -203,7 +203,12 @@ fun AnemiaScreen(
                 Button(
                     onClick = {
                         lastCapturedBitmap?.let { bmp ->
-                            pallorDetector.analyzeConjunctiva(bmp)
+                            // F-10: Error boundary — prevent processor crash from killing UI
+                            try {
+                                pallorDetector.analyzeConjunctiva(bmp)
+                            } catch (e: Exception) {
+                                android.util.Log.e("AnemiaScreen", "Pallor analysis error: ${e.message}")
+                            }
                             isCapturing = false
                         }
                     },

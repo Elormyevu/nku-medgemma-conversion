@@ -128,9 +128,14 @@ fun PreeclampsiaScreen(
                 Button(
                     onClick = {
                         lastCapturedBitmap?.let { bmp ->
-                            val landmarks = faceDetectorHelper.detectLandmarks(bmp)
-                            if (landmarks != null) edemaDetector.analyzeFaceWithLandmarks(bmp, landmarks)
-                            else edemaDetector.analyzeFace(bmp)
+                            // F-10: Error boundary — prevent processor crash from killing UI
+                            try {
+                                val landmarks = faceDetectorHelper.detectLandmarks(bmp)
+                                if (landmarks != null) edemaDetector.analyzeFaceWithLandmarks(bmp, landmarks)
+                                else edemaDetector.analyzeFace(bmp)
+                            } catch (e: Exception) {
+                                android.util.Log.e("PreeclampsiaScreen", "Edema analysis error: ${e.message}")
+                            }
                             isCapturing = false
                         }
                     },

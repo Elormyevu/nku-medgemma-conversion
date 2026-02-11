@@ -18,11 +18,15 @@ This directory contains the Android application source code for **Nku** (The Sen
 3.  Click the **Run** button (Green Arrow).
 
 ## Key Files
-*   `MainActivity.kt`: Entry point, permission handling.
-*   `CameraFragment.kt`: CameraX setup, binds `ImageAnalyzer`.
-*   `ImageAnalyzer.kt`: Core logic. Runs MediaPipe FaceLandmarker and state machine.
-*   `NkuBrain.kt`: The Intelligence Engine (stubbed for PaliGemma).
-*   `OverlayView.kt`: Custom View for AR wireframes and result dashboard.
+*   `MainActivity.kt`: Entry point, Compose UI host, permission handling.
+*   `NkuInferenceEngine.kt`: Nku Cycle model orchestration (MedGemma + TranslateGemma).
+*   `RPPGProcessor.kt`: Heart rate extraction via rPPG (camera-based).
+*   `PallorDetector.kt`: Anemia screening via conjunctival pallor analysis.
+*   `EdemaDetector.kt`: Preeclampsia screening via facial edema geometry.
+*   `SensorFusion.kt`: Aggregates vital signs from all three detectors.
+*   `ClinicalReasoner.kt`: MedGemma triage prompts + WHO/IMCI rule-based fallback.
+*   `LocalizedStrings.kt`: 46-language UI strings (14 Tier 1, 32 Tier 2).
+*   `screens/`: Extracted screen composables (HomeScreen, CardioScreen, AnemiaScreen, PreeclampsiaScreen, TriageScreen).
 
 ## Troubleshooting
 *   **Permissions**: If the camera doesn't open, ensuring you have granted Camera and Internet permissions in the dialog.

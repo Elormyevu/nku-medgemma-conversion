@@ -16,8 +16,13 @@ import java.net.URL
  * Nku is 100% offline in production — this class exists solely for
  * development and emulator testing.
  *
+ * L-02: Marked as deprecated. Consider removing in a future cleanup
+ * pass once emulator testing workflows are fully validated with
+ * on-device model sideloading.
+ *
  * Endpoint: Nku Cloud Run API (cloud/inference_api/)
  */
+@Deprecated("Dev/emulator only — all methods return null in release builds. See L-02.")
 class CloudInferenceClient(
     private val baseUrl: String = BuildConfig.NKU_CLOUD_URL,
     private val apiKey: String? = null,
@@ -70,8 +75,9 @@ class CloudInferenceClient(
             conn.doOutput = true
 
             // Build request body
+            // C-03 fix: field name matches backend /triage endpoint contract
             val body = JSONObject().apply {
-                put("prompt", prompt)
+                put("symptoms", prompt)
                 put("max_tokens", 512)
                 put("temperature", 0.3)
             }
@@ -124,10 +130,11 @@ class CloudInferenceClient(
                 conn.readTimeout = timeoutMs
                 conn.doOutput = true
 
+                // C-03 fix: field names match backend /translate endpoint contract
                 val body = JSONObject().apply {
                     put("text", text)
-                    put("source_language", sourceLang)
-                    put("target_language", targetLang)
+                    put("source", sourceLang)
+                    put("target", targetLang)
                 }
 
                 OutputStreamWriter(conn.outputStream).use { writer ->

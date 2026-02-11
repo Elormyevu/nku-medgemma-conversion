@@ -120,6 +120,13 @@ class InputValidator:
         # Remove potentially dangerous unicode
         sanitized = self._sanitize_unicode(sanitized)
 
+        # C-04 fix: Strip delimiter tokens from user input to prevent boundary spoofing
+        # Defense-in-depth: client-side PromptSanitizer also escapes these, but API
+        # can be called directly without the Android client.
+        if '<<<' in sanitized or '>>>' in sanitized:
+            logger.warning("Delimiter tokens found in user input — stripping")
+            sanitized = sanitized.replace('<<<', '').replace('>>>', '')
+
         return ValidationResult(True, sanitized, errors, warnings)
 
     def validate_symptoms(self, symptoms: Optional[str]) -> ValidationResult:
@@ -292,8 +299,10 @@ Assessment:""",
         cleaned = output.strip()
 
         # Check for delimiter leakage
+        # C-04 fix: reject output if delimiters leak through (possible injection pass-through)
         if cls.DELIMITER in cleaned:
-            cleaned = cleaned.replace(cls.DELIMITER, "")
+            logger.warning("Delimiter leakage detected in LLM output — rejecting")
+            return False, ""
 
         return True, cleaned
 
@@ -543,7 +552,7 @@ def configure_cors(app, allowed_origins: List[str] = None):
     CORS(app,
          origins=allowed_origins,
          methods=['GET', 'POST', 'OPTIONS'],
-         allow_headers=['Content-Type', 'Authorization'],
+         allow_headers=['Content-Type', 'Authorization', 'X-API-Key'],  # M-06 fix
          max_age=3600)
 
 

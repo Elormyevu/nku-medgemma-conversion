@@ -8,13 +8,16 @@
     <!-- Microphone permission for voice input (speech-to-text) -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     
+    <!-- C-03 fix: Internet permission for cloud fallback (debug builds only) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    
     <!-- Required for camera features -->
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"

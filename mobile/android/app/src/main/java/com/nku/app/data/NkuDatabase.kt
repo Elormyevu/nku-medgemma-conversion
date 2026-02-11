@@ -38,7 +38,7 @@ abstract class NkuDatabase : RoomDatabase() {
                     "nku_screenings.db"
                 )
                 .addMigrations(MIGRATION_1_2)
-                .fallbackToDestructiveMigration()  // F-9: safety net for future schema mismatches
+                // M-03 fix: removed fallbackToDestructiveMigration() — PHI must never be silently destroyed
                 .build().also { INSTANCE = it }
             }
         }

@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.launch
+import androidx.lifecycle.lifecycleScope
 import java.util.concurrent.Executors
 import com.nku.app.ui.NkuTheme
 import com.nku.app.ui.NkuColors
@@ -96,6 +97,11 @@ class MainActivity : ComponentActivity() {
         
         // Initialize MedGemma engine
         nkuEngine = NkuInferenceEngine(this)
+        
+        // C-01 fix: extract models from assets on first launch
+        lifecycleScope.launch {
+            nkuEngine.extractModelsFromAssets()
+        }
         
         // Request camera + audio permissions
         val permissionLauncher = registerForActivityResult(
@@ -293,13 +299,16 @@ fun NkuSentinelApp(
                                     clinicalReasoner.parseMedGemmaResponse(
                                         result.clinicalResponse, currentVitals
                                     )
-                                    // Auto-save screening
+                                    // Auto-save screening (H-03 fix: populate all fields)
                                     screeningDao.insert(ScreeningEntity(
                                         heartRateBpm = rppgResult.bpm?.toFloat(),
                                         heartRateConfidence = rppgResult.confidence,
                                         pallorSeverity = pallorResult.severity.name,
                                         edemaSeverity = edemaResult.severity.name,
                                         triageLevel = result.clinicalResponse.take(200),
+                                        symptoms = prompt,
+                                        recommendations = result.clinicalResponse,
+                                        edemaRiskFactors = edemaResult.riskFactors.joinToString(","),
                                         language = selectedLanguage,
                                         isPregnant = isPregnant,
                                         gestationalWeeks = gestationalWeeks.toIntOrNull()
@@ -308,14 +317,18 @@ fun NkuSentinelApp(
                             } else {
                                 // Models not sideloaded — use rule-based triage
                                 clinicalReasoner.createRuleBasedAssessment(currentVitals)
-                                // Auto-save screening
+                                // Auto-save screening (H-03 fix: populate all fields)
                                 scope.launch {
+                                    val currentAssessment = assessment
                                     screeningDao.insert(ScreeningEntity(
                                         heartRateBpm = rppgResult.bpm?.toFloat(),
                                         heartRateConfidence = rppgResult.confidence,
                                         pallorSeverity = pallorResult.severity.name,
                                         edemaSeverity = edemaResult.severity.name,
                                         triageLevel = "Rule-based",
+                                        symptoms = currentVitals.toString(),
+                                        recommendations = currentAssessment?.recommendations?.joinToString("; ") ?: "",
+                                        edemaRiskFactors = edemaResult.riskFactors.joinToString(","),
                                         language = selectedLanguage,
                                         isPregnant = isPregnant,
                                         gestationalWeeks = gestationalWeeks.toIntOrNull()

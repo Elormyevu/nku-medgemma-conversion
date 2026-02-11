@@ -12,7 +12,7 @@ Nku is an **offline-first Android application** that provides medical triage in 
 |:----------|:--------|:------------|
 | **RAM** | 2GB | 4GB |
 | **Storage** | 4GB | 8GB |
-| **Android** | 8.0 (API 26) | 12+ (API 31+) |
+| **Android** | 9.0 (API 28) | 12+ (API 31+) |
 | **Network** | None | Optional (for updates) |
 
 ## Component Architecture

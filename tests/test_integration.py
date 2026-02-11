@@ -248,12 +248,12 @@ class TestOutputValidation(unittest.TestCase):
         is_valid, cleaned = self.protector.validate_output("   \n\t  ")
         self.assertFalse(is_valid)
     
-    def test_strips_delimiter_from_output(self):
-        """Test that leaked delimiters are stripped from output."""
+    def test_rejects_delimiter_in_output(self):
+        """C-04: Test that leaked delimiters cause output rejection (not silent strip)."""
         dirty = f"Result: {self.protector.DELIMITER} some data {self.protector.DELIMITER}"
         is_valid, cleaned = self.protector.validate_output(dirty)
-        self.assertTrue(is_valid)
-        self.assertNotIn(self.protector.DELIMITER, cleaned)
+        self.assertFalse(is_valid, "Delimiter leakage must cause rejection")
+        self.assertEqual(cleaned, "")
     
     def test_truncates_excessively_long_output(self):
         """Test truncation of oversized model output."""

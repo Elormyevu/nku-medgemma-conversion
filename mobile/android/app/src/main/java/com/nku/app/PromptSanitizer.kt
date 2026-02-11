@@ -177,7 +177,13 @@ object PromptSanitizer {
                 "codepoints=${unexpectedChars.take(10).map { "U+%04X".format(it.code) }}")
         }
 
-        // 6. Length cap — symptoms should not exceed 500 chars
+        // 6. C-04 fix: Escape delimiter sequences to prevent delimiter spoofing
+        if (cleaned.contains("<<<") || cleaned.contains(">>>")) {
+            Log.w(TAG, "Delimiter sequences detected in user input — escaping")
+            cleaned = cleaned.replace("<<<", "‹‹‹").replace(">>>", "›››")
+        }
+
+        // 7. Length cap — symptoms should not exceed 500 chars
         if (cleaned.length > 500) {
             cleaned = cleaned.take(500)
             Log.w(TAG, "User input truncated to 500 characters")

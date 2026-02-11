@@ -4,8 +4,10 @@ package com.nku.app
  * LocalizedStrings — Pan-African Language Support (46 Languages)
  *
  * Provides UI strings and clinical text in 46 African languages.
- * Tier 1 (14 languages): Full clinical vocabulary verified
- * Tier 2 (32 languages): UI labels localized
+ * Tier 1 (14 languages): Full clinical vocabulary with native UI strings
+ * Tier 2 (32 languages): Language name listed in the selector, but UI falls back
+ *   to English strings. L-01: Tier 2 entries display "(English UI)" suffix so CHWs
+ *   understand the limitation.
  *
  * Usage:
  *   val strings = LocalizedStrings.forLanguage("ee")  // Ewe
@@ -15,7 +17,7 @@ object LocalizedStrings {
 
     // All supported language codes
     val supportedLanguages: Map<String, String> = mapOf(
-        // Tier 1: Clinically Verified (14)
+        // Tier 1: Clinically Verified (14) — full native UI strings
         "en" to "English",
         "fr" to "French",
         "sw" to "Swahili",
@@ -30,39 +32,39 @@ object LocalizedStrings {
         "xh" to "Xhosa",
         "om" to "Oromo",
         "ti" to "Tigrinya",
-        // Tier 2: UI Localized (32)
-        "af" to "Afrikaans",
-        "bm" to "Bambara",
-        "ny" to "Chichewa",
-        "din" to "Dinka",
-        "ff" to "Fula",
-        "gaa" to "Ga",
-        "ki" to "Kikuyu",
-        "rw" to "Kinyarwanda",
-        "kg" to "Kongo",
-        "ln" to "Lingala",
-        "luo" to "Luo",
-        "lg" to "Luganda",
-        "mg" to "Malagasy",
-        "nd" to "Ndebele",
-        "nus" to "Nuer",
-        "pcm" to "Pidgin (Nigerian)",
-        "wes" to "Pidgin (Cameroonian)",
-        "rn" to "Rundi",
-        "st" to "Sesotho",
-        "sn" to "Shona",
-        "so" to "Somali",
-        "tn" to "Tswana",
-        "pt" to "Portuguese",
-        "ar" to "Arabic",
-        "ts" to "Tsonga",
-        "ve" to "Venda",
-        "ss" to "Swati",
-        "nso" to "Northern Sotho",
-        "bem" to "Bemba",
-        "tum" to "Tumbuka",
-        "lua" to "Luba-Kasai",
-        "kj" to "Kuanyama"
+        // Tier 2: UI falls back to English (32) — M-01 fix: explicit labeling
+        "af" to "Afrikaans (English UI)",
+        "bm" to "Bambara (English UI)",
+        "ny" to "Chichewa (English UI)",
+        "din" to "Dinka (English UI)",
+        "ff" to "Fula (English UI)",
+        "gaa" to "Ga (English UI)",
+        "ki" to "Kikuyu (English UI)",
+        "rw" to "Kinyarwanda (English UI)",
+        "kg" to "Kongo (English UI)",
+        "ln" to "Lingala (English UI)",
+        "luo" to "Luo (English UI)",
+        "lg" to "Luganda (English UI)",
+        "mg" to "Malagasy (English UI)",
+        "nd" to "Ndebele (English UI)",
+        "nus" to "Nuer (English UI)",
+        "pcm" to "Pidgin (Nigerian) (English UI)",
+        "wes" to "Pidgin (Cameroonian) (English UI)",
+        "rn" to "Rundi (English UI)",
+        "st" to "Sesotho (English UI)",
+        "sn" to "Shona (English UI)",
+        "so" to "Somali (English UI)",
+        "tn" to "Tswana (English UI)",
+        "pt" to "Portuguese (English UI)",
+        "ar" to "Arabic (English UI)",
+        "ts" to "Tsonga (English UI)",
+        "ve" to "Venda (English UI)",
+        "ss" to "Swati (English UI)",
+        "nso" to "Northern Sotho (English UI)",
+        "bem" to "Bemba (English UI)",
+        "tum" to "Tumbuka (English UI)",
+        "lua" to "Luba-Kasai (English UI)",
+        "kj" to "Kuanyama (English UI)"
     )
 
     /**

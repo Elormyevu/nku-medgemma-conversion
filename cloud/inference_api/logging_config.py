@@ -136,9 +136,12 @@ def log_request(logger: logging.Logger):
             try:
                 response = f(*args, **kwargs)
 
-                # Log response
+                # H-04 fix: Handle Flask tuple responses (jsonify(...), status_code)
                 duration_ms = (time.time() - g.request_start) * 1000
-                status_code = response.status_code if hasattr(response, 'status_code') else 200
+                if isinstance(response, tuple):
+                    status_code = response[1] if len(response) > 1 else 200
+                else:
+                    status_code = response.status_code if hasattr(response, 'status_code') else 200
 
                 logger.info(f"Request completed: {status_code}", extra={
                     'extra_data': {

@@ -1,6 +1,13 @@
 package com.nku.app.screens
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,10 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.nku.app.*
 import com.nku.app.ui.NkuColors
 
@@ -39,6 +48,20 @@ fun PreeclampsiaScreen(
 ) {
     var isCapturing by remember { mutableStateOf(false) }
     var lastCapturedBitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var cameraPermissionDenied by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    
+    // H-01 fix: Runtime camera permission gate (mirrors CardioScreen pattern)
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            isCapturing = true
+            cameraPermissionDenied = false
+        } else {
+            cameraPermissionDenied = true
+        }
+    }
     
     Column(
         modifier = Modifier
@@ -99,6 +122,48 @@ fun PreeclampsiaScreen(
             }
             Spacer(Modifier.height(20.dp))
         }
+        
+        // H-01 fix: Camera permission denied feedback
+        if (cameraPermissionDenied) {
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = NkuColors.Warning.copy(alpha = 0.15f)
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        strings.cameraPermissionTitle,
+                        fontWeight = FontWeight.Bold,
+                        color = NkuColors.Warning
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        "Preeclampsia screening needs camera access. Please enable in Settings.",
+                        fontSize = 12.sp,
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(
+                        onClick = {
+                            context.startActivity(
+                                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                    data = Uri.fromParts("package", context.packageName, null)
+                                }
+                            )
+                        }
+                    ) {
+                        Text(strings.openSettings, fontSize = 13.sp)
+                    }
+                }
+            }
+            Spacer(Modifier.height(16.dp))
+        }
+        
         
         if (isCapturing) {
             Card(
@@ -185,7 +250,17 @@ fun PreeclampsiaScreen(
         
         if (!isCapturing) {
             Button(
-                onClick = { isCapturing = true },
+                onClick = {
+                    // H-01 fix: Check camera permission before starting capture
+                    if (ContextCompat.checkSelfPermission(
+                            context, Manifest.permission.CAMERA
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        isCapturing = true
+                    } else {
+                        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = NkuColors.Secondary),
                 modifier = Modifier.fillMaxWidth(0.8f).height(56.dp),
                 shape = RoundedCornerShape(28.dp)

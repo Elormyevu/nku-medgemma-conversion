@@ -1,0 +1,40 @@
+flowchart TB
+    User["CHW / Patient"]
+    UI["Android UI (Jetpack Compose)\nMainActivity + Screens"]
+    Sensors["Sensor Layer\nRPPGProcessor + PallorDetector + EdemaDetector"]
+    Face["FaceDetectorHelper\n(MediaPipe)"]
+    Fusion["SensorFusion"]
+    Reasoner["ClinicalReasoner\nPrompt Builder + Rule Fallback"]
+    Engine["NkuInferenceEngine\nNku Cycle Orchestrator"]
+    Prompt["PromptSanitizer"]
+    SmolLM["SmolLM JNI"]
+    Llama["llama.cpp native"]
+    Models["Model Files\nmedgemma-4b-iq1_m.gguf\ntranslategemma-4b-iq1_m.gguf"]
+    TTS["NkuTTS\nAndroid System TTS"]
+    DB["Room DB\nNkuDatabase + ScreeningDao"]
+    Export["CSV Export\nScreeningExporter + FileProvider"]
+    CloudClient["CloudInferenceClient (Debug only)"]
+    CloudAPI["Cloud Inference API\nFlask + llama-cpp-python"]
+
+    User --> UI
+    UI --> Sensors
+    UI --> Face
+    Face --> Sensors
+    Sensors --> Fusion
+    UI --> Fusion
+    Fusion --> Reasoner
+    Reasoner --> Engine
+    Engine --> Prompt
+    Prompt --> Engine
+    Engine --> SmolLM
+    SmolLM --> Llama
+    Llama --> Models
+    Engine --> TTS
+
+    UI --> DB
+    DB --> Export
+
+    UI -.optional debug path.- CloudClient
+    CloudClient -.HTTP.- CloudAPI
+
+    Reasoner -.fallback when models unavailable.- UI

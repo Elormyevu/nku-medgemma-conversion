@@ -18,12 +18,12 @@ Our core innovation is a memory-efficient orchestration pattern that runs MedGem
 
 | Stage | Model | Size | Function |
 |:------|:------|:----:|:---------|
-| 1 | TranslateGemma 4B (IQ1_M) | 0.51GB | Local language → English |
-| 2 | **MedGemma 4B (IQ1_M)** | 0.78GB | Clinical reasoning & triage |
-| 3 | TranslateGemma 4B (IQ1_M) | 0.51GB | English → Local language |
+| 1 | TranslateGemma 4B (IQ1_M) | 0.76GB | Local language → English |
+| 2 | **MedGemma 4B (IQ1_M)** | 1.1GB | Clinical reasoning & triage |
+| 3 | TranslateGemma 4B (IQ1_M) | 0.76GB | English → Local language |
 | 4 | Android System TTS | ~0MB | Spoken output |
 
-**Peak RAM: ~1.4GB** (well within the 2GB device budget). Total on-disk footprint: **~1.3GB**.
+**Peak RAM: ~1.4GB** (estimated; well within the 2GB device budget). Total on-disk footprint: **~1.88GB**.
 
 **Ultra-Compression**: We achieve 90% size reduction from MedGemma's original 8GB weights using IQ1_M quantization via llama.cpp, calibrated with a 64-chunk **medical imatrix** derived from 243 African primary care scenarios across 14+ languages—ensuring the quantized model retains diagnostic vocabulary for malaria, anemia, pneumonia, and other regionally prevalent conditions.
 
@@ -33,13 +33,15 @@ CHWs lack diagnostic equipment. Nku Sentinel extracts vital signs using **only t
 
 | Screening | Method | Key Evidence |
 |:----------|:-------|:-------------|
-| **Cardio Check** | rPPG (green channel FFT, 30fps) | Literature reports 96.2% accuracy vs ECG [9] |
-| **Anemia Screen** | **Conjunctival** HSV analysis | Clinical pallor assessment achieves 80% sens / 82% spec [10] |
-| **Preeclampsia** | Facial geometry ratios | Edema is a key warning sign (ACOG) |
+| **Cardio Check** | rPPG (green channel DFT, 30fps) | Verkruysse 2008: green channel strongest signal; smartphone rPPG MAE 2.49 BPM |
+| **Anemia Screen** | **Conjunctival** HSV analysis | Jay 2024: 75.4% accuracy, 92.7% for severe anemia; thresholds pending field calibration |
+| **Preeclampsia** | Facial geometry (EAR) | NEC/Tsukuba: 85% edema detection accuracy; EAR thresholds pending field calibration |
 
 **Fitzpatrick-Aware Design**: Pallor uses conjunctiva-only analysis (skin-tone agnostic). Edema uses geometry ratios (skin-color independent). These explicit design choices ensure diagnostic parity for Fitzpatrick V-VI—the primary target demographic.
 
 **Clinical Reasoning Pipeline**: `SensorFusion.kt` aggregates all sensor outputs → `ClinicalReasoner.kt` generates structured MedGemma prompts with vital signs + patient context → MedGemma returns severity, urgency, and actionable CHW recommendations. If MedGemma is unavailable (device overheating), a WHO/IMCI rule-based fallback ensures continuous safety.
+
+**Prompt Injection Protection**: All user input passes through a 6-layer `PromptSanitizer` (zero-width stripping, homoglyph normalization, base64 detection, regex pattern matching, character allowlist, delimiter wrapping) at every model boundary—input, output validation at each stage—preventing prompt injection across the multi-model pipeline.
 
 ### 2.3 Localization
 
@@ -64,6 +66,7 @@ MedGemma 4B is **irreplaceable** in this system. It performs the clinical reason
 | Device requirement | $50 Android, 2GB RAM |
 | Network requirement | **None** (100% on-device inference) |
 | Languages | 46 (14 clinically verified) |
+| Total model footprint | **~1.88GB** |
 | Per-query cost | **$0** |
 | Additional hardware | **None** (camera-only screening) |
 

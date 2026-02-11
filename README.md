@@ -44,7 +44,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 | What | How |
 |:-----|:----|
 | **100% On-Device Inference** | All clinical reasoning runs on-device — zero cloud dependency for inference |
-| **Ultra-Compressed** | 8GB models → 1.3GB via IQ1_M quantization |
+| **Ultra-Compressed** | 8GB models → ~1.88GB via IQ1_M quantization |
 | **Pan-African Languages** | 46 languages including Ewe, Hausa, Yoruba, Swahili |
 | **Budget Hardware** | Runs on 2GB RAM devices (TECNO, Infinix) |
 | **Camera Screening** | Heart rate, anemia, & preeclampsia via phone camera |
@@ -53,7 +53,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 ## ✨ Features
 
-- 🧠 **MedGemma 4B** — Google's clinical reasoning model, quantized to 0.78GB
+- 🧠 **MedGemma 4B** — Google's clinical reasoning model, quantized to ~1.1GB
 - 🌐 **TranslateGemma 4B** — Bi-directional Pan-African language bridge
 - 🔊 **Android System TTS** — Device-native voice synthesis for spoken clinical results
 - 💎 **Premium UI** — Glassmorphism design with localized strings
@@ -98,9 +98,9 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 | Screening | Module | Method | Output |
 |:----------|:-------|:-------|:-------|
-| **Cardio Check** | `RPPGProcessor.kt` | Green channel FFT (30fps) | Heart rate ±5 BPM |
+| **Cardio Check** | `RPPGProcessor.kt` | Green channel DFT (30fps) | Heart rate ±5 BPM |
 | **Anemia Screen** | `PallorDetector.kt` | Conjunctival HSV analysis | Pallor severity (0-1) |
-| **Preeclampsia** | `EdemaDetector.kt` | Facial geometry ratios | Edema severity (0-1) |
+| **Preeclampsia** | `EdemaDetector.kt` | Facial geometry (EAR + gradients) | Edema severity (0-1) |
 | **Triage** | `ClinicalReasoner.kt` | MedGemma + WHO/IMCI fallback | Severity & recommendations |
 
 All screening uses **pure signal processing** (0 MB additional weights). Sensor outputs are aggregated by `SensorFusion.kt` and interpreted by MedGemma for clinical reasoning.
@@ -118,6 +118,7 @@ All screening uses **pure signal processing** (0 MB additional weights). Sensor 
 | **UI** | Jetpack Compose (Glassmorphism) |
 | **Perception** | RPPGProcessor, PallorDetector, EdemaDetector |
 | **Orchestration** | ClinicalReasoner + SensorFusion + ThermalManager (42°C) |
+| **Security** | PromptSanitizer (6-layer injection protection at every model boundary) |
 | **Inference** | llama.cpp via JNI (NDK 29, ARM64 NEON) |
 | **TTS** | Android System TTS (NkuTTS.kt) |
 | **Quantization** | IQ1_M + 64-chunk medical imatrix |
@@ -173,7 +174,7 @@ We achieve **90% model size reduction** while preserving clinical accuracy:
 |:------|:------:|:--------:|:--------------:|:-----:|
 | Original | F16 | ~8.0 GB | ~5.0 GB | ~13 GB |
 | Standard | Q2_K | 1.6 GB | 1.6 GB | 3.2 GB |
-| **Extreme** | **IQ1_M** | **0.78 GB** | **0.51 GB** | **~1.3 GB** |
+| **Extreme** | **IQ1_M** | **~1.1 GB** | **~0.76 GB** | **~1.88 GB** |
 
 ### Calibration
 

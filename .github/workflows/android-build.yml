@@ -5,10 +5,12 @@ on:
     branches: [main]
     paths:
       - 'mobile/android/**'
+      - '.github/workflows/android-build.yml'
   pull_request:
     branches: [main]
     paths:
       - 'mobile/android/**'
+      - '.github/workflows/android-build.yml'
 
 jobs:
   build:
@@ -33,6 +35,26 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      # Download GGUF models from HuggingFace for bundling in APK assets
+      # This is the offline-only requirement: ALL models must be in the APK
+      - name: Download GGUF models for APK assets
+        run: |
+          mkdir -p app/src/main/assets
+          pip install huggingface-hub
+          python3 -c "
+          from huggingface_hub import hf_hub_download
+          import shutil
+          # MedGemma 4B IQ1_M (~1.1GB)
+          p = hf_hub_download('wredd/medgemma-4b-gguf', 'medgemma-4b-iq1_m.gguf')
+          shutil.copy(p, 'app/src/main/assets/medgemma-4b-iq1_m.gguf')
+          print(f'MedGemma copied from {p}')
+          # TranslateGemma 4B IQ1_M (~776MB)
+          p = hf_hub_download('wredd/translategemma-4b-gguf', 'translategemma-4b-iq1_m.gguf')
+          shutil.copy(p, 'app/src/main/assets/translategemma-4b-iq1_m.gguf')
+          print(f'TranslateGemma copied from {p}')
+          "
+          ls -lh app/src/main/assets/*.gguf
 
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest --no-daemon

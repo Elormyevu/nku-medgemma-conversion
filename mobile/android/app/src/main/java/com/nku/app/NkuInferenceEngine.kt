@@ -1,6 +1,7 @@
 package com.nku.app
 
 import android.content.Context
+import android.os.Environment
 import android.util.Log
 import io.shubham0204.smollm.SmolLM
 import kotlinx.coroutines.*
@@ -70,20 +71,41 @@ class NkuInferenceEngine(private val context: Context) {
     }
 
     /**
+     * Search order for model files:
+     * 1. Internal storage (filesDir/models/) — extracted from APK assets on first run
+     * 2. External storage (/sdcard/Download/) — dev/testing fallback
+     */
+    private fun resolveModelFile(modelFileName: String): File? {
+        // Primary: extracted from APK assets (production path)
+        val internal = File(modelDir, modelFileName)
+        if (internal.exists()) return internal
+
+        // Fallback: /sdcard/Download/ (for development/testing)
+        val sdcard = File(Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_DOWNLOADS), modelFileName)
+        if (sdcard.exists()) {
+            Log.i(TAG, "Model found on sdcard: $modelFileName")
+            return sdcard
+        }
+
+        Log.w(TAG, "Model not found anywhere: $modelFileName")
+        return null
+    }
+
+    /**
      * Check if GGUF model files are available on-device.
      */
     fun areModelsReady(): Boolean {
-        val medgemma = File(modelDir, MEDGEMMA_MODEL)
-        val translate = File(modelDir, TRANSLATE_MODEL)
-        return medgemma.exists() && translate.exists()
+        return resolveModelFile(MEDGEMMA_MODEL) != null &&
+               resolveModelFile(TRANSLATE_MODEL) != null
     }
 
     /**
      * Get paths of available models (for status display).
      */
     fun getModelStatus(): Map<String, Boolean> = mapOf(
-        "MedGemma 4B (IQ1_M)" to File(modelDir, MEDGEMMA_MODEL).exists(),
-        "TranslateGemma 4B (IQ1_M)" to File(modelDir, TRANSLATE_MODEL).exists()
+        "MedGemma 4B (IQ1_M)" to (resolveModelFile(MEDGEMMA_MODEL) != null),
+        "TranslateGemma 4B (IQ1_M)" to (resolveModelFile(TRANSLATE_MODEL) != null)
     )
 
     /**
@@ -95,11 +117,13 @@ class NkuInferenceEngine(private val context: Context) {
         _state.value = EngineState.LOADING_MODEL
         _progress.value = "Loading ${modelFileName}..."
 
-        val modelPath = File(modelDir, modelFileName).absolutePath
-        if (!File(modelPath).exists()) {
-            Log.w(TAG, "Model not found: $modelPath")
+        val resolvedFile = resolveModelFile(modelFileName)
+        if (resolvedFile == null) {
+            Log.w(TAG, "Model not found in any location: $modelFileName")
             return@withContext null
         }
+        val modelPath = resolvedFile.absolutePath
+        Log.i(TAG, "Loading model from: $modelPath")
 
         val backoffMs = longArrayOf(500, 1000, 2000)
 

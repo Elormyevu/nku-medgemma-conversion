@@ -121,3 +121,6 @@ mobile/android/test_*.png
 
 # Stale root-level task file (current plan in .agent/task_plan.md)
 task.md
+
+# Local Python dev modules (Kotlin equivalents exist on Android)
+src/

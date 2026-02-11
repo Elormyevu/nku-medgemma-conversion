@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ─── Python Tests (Cloud API + Scripts) ───
+  python-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install cloud API dependencies
+        run: pip install -r cloud/inference_api/requirements.txt
+
+      - name: Run cloud API tests
+        run: pytest tests/ -v --tb=short
+
+      - name: Lint with ruff
+        run: |
+          pip install ruff
+          ruff check cloud/ scripts/ --select=E,F,W --ignore=E501
+
+  # ─── Android Build + Unit Tests ───
+  android:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile/android
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest --no-daemon
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: mobile/android/app/build/reports/tests/
+
+  # ─── Security Scan ───
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: TruffleHog secret scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified
+
+      - name: pip-audit (Python dependencies)
+        run: |
+          pip install pip-audit
+          pip-audit -r cloud/inference_api/requirements.txt --ignore-vuln PYSEC-2024-* || true

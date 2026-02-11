@@ -97,9 +97,9 @@ def generate_highlevel_architecture():
     ax.text(0.50, 0.59, 'NDK 29 • ARM64/x86_64', fontsize=8, 
             color=COLORS['gray'], ha='center')
     
-    # Piper TTS Output
+    # Android System TTS Output
     add_glass_card(ax, 0.75, 0.70, 0.20, 0.15, edge_color=COLORS['orange'])
-    ax.text(0.85, 0.82, '🔊 PIPER TTS', fontsize=11, fontweight='bold', 
+    ax.text(0.85, 0.82, '🔊 Android System TTS', fontsize=11, fontweight='bold', 
             color=COLORS['orange'], ha='center')
     ax.text(0.85, 0.77, 'Offline Voice Output', fontsize=9, 
             color=COLORS['gray'], ha='center')
@@ -261,7 +261,7 @@ def generate_status_dashboard():
         ('MedGemma 4B', 'IQ1_M • 0.78GB', COLORS['gold']),
         ('TranslateGemma 4B', 'IQ1_M • 0.51GB', COLORS['purple']),
         ('Inference Engine', 'llama.cpp JNI', COLORS['green']),
-        ('TTS', 'Piper ONNX • ~20MB', COLORS['orange']),
+        ('TTS', 'Android System TTS • 0 MB', COLORS['orange']),
         ('Android SDK', '35 • Kotlin 2.1.0', COLORS['blue']),
         ('NDK', '29.0.13113456', COLORS['teal']),
         ('APK Size', '2.7GB (debug)', COLORS['gray']),
@@ -397,7 +397,7 @@ def generate_timeline():
         (0.08, 'Jan 2026', 'Model Acquisition', ['MedGemma 4B', 'TranslateGemma 4B'], COLORS['green'], True),
         (0.20, 'Jan 2026', 'GGUF Conversion', ['IQ1_M Quantization', '64-chunk imatrix'], COLORS['green'], True),
         (0.32, 'Jan 2026', 'Android Build', ['llama.cpp JNI', 'SmolLM Module'], COLORS['green'], True),
-        (0.44, 'Feb 2026', 'Integration', ['Piper TTS', '47 Languages'], COLORS['green'], True),
+        (0.44, 'Feb 2026', 'Integration', ['System TTS', '46 Languages'], COLORS['green'], True),
         (0.56, 'Feb 4', 'TODAY', ['Planning', 'Status Review'], COLORS['teal'], True),
         (0.68, 'Feb 10', 'Video Demo', ['3-min Recording', 'Nku Cycle Demo'], COLORS['orange'], False),
         (0.80, 'Feb 17', 'Writeup', ['Technical Paper', 'Code Cleanup'], COLORS['orange'], False),

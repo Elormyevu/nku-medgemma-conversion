@@ -472,6 +472,20 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 
 ---
 
+## Development Tooling
+
+Nku was developed in **Google Antigravity** using the following AI coding assistants:
+
+| Model | Provider |
+|:------|:---------|
+| **Gemini 3 Flash** | Google DeepMind |
+| **Gemini 3 Pro** | Google DeepMind |
+| **Claude Opus 4.5** | Anthropic |
+| **Claude Opus 4.6** | Anthropic |
+| **GPT 5.3 Codex** | OpenAI (Codex IDE) |
+
+---
+
 **Prize Track**: Edge AI Prize ($5,000)
 **Why Edge AI**: Nku's entire architecture—IQ1_M compression, 2GB RAM target, llama.cpp JNI, 100% offline operation—is purpose-built for edge deployment. No cloud, no connectivity, no compromise.
 

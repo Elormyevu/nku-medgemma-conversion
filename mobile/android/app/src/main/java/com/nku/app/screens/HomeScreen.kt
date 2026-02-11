@@ -187,7 +187,7 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    "💾 $savedScreeningCount screening${if (savedScreeningCount != 1) "s" else ""} saved",
+                    strings.savedScreenings.format(savedScreeningCount),
                     fontSize = 11.sp,
                     color = NkuColors.InactiveText
                 )

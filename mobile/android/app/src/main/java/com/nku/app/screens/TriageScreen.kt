@@ -232,12 +232,12 @@ fun TriageScreen(
                     Spacer(Modifier.height(12.dp))
                     Text(
                         text = when (engineState) {
-                            EngineState.LOADING_MODEL -> "Loading AI model…"
-                            EngineState.TRANSLATING_TO_ENGLISH -> "Translating to English…"
-                            EngineState.RUNNING_MEDGEMMA -> "MedGemma analyzing…"
-                            EngineState.TRANSLATING_TO_LOCAL -> "Translating result…"
-                            EngineState.ERROR -> "Error occurred"
-                            else -> "Processing…"
+                            EngineState.LOADING_MODEL -> strings.loadingAiModel
+                            EngineState.TRANSLATING_TO_ENGLISH -> strings.translatingToEnglish
+                            EngineState.RUNNING_MEDGEMMA -> strings.medgemmaAnalyzing
+                            EngineState.TRANSLATING_TO_LOCAL -> strings.translatingResult
+                            EngineState.ERROR -> strings.errorOccurred
+                            else -> strings.processing
                         },
                         fontWeight = FontWeight.Bold, color = Color.White, fontSize = 15.sp
                     )
@@ -281,15 +281,15 @@ fun TriageScreen(
                 modifier = Modifier.fillMaxWidth(0.7f).height(48.dp),
                 shape = RoundedCornerShape(24.dp)
             ) {
-                Icon(if (ttsState == TTSState.SPEAKING) Icons.Default.Stop else Icons.Default.VolumeUp, contentDescription = if (ttsState == TTSState.SPEAKING) "Stop" else "Listen", modifier = Modifier.size(22.dp))
+                Icon(if (ttsState == TTSState.SPEAKING) Icons.Default.Stop else Icons.Default.VolumeUp, contentDescription = if (ttsState == TTSState.SPEAKING) strings.stopLabel else strings.listenLabel, modifier = Modifier.size(22.dp))
                 Spacer(Modifier.width(8.dp))
-                Text(if (ttsState == TTSState.SPEAKING) "Stop" else "🔊 Listen", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                Text(if (ttsState == TTSState.SPEAKING) strings.stopLabel else strings.listenLabel, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }
             Spacer(Modifier.height(16.dp))
             
             Card(colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground), modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Primary Concerns", fontWeight = FontWeight.Bold, color = Color.White)
+                    Text(strings.primaryConcerns, fontWeight = FontWeight.Bold, color = Color.White)
                     Spacer(Modifier.height(8.dp))
                     result.primaryConcerns.forEach { concern -> Text("• $concern", color = Color.Gray, fontSize = 14.sp) }
                 }

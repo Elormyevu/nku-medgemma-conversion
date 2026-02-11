@@ -142,7 +142,7 @@ fun PreeclampsiaScreen(
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Preeclampsia screening needs camera access. Please enable in Settings.",
+                        strings.cameraPermissionPreE,
                         fontSize = 12.sp,
                         color = Color.Gray,
                         textAlign = TextAlign.Center

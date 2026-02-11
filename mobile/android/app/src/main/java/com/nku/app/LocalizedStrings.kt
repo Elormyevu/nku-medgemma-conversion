@@ -225,7 +225,20 @@ object LocalizedStrings {
         val openSettings: String = "Open Settings",
 
         // Data export
-        val exportData: String = "Export Screening Data"
+        val exportData: String = "Export Screening Data",
+
+        // L-01 fix: Previously hardcoded English strings now localized
+        val cameraPermissionPreE: String = "Preeclampsia screening needs camera access. Please enable in Settings.",
+        val loadingAiModel: String = "Loading AI model…",
+        val translatingToEnglish: String = "Translating to English…",
+        val medgemmaAnalyzing: String = "MedGemma analyzing…",
+        val translatingResult: String = "Translating result…",
+        val errorOccurred: String = "Error occurred",
+        val processing: String = "Processing…",
+        val primaryConcerns: String = "Primary Concerns",
+        val savedScreenings: String = "💾 %d screening(s) saved",
+        val stopLabel: String = "Stop",
+        val listenLabel: String = "🔊 Listen"
     )
 
     // ─── Tier 1 Languages ───────────────────────────────────────
@@ -264,7 +277,18 @@ object LocalizedStrings {
         analyze = "Dzraɖoƒe",
         cancel = "Ɖuƒe",
         howTo = "Alesi nàwɔe",
-        disclaimer = "Elime kpɔkpɔ dɔwɔnu enye. Fia ɖe dɔkta gɔme hafi nàwɔ nane."
+        disclaimer = "Elime kpɔkpɔ dɔwɔnu enye. Fia ɖe dɔkta gɔme hafi nàwɔ nane.",
+        cameraPermissionPreE = "Futɔ kpɔkpɔ hia kamera. Ɖe edzi le Ɖoɖowo me.",
+        loadingAiModel = "AI ƒe dɔwɔnu le dzadzram…",
+        translatingToEnglish = "Ɖe eŋlisigbe me dzi…",
+        medgemmaAnalyzing = "MedGemma le kpɔkpɔ wɔm…",
+        translatingResult = "Ðe gbe me dzi…",
+        errorOccurred = "Vodada aɖe dzɔ",
+        processing = "Le dɔ wɔm…",
+        primaryConcerns = "Nuŋlɔɖiwo tiatia",
+        savedScreenings = "💾 Kpɔkpɔ %d wotsɔ axa",
+        stopLabel = "Etsɔ asi le eŋu",
+        listenLabel = "🔊 Ɖo to"
     )
 
     val frenchStrings = UiStrings(
@@ -297,7 +321,18 @@ object LocalizedStrings {
         analyze = "Analyser",
         cancel = "Annuler",
         howTo = "Comment capturer",
-        disclaimer = "Outil de dépistage assisté par IA. Consultez toujours un professionnel de santé."
+        disclaimer = "Outil de dépistage assisté par IA. Consultez toujours un professionnel de santé.",
+        cameraPermissionPreE = "Le dépistage de la prééclampsie nécessite la caméra. Activez dans Paramètres.",
+        loadingAiModel = "Chargement du modèle IA…",
+        translatingToEnglish = "Traduction en anglais…",
+        medgemmaAnalyzing = "MedGemma analyse…",
+        translatingResult = "Traduction du résultat…",
+        errorOccurred = "Une erreur s'est produite",
+        processing = "Traitement…",
+        primaryConcerns = "Préoccupations principales",
+        savedScreenings = "💾 %d dépistage(s) enregistré(s)",
+        stopLabel = "Arrêter",
+        listenLabel = "🔊 Écouter"
     )
 
     val swahiliStrings = UiStrings(
@@ -329,7 +364,18 @@ object LocalizedStrings {
         analyze = "Changanua",
         cancel = "Ghairi",
         howTo = "Jinsi ya kuchukua",
-        disclaimer = "Hii ni zana ya uchunguzi inayosaidiwa na AI. Wasiliana na mtaalamu wa afya kila wakati."
+        disclaimer = "Hii ni zana ya uchunguzi inayosaidiwa na AI. Wasiliana na mtaalamu wa afya kila wakati.",
+        cameraPermissionPreE = "Uchunguzi wa preeclampsia unahitaji kamera. Tafadhali washa kwenye Mipangilio.",
+        loadingAiModel = "Kupakia muundo wa AI…",
+        translatingToEnglish = "Kutafsiri kwa Kiingereza…",
+        medgemmaAnalyzing = "MedGemma inachambua…",
+        translatingResult = "Kutafsiri matokeo…",
+        errorOccurred = "Hitilafu imetokea",
+        processing = "Inachakata…",
+        primaryConcerns = "Wasiwasi Wakuu",
+        savedScreenings = "💾 Uchunguzi %d umehifadhiwa",
+        stopLabel = "Simamisha",
+        listenLabel = "🔊 Sikiliza"
     )
 
     val hausaStrings = UiStrings(
@@ -424,7 +470,18 @@ object LocalizedStrings {
         cameraPermissionCardio = "Gwajin bugun zuciya yana buƙatar kyamara. Don Allah a kunna a Saituna.",
         cameraPermissionAnemia = "Gwajin rashin jini yana buƙatar kyamara. Don Allah a kunna a Saituna.",
         openSettings = "Buɗe Saituna",
-        exportData = "Fitar da bayanan bincike"
+        exportData = "Fitar da bayanan bincike",
+        cameraPermissionPreE = "Gwajin preeclampsia yana buƙatar kyamara. Don Allah a kunna a Saituna.",
+        loadingAiModel = "Ana lodi tsarin AI…",
+        translatingToEnglish = "Ana fassara zuwa Turanci…",
+        medgemmaAnalyzing = "MedGemma yana bincike…",
+        translatingResult = "Ana fassara sakamako…",
+        errorOccurred = "Kuskure ya faru",
+        processing = "Ana sarrafa…",
+        primaryConcerns = "Manyan Damuwa",
+        savedScreenings = "💾 An ajiye gwaje-gwaje %d",
+        stopLabel = "Tsaya",
+        listenLabel = "🔊 Saurara"
     )
 
     val yorubaStrings = UiStrings(
@@ -519,7 +576,18 @@ object LocalizedStrings {
         cameraPermissionCardio = "Wíwọn ìlù ọkàn nílò kámẹ́rà. Jọ̀wọ́ mú ṣiṣẹ́ ní Ètò.",
         cameraPermissionAnemia = "Àyẹ̀wò ẹ̀jẹ̀ nílò kámẹ́rà. Jọ̀wọ́ mú ṣiṣẹ́ ní Ètò.",
         openSettings = "Ṣí Ètò",
-        exportData = "Gbejàde dátà àyẹ̀wò"
+        exportData = "Gbejàde dátà àyẹ̀wò",
+        cameraPermissionPreE = "Àyẹ̀wò preeclampsia nílò kámẹ́rà. Jọ̀wọ́ mú ṣiṣẹ́ ní Ètò.",
+        loadingAiModel = "Ń ṣí àwòṣe AI sílẹ̀…",
+        translatingToEnglish = "Ń yí padà sí Gẹ̀ẹ́sì…",
+        medgemmaAnalyzing = "MedGemma ń ṣàyẹ̀wò…",
+        translatingResult = "Ń yí èsì padà…",
+        errorOccurred = "Àṣìṣe ti ṣẹlẹ̀",
+        processing = "Ń ṣe iṣẹ́…",
+        primaryConcerns = "Àwọn Àníyàn Pàtàkì",
+        savedScreenings = "💾 Àyẹ̀wò %d ti fipamọ́",
+        stopLabel = "Dúró",
+        listenLabel = "🔊 Gbọ́"
     )
 
     val igboStrings = UiStrings(
@@ -542,7 +610,18 @@ object LocalizedStrings {
         severe = "Ike",
         analyze = "Nyochaa",
         cancel = "Kagbuo",
-        disclaimer = "Ngwá ọrụ nlele AI bụ nke a. Jụrụ dọkịta oge niile."
+        disclaimer = "Ngwá ọrụ nlele AI bụ nke a. Jụrụ dọkịợta oge nịile.",
+        cameraPermissionPreE = "Nlele preeclampsia chọrọ kamera. Biko mee ya na Ntọrị.",
+        loadingAiModel = "Na-ebuli ùdị AI…",
+        translatingToEnglish = "Na-asụgharị n'asusu Bekèe…",
+        medgemmaAnalyzing = "MedGemma na-enyocha…",
+        translatingResult = "Na-asụgharị nsopùta…",
+        errorOccurred = "Mmerụ mere",
+        processing = "Na-arụ ọ rụ…",
+        primaryConcerns = "Ihe Na-Echè Gị",
+        savedScreenings = "💾 E chekwara nlele %d",
+        stopLabel = "Kwụsị",
+        listenLabel = "🔊 Nụrị ntị"
     )
 
     val amharicStrings = UiStrings(
@@ -560,7 +639,18 @@ object LocalizedStrings {
         severe = "ከባድ",
         analyze = "ተንትን",
         cancel = "ሰርዝ",
-        disclaimer = "ይህ በ AI የሚደገፍ የማጣሪያ መሳሪያ ነው። ሁልጊዜ ሐኪም ያማክሩ።"
+        disclaimer = "ይህ በ AI የሚደገፍ የማጣሪያ መሳሪያ ነው። ሁልጊዜ ሐኪም ያማክሩ።",
+        cameraPermissionPreE = "የፕሪኤክላምፕሲያ ምርመራ ካሜራ ያስፈልጋል። በቅንብሮች ውስጥ ያብሩ።",
+        loadingAiModel = "የ AI ሞዴል በመጫን ላይ ነው…",
+        translatingToEnglish = "ወደ እንግሊዝኛ በመተርገም ላይ…",
+        medgemmaAnalyzing = "MedGemma በመመርመር ላይ…",
+        translatingResult = "ውጤቱን በመተርገም…",
+        errorOccurred = "ስህተት ተከስቶል",
+        processing = "በማክመም ላይ…",
+        primaryConcerns = "ውይን ስግጊቶች",
+        savedScreenings = "💾 %d ምርመራዎች ተቀምጠው",
+        stopLabel = "አቃም",
+        listenLabel = "🔊 አዳምጥ"
     )
 
     val twiStrings = UiStrings(
@@ -578,7 +668,18 @@ object LocalizedStrings {
         severe = "Emu yɛ den",
         analyze = "Hwehwɛ mu",
         cancel = "Twa mu",
-        disclaimer = "AI nhwehwɛmu adwumayɛdeɛ ni yi. Bisa dɔkota bere biara."
+        disclaimer = "AI nhwehwɛmu adwumayɛdeɛ ni yi. Bisa dɔkota bere biara.",
+        cameraPermissionPreE = "Preeclampsia hwehwɛ hia kamera. Yɛ so wɔ Nhɛhyemu mu.",
+        loadingAiModel = "Yɛrehɛre AI model…",
+        translatingToEnglish = "Yɛrekyekyerem Borofó kasa mu…",
+        medgemmaAnalyzing = "MedGemma rehwehwɛ mu…",
+        translatingResult = "Yɛrekyekyerem nsoano…",
+        errorOccurred = "Mfomso bi abɛɖɛ ba",
+        processing = "Yɛredi adwuma…",
+        primaryConcerns = "Nkyerɛdɛɛ titīre",
+        savedScreenings = "💾 Wɔakora nhwehwɛmu %d",
+        stopLabel = "Gyina",
+        listenLabel = "🔊 Tie"
     )
 
     val wolofStrings = UiStrings(
@@ -592,7 +693,18 @@ object LocalizedStrings {
         severe = "Lëndëm",
         analyze = "Saytul",
         cancel = "Bàyyi",
-        disclaimer = "Jumtukaay bi dafa jëm ci AI. Laajte ak doktoor."
+        disclaimer = "Jumtukaay bi dafa jëm ci AI. Laajte ak doktoor.",
+        cameraPermissionPreE = "Saytul preeclampsia daf lay kamera. Moytu ko ci Téere yi.",
+        loadingAiModel = "Yey bi AI model…",
+        translatingToEnglish = "Yey bi ci Angale…",
+        medgemmaAnalyzing = "MedGemma di na ko saytul…",
+        translatingResult = "Yey bi natalu bi…",
+        errorOccurred = "Njum bu bon jëm na",
+        processing = "Di na li liggéey…",
+        primaryConcerns = "Xalaat yu ndaw yi",
+        savedScreenings = "💾 %d saytul yi des na ko",
+        stopLabel = "Téédél",
+        listenLabel = "🔊 Dègg"
     )
 
     val zuluStrings = UiStrings(
@@ -606,7 +718,18 @@ object LocalizedStrings {
         severe = "Kakhulu",
         analyze = "Hlola",
         cancel = "Khansela",
-        disclaimer = "Lesi yithuluzi lokuhlola le-AI. Xhumana nodokotela njalo."
+        disclaimer = "Lesi yithuluzi lokuhlola le-AI. Xhumana nodokotela njalo.",
+        cameraPermissionPreE = "Ukuhlola i-preeclampsia kudinga ikhamera. Sicela uvule kuZilungiselelo.",
+        loadingAiModel = "Kulayisha imodeli ye-AI…",
+        translatingToEnglish = "Kuhumushelwa esiNgesini…",
+        medgemmaAnalyzing = "I-MedGemma iyahlola…",
+        translatingResult = "Kuhumusha umphumela…",
+        errorOccurred = "Kukhona iphutha",
+        processing = "Iyasebenza…",
+        primaryConcerns = "Okukhathazayo Okukhulu",
+        savedScreenings = "💾 Ukuhlolwa %d kulondolozwe",
+        stopLabel = "Misa",
+        listenLabel = "🔊 Lalela"
     )
 
     val xhosaStrings = UiStrings(
@@ -620,7 +743,18 @@ object LocalizedStrings {
         severe = "Kakhulu",
         analyze = "Hlola",
         cancel = "Rhoxisa",
-        disclaimer = "Esi sisixhobo sokuhlola se-AI. Thetha nogqirha rhoqo."
+        disclaimer = "Esi sisixhobo sokuhlola se-AI. Thetha nogqirha rhoqo.",
+        cameraPermissionPreE = "Ukuhlolwa kwe-preeclampsia kufuna ikhamera. Nceda uvule kwiiSetingi.",
+        loadingAiModel = "Kulayishwa imodeli ye-AI…",
+        translatingToEnglish = "Iguqulelwa esiNgesini…",
+        medgemmaAnalyzing = "I-MedGemma iyahlola…",
+        translatingResult = "Iguqulela isiphumo…",
+        errorOccurred = "Kukhona impazamo",
+        processing = "Iyasebenza…",
+        primaryConcerns = "Iinkxalabo Eziphambili",
+        savedScreenings = "💾 Ukuhlolwa %d kugcinwe",
+        stopLabel = "Yima",
+        listenLabel = "🔊 Mamela"
     )
 
     val oromoStrings = UiStrings(
@@ -634,7 +768,18 @@ object LocalizedStrings {
         severe = "Cimaa",
         analyze = "Qoradhu",
         cancel = "Haquu",
-        disclaimer = "Meeshaan kun AI irratti. Ogeessa fayyaa mariyadhaa."
+        disclaimer = "Meeshaan kun AI irratti. Ogeessa fayyaa mariyadhaa.",
+        cameraPermissionPreE = "Qorannoo preeclampsia kaameeraa barbaada. Maaloo Settings keessatti banaa.",
+        loadingAiModel = "Moodeela AI fe'aa jira…",
+        translatingToEnglish = "Gara Ingiliffaatti hiikaa jira…",
+        medgemmaAnalyzing = "MedGemma xiinxalaa jira…",
+        translatingResult = "Bu'aa hiikaa jira…",
+        errorOccurred = "Dogoggorri uumame",
+        processing = "Hojjechaa jira…",
+        primaryConcerns = "Dhimmoota Ijoo",
+        savedScreenings = "💾 Qorannoo %d kuufame",
+        stopLabel = "Dhaabi",
+        listenLabel = "🔊 Dhaggeeffadhu"
     )
 
     val tigrinyaStrings = UiStrings(
@@ -648,6 +793,17 @@ object LocalizedStrings {
         severe = "ከቢድ",
         analyze = "ምርመራ",
         cancel = "ሰርዝ",
-        disclaimer = "እዚ ብ AI ዝተሓገዘ መሳርሒ ምርመራ እዩ። ኩሉ ግዜ ሓኪም ኣማኽሩ።"
+        disclaimer = "እዚ ብ AI ዝተሓገዘ መሳርሒ ምርመራ እዩ። ኩሉ ግዜ ሓኪም ኣማኽሩ።",
+        cameraPermissionPreE = "መርመራ ፕሪኤክላምፕሲያ ካሜራ የዐል። ብጡብሓክ እቡ ብመንባብ እቶ ክፈት።",
+        loadingAiModel = "ሞዴል AI ይጫን አሎ…",
+        translatingToEnglish = "ናብ እንግሊዝኛ ይትርገም አሎ…",
+        medgemmaAnalyzing = "MedGemma ይመርምር አሎ…",
+        translatingResult = "ውጤት ይትርገም አሎ…",
+        errorOccurred = "ሳሕቲ ተፈጢዓል",
+        processing = "ይሰራሕ አሎ…",
+        primaryConcerns = "ቀነውን ስጋታት",
+        savedScreenings = "💾 %d ምርመራታት ተዓቊቡ’ት",
+        stopLabel = "አቅሩዕ",
+        listenLabel = "🔊 ስማዕ"
     )
 }

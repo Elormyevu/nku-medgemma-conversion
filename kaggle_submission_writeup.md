@@ -29,7 +29,7 @@ A Community Health Worker conducting home visits in rural Ghana. She carries a $
 
 ## 2. Solution Overview
 
-**Nku** (meaning "eye" in Ewe) transforms any $50-100 Android smartphone into an offline clinical triage engine, powered by MedGemma. It is a **pure edge system**—100% on-device, zero cloud dependency.
+**Nku** (meaning "eye" in Ewe) is a **proof-of-concept prototype** that demonstrates the technical feasibility of running MedGemma entirely on $50-100 Android smartphones — a pure edge system with 100% on-device inference and zero cloud dependency. Nku is not a finished clinical product; it is a working foundation that requires field deployment with Community Health Workers to validate its screening thresholds, assess real-world accuracy across diverse patient populations, and identify areas for improvement that only on-the-ground usage can reveal.
 
 ### The "Nku Cycle" Architecture
 
@@ -265,7 +265,31 @@ MedGemma 4B is **not optional**—it is the irreplaceable core of the Nku system
 
 ## 5. Impact Potential
 
-### Quantified Reach
+### Current State: Proof of Concept
+
+Nku is a **working prototype** — a fully functional Android application that demonstrates the end-to-end feasibility of offline, multilingual clinical triage on budget smartphones. What we are submitting proves that the core technical challenges — extreme model compression, sequential memory management, camera-based vital sign extraction, and multilingual orchestration — are solvable within the constraints of a $50 phone.
+
+However, we are candid about what Nku is not yet: a clinically validated tool. The sensor processing layer (rPPG heart rate, conjunctival pallor, facial edema) uses thresholds derived from published literature and engineering estimates, but these have not been calibrated against ground-truth clinical data from the target population. The path from prototype to impact requires putting Nku in the hands of the CHWs it was designed for.
+
+### What Field Deployment Will Reveal
+
+| Area | What We Expect to Learn |
+|:-----|:------------------------|
+| **Sensor accuracy** | How rPPG, pallor, and edema thresholds perform across real Fitzpatrick V-VI patients vs. controlled studies |
+| **CHW usability** | Whether the camera capture workflow is intuitive for low-literacy users in variable lighting conditions |
+| **Clinical value** | Which screening modality (cardio, anemia, preeclampsia) provides the most actionable triage information |
+| **Language quality** | How TranslateGemma handles dialectal variation within languages like Ewe, Hausa, or Yoruba |
+| **Device diversity** | Performance across the actual phone models CHWs carry (TECNO, Infinix, Samsung A-series) |
+| **Thermal constraints** | Real-world frequency of thermal throttling during multi-patient screening sessions |
+
+### Deployment Pathway
+
+1. **Pilot** (3-6 months): Deploy with 5-10 CHWs in rural Ghana. Collect concurrent ground-truth vitals (pulse oximeter, hemoglobin test, blood pressure) alongside Nku readings to calibrate sensor thresholds against real patient data.
+2. **Iterate** (3-6 months): Refine detection thresholds, UX, and language models based on pilot findings. Publish calibration results.
+3. **Community partnerships**: Engage local health organizations (e.g., Ghana Health Service) for validation and institutional buy-in.
+4. **Scale**: Distribute via Play Asset Delivery or sideloaded APK+models via GitHub for offline regions.
+
+### Quantified Potential Reach
 
 | Metric | Value |
 |:-------|:------|
@@ -276,21 +300,20 @@ MedGemma 4B is **not optional**—it is the irreplaceable core of the Nku system
 | Total Model Footprint | **~1.88GB** |
 | End-to-End Latency | <30 seconds |
 
-### Deployment Pathway
-
-1. **Field Testing**: Small-scale pilot with 5-10 CHWs, gathering real-world accuracy data
-2. **Iteration**: Refine thresholds and UX based on pilot feedback
-3. **Community Partnerships**: Engage local health organizations for validation
-4. **Distribution**: Models delivered via Play Asset Delivery (install-time), or APK+models available via GitHub for sideloading
-
 ### Why This Matters
 
-Every day, CHWs make triage decisions without tools. A mother walks 10km to a clinic for a condition that could have been triaged at home. With Nku:
+The promise of AI in healthcare has, so far, benefited those who already have the most access to medical care — patients in well-connected urban hospitals with broadband internet and modern devices. The 450 million people in rural Sub-Saharan Africa who lack basic primary care screening have been excluded from this revolution — not because the technology doesn't exist, but because it has never been engineered for their constraints.
+
+Nku is an attempt to invert that equation. By proving that MedGemma can run on a $50 phone with no internet, in 46 languages, using only the phone's camera as a sensor — we demonstrate that the **technical barriers to democratized AI triage are solvable**. What remains is the harder, more important work: field validation, community partnership, and iterative refinement guided by the CHWs who know their patients best.
+
+Every day, a Community Health Worker makes triage decisions without tools. A mother walks 10km to a clinic for a condition that could have been assessed at home. With a validated Nku:
 
 - **Earlier intervention** for high-severity cases (anemia, preeclampsia)
 - **Reduced unnecessary clinic visits** for low-severity cases
 - **Empowered CHWs** who can serve their communities in their own language [3]
 - **Camera-based screening** without any additional equipment purchases
+
+The gap between prototype and impact is field deployment. Nku is ready for that next step.
 
 ---
 
@@ -514,8 +537,8 @@ Nku was developed in **Google Antigravity** using the following AI coding assist
 ---
 
 **Prize Track**: Edge AI Prize ($5,000)
-**Why Edge AI**: Nku's entire architecture—IQ1_M compression, 2GB RAM target, llama.cpp JNI, 100% on-device inference—is purpose-built for edge deployment. No cloud, no connectivity, no compromise.
+**Why Edge AI**: Nku's entire architecture — IQ1_M compression, 2GB RAM target, llama.cpp JNI, 100% on-device inference — is purpose-built for edge deployment. No cloud, no connectivity, no compromise. What we present is a proof of concept that the hardest technical challenge — running a medical-grade LLM entirely on a $50 phone — is solved. The next challenge is human: bringing this tool to the CHWs who need it and learning from their experience.
 
 ---
 
-*Nku: 450M+ lives • $50 phones • 100% on-device inference • 46 languages*
+*Nku: a proof of concept for 450M+ lives • $50 phones • 100% on-device inference • 46 languages*

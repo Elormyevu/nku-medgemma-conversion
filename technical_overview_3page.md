@@ -8,7 +8,7 @@ In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people—far
 
 Yet nearly all CHWs carry smartphones. Powerful clinical AI models like MedGemma exist, but require cloud connectivity. In rural Ghana, Nigeria, and Kenya, <2G connectivity is the norm—making cloud-based AI **medically useless** precisely where it is needed most.
 
-**Nku** (Ewe: "eye") solves this by running MedGemma **entirely on-device** on $50 Android phones with 2GB RAM. No cloud. No internet. No compromise.
+**Nku** (Ewe: "eye") is a **proof-of-concept prototype** demonstrating that MedGemma can run **entirely on-device** on $50 Android phones with 2GB RAM. No cloud. No internet. No compromise. Nku's sensor thresholds and clinical workflows require field validation with real CHWs before deployment, but the core technical challenge — fitting a medical-grade LLM on a budget phone — is solved.
 
 ## 2. Technical Implementation
 
@@ -56,9 +56,11 @@ MedGemma 4B is **irreplaceable** in this system. It performs the clinical reason
 | Clinical reasoning | Interprets Nku Sentinel vital signs + symptoms for triage |
 | Structured output | Severity, urgency, differential considerations, CHW recommendations |
 | Medical accuracy | Preserved via domain-specific imatrix calibration (243 scenarios) |
-| Edge deployment | IQ1_M GGUF, mmap loading, 0.78GB footprint |
+| Edge deployment | IQ1_M GGUF, mmap loading, ~1.1GB footprint |
 
 ## 4. Impact
+
+Nku is a **working prototype** that proves the technical feasibility of offline, multilingual clinical triage on budget smartphones. Sensor processing thresholds are derived from published literature but require field calibration with ground-truth clinical data from the target population.
 
 | Metric | Value |
 |:-------|:------|
@@ -70,7 +72,9 @@ MedGemma 4B is **irreplaceable** in this system. It performs the clinical reason
 | Per-query cost | **$0** |
 | Additional hardware | **None** (camera-only screening) |
 
-**Deployment Pathway**: Field testing with 5-10 CHWs → iterative threshold refinement → community health organization partnerships → Play Asset Delivery or APK+model distribution via GitHub.
+**Deployment Pathway**: Pilot with 5-10 CHWs in rural Ghana (concurrent ground-truth vital sign collection) → threshold calibration and UX refinement → community health organization partnerships → Play Asset Delivery or APK+model distribution via GitHub.
+
+The promise of AI in healthcare has so far benefited those with the most access to medical care. Nku demonstrates that the **technical barriers to democratized AI triage are solvable** — what remains is the harder, more important work of field validation and community partnership.
 
 ## 5. Reproducibility
 
@@ -83,4 +87,4 @@ MedGemma 4B is **irreplaceable** in this system. It performs the clinical reason
 
 ---
 
-*Nku: 450M+ lives • $50 phones • 100% on-device inference • 46 languages*
+*Nku: a proof of concept for 450M+ lives • $50 phones • 100% on-device inference • 46 languages*

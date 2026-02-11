@@ -120,7 +120,7 @@ def generate_highlevel_architecture():
     specs = [
         ('RAM', '2GB - 4GB', COLORS['green']),
         ('Storage', '4GB minimum', COLORS['blue']),
-        ('Network', '100% Offline', COLORS['gold']),
+        ('Network', '100% On-Device', COLORS['gold']),
         ('Models', '~1.3GB total', COLORS['purple']),
     ]
     for i, (label, value, color) in enumerate(specs):

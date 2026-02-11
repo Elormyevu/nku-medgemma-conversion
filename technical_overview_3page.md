@@ -62,7 +62,7 @@ MedGemma 4B is **irreplaceable** in this system. It performs the clinical reason
 |:-------|:------|
 | Target population | **450M+** (rural Sub-Saharan Africa) |
 | Device requirement | $50 Android, 2GB RAM |
-| Network requirement | **None** (100% offline) |
+| Network requirement | **None** (100% on-device inference) |
 | Languages | 46 (14 clinically verified) |
 | Per-query cost | **$0** |
 | Additional hardware | **None** (camera-only screening) |
@@ -80,4 +80,4 @@ MedGemma 4B is **irreplaceable** in this system. It performs the clinical reason
 
 ---
 
-*Nku: 450M+ lives • $50 phones • 100% offline • 46 languages*
+*Nku: 450M+ lives • $50 phones • 100% on-device inference • 46 languages*

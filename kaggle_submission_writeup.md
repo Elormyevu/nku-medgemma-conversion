@@ -256,7 +256,7 @@ MedGemma 4B is **not optional**—it is the irreplaceable core of the Nku system
 |:-------|:------|
 | Target Population | **450M+** (rural Sub-Saharan Africa) [5] |
 | Device Compatibility | $50-100 phones (2GB RAM) |
-| Network Requirement | **None** (100% offline) |
+| Network Requirement | **None** (100% on-device inference) |
 | Language Coverage | **46** (14+ verified clinically) |
 | Total Model Footprint | **~1.3GB** |
 | End-to-End Latency | <30 seconds |
@@ -487,8 +487,8 @@ Nku was developed in **Google Antigravity** using the following AI coding assist
 ---
 
 **Prize Track**: Edge AI Prize ($5,000)
-**Why Edge AI**: Nku's entire architecture—IQ1_M compression, 2GB RAM target, llama.cpp JNI, 100% offline operation—is purpose-built for edge deployment. No cloud, no connectivity, no compromise.
+**Why Edge AI**: Nku's entire architecture—IQ1_M compression, 2GB RAM target, llama.cpp JNI, 100% on-device inference—is purpose-built for edge deployment. No cloud, no connectivity, no compromise.
 
 ---
 
-*Nku: 450M+ lives • $50 phones • 100% offline • 46 languages*
+*Nku: 450M+ lives • $50 phones • 100% on-device inference • 46 languages*

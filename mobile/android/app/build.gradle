@@ -38,7 +38,7 @@ android {
             shrinkResources true                // F-3: Remove unused resources
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             debuggable false
-            // F-SEC-3: No cloud URL in release builds (100% offline)
+            // F-SEC-3: No cloud URL in release builds (100% on-device inference)
             buildConfigField "String", "NKU_CLOUD_URL", '""'
         }
         debug {

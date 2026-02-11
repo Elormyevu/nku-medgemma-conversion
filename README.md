@@ -39,7 +39,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 ## 💡 The Solution
 
-**Nku** ("eye" in Ewe) transforms any $50-100 Android phone into an offline clinical triage engine. It is a **pure edge system** — 100% on-device, zero cloud dependency.
+**Nku** ("eye" in Ewe) transforms any $50-100 Android phone into an offline clinical triage engine. It is a **pure edge system** — 100% on-device inference, zero cloud dependency for clinical reasoning.
 
 | What | How |
 |:-----|:----|

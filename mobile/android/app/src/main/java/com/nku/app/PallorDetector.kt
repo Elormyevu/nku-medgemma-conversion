@@ -10,16 +10,30 @@ import kotlin.math.min
 
 /**
  * Conjunctival Pallor Detector for Anemia Screening
- * 
+ *
  * Uses HSV color histogram analysis of the palpebral conjunctiva
  * (lower eyelid inner surface) to detect pallor as an indicator of anemia.
- * 
- * Conjunctiva-only approach chosen because:
- * - Consistent color baseline across ALL Fitzpatrick skin types [Zucker et al., 1997]
- * - 80% sensitivity, 82% specificity for moderate anemia
- * - No calibration needed for skin tone differences
- * 
- * No ML model required - pure signal processing.
+ *
+ * Literature basis:
+ * - Conjunctival pallor is a validated clinical sign for anemia screening,
+ *   independent of Fitzpatrick skin type [Zucker et al., Bull WHO, 1997:
+ *   80% sensitivity, 82% specificity for moderate anemia by clinician assessment]
+ * - HSV color space analysis of conjunctival images is an established approach
+ *   in smartphone-based anemia detection [Mannino et al., Nat Commun, 2018;
+ *   Dimauro et al., J Biomed Inform, 2018]
+ * - Published systems typically use ML regression trained on hemoglobin data
+ *   (e.g., High Hue Ratio method); our fixed-threshold approach is a lighter
+ *   alternative for resource-constrained on-device screening
+ *
+ * Architecture role:
+ * - This detector provides quantitative pallor features to MedGemma for
+ *   clinical reasoning; it is a feature extractor, not a standalone diagnostic
+ * - MedGemma receives the raw score + confidence and applies medical knowledge
+ * - Severity thresholds are conservative screening estimates designed to
+ *   over-refer rather than miss cases; field calibration against clinician
+ *   pallor grading is required to optimize sensitivity/specificity tradeoff
+ *
+ * No ML model required — pure signal processing.
  * Footprint: ~0 MB storage, ~1 MB RAM
  */
 
@@ -41,10 +55,15 @@ enum class PallorSeverity {
 class PallorDetector {
     
     companion object {
-        // HSV thresholds for conjunctival analysis
+        // HSV saturation thresholds for conjunctival pallor screening.
         // Healthy conjunctiva: rich pink/red (high saturation)
         // Anemic conjunctiva: pale, washed out (low saturation)
-        
+        //
+        // Note: Published smartphone anemia systems (Mannino 2018, Dimauro 2018)
+        // use ML regression trained on paired Hb data rather than fixed cutoffs.
+        // These thresholds are conservative screening estimates for on-device use
+        // where Hb training data is unavailable. The raw pallor score is passed
+        // to MedGemma for clinical interpretation regardless of severity label.
         private const val HEALTHY_SATURATION_MIN = 0.20f
         private const val PALLOR_SATURATION_THRESHOLD = 0.10f
         

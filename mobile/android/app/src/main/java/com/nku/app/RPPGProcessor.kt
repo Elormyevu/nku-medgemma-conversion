@@ -11,8 +11,23 @@ import kotlin.math.sqrt
 
 /**
  * Remote Photoplethysmography (rPPG) Processor
+ *
  * Extracts heart rate from camera video frames via green channel analysis.
- * Part of "Sensorless Sentinel" - camera-based vitals without specialized hardware.
+ * Part of "Sensorless Sentinel" — camera-based vitals without specialized hardware.
+ *
+ * Literature basis:
+ * - Green channel rPPG validated for HR estimation from facial video
+ *   [Verkruysse et al., Opt Express, 2008; Poh et al., Opt Express, 2010]
+ * - 10-second sliding window provides 0.1 Hz frequency resolution via DFT,
+ *   sufficient for ~3 BPM accuracy [standard signal processing]
+ * - 5-second minimum analysis window matches PSD intervals in rPPG literature
+ * - 40–200 BPM range covers physiological extremes including tachycardia
+ * - Published smartphone rPPG achieves MAE 1.7–3.9 BPM on benchmark datasets
+ *
+ * Architecture role:
+ * - Provides heart rate + confidence as features to MedGemma for clinical
+ *   reasoning; MedGemma interprets the values in clinical context
+ * - Not a standalone diagnostic — feeds into the Nku triage pipeline
  */
 data class RPPGResult(
     val bpm: Float?,
@@ -23,11 +38,12 @@ data class RPPGResult(
 
 class RPPGProcessor(
     private val fps: Float = 30.0f,
+    // 10-second buffer: Δf = fps/N = 30/300 = 0.1 Hz → ~3 BPM resolution
     private val bufferSeconds: Float = 10.0f
 ) {
     companion object {
-        const val MIN_BPM = 40.0f
-        const val MAX_BPM = 200.0f
+        const val MIN_BPM = 40.0f   // Extreme bradycardia floor
+        const val MAX_BPM = 200.0f  // Extreme tachycardia ceiling
     }
     
     private val bufferSize = (fps * bufferSeconds).toInt()

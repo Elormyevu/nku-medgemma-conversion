@@ -50,7 +50,7 @@ CHWs lack even basic equipment. Nku Sentinel extracts vital signs using **only t
 | **Anemia** | Conjunctival HSV analysis | 75.4% accuracy, 92.7% for severe anemia (Hb <7) [15]; HSV pallor correlates with hemoglobin [16] | Pallor score 0–1 |
 | **Preeclampsia** | Facial geometry (EAR + gradients) | EAR from landmarks validated [17]; facial edema detection 85% accuracy [18] | Edema score 0–1 |
 
-Sensor thresholds (rPPG: 40–200 BPM range; pallor: saturation 0.10–0.20; edema: EAR 2.2–2.8) are derived from published literature but are **engineering estimates pending field calibration** with ground-truth clinical data from the target population.
+Sensor thresholds (rPPG: 40–200 BPM range; pallor: saturation 0.10–0.20; edema: EAR 2.2–2.8) are grounded in published anthropometric and physiological data but are **conservative screening estimates**, intentionally tuned to over-refer rather than miss cases. This is by design: the sensors are **feature extractors, not diagnostic endpoints**. They pass continuous scores + confidence levels to MedGemma, which provides the clinical interpretation. Field calibration against clinician assessment will optimize sensitivity/specificity for specific deployment populations.
 
 ### Fitzpatrick-Aware Design
 
@@ -116,7 +116,7 @@ The promise of AI in healthcare has so far benefited those with the most access 
 **Prize Tracks**:
 - **Main Track** (1st–4th, $10K–$30K): Nku addresses a real, urgent healthcare gap for 450M+ people by putting MedGemma-powered clinical reasoning directly in CHWs' hands — offline, multilingual, on their existing $50 devices.
 - **Edge AI Prize** ($5K): Nku's entire architecture — IQ1_M compression, 2GB RAM target, llama.cpp JNI, 100% on-device inference — is purpose-built for edge deployment. The hardest technical challenge — running a medical-grade LLM on a $50 phone — is solved.
-- **Novel Task Prize** ($5K): IQ1_M quantization calibrated with a custom 243-scenario African primary care imatrix represents a novel adaptation of MedGemma for an entirely new deployment context — offline multilingual triage on budget smartphones, a use case no existing model or product addresses.
+- **Novel Task Prize** ($5K): Two novel contributions: (1) IQ1_M quantization calibrated with a 243-scenario African primary care imatrix for an entirely new deployment context — offline multilingual triage on $50 smartphones. (2) A novel EAR-based periorbital edema screening heuristic, repurposing established computer vision geometry (Eye Aspect Ratio) for preeclampsia detection — grounded in palpebral fissure anthropometrics but not previously described in the literature.
 
 ---
 

@@ -171,6 +171,19 @@ A critical gap in medical AI: most models are trained on predominantly light-ski
 
 **Why Conjunctiva?** Jay et al. (2024) validated smartphone-based conjunctival analysis with 75.4% overall accuracy and 92.7% accuracy for severe anemia [15]. Zucker et al. (1997) confirmed clinical conjunctival pallor assessment achieves 80% sensitivity and 82% specificity for moderate anemia across all skin tones [10]. Nku's `PallorDetector.kt` automates this clinical assessment using HSV color analysis of the palpebral conjunctiva, making it the preferred method over palm inspection which is less reliable for Fitzpatrick V-VI.
 
+#### Why Continuous Scores + MedGemma, Not Binary Classification
+
+A standalone screening app might output "anemia: yes/no" from a camera image. Nku's architecture is fundamentally different — and more clinically useful — because the sensors produce **continuous scores** that MedGemma interprets **in context** with patient-reported symptoms, pregnancy status, and cross-sensor correlations:
+
+| Approach | Output | Limitation |
+|:---------|:-------|:-----------|
+| **Binary classifier** | "Anemia: YES" | No severity. No context. No recommendations. No cross-condition reasoning. CHW doesn't know what to do next. |
+| **Nku (sensors → MedGemma)** | Pallor 70% + HR 110 + Edema 45% + pregnant 28wk → "Moderate anemia with mild preeclampsia risk; hemoglobin test within 3 days, BP check today, watch for headaches" | Severity-graded. Cross-correlates multiple signals. Provides actionable, context-aware CHW guidance. |
+
+This is the core architectural insight: **the sensors are signal producers, not diagnostic endpoints.** They generate quantified physiological data that feeds into MedGemma's clinical reasoning — the same way a physician interprets a constellation of vital signs, not each one in isolation.
+
+A heart rate of 110 BPM means one thing in a febrile child (likely infection) and something entirely different in a 28-week pregnant woman with facial edema (possible preeclampsia). Only a clinical reasoning model can make that distinction. The sensors provide the data; MedGemma provides the judgment.
+
 #### Clinical Reasoning Pipeline
 
 Sensor data flows to MedGemma via structured prompts:
@@ -186,13 +199,17 @@ VITAL SIGNS:
   SEVERITY: MEDIUM
   URGENCY: WITHIN_48_HOURS
   PRIMARY_CONCERNS:
-  - Moderate pallor - likely moderate anemia (Hb 7-10 g/dL)
-  - Mild edema in pregnancy - monitor for preeclampsia
+  - Moderate pallor with tachycardia - likely moderate anemia (Hb 7-10 g/dL)
+  - Mild edema + pregnancy at 28 weeks - early preeclampsia risk
+  - Cross-correlation: tachycardia may be compensatory for anemia
   RECOMMENDATIONS:
   - Hemoglobin test within 3-5 days
   - Blood pressure check today
   - Watch for headaches, visual changes
+  - Return immediately if edema worsens or headache develops
 ```
+
+Note how MedGemma cross-correlates tachycardia + pallor (compensatory for anemia) and edema + pregnancy (preeclampsia risk) — reasoning that no binary classifier or threshold-based system can perform.
 
 **Fallback**: If MedGemma is unavailable (device overheating, memory pressure), `ClinicalReasoner.kt` provides rule-based triage using WHO/IMCI clinical decision trees [12].
 

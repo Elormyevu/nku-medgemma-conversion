@@ -223,9 +223,13 @@ def load_models() -> Tuple[bool, Optional[str]]:
         try:
             if medgemma is None:
                 request_logger.info("Downloading MedGemma...")
+                # B-07: Explicitly pass token — deploy.sh may set HUGGINGFACE_TOKEN
+                # but huggingface_hub expects HF_TOKEN. Support both.
+                hf_token = os.environ.get('HF_TOKEN') or os.environ.get('HUGGINGFACE_TOKEN')
                 med_path = hf_hub_download(
                     config.model.medgemma_repo, 
-                    config.model.medgemma_file
+                    config.model.medgemma_file,
+                    token=hf_token
                 )
                 medgemma = Llama(
                     model_path=med_path,
@@ -238,9 +242,11 @@ def load_models() -> Tuple[bool, Optional[str]]:
             
             if translategemma is None:
                 request_logger.info("Downloading TranslateGemma...")
+                hf_token = os.environ.get('HF_TOKEN') or os.environ.get('HUGGINGFACE_TOKEN')
                 trans_path = hf_hub_download(
                     config.model.translategemma_repo, 
-                    config.model.translategemma_file
+                    config.model.translategemma_file,
+                    token=hf_token
                 )
                 translategemma = Llama(
                     model_path=trans_path,

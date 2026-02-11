@@ -27,6 +27,10 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
+      # Accept all Android SDK licenses (NDK requires this)
+      - name: Accept Android SDK licenses
+        run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 

@@ -144,9 +144,12 @@ fun CardioScreen(
                         lensFacing = CameraSelector.LENS_FACING_BACK,
                         enableTorch = true,
                         onFrameAnalyzed = { bitmap ->
-                            // Finger-on-lens PPG: analyze entire frame (no face ROI needed)
-                            rppgProcessor.processFrame(bitmap)
-                        }
+                            // F-10: Error boundary — prevent processor crash from killing UI
+                            try {
+                                rppgProcessor.processFrame(bitmap)
+                            } catch (e: Exception) {
+                                android.util.Log.e("CardioScreen", "Frame processing error: ${e.message}")
+                            }
                     )
                     
                     // Buffer fill indicator overlay

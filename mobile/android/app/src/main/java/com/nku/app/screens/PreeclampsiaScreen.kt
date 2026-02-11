@@ -67,7 +67,14 @@ fun PreeclampsiaScreen(
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value = gestationalWeeks,
-                        onValueChange = { onPregnancyChange(isPregnant, it) },
+                        onValueChange = { input ->
+                            // F-12: Validate gestational weeks — digits only, range 1-45
+                            val filtered = input.filter { it.isDigit() }
+                            val weeks = filtered.toIntOrNull()
+                            if (filtered.isEmpty() || (weeks != null && weeks in 1..45)) {
+                                onPregnancyChange(isPregnant, filtered)
+                            }
+                        },
                         label = { Text(strings.gestationalWeeks) },
                         modifier = Modifier.fillMaxWidth()
                     )

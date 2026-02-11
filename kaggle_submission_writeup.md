@@ -92,7 +92,7 @@ Nku is a **working prototype** proving that offline, multilingual clinical triag
 
 **What field deployment will reveal**: sensor accuracy across Fitzpatrick V-VI patients; CHW usability in variable lighting; which screening modality provides the most actionable triage; TranslateGemma's handling of dialectal variation; performance across TECNO/Infinix/Samsung A-series devices.
 
-**Deployment pathway**: Pilot with 5–10 CHWs in rural Ghana (concurrent ground-truth vitals) → threshold calibration → community health organization partnerships (e.g., Ghana Health Service) → Play Asset Delivery / sideloaded APK distribution.
+**Deployment pathway**: Pilot with 5–10 CHWs in rural Ghana (concurrent ground-truth vitals) → threshold calibration → community health organization partnerships (e.g., Ghana Health Service) → Play Asset Delivery / sideloaded APK distribution. Ghana is the natural starting point — the developer was born and raised there and maintains active ties to local health communities, making it the most feasible location for hands-on pilot coordination.
 
 The promise of AI in healthcare has so far benefited those with the most access to care. Nku demonstrates that the **technical barriers to democratized AI triage are solvable**. The gap between prototype and impact is field deployment. Nku is ready for that next step.
 
@@ -109,12 +109,14 @@ The promise of AI in healthcare has so far benefited those with the most access 
 
 *See `kaggle_submission_appendices.md` for full language list (46), calibration scenario examples, MedGemma reasoning examples, and complete references [1–18].*
 
-**Development tooling**: Google Antigravity (Gemini 3 Flash/Pro, Claude Opus 4.5/4.6, GPT 5.3 Codex).
+**Development tooling**: Google Antigravity (Gemini 3 Flash/Pro, Claude Opus 4.5/4.6); OpenAI Codex IDE (GPT 5.3 Codex).
 
 ---
 
-**Prize Track**: Edge AI Prize ($5,000)
-**Why Edge AI**: Nku's entire architecture — IQ1_M compression, 2GB RAM target, llama.cpp JNI, 100% on-device inference — is purpose-built for edge deployment. The hardest technical challenge — running a medical-grade LLM on a $50 phone — is solved. The next challenge is human.
+**Prize Tracks**:
+- **Main Track** (1st–4th, $10K–$30K): Nku addresses a real, urgent healthcare gap for 450M+ people by putting MedGemma-powered clinical reasoning directly in CHWs' hands — offline, multilingual, on their existing $50 devices.
+- **Edge AI Prize** ($5K): Nku's entire architecture — IQ1_M compression, 2GB RAM target, llama.cpp JNI, 100% on-device inference — is purpose-built for edge deployment. The hardest technical challenge — running a medical-grade LLM on a $50 phone — is solved.
+- **Novel Task Prize** ($5K): IQ1_M quantization calibrated with a custom 243-scenario African primary care imatrix represents a novel adaptation of MedGemma for an entirely new deployment context — offline multilingual triage on budget smartphones, a use case no existing model or product addresses.
 
 ---
 

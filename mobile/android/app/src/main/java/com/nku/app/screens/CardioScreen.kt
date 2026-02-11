@@ -150,6 +150,7 @@ fun CardioScreen(
                             } catch (e: Exception) {
                                 android.util.Log.e("CardioScreen", "Frame processing error: ${e.message}")
                             }
+                        }
                     )
                     
                     // Buffer fill indicator overlay

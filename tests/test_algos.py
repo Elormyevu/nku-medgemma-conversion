@@ -24,10 +24,13 @@ except ImportError:
 
 try:
     import mediapipe as mp
+    # Newer mediapipe versions may not have 'solutions' attribute
+    if not hasattr(mp, 'solutions'):
+        raise ImportError("mediapipe.solutions not available")
 except ImportError:
     mp = MagicMock()
     sys.modules['mediapipe'] = mp
-    
+
     # Mock FaceMesh
     mock_face_mesh = MagicMock()
     mock_face_mesh.process.return_value = MagicMock(multi_face_landmarks=[

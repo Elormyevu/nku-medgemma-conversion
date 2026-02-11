@@ -1,0 +1,14 @@
+workerPoolSpecs:
+  - machineSpec:
+      machineType: n1-highmem-8
+    replicaCount: 1
+    diskSpec:
+      bootDiskType: pd-ssd
+      bootDiskSizeGb: 200
+    containerSpec:
+      imageUri: gcr.io/nku-impact-challenge-1335/nku-training:latest
+      # Script is now at /app/prune_vocab.py
+      command: ["python3", "-c", "import sys; sys.path.append('/app'); from prune_vocab import prune_gemma_embeddings; prune_gemma_embeddings('google/gemma-2-2b-it', 'gs://nku-impact-outputs-1335/translategemma_pruned')"]
+      env:
+        - name: HF_TOKEN
+          value: "${HF_TOKEN}"

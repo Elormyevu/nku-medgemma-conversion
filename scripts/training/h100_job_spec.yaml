@@ -1,0 +1,14 @@
+workerPoolSpecs:
+  - machineSpec:
+      machineType: a3-highgpu-1g
+      acceleratorType: NVIDIA_H100_80GB
+      acceleratorCount: 1
+    replicaCount: 1
+    diskSpec:
+      bootDiskType: pd-ssd
+      bootDiskSizeGb: 250
+    containerSpec:
+      imageUri: gcr.io/dora-gemini-research/nku-training:latest
+scheduling:
+  timeout: 604800s
+  restartJobOnWorkerRestart: true

@@ -1,0 +1,6 @@
+ai-edge-torch
+torch>=2.4.0
+transformers
+accelerate
+bitsandbytes
+scipy

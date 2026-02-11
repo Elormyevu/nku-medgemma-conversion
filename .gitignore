@@ -95,3 +95,29 @@ conversion_native.log*
 # Job configs (may contain sensitive data)
 *_job.json
 
+# Java heap dumps
+*.hprof
+
+# Android SDK/tooling (downloaded locally)
+mobile/android/platform-tools/
+mobile/android/emulator/
+mobile/android/licenses/
+mobile/android/.knownPackages
+
+# Build scripts (local dev convenience)
+mobile/android/build.sh
+mobile/android/launch_emulator.sh
+
+# SmolChat (submodule — not part of submission)
+SmolChat-Android/
+
+# llama.cpp submodule at root (build artifact)
+llama.cpp/
+
+# Duplicate/scratch screenshots (keep only video_assets/ and docs/assets/)
+mobile/android/s_*.png
+mobile/android/tab_*.png
+mobile/android/test_*.png
+
+# Stale root-level task file (current plan in .agent/task_plan.md)
+task.md

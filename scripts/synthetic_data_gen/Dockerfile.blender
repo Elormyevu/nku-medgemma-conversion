@@ -1,0 +1,34 @@
+FROM ubuntu:22.04
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    xz-utils \
+    libgl1-mesa-dev \
+    libxi6 \
+    libxrender1 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Blender 3.6 LTS
+RUN curl -SL https://download.blender.org/release/Blender3.6/blender-3.6.5-linux-x64.tar.xz -o blender.tar.xz \
+    && tar -xf blender.tar.xz -C /usr/local/ \
+    && mv /usr/local/blender-3.6.5-linux-x64 /usr/local/blender \
+    && rm blender.tar.xz
+
+# Add Blender to PATH
+ENV PATH="/usr/local/blender:${PATH}"
+
+# Install Python dependencies for the script
+RUN /usr/local/blender/3.6/python/bin/python3.10 -m pip install google-cloud-storage
+
+WORKDIR /app
+
+# Copy scripts
+COPY scripts/synthetic_data_gen/generate_faces.py .
+COPY scripts/synthetic_data_gen/entrypoint.sh .
+
+# Make entrypoint executable
+RUN chmod +x entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]

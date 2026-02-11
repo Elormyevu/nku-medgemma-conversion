@@ -1,0 +1,29 @@
+workerPoolSpecs:
+  - machineSpec:
+      machineType: a3-highgpu-8g
+      acceleratorType: NVIDIA_H100_80GB
+      acceleratorCount: 8
+    replicaCount: 1 # Start with 1 node (8 GPUs) for stability, can scale to 8 nodes (64 GPUs)
+    containerSpec:
+      imageUri: gcr.io/dora-gemini-research/nku-training:sentinel
+      args:
+        - "--output_dir=gs://nku-impact-outputs-1335/checkpoints_sentinel"
+        - "--lora_save_path=gs://nku-impact-outputs-1335/final_lora_sentinel"
+        - "--batch_size=4"
+        - "--grad_accum=4"
+        - "--noise_std=0.01" # Enable robustness injection
+      env:
+        - name: NCCL_DEBUG
+          value: "INFO"
+        - name: NCCL_IB_DISABLE
+          value: "0"
+        - name: NCCL_NET_GDR_LEVEL
+          value: "pi"
+        - name: PYTORCH_CUDA_ALLOC_CONF
+          value: "expandable_segments:True"
+        - name: DEEPSPEED_CONFIG
+          value: "ds_zero3.json"
+scheduling:
+  timeout: 86400s # 24h as per skill best practices
+  restartJobOnWorkerRestart: true
+  strategy: FLEX_START

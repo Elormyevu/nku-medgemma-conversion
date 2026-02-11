@@ -1,0 +1,11 @@
+workerPoolSpecs:
+  machineSpec:
+    machineType: n1-highmem-16
+  replicaCount: 1
+  containerSpec:
+    imageUri: gcr.io/nku-impact-challenge-1335/nku-curator:latest
+    args:
+    - "--synthetic_path=gs://nku-impact-data-1335/synthetic/train.jsonl"
+    - "--gold_path=gs://nku-impact-data-1335/real/skin_cancer.jsonl"
+    - "--output_path=gs://nku-impact-data-1335/curated/grand_synthesis_v3_curated.jsonl"
+    - "--threshold=0.70"

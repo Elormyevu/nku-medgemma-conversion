@@ -1,0 +1,17 @@
+steps:
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'build'
+      - '-t'
+      - '$_IMAGE_URI'
+      - '-f'
+      - 'scripts/synthetic_data_gen/Dockerfile.blender'
+      - '.'
+  
+  # Docker Push
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '$_IMAGE_URI']
+
+images:
+  - '$_IMAGE_URI'

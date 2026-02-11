@@ -1,0 +1,32 @@
+# MedGemma TFLite Conversion Dockerfile
+# Uses PyTorch XLA image for proper StableHLO support on Linux
+
+FROM us-central1-docker.pkg.dev/tpu-pytorch-releases/docker/xla:r2.4.0_3.10_tpuvm
+
+WORKDIR /app
+
+# Pin compatible versions to avoid torch.int1 / torchao conflicts
+# The XLA image has torch 2.4, so we need transformers that works with it
+RUN pip install --no-cache-dir \
+    "transformers>=4.44.0,<4.46.0" \
+    accelerate \
+    tqdm \
+    ai-edge-torch-nightly \
+    tf-nightly \
+    kagglehub \
+    sentencepiece \
+    protobuf \
+    && pip uninstall -y torchao 2>/dev/null || true
+
+# Copy the conversion script
+COPY convert_tflite_with_progress.py /app/
+
+# Create output directory
+RUN mkdir -p /app/output
+
+# Set environment variables for memory optimization
+ENV PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+ENV HF_HOME=/app/cache
+
+# Run conversion with output to mounted volume
+ENTRYPOINT ["python3", "/app/convert_tflite_with_progress.py"]

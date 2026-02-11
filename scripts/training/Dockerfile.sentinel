@@ -1,0 +1,39 @@
+FROM pytorch/pytorch:2.4.0-cuda12.4-cudnn9-runtime
+
+# Sentinel Environment Settings
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    build-essential \
+    pdsh \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install AI Training Sentinel Stack
+RUN pip install --no-cache-dir \
+    transformers \
+    accelerate \
+    peft \
+    bitsandbytes \
+    datasets \
+    sentencepiece \
+    protobuf \
+    gcsfs \
+    google-cloud-storage \
+    pillow \
+    tqdm \
+    deepspeed \
+    mpi4py
+
+# Copy training scripts
+WORKDIR /app
+COPY cloud_train.py /app/
+COPY ds_zero3.json /app/
+
+# Set entrypoint
+ENTRYPOINT ["python3", "cloud_train.py"]

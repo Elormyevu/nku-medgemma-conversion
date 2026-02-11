@@ -55,35 +55,33 @@ Nku is an **offline-first Android application** that provides medical triage in 
 
 ## The Nku Cycle
 
-The core innovation is the **Nku Cycle** — a memory-efficient orchestration pattern that performs clinical triage within a 2GB RAM budget.
+The core innovation is the **Nku Cycle** — a memory-efficient orchestration pattern that performs clinical triage on budget devices (2–3GB RAM). MedGemma is loaded via `mmap` (pages loaded on demand by the OS), while ML Kit handles translation in a separate process — eliminating the model-swapping overhead of the earlier TranslateGemma approach.
 
 ### Flow
 
 1. **Input**: User enters symptoms in local language (e.g., Twi)
-2. **Translation**: TranslateGemma converts to English
-3. **Reasoning**: MedGemma performs clinical triage
-4. **Localization**: TranslateGemma converts result back to local language
+2. **Translation**: Android ML Kit translates to English (on-device for 59 languages; Cloud Translate fallback for indigenous languages)
+3. **Reasoning**: MedGemma performs clinical triage (100% on-device)
+4. **Localization**: ML Kit / Cloud Translate converts result back to local language
 5. **Output**: Android System TTS speaks the result
+
+All African official languages (English, French, Portuguese) are fully on-device via ML Kit — CHWs always have a fully offline path.
 
 ### Memory Management
 
 ```kotlin
-// Only one model loaded at a time
+// MedGemma loaded via mmap; ML Kit handles translation separately
 fun runNkuCycleLocal(patientInput: String, language: String): NkuResult {
-    // Step 1: Load TranslateGemma, translate to English
-    loadModel(translateGemmaPath)
-    val englishSymptoms = runCompletion(translatePrompt)
-    unloadModel()  // Free ~0.5GB
+    // Step 1: ML Kit translates to English (on-device, ~30MB/lang)
+    val englishSymptoms = mlKitTranslate(patientInput, language, "en")
     
-    // Step 2: Load MedGemma, perform triage
+    // Step 2: Load MedGemma, perform triage (100% on-device)
     loadModel(medGemmaPath)
     val triage = runCompletion(triagePrompt)
-    unloadModel()  // Free ~0.8GB
+    unloadModel()  // Free ~2.3GB
     
-    // Step 3: Load TranslateGemma, localize result
-    loadModel(translateGemmaPath)
-    val localizedResult = runCompletion(localizePrompt)
-    unloadModel()
+    // Step 3: ML Kit translates result back
+    val localizedResult = mlKitTranslate(triage, "en", language)
     
     return NkuResult(triage, localizedResult)
 }
@@ -91,19 +89,21 @@ fun runNkuCycleLocal(patientInput: String, language: String): NkuResult {
 
 ## Model Architecture
 
-### MedGemma 4B (IQ1_M)
+### MedGemma 4B (Q4_K_M)
 
 - **Base**: google/medgemma-4b-it
-- **Quantization**: IQ1_M (1-bit with importance matrix)
-- **Size**: 0.78 GB
-- **Purpose**: Clinical reasoning and symptom triage
+- **Quantization**: Q4_K_M (4-bit with importance matrix)
+- **Size**: 2.3 GB
+- **MedQA Accuracy**: 56% (81% of published 69% baseline)
+- **Purpose**: Clinical reasoning and symptom triage (100% on-device)
 
-### TranslateGemma 4B (IQ1_M)
+### Android ML Kit Translation
 
-- **Base**: google/gemma-2-4b (prompt-engineered for translation)
-- **Quantization**: IQ1_M
-- **Size**: 0.51 GB
-- **Purpose**: Bi-directional Pan-African language translation
+- **Type**: Google ML Kit on-device translation API
+- **Size**: ~30 MB per language pack
+- **Supported languages**: 59 (including English, French, Portuguese, Afrikaans, Swahili)
+- **Fallback**: Google Cloud Translate API for unsupported indigenous languages (Twi, Hausa, Yoruba)
+- **Purpose**: Bi-directional language translation
 
 ### Android System TTS (NkuTTS.kt)
 
@@ -126,11 +126,11 @@ python llama.cpp/convert_hf_to_gguf.py \
     --chunks 64 \
     -o medgemma-medical.imatrix
 
-# 3. Quantize with calibration
+# 3. Quantize with calibration (Q4_K_M — see Appendix D for comparison)
 ./llama-quantize \
     medgemma-4b-f16.gguf \
-    medgemma-4b-iq1_m.gguf \
-    IQ1_M \
+    medgemma-4b-Q4_K_M.gguf \
+    Q4_K_M \
     --imatrix medgemma-medical.imatrix
 ```
 
@@ -140,7 +140,8 @@ python llama.cpp/convert_hf_to_gguf.py \
 mobile/android/app/src/main/
 ├── java/com/nku/app/
 │   ├── MainActivity.kt         # UI + Compose (Jetpack Compose)
-│   ├── NkuInferenceEngine.kt   # Nku Cycle model orchestration
+│   ├── NkuInferenceEngine.kt   # MedGemma orchestration
+│   ├── NkuTranslator.kt        # ML Kit translation wrapper
 │   ├── RPPGProcessor.kt        # Heart rate via rPPG
 │   ├── PallorDetector.kt       # Anemia via conjunctival pallor
 │   ├── EdemaDetector.kt        # Preeclampsia via facial edema
@@ -160,11 +161,11 @@ mobile/android/app/src/main/
 
 | Metric | Value | Notes |
 |:-------|:------|:------|
-| **Model Load** | ~1.4s | Memory-mapped GGUF |
+| **Model Load** | ~2s | Memory-mapped Q4_K_M GGUF |
 | **Inference** | 4-6 tok/s | Pure ARM CPU |
 | **Full Cycle** | 15-30s | End-to-end triage |
-| **Peak RAM** | ~1.4 GB | Single model active |
-| **APK Size** | ~60 MB base | + models via PAD or sideloading |
+| **Peak RAM** | ~2.3 GB | MedGemma active (ML Kit translation is lightweight) |
+| **APK Size** | ~60 MB base | + MedGemma via PAD or sideloading |
 
 ## Safety Guardrails
 

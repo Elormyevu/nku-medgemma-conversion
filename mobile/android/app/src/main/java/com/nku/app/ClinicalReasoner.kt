@@ -1,5 +1,6 @@
 package com.nku.app
 
+import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -67,8 +68,17 @@ class ClinicalReasoner {
         sb.appendLine()
         sb.appendLine("=== VITAL SIGNS ===")
         
+        // P2 fix: Apply same confidence gating as rule-based path
+        val hrConfident = vitals.heartRateConfidence >= CONFIDENCE_THRESHOLD
+        val pallorConfident = vitals.pallorConfidence >= CONFIDENCE_THRESHOLD
+        val edemaConfident = vitals.edemaConfidence >= CONFIDENCE_THRESHOLD
+
         // Heart Rate
         vitals.heartRateBpm?.let { hr ->
+            if (!hrConfident) {
+                sb.appendLine("Heart Rate: ${hr.toInt()} bpm [LOW CONFIDENCE — ${(vitals.heartRateConfidence * 100).toInt()}%, excluded from assessment]")
+                return@let
+            }
             val status = when {
                 hr < 50 -> "bradycardia"
                 hr > 100 -> "tachycardia"
@@ -80,12 +90,20 @@ class ClinicalReasoner {
         
         // Pallor (Anemia Screening)
         vitals.pallorScore?.let { score ->
+            if (!pallorConfident) {
+                sb.appendLine("Pallor Score: ${(score * 100).toInt()}% [LOW CONFIDENCE — ${(vitals.pallorConfidence * 100).toInt()}%, excluded from assessment]")
+                return@let
+            }
             sb.appendLine("Pallor Score: ${(score * 100).toInt()}% (${vitals.pallorSeverity?.name ?: "unknown"})")
             sb.appendLine("  Interpretation: ${getPallorInterpretation(vitals.pallorSeverity)}")
         } ?: sb.appendLine("Pallor Assessment: Not performed")
         
         // Edema (Preeclampsia Screening)
         vitals.edemaScore?.let { score ->
+            if (!edemaConfident) {
+                sb.appendLine("Edema Score: ${(score * 100).toInt()}% [LOW CONFIDENCE — ${(vitals.edemaConfidence * 100).toInt()}%, excluded from assessment]")
+                return@let
+            }
             sb.appendLine("Edema Score: ${(score * 100).toInt()}% (${vitals.edemaSeverity?.name ?: "unknown"})")
             vitals.periorbitalScore?.let { peri ->
                 sb.appendLine("  Periorbital puffiness: ${(peri * 100).toInt()}%")
@@ -336,20 +354,36 @@ class ClinicalReasoner {
         try {
             // Extract severity
             val severityMatch = Regex("SEVERITY:\\s*(\\w+)", RegexOption.IGNORE_CASE).find(response)
-            val severity = when (severityMatch?.groupValues?.get(1)?.uppercase()) {
+            // Extract urgency
+            val urgencyMatch = Regex("URGENCY:\\s*(\\w+)", RegexOption.IGNORE_CASE).find(response)
+
+            // P1 fix: If model didn't produce structured markers, fall back to rule-based
+            // instead of silently defaulting to LOW/ROUTINE which could under-triage
+            if (severityMatch == null || urgencyMatch == null) {
+                Log.w("ClinicalReasoner", "Malformed MedGemma output — missing SEVERITY/URGENCY markers. Falling back to rule-based.")
+                return createRuleBasedAssessment(vitals)
+            }
+
+            val severity = when (severityMatch.groupValues[1].uppercase()) {
                 "CRITICAL" -> Severity.CRITICAL
                 "HIGH" -> Severity.HIGH
                 "MEDIUM" -> Severity.MEDIUM
-                else -> Severity.LOW
+                "LOW" -> Severity.LOW
+                else -> {
+                    Log.w("ClinicalReasoner", "Unrecognized severity '${severityMatch.groupValues[1]}', falling back to rule-based.")
+                    return createRuleBasedAssessment(vitals)
+                }
             }
-            
-            // Extract urgency
-            val urgencyMatch = Regex("URGENCY:\\s*(\\w+)", RegexOption.IGNORE_CASE).find(response)
-            val urgency = when (urgencyMatch?.groupValues?.get(1)?.uppercase()) {
+
+            val urgency = when (urgencyMatch.groupValues[1].uppercase()) {
                 "IMMEDIATE" -> Urgency.IMMEDIATE
                 "WITHIN_48_HOURS" -> Urgency.WITHIN_48_HOURS
                 "WITHIN_WEEK" -> Urgency.WITHIN_WEEK
-                else -> Urgency.ROUTINE
+                "ROUTINE" -> Urgency.ROUTINE
+                else -> {
+                    Log.w("ClinicalReasoner", "Unrecognized urgency '${urgencyMatch.groupValues[1]}', falling back to rule-based.")
+                    return createRuleBasedAssessment(vitals)
+                }
             }
             
             // Extract concerns

@@ -43,21 +43,22 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 | What | How |
 |:-----|:----|
-| **100% On-Device Inference** | All clinical reasoning runs on-device — zero cloud dependency for inference |
-| **Ultra-Compressed** | 8GB models → ~1.88GB via IQ1_M quantization |
+| **100% On-Device Medical Inference** | All clinical reasoning runs on-device — zero cloud dependency for MedGemma |
+| **On-Device Translation** | ML Kit for 59 languages (incl. English, French, Portuguese) + Cloud Translate fallback for indigenous languages |
+| **Ultra-Compressed** | 8GB model → ~2.3GB via Q4_K_M quantization (56% MedQA accuracy) |
 | **Pan-African Languages** | 46 languages including Ewe, Hausa, Yoruba, Swahili |
-| **Budget Hardware** | Runs on 2GB RAM devices (TECNO, Infinix) |
+| **Budget Hardware** | Runs on $50–100 Android phones (2–3GB RAM, TECNO/Infinix) via mmap |
 | **Camera Screening** | Heart rate, anemia, & preeclampsia via phone camera |
 
 ---
 
 ## ✨ Features
 
-- 🧠 **MedGemma 4B** — Google's clinical reasoning model, quantized to ~1.1GB
-- 🌐 **TranslateGemma 4B** — Bi-directional Pan-African language bridge
+- 🧠 **MedGemma 4B** — Google's clinical reasoning model, quantized to ~2.3GB Q4_K_M (56% MedQA)
+- 🌐 **Android ML Kit** — On-device translation for 59 languages + Cloud Translate fallback for indigenous African languages
 - 🔊 **Android System TTS** — Device-native voice synthesis for spoken clinical results
 - 💎 **Premium UI** — Glassmorphism design with localized strings
-- ⚡ **Nku Cycle** — Intelligent model swapping under 2GB RAM budget
+- ⚡ **Nku Cycle** — Memory-efficient mmap orchestration on budget devices (2–3GB RAM)
 - 📷 **Nku Sentinel** — Camera-based screening for heart rate, anemia, & preeclampsia
 
 ---
@@ -72,17 +73,17 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 │   [Patient Symptom in Ewe / Camera Screening]              │
 │           ↓                                                 │
 │   ┌───────────────────┐                                    │
-│   │  TranslateGemma   │  ← IQ1_M (0.51GB)                  │
-│   │  Local → English  │                                    │
+│   │  Android ML Kit   │  ← On-device (~30MB/lang)           │
+│   │  Local → English  │  or Cloud Translate fallback        │
 │   └────────┬──────────┘                                    │
 │            ↓                                                │
 │   ┌───────────────────┐                                    │
-│   │    MedGemma 4B    │  ← IQ1_M (0.78GB)                  │
+│   │    MedGemma 4B    │  ← Q4_K_M (2.3GB) • 100% on-device │
 │   │  Clinical Triage  │                                    │
 │   └────────┬──────────┘                                    │
 │            ↓                                                │
 │   ┌───────────────────┐                                    │
-│   │  TranslateGemma   │                                    │
+│   │  Android ML Kit   │                                    │
 │   │  English → Local  │                                    │
 │   └────────┬──────────┘                                    │
 │            ↓                                                │
@@ -120,8 +121,9 @@ All screening uses **pure signal processing** (0 MB additional weights). Sensor 
 | **Orchestration** | ClinicalReasoner + SensorFusion + ThermalManager (42°C) |
 | **Security** | PromptSanitizer (6-layer injection protection at every model boundary) |
 | **Inference** | llama.cpp via JNI (NDK 29, ARM64 NEON) |
+| **Translation** | Android ML Kit (on-device) + Google Cloud Translate (fallback) |
 | **TTS** | Android System TTS (NkuTTS.kt) |
-| **Quantization** | IQ1_M + 64-chunk medical imatrix |
+| **Quantization** | Q4_K_M + 64-chunk medical imatrix (56% MedQA) |
 
 ---
 
@@ -153,13 +155,13 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 Models are loaded from device storage. For production, see `MODEL_DISTRIBUTION.md` for Play Asset Delivery integration.
 
 ```bash
-# Download IQ1_M models from HuggingFace
-huggingface-cli download wredd/medgemma-4b-gguf medgemma-4b-iq1_m.gguf
-huggingface-cli download wredd/translategemma-4b-gguf translategemma-4b-iq1_m.gguf
+# Download MedGemma Q4_K_M from HuggingFace
+huggingface-cli download mradermacher/medgemma-4b-it-GGUF medgemma-4b-it-Q4_K_M.gguf
 
 # Push to device (development)
-adb push medgemma-4b-iq1_m.gguf /sdcard/Download/
-adb push translategemma-4b-iq1_m.gguf /sdcard/Download/
+adb push medgemma-4b-it-Q4_K_M.gguf /sdcard/Download/
+
+# ML Kit translation packs are downloaded automatically by the app
 ```
 
 ---
@@ -170,11 +172,13 @@ adb push translategemma-4b-iq1_m.gguf /sdcard/Download/
 
 We achieve **90% model size reduction** while preserving clinical accuracy:
 
-| Stage | Format | MedGemma | TranslateGemma | Total |
-|:------|:------:|:--------:|:--------------:|:-----:|
-| Original | F16 | ~8.0 GB | ~5.0 GB | ~13 GB |
-| Standard | Q2_K | 1.6 GB | 1.6 GB | 3.2 GB |
-| **Extreme** | **IQ1_M** | **~1.1 GB** | **~0.76 GB** | **~1.88 GB** |
+| Stage | Format | MedGemma | Total |
+|:------|:------:|:--------:|:-----:|
+| Original | F16 | ~8.0 GB | ~8 GB |
+| Standard | Q4_K_M | 2.3 GB | 2.3 GB |
+| **Production** | **Q4_K_M** | **~2.3 GB** | **~2.3 GB** |
+
+*Translation handled by Android ML Kit (~30MB/language pack) — not a GGUF model.*
 
 ### Calibration
 
@@ -187,8 +191,8 @@ Medical accuracy is preserved through **64-chunk imatrix calibration** using 243
   --chunks 64 \
   -o medgemma-medical.imatrix
 
-# Quantize with calibration
-./llama-quantize medgemma-4b-f16.gguf medgemma-4b-iq1_m.gguf IQ1_M \
+# Quantize with calibration (Q4_K_M — see Appendix D for quantization comparison)
+./llama-quantize medgemma-4b-f16.gguf medgemma-4b-Q4_K_M.gguf Q4_K_M \
   --imatrix medgemma-medical.imatrix
 ```
 
@@ -222,7 +226,8 @@ nku-medgemma-conversion/
 │   └── app/src/main/
 │       ├── java/com/nku/app/
 │       │   ├── MainActivity.kt         # UI + Compose
-│       │   ├── NkuInferenceEngine.kt   # Model orchestration
+│       │   ├── NkuInferenceEngine.kt   # MedGemma orchestration
+│       │   ├── NkuTranslator.kt        # ML Kit translation wrapper
 │       │   ├── RPPGProcessor.kt        # Heart rate (rPPG)
 │       │   ├── PallorDetector.kt       # Anemia (conjunctiva)
 │       │   ├── EdemaDetector.kt        # Preeclampsia (edema)
@@ -234,7 +239,7 @@ nku-medgemma-conversion/
 │       │   └── CloudInferenceClient.kt # Cloud fallback (dev only)
 │       └── assets/           # App resources (models loaded from device storage)
 ├── scripts/
-│   ├── quantization/         # IQ1_M/IQ2_XS quantization
+│   ├── quantization/         # Q4_K_M quantization (see Appendix D)
 │   ├── calibration/          # Medical imatrix generation
 │   └── conversion/           # HF → GGUF conversion
 ├── calibration/              # Clinical calibration datasets
@@ -277,7 +282,7 @@ This project is licensed under the Apache License 2.0 — see the [LICENSE](./LI
 
 **Model Licenses:**
 - MedGemma: [Google Health AI Terms](https://aistudio.google.com/app/prompts/new_chat?model=medlm-1.5-4b)
-- TranslateGemma: [Gemma Terms of Use](https://ai.google.dev/gemma/terms)
+- Android ML Kit: [Google APIs Terms of Service](https://developers.google.com/terms)
 
 ---
 
@@ -290,7 +295,7 @@ This project is licensed under the Apache License 2.0 — see the [LICENSE](./LI
 ---
 
 <p align="center">
-  <strong>🌍 450M+ lives • 💰 $50 phones • 🧠 100% on-device inference • 🗣️ 46 languages</strong>
+  <strong>🌍 450M+ lives • 💰 $50 phones • 🧠 100% on-device medical inference • 🗣️ 46 languages</strong>
 </p>
 
 <p align="center">

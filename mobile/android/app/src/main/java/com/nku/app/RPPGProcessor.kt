@@ -30,10 +30,10 @@ import kotlin.math.sqrt
  * - Not a standalone diagnostic — feeds into the Nku triage pipeline
  */
 data class RPPGResult(
-    val bpm: Float?,
-    val confidence: Float,
-    val signalQuality: String,  // "insufficient", "poor", "good", "excellent"
-    val bufferFillPercent: Float
+    val bpm: Float? = null,
+    val confidence: Float = 0f,
+    val signalQuality: String = "insufficient",  // "insufficient", "poor", "good", "excellent"
+    val bufferFillPercent: Float = 0f
 )
 
 class RPPGProcessor(

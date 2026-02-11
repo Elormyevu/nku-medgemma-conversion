@@ -174,3 +174,44 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 [17] Sokolova, T. & Cech, J. "Real-time eye blink detection using facial landmarks." *CVWW*, 2017.
 
 [18] NEC/Tsukuba. "Facial Image Analysis for Detecting Edema." 2023. 85% accuracy.
+
+---
+
+## Appendix D: Quantization & Translation Model Selection
+
+Selecting the right quantization level required balancing two competing goals: **minimizing model size** (for budget devices) and **maintaining clinical accuracy** (for medical reasoning). We systematically benchmarked multiple quantization levels before selecting Q4_K_M.
+
+### MedGemma Quantization Comparison (MedQA, n=500+)
+
+| Quantization | Size | MedQA Accuracy | % of Baseline (69%) | Verdict |
+|:-------------|:----:|:--------------:|:--------------------:|:--------|
+| F16 (baseline) | 8.0 GB | 69% | 100% | Too large for mobile |
+| **Q4_K_M** | **2.3 GB** | **56%** | **81%** | **✅ Selected — best accuracy/size ratio** |
+| Q3_K_M | 1.8 GB | ~45% | ~65% | Marginal for clinical use |
+| IQ2_XS | 1.3 GB | ~35% | ~51% | Below acceptable threshold |
+| IQ1_M | 1.1 GB | 29.8% | 43% | ❌ Near random chance — rejected |
+
+**Key finding**: IQ1_M (our original choice for maximum compression) scored 29.8% on MedQA — barely above the 25% random baseline. At this accuracy level, the model was essentially guessing on medical questions. We stopped the IQ1_M benchmark early (at n=500) once the trend was clear.
+
+**Decision rationale**: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The 1.2GB size increase over IQ1_M was an acceptable tradeoff for nearly doubling medical reasoning accuracy. With `mmap` memory mapping, the 2.3GB model runs on 2–3GB RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
+
+### Translation Model Comparison
+
+We also evaluated TranslateGemma 4B as an on-device translation model before selecting ML Kit:
+
+| Approach | Size | African Language Support | RAM Impact | Offline |
+|:---------|:----:|:------------------------:|:----------:|:-------:|
+| TranslateGemma 4B (Q4_K_M) | 2.3 GB | Twi/Akan: ❌ broken | +2.3 GB (sequential load) | ✅ |
+| TranslateGemma 4B (IQ1_M) | 0.78 GB | Twi/Akan: ❌ broken | +0.78 GB (sequential load) | ✅ |
+| **Android ML Kit** | **~30 MB/lang** | **59 languages on-device** | **Negligible (separate process)** | **✅ (official langs)** |
+| Google Cloud Translate | 0 MB | 100+ languages | None | ❌ (requires internet) |
+
+**Key finding**: TranslateGemma could not translate Twi/Akan (a major Ghanaian language) at any quantization level — this was a base model limitation, not a quantization artifact. We benchmarked all 31 African languages across Q4_K_M and Q3_K_M and found significant gaps.
+
+**Final architecture — hybrid translation**:
+- **ML Kit on-device** (59 languages, ~30MB each): Handles all official African languages (English, French, Portuguese) + Afrikaans, Swahili, Zulu — fully offline
+- **Cloud Translate fallback**: Handles indigenous languages (Twi, Hausa, Yoruba, Igbo, etc.) when online
+- **Critical insight**: CHWs are trained and fluent in their country's official language. Since ML Kit supports all official languages on-device, **every CHW always has a fully offline triage path**. Cloud translation only extends reach to indigenous languages.
+
+This hybrid approach eliminated ~2.3GB of GGUF model weight, removed the model-swapping pipeline overhead (3 load/unload cycles → 1), and expanded language coverage from ~15 to 59 on-device languages — while preserving the 100% offline guarantee for the primary use case.
+

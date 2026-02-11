@@ -19,7 +19,7 @@ This directory contains the Android application source code for **Nku** (The Sen
 
 ## Key Files
 *   `MainActivity.kt`: Entry point, Compose UI host, permission handling.
-*   `NkuInferenceEngine.kt`: Nku Cycle model orchestration (MedGemma + TranslateGemma).
+*   `NkuInferenceEngine.kt`: MedGemma orchestration (mmap loading, retry/backoff).\n*   `NkuTranslator.kt`: ML Kit on-device translation wrapper (59 languages + cloud fallback).
 *   `RPPGProcessor.kt`: Heart rate extraction via rPPG (camera-based).
 *   `PallorDetector.kt`: Anemia screening via conjunctival pallor analysis.
 *   `EdemaDetector.kt`: Preeclampsia screening via facial edema geometry.

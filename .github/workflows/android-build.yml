@@ -36,28 +36,22 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # Download GGUF models into Play Asset Delivery pack directories
-      # install-time packs: user downloads everything at install, 100% offline after
-      - name: Download GGUF models for PAD asset packs
+      # Download GGUF model into Play Asset Delivery pack directory
+      # Translation handled by Android ML Kit (not a GGUF model)
+      - name: Download MedGemma GGUF for PAD asset pack
         run: |
           mkdir -p medgemma/src/main/assets
-          mkdir -p translategemma/src/main/assets
           pip install huggingface-hub
           python3 -c "
           from huggingface_hub import hf_hub_download
           import shutil
-          # MedGemma 4B IQ1_M (~1.1GB) → medgemma asset pack
-          p = hf_hub_download('wredd/medgemma-4b-gguf', 'medgemma-4b-iq1_m.gguf')
-          shutil.copy(p, 'medgemma/src/main/assets/medgemma-4b-iq1_m.gguf')
-          print(f'MedGemma → medgemma pack ({p})')
-          # TranslateGemma 4B IQ1_M (~776MB) → translategemma asset pack
-          p = hf_hub_download('wredd/translategemma-4b-gguf', 'translategemma-4b-iq1_m.gguf')
-          shutil.copy(p, 'translategemma/src/main/assets/translategemma-4b-iq1_m.gguf')
-          print(f'TranslateGemma → translategemma pack ({p})')
+          # MedGemma 4B Q4_K_M (~2.3GB) → medgemma asset pack
+          p = hf_hub_download('mradermacher/medgemma-4b-it-GGUF', 'medgemma-4b-it-Q4_K_M.gguf')
+          shutil.copy(p, 'medgemma/src/main/assets/medgemma-4b-it-Q4_K_M.gguf')
+          print(f'MedGemma Q4_K_M → medgemma pack ({p})')
           "
           echo "--- Asset pack contents ---"
           ls -lh medgemma/src/main/assets/*.gguf
-          ls -lh translategemma/src/main/assets/*.gguf
 
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest --no-daemon

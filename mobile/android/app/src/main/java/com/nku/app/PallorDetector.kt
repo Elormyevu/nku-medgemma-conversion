@@ -38,10 +38,10 @@ import kotlin.math.min
  */
 
 data class PallorResult(
-    val pallorScore: Float,           // 0.0 = healthy pink, 1.0 = severe pallor
-    val confidence: Float,            // 0.0 - 1.0
-    val severity: PallorSeverity,
-    val recommendation: String,
+    val pallorScore: Float = 0f,           // 0.0 = healthy pink, 1.0 = severe pallor
+    val confidence: Float = 0f,            // 0.0 - 1.0
+    val severity: PallorSeverity = PallorSeverity.NORMAL,
+    val recommendation: String = "No analysis",
     val hasBeenAnalyzed: Boolean = false
 )
 

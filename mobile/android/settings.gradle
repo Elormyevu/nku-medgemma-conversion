@@ -3,5 +3,5 @@ include ':app'
 include ':smollm'
 
 // Play Asset Delivery — model packs (see MODEL_DISTRIBUTION.md)
+// Translation handled by Android ML Kit (not a GGUF model)
 include ':medgemma'
-include ':translategemma'

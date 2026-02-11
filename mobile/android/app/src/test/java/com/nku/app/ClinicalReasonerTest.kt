@@ -266,6 +266,55 @@ class ClinicalReasonerTest {
             assessment.primaryConcerns.any { it.lowercase().contains("pallor") })
     }
 
+    // ── P1: Malformed output safety ────────────────────────
+
+    @Test
+    fun `parseMedGemmaResponse falls back to rule-based when markers missing`() {
+        // If MedGemma returns prose without SEVERITY:/URGENCY: markers,
+        // the parser must NOT default to LOW/ROUTINE — it must fall back
+        // to rule-based assessment which uses actual sensor data.
+        val response = "The patient shows signs of moderate anemia and should seek care soon."
+        val vitals = VitalSigns(
+            pallorScore = 0.85f,
+            pallorSeverity = PallorSeverity.SEVERE,
+            pallorConfidence = 0.9f
+        )
+        val assessment = reasoner.parseMedGemmaResponse(response, vitals)
+
+        // Rule-based with severe pallor should produce HIGH/ORANGE, not LOW/GREEN
+        assertEquals("Severe pallor should trigger ORANGE triage via rule-based fallback",
+            TriageCategory.ORANGE, assessment.triageCategory)
+        assertEquals(Severity.HIGH, assessment.overallSeverity)
+    }
+
+    // ── P2: Confidence gating in prompt ───────────────────
+
+    @Test
+    fun `generatePrompt marks low confidence HR as excluded`() {
+        val vitals = VitalSigns(
+            heartRateBpm = 125f,             // Would be tachycardia if confident
+            heartRateConfidence = 0.3f       // Below 0.75 threshold
+        )
+        val prompt = reasoner.generatePrompt(vitals)
+        assertTrue("Low-confidence HR should be marked excluded",
+            prompt.contains("excluded from assessment"))
+        assertFalse("Should NOT label as tachycardia when excluded",
+            prompt.contains("tachycardia"))
+    }
+
+    @Test
+    fun `generatePrompt includes high confidence HR normally`() {
+        val vitals = VitalSigns(
+            heartRateBpm = 125f,
+            heartRateConfidence = 0.9f       // Above 0.75 threshold
+        )
+        val prompt = reasoner.generatePrompt(vitals)
+        assertFalse("High-confidence HR should NOT be marked excluded",
+            prompt.contains("excluded from assessment"))
+        assertTrue("Should label as tachycardia",
+            prompt.contains("tachycardia"))
+    }
+
     // ── reset() ─────────────────────────────────────────────
 
     @Test

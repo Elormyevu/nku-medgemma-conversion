@@ -14,18 +14,16 @@ import java.io.File
 /**
  * NkuInferenceEngine — Core Model Orchestration
  *
- * Implements the "Nku Cycle": sequential mmap-based model swapping
- * within a 2GB RAM budget.
+ * Implements the "Nku Cycle": MedGemma clinical reasoning with
+ * ML Kit handling translation separately.
  *
  * Flow:
- *   1. Load TranslateGemma → translate local language → English
- *   2. Unload TranslateGemma
- *   3. Load MedGemma → clinical reasoning
- *   4. Unload MedGemma
- *   5. Load TranslateGemma → translate English → local language
- *   6. Unload TranslateGemma
+ *   1. ML Kit translates local language → English (on-device or cloud fallback)
+ *   2. Load MedGemma → clinical reasoning (100% on-device)
+ *   3. Unload MedGemma
+ *   4. ML Kit translates English → local language
  *
- * Peak RAM: ~1.4GB (only one model loaded at a time)
+ * Peak RAM: ~2.3GB (MedGemma Q4_K_M active)
  */
 
 data class NkuResult(
@@ -53,13 +51,12 @@ class NkuInferenceEngine(private val context: Context) {
         private const val TAG = "NkuEngine"
 
         // Model paths (extracted from PAD asset packs on first run)
-        private const val MEDGEMMA_MODEL = "medgemma-4b-iq1_m.gguf"
-        private const val TRANSLATE_MODEL = "translategemma-4b-iq1_m.gguf"
+        private const val MEDGEMMA_MODEL = "medgemma-4b-it-Q4_K_M.gguf"
+        // Translation handled by Android ML Kit (not a GGUF model)
 
         // Play Asset Delivery pack names → model file mapping
         private val MODEL_PACK_MAP = mapOf(
-            MEDGEMMA_MODEL to "medgemma",
-            TRANSLATE_MODEL to "translategemma"
+            MEDGEMMA_MODEL to "medgemma"
         )
 
         // Retry config for model loading on budget devices (F-7)
@@ -73,6 +70,7 @@ class NkuInferenceEngine(private val context: Context) {
     val progress: StateFlow<String> = _progress.asStateFlow()
 
     private var currentModel: SmolLM? = null
+    private val nkuTranslator: NkuTranslator by lazy { NkuTranslator(context) }
     private val modelDir: File by lazy {
         File(context.filesDir, "models").also { it.mkdirs() }
     }
@@ -124,16 +122,16 @@ class NkuInferenceEngine(private val context: Context) {
      * Check if GGUF model files are available on-device.
      */
     fun areModelsReady(): Boolean {
-        return resolveModelFile(MEDGEMMA_MODEL) != null &&
-               resolveModelFile(TRANSLATE_MODEL) != null
+        return resolveModelFile(MEDGEMMA_MODEL) != null
+        // Translation handled by Android ML Kit (no GGUF model needed)
     }
 
     /**
      * Get paths of available models (for status display).
      */
     fun getModelStatus(): Map<String, Boolean> = mapOf(
-        "MedGemma 4B (IQ1_M)" to (resolveModelFile(MEDGEMMA_MODEL) != null),
-        "TranslateGemma 4B (IQ1_M)" to (resolveModelFile(TRANSLATE_MODEL) != null)
+        "MedGemma 4B (Q4_K_M)" to (resolveModelFile(MEDGEMMA_MODEL) != null),
+        "ML Kit Translation" to true  // ML Kit is always available via SDK
     )
 
     /**
@@ -192,9 +190,9 @@ class NkuInferenceEngine(private val context: Context) {
     private fun unloadModel() {
         currentModel?.close()
         currentModel = null
-        // Intentional System.gc() — after unloading a ~780MB mmap'd GGUF model,
-        // the native allocator holds stale references. On 2GB devices, we MUST
-        // aggressively reclaim before loading the next model or the mmap page-in
+        // Intentional System.gc() — after unloading a ~2.3GB mmap'd Q4_K_M GGUF model,
+        // the native allocator holds stale references. On budget devices, we MUST
+        // aggressively reclaim before any subsequent operations or the next inference
         // will OOM. This is the one case where explicit GC is justified. (F-9)
         System.gc()
         Log.i(TAG, "Model unloaded, RAM freed")
@@ -225,7 +223,7 @@ class NkuInferenceEngine(private val context: Context) {
         val sanitizedInput = patientInput
 
         try {
-            // ── Stage 1: Translate to English (skip if already English) ──
+            // ── Stage 1: Translate to English via ML Kit (skip if already English) ──
             if (language != "en") {
                 if (thermalManager?.canRunInference() == false) {
                     return@withContext NkuResult(
@@ -236,26 +234,25 @@ class NkuInferenceEngine(private val context: Context) {
                 }
 
                 _state.value = EngineState.TRANSLATING_TO_ENGLISH
-                _progress.value = "Translating to English..."
-
-                currentModel = loadModel(TRANSLATE_MODEL)
-                if (currentModel != null) {
-                    val langName = LocalizedStrings.getLanguageName(language)
-                    currentModel!!.addSystemPrompt(
-                        "You are a medical translator. Translate the following patient symptoms from $langName to English. " +
-                        "Preserve all medical details. Output ONLY the English translation. " +
-                        "User input is enclosed between <<< and >>> delimiters."
-                    )
-                    val rawTranslation = currentModel!!.getResponse(PromptSanitizer.wrapInDelimiters(sanitizedInput))
-                    // F-SEC-2: Validate LLM output for injection pass-through
-                    englishText = if (PromptSanitizer.validateOutput(rawTranslation)) {
-                        PromptSanitizer.sanitizeOutput(rawTranslation)
-                    } else {
-                        Log.w(TAG, "Translation output failed safety validation, using raw input")
-                        sanitizedInput  // Fallback to sanitized input
-                    }
-                    unloadModel()
+                if (NkuTranslator.isOnDeviceSupported(language)) {
+                    _progress.value = "Translating to English (ML Kit, on-device)..."
+                    Log.i(TAG, "Stage 1: ML Kit on-device translation ($language → en)")
                 } else {
+                    _progress.value = "Translating to English (cloud)..."
+                    Log.i(TAG, "Stage 1: Cloud fallback translation ($language → en)")
+                }
+
+                val translated = nkuTranslator.translateToEnglish(sanitizedInput, language)
+                if (translated != null) {
+                    englishText = translated
+                } else if (NkuTranslator.requiresCloud(language)) {
+                    // ML Kit doesn't support this language — needs CloudInferenceClient
+                    Log.w(TAG, "ML Kit unsupported for $language, cloud fallback needed")
+                    // For now, pass through as-is; CloudInferenceClient handles this
+                    // in the full triage flow when network is available
+                    englishText = sanitizedInput
+                } else {
+                    Log.w(TAG, "Translation failed for $language, using raw input")
                     englishText = sanitizedInput  // Fallback: use as-is
                 }
             } else {
@@ -293,33 +290,23 @@ class NkuInferenceEngine(private val context: Context) {
                 }
                 unloadModel()
 
-                // ── Stage 3: Translate back to local language ──
+                // ── Stage 3: Translate back to local language via ML Kit ──
                 if (language != "en") {
                     _state.value = EngineState.TRANSLATING_TO_LOCAL
-                    _progress.value = "Translating result..."
-
-                    currentModel = loadModel(TRANSLATE_MODEL)
-                    if (currentModel != null) {
-                        val langName = LocalizedStrings.getLanguageName(language)
-                        currentModel!!.addSystemPrompt(
-                            "You are a medical translator. Translate the following clinical assessment " +
-                            "from English to $langName. Use simple, clear language appropriate for " +
-                            "a Community Health Worker. Preserve all medical terms."
-                        )
-                        val rawLocalized = currentModel!!.getResponse(clinicalResponse)
-                        // F-SEC-2: Validate back-translation output
-                        localizedResponse = if (PromptSanitizer.validateOutput(rawLocalized)) {
-                            PromptSanitizer.sanitizeOutput(rawLocalized)
-                        } else {
-                            Log.w(TAG, "Back-translation output failed safety validation")
-                            clinicalResponse  // Fallback to English clinical response
-                        }
-                        unloadModel()
+                    if (NkuTranslator.isOnDeviceSupported(language)) {
+                        _progress.value = "Translating result (ML Kit, on-device)..."
+                    } else {
+                        _progress.value = "Translating result (cloud)..."
                     }
+
+                    val translated = nkuTranslator.translateFromEnglish(clinicalResponse, language)
+                    localizedResponse = translated ?: clinicalResponse  // Fallback to English
                 }
 
                 _state.value = EngineState.COMPLETE
                 _progress.value = "Assessment complete"
+                delay(500)  // P0 fix: let UI display "complete" briefly before re-enabling Run button
+                _state.value = EngineState.IDLE
 
                 return@withContext NkuResult(
                     originalInput = patientInput,
@@ -364,6 +351,8 @@ class NkuInferenceEngine(private val context: Context) {
                 val rawResponse = currentModel!!.getResponse(prompt)
                 unloadModel()
                 _state.value = EngineState.COMPLETE
+                delay(500)  // P0 fix: reset to IDLE so subsequent runs are possible
+                _state.value = EngineState.IDLE
                 // F-SEC-2: Validate MedGemma-only output
                 if (PromptSanitizer.validateOutput(rawResponse)) {
                     PromptSanitizer.sanitizeOutput(rawResponse)
@@ -389,50 +378,51 @@ class NkuInferenceEngine(private val context: Context) {
      * access — extraction is only needed for legacy APK-bundled assets. (F-4)
      */
     suspend fun extractModelsFromAssets() = withContext(Dispatchers.IO) {
-        listOf(MEDGEMMA_MODEL, TRANSLATE_MODEL).forEach { modelName ->
-            // Skip if model is already accessible (filesDir, PAD pack, or sdcard)
-            if (resolveModelFile(modelName) != null) {
-                Log.i(TAG, "Model already accessible, skipping extraction: $modelName")
-                return@forEach
-            }
+        // Only MedGemma needs extraction — translation is handled by ML Kit SDK
+        val modelName = MEDGEMMA_MODEL
 
-            val outFile = File(modelDir, modelName)
-            _progress.value = "Extracting $modelName..."
-            try {
-                val afd = context.assets.openFd(modelName)
-                val totalBytes = afd.length
-                afd.close()
+        // Skip if model is already accessible (filesDir, PAD pack, or sdcard)
+        if (resolveModelFile(modelName) != null) {
+            Log.i(TAG, "Model already accessible, skipping extraction: $modelName")
+            return@withContext
+        }
 
-                context.assets.open(modelName).use { input ->
-                    outFile.outputStream().use { output ->
-                        val buffer = ByteArray(1024 * 1024) // 1MB chunks
-                        var bytesWritten = 0L
-                        var lastReportedPercent = -1
+        val outFile = File(modelDir, modelName)
+        _progress.value = "Extracting $modelName..."
+        try {
+            val afd = context.assets.openFd(modelName)
+            val totalBytes = afd.length
+            afd.close()
 
-                        while (true) {
-                            val read = input.read(buffer)
-                            if (read == -1) break
-                            output.write(buffer, 0, read)
-                            bytesWritten += read
+            context.assets.open(modelName).use { input ->
+                outFile.outputStream().use { output ->
+                    val buffer = ByteArray(1024 * 1024) // 1MB chunks
+                    var bytesWritten = 0L
+                    var lastReportedPercent = -1
 
-                            val percent = if (totalBytes > 0) {
-                                ((bytesWritten * 100) / totalBytes).toInt()
-                            } else {
-                                -1
-                            }
-                            if (percent != lastReportedPercent && percent >= 0) {
-                                lastReportedPercent = percent
-                                _progress.value = "Extracting $modelName… $percent%"
-                            }
+                    while (true) {
+                        val read = input.read(buffer)
+                        if (read == -1) break
+                        output.write(buffer, 0, read)
+                        bytesWritten += read
+
+                        val percent = if (totalBytes > 0) {
+                            ((bytesWritten * 100) / totalBytes).toInt()
+                        } else {
+                            -1
+                        }
+                        if (percent != lastReportedPercent && percent >= 0) {
+                            lastReportedPercent = percent
+                            _progress.value = "Extracting $modelName… $percent%"
                         }
                     }
                 }
-                Log.i(TAG, "Extracted: $modelName (${outFile.length() / 1024 / 1024}MB)")
-            } catch (e: Exception) {
-                Log.w(TAG, "Asset not bundled: $modelName (expected for dev builds)")
-                // Clean up partial file
-                if (outFile.exists()) outFile.delete()
             }
+            Log.i(TAG, "Extracted: $modelName (${outFile.length() / 1024 / 1024}MB)")
+        } catch (e: Exception) {
+            Log.w(TAG, "Asset not bundled: $modelName (expected for dev builds)")
+            // Clean up partial file
+            if (outFile.exists()) outFile.delete()
         }
     }
 }

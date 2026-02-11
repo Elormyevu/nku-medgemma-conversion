@@ -48,13 +48,13 @@ import kotlin.math.sqrt
  */
 
 data class EdemaResult(
-    val edemaScore: Float,            // 0.0 = normal, 1.0 = significant swelling
-    val confidence: Float,            // 0.0 - 1.0
-    val severity: EdemaSeverity,
-    val periorbitalScore: Float,      // Eye area puffiness
-    val facialScore: Float,           // Overall facial swelling
-    val recommendation: String,
-    val riskFactors: List<String>,
+    val edemaScore: Float = 0f,            // 0.0 = normal, 1.0 = significant swelling
+    val confidence: Float = 0f,            // 0.0 - 1.0
+    val severity: EdemaSeverity = EdemaSeverity.NORMAL,
+    val periorbitalScore: Float = 0f,      // Eye area puffiness
+    val facialScore: Float = 0f,           // Overall facial swelling
+    val recommendation: String = "No analysis",
+    val riskFactors: List<String> = emptyList(),
     val hasBeenAnalyzed: Boolean = false
 )
 

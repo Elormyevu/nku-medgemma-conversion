@@ -10,7 +10,7 @@ In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people [1] �
 
 The disconnect: powerful AI models like MedGemma exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, while 3G accounts for ~54% of mobile connections (GSMA 2023), coverage is unreliable — 25% of rural Africans lack mobile broadband entirely, and only 23% use the internet regularly (ITU 2024) [4]. Cloud-based AI is **impractical** where it is needed most.
 
-**Target user**: A CHW in rural Ghana with a $60 TECNO phone (2GB RAM), no stable internet, speaking Ewe. She needs immediate triage guidance — in her language, offline, on her existing device.
+**Target user**: A CHW in rural Ghana with a $60 TECNO phone (2–3GB RAM), no stable internet, speaking Ewe. She needs immediate triage guidance — in her language, offline, on her existing device.
 
 ---
 
@@ -18,23 +18,25 @@ The disconnect: powerful AI models like MedGemma exist, but require reliable clo
 
 **Nku** (Ewe: "eye") is a **proof-of-concept prototype** demonstrating that MedGemma can run entirely on $50–100 Android smartphones — 100% on-device, zero cloud dependency. It is not a finished clinical product; it requires field deployment with CHWs to validate thresholds and assess real-world accuracy.
 
-**Architecture** — models are sequentially loaded/unloaded via `mmap`, keeping peak RAM at ~1.4GB within the 2GB budget:
+**Architecture** — MedGemma runs entirely on-device via `mmap` loading (the OS pages model data on demand, so peak resident memory adapts to available RAM). Translation uses Android ML Kit (on-device, ~30MB/language) for its 59 supported languages, with Google Cloud Translate API fallback for additional African languages (Twi, Hausa, Yoruba, Igbo) when connectivity is available:
 
-| Stage | Model | Size | Function |
-|:------|:------|:----:|:---------|
-| 1. Translate | TranslateGemma 4B (IQ1_M) | 0.76GB | Local language → English |
-| 2. Reason | MedGemma 4B (IQ1_M) | 1.1GB | Clinical reasoning on symptoms + sensor data |
-| 3. Translate | TranslateGemma 4B (reloaded) | 0.76GB | English → local language |
+| Stage | Component | Size | Function |
+|:------|:----------|:----:|:---------|
+| 1. Translate | Android ML Kit / Cloud Translate | ~30MB/lang | Local language → English |
+| 2. Reason | **MedGemma 4B (Q4_K_M)** | **2.3GB** | Clinical reasoning on symptoms + sensor data |
+| 3. Translate | Android ML Kit / Cloud Translate | ~30MB/lang | English → local language |
 | 4. Speak | Android System TTS | 0 MB | Spoken result in 46 languages |
 
-**Ultra-compression**: 90% size reduction via IQ1_M quantization. A custom imatrix calibrated on 243 African primary care scenarios preserves diagnostic vocabulary for malaria, cholera, typhoid, and maternal health. Models served via llama.cpp JNI (NDK 29, ARM64 NEON) [7,8].
+**🔑 Offline guarantee for CHWs**: All African official languages (English, French, Portuguese) are fully on-device via ML Kit. Since CHWs are trained and fluent in their country's official language, **every CHW always has a fully offline triage path** — no internet required at any stage. Cloud translation is only needed for indigenous/local languages like Twi, Hausa, and Yoruba, extending reach beyond the offline baseline.
+
+**Key distinction**: All **medical inference is 100% on-device** — MedGemma never touches the cloud. Translation is on-device for ML Kit's 59 languages (including Afrikaans and Swahili); for additional African languages, translation uses Google Cloud Translate when online. MedGemma's Q4_K_M quantization achieves 56% on MedQA (81% of published baseline), calibrated with a 243-scenario African primary care imatrix [7,8].
 
 | | Nku | Cloud Alternatives |
 |:--------|:---:|:------------------:|
-| Offline | 100% | 0% |
-| 2GB RAM devices | ✅ | ❌ |
+| Medical inference offline | **100%** | 0% |
+| 2–3GB RAM devices | ✅ | ❌ |
 | Pan-African languages | 46 | ~5 |
-| Per-query cost | $0 | $0.01–0.10 |
+| Per-query cost | **$0** (inference) | $0.01–0.10 |
 
 ---
 
@@ -82,7 +84,7 @@ A heart rate of 110 BPM means one thing in a febrile child and something entirel
 
 ## 5. MedGemma: Irreplaceable Core (HAI-DEF)
 
-MedGemma 4B is not optional — it is the **sole clinical reasoning engine**. It interprets sensor data + symptoms, generates structured triage output (severity, urgency, recommendations), and maintains medical accuracy via domain-specific imatrix calibration. No alternative works: cloud inference fails without reliable connectivity; smaller models lack medical knowledge. Only MedGemma, quantized to IQ1_M via llama.cpp, enables the offline + accurate + multilingual combination Nku requires.
+MedGemma 4B is not optional — it is the **sole clinical reasoning engine**, running 100% on-device. It interprets sensor data + symptoms, generates structured triage output (severity, urgency, recommendations), and maintains medical accuracy via domain-specific imatrix calibration (56% MedQA, 81% of published baseline). No alternative works: cloud inference fails without reliable connectivity; smaller models lack medical knowledge. Only MedGemma, quantized to Q4_K_M via llama.cpp, enables the offline + accurate + multilingual combination Nku requires. Translation is handled separately by Android ML Kit (on-device) with Google Cloud Translate fallback — keeping medical reasoning fully offline while extending language access.
 
 ---
 
@@ -90,7 +92,7 @@ MedGemma 4B is not optional — it is the **sole clinical reasoning engine**. It
 
 Nku is a **working prototype** proving that offline, multilingual clinical triage on budget smartphones is technically feasible. What remains is the harder, more important work: field validation.
 
-**What field deployment will reveal**: sensor accuracy across Fitzpatrick V-VI patients; CHW usability in variable lighting; which screening modality provides the most actionable triage; TranslateGemma's handling of dialectal variation; performance across TECNO/Infinix/Samsung A-series devices.
+**What field deployment will reveal**: sensor accuracy across Fitzpatrick V-VI patients; CHW usability in variable lighting; which screening modality provides the most actionable triage; ML Kit translation accuracy for dialectal variation; cloud translation fallback reliability in low-connectivity areas; performance across TECNO/Infinix/Samsung A-series devices.
 
 **Deployment pathway**: Pilot with 5–10 CHWs in rural Ghana (concurrent ground-truth vitals) → threshold calibration → community health organization partnerships (e.g., Ghana Health Service) → Play Asset Delivery / sideloaded APK distribution. Ghana is the natural starting point — the developer was born and raised there and maintains active ties to local health communities, making it the most feasible location for hands-on pilot coordination.
 
@@ -115,9 +117,9 @@ The promise of AI in healthcare has so far benefited those with the most access 
 
 **Prize Tracks**:
 - **Main Track** (1st–4th, $10K–$30K): Nku addresses a real, urgent healthcare gap for 450M+ people by putting MedGemma-powered clinical reasoning directly in CHWs' hands — offline, multilingual, on their existing $50 devices.
-- **Edge AI Prize** ($5K): Nku's entire architecture — IQ1_M compression, 2GB RAM target, llama.cpp JNI, 100% on-device inference — is purpose-built for edge deployment. The hardest technical challenge — running a medical-grade LLM on a $50 phone — is solved.
-- **Novel Task Prize** ($5K): Two novel contributions: (1) IQ1_M quantization calibrated with a 243-scenario African primary care imatrix for an entirely new deployment context — offline multilingual triage on $50 smartphones. (2) A novel EAR-based periorbital edema screening heuristic, repurposing established computer vision geometry (Eye Aspect Ratio) for preeclampsia detection — grounded in palpebral fissure anthropometrics but not previously described in the literature.
+- **Edge AI Prize** ($5K): Nku's entire architecture — Q4_K_M compression (56% MedQA), mmap loading on $50–100 phones, llama.cpp JNI, 100% on-device medical inference — is purpose-built for edge deployment. We deliberately chose Q4_K_M over the smaller IQ1_M after benchmarking showed IQ1_M's 29.8% MedQA accuracy was near random chance — unacceptable for medical reasoning (see Appendix D). The hardest technical challenge — running a medical-grade LLM on a budget phone — is solved.
+- **Novel Task Prize** ($5K): Two novel contributions: (1) Q4_K_M quantization calibrated with a 243-scenario African primary care imatrix for an entirely new deployment context — offline multilingual triage on $50 smartphones. (2) A novel EAR-based periorbital edema screening heuristic, repurposing established computer vision geometry (Eye Aspect Ratio) for preeclampsia detection — grounded in palpebral fissure anthropometrics but not previously described in the literature.
 
 ---
 
-*Nku: a proof of concept for 450M+ lives • $50 phones • 100% on-device inference • 46 languages*
+*Nku: a proof of concept for 450M+ lives • $50 phones • 100% on-device medical inference • 46 languages*

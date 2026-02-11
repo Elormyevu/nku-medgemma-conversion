@@ -288,26 +288,29 @@ fun NkuSentinelApp(
                             sensorFusion.updateVitalSigns()
                             val currentVitals = sensorFusion.vitalSigns.value
                             if (nkuEngine.areModelsReady()) {
-                                // MedGemma available — run full Nku Cycle
+                                // MedGemma available — run direct inference (skip translation)
+                                // P1 fix: the prompt is already structured English from generatePrompt(),
+                                // so we use runMedGemmaOnly() to avoid re-translating instruction tokens
                                 scope.launch {
                                     val prompt = clinicalReasoner.generatePrompt(currentVitals)
-                                    val result = nkuEngine.runNkuCycle(
-                                        patientInput = prompt,
-                                        language = selectedLanguage,
-                                        thermalManager = thermalManager
-                                    )
-                                    clinicalReasoner.parseMedGemmaResponse(
-                                        result.clinicalResponse, currentVitals
-                                    )
+                                    val medGemmaResponse = nkuEngine.runMedGemmaOnly(prompt)
+                                    if (medGemmaResponse != null) {
+                                        clinicalReasoner.parseMedGemmaResponse(
+                                            medGemmaResponse, currentVitals
+                                        )
+                                    } else {
+                                        // MedGemma failed — fall back to rule-based triage
+                                        clinicalReasoner.createRuleBasedAssessment(currentVitals)
+                                    }
                                     // Auto-save screening (H-03 fix: populate all fields)
                                     screeningDao.insert(ScreeningEntity(
                                         heartRateBpm = rppgResult.bpm?.toFloat(),
                                         heartRateConfidence = rppgResult.confidence,
                                         pallorSeverity = pallorResult.severity.name,
                                         edemaSeverity = edemaResult.severity.name,
-                                        triageLevel = result.clinicalResponse.take(200),
+                                        triageLevel = medGemmaResponse?.take(200) ?: "Rule-based",
                                         symptoms = prompt,
-                                        recommendations = result.clinicalResponse,
+                                        recommendations = medGemmaResponse ?: assessment?.recommendations?.joinToString("; ") ?: "",
                                         edemaRiskFactors = edemaResult.riskFactors.joinToString(","),
                                         language = selectedLanguage,
                                         isPregnant = isPregnant,

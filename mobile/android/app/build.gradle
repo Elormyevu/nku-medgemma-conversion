@@ -5,8 +5,8 @@ plugins {
     id 'com.google.devtools.ksp' version '2.1.0-1.0.29'
 }
 
-// Play Asset Delivery — model packs (see MODEL_DISTRIBUTION.md)
-android.assetPacks = [":medgemma", ":translategemma"]
+// Play Asset Delivery — MedGemma model pack (translation handled by ML Kit)
+android.assetPacks = [":medgemma"]
 
 // Force all modules to use the same coroutines version
 configurations.all {
@@ -107,6 +107,10 @@ dependencies {
     implementation 'com.google.android.play:asset-delivery:2.2.2'
     implementation 'com.google.android.play:asset-delivery-ktx:2.2.2'
     
+    // ML Kit Translation — on-device translation for 59 languages (~30MB/lang pack)
+    // Replaces TranslateGemma GGUF, zero RAM contention with MedGemma
+    implementation 'com.google.mlkit:translate:17.0.3'
+    
     // Room — offline screening data persistence
     implementation 'androidx.room:room-runtime:2.6.1'
     implementation 'androidx.room:room-ktx:2.6.1'
@@ -117,7 +121,8 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:5.11.0'
     testImplementation 'org.mockito.kotlin:mockito-kotlin:5.3.1'
 
-    // Compose UI testing
+    // Compose UI testing — BOM required for version resolution (P1 fix)
+    androidTestImplementation platform('androidx.compose:compose-bom:2024.12.01')
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

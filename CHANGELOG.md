@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Generated project logo
 
 ### Changed
+- **Replaced TranslateGemma with Android ML Kit** for on-device translation (59 languages, ~30MB/lang)
+- Added Google Cloud Translate API fallback for indigenous African languages (Twi, Hausa, Yoruba)
+- Upgraded MedGemma from IQ1_M to **Q4_K_M** quantization (56% MedQA accuracy, 81% of baseline)
 - Updated .gitignore to exclude large model files and agent directories
 
 ---
@@ -86,7 +89,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added - Initial Development
 - **MedGemma 4B Integration**: Clinical reasoning via llama.cpp
 - **TranslateGemma 4B**: Pan-African language translation
-- **Nku Cycle Architecture**: Memory-efficient model swapping
+- **Nku Cycle Architecture**: Memory-efficient mmap-based model orchestration
 - **Basic Android App**: Symptom input and triage display
 
 ---

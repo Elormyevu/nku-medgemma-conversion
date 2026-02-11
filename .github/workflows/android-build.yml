@@ -64,9 +64,9 @@ jobs:
 
       # Build AAB (Android App Bundle) with Play Asset Delivery packs
       # AAB is required for Play Store and supports asset packs up to 2GB
+      # Finding 13 fix: Release build must be a blocking quality gate
       - name: Build release AAB with PAD
         run: ./gradlew bundleRelease --no-daemon
-        continue-on-error: true
 
       # Also build debug APK for emulator testing (without bundled models)
       - name: Build debug APK

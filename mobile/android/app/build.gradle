@@ -13,6 +13,10 @@ configurations.all {
     resolutionStrategy {
         force 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0'
         force 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
+        // Finding 1/15 fix: Play Asset Delivery pulls fragment:1.1.0 transitively,
+        // but Activity Result API requires >=1.3.0. Force both base and ktx variants.
+        force 'androidx.fragment:fragment:1.6.2'
+        force 'androidx.fragment:fragment-ktx:1.6.2'
     }
 }
 

@@ -535,9 +535,15 @@ def nku_cycle():
             temperature=config.inference.translation_temperature,
             stop=["\n\n", "<<<USER_INPUT>>>"]
         )
-        _, english = PromptProtector.validate_output(
-            trans_result['choices'][0]['text'].strip()
-        )
+        # Finding 5 fix: gate on is_valid (was discarded with _)
+        raw_translation = trans_result['choices'][0]['text'].strip()
+        is_valid, english = PromptProtector.validate_output(raw_translation)
+        if not is_valid:
+            request_logger.warning("Translation output validation failed")
+            return jsonify({
+                'error': 'generation_error',
+                'message': 'Failed to generate valid translation'
+            }), 500
 
         # Step 2: Medical triage
         triage_prompt = PromptProtector.build_triage_prompt(english)
@@ -547,9 +553,15 @@ def nku_cycle():
             temperature=config.inference.triage_temperature,
             stop=["<<<USER_INPUT>>>"]
         )
-        _, assessment = PromptProtector.validate_output(
-            triage_result['choices'][0]['text'].strip()
-        )
+        # Finding 5 fix: gate on is_valid (was discarded with _)
+        raw_assessment = triage_result['choices'][0]['text'].strip()
+        is_valid, assessment = PromptProtector.validate_output(raw_assessment)
+        if not is_valid:
+            request_logger.warning("Triage output validation failed")
+            return jsonify({
+                'error': 'generation_error',
+                'message': 'Failed to generate valid triage assessment'
+            }), 500
 
         # Step 3: Translate response back to Twi
         back_prompt = PromptProtector.build_translation_prompt(
@@ -562,9 +574,15 @@ def nku_cycle():
             temperature=config.inference.translation_temperature,
             stop=["\n\n", "<<<USER_INPUT>>>"]
         )
-        _, twi_output = PromptProtector.validate_output(
-            back_result['choices'][0]['text'].strip()
-        )
+        # Finding 5 fix: gate on is_valid (was discarded with _)
+        raw_back = back_result['choices'][0]['text'].strip()
+        is_valid, twi_output = PromptProtector.validate_output(raw_back)
+        if not is_valid:
+            request_logger.warning("Back-translation output validation failed")
+            return jsonify({
+                'error': 'generation_error',
+                'message': 'Failed to generate valid back-translation'
+            }), 500
 
         return jsonify({
             "english_translation": english,

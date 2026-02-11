@@ -19,7 +19,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/MedGemma-4B-blue?style=flat-square" alt="MedGemma" />
-  <img src="https://img.shields.io/badge/Offline-100%25-green?style=flat-square" alt="Offline" />
+  <img src="https://img.shields.io/badge/Inference-100%25_On--Device-green?style=flat-square" alt="On-Device" />
   <img src="https://img.shields.io/badge/Languages-46-orange?style=flat-square" alt="Languages" />
   <img src="https://img.shields.io/badge/RAM-2GB-purple?style=flat-square" alt="RAM" />
   <img src="https://img.shields.io/badge/License-Apache%202.0-lightgrey?style=flat-square" alt="License" />
@@ -43,7 +43,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 | What | How |
 |:-----|:----|
-| **100% Offline** | Zero network dependency — pure on-device inference |
+| **100% On-Device Inference** | All clinical reasoning runs on-device — zero cloud dependency for inference |
 | **Ultra-Compressed** | 8GB models → 1.3GB via IQ1_M quantization |
 | **Pan-African Languages** | 46 languages including Ewe, Hausa, Yoruba, Swahili |
 | **Budget Hardware** | Runs on 2GB RAM devices (TECNO, Infinix) |
@@ -289,7 +289,7 @@ This project is licensed under the Apache License 2.0 — see the [LICENSE](./LI
 ---
 
 <p align="center">
-  <strong>🌍 450M+ lives • 💰 $50 phones • 📵 100% offline • 🗣️ 46 languages</strong>
+  <strong>🌍 450M+ lives • 💰 $50 phones • 🧠 100% on-device inference • 🗣️ 46 languages</strong>
 </p>
 
 <p align="center">

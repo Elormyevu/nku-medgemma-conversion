@@ -8,8 +8,9 @@
     <!-- Microphone permission for voice input (speech-to-text) -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     
-    <!-- C-03 fix: Internet permission for cloud fallback (debug builds only) -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Finding 2 fix: Removed explicit INTERNET permission from source manifest.
+         Transitive deps (Play Asset Delivery) pull it via manifest merge if needed.
+         All clinical inference is 100% on-device; no app code uses network. -->
     
     <!-- Model loading fallback: read GGUF models from /sdcard/Download/ (dev/testing) -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"

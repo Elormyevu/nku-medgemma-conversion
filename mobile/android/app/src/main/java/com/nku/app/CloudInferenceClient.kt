@@ -69,7 +69,8 @@ class CloudInferenceClient(
             conn.requestMethod = "POST"
             conn.setRequestProperty("Content-Type", "application/json")
             conn.setRequestProperty("Accept", "application/json")
-            apiKey?.let { conn.setRequestProperty("Authorization", "Bearer $it") }
+            // Finding 6 fix: match backend X-API-Key contract
+            apiKey?.let { conn.setRequestProperty("X-API-Key", it) }
             conn.connectTimeout = timeoutMs
             conn.readTimeout = timeoutMs
             conn.doOutput = true
@@ -125,7 +126,8 @@ class CloudInferenceClient(
                 val conn = url.openConnection() as HttpURLConnection
                 conn.requestMethod = "POST"
                 conn.setRequestProperty("Content-Type", "application/json")
-                apiKey?.let { conn.setRequestProperty("Authorization", "Bearer $it") }
+                // Finding 6 fix: match backend X-API-Key contract
+                apiKey?.let { conn.setRequestProperty("X-API-Key", it) }
                 conn.connectTimeout = timeoutMs
                 conn.readTimeout = timeoutMs
                 conn.doOutput = true

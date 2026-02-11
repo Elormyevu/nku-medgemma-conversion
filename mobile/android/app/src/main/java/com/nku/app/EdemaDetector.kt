@@ -244,15 +244,23 @@ class EdemaDetector {
         bitmap: Bitmap,
         left: Int, right: Int, top: Int, bottom: Int
     ): Float {
+        // Finding 11 fix: Batch getPixels() instead of per-pixel getBrightness()
+        val roiWidth = right - left
+        val roiHeight = bottom - top
+        if (roiWidth <= 0 || roiHeight <= 0) return 0f
+
+        val pixels = IntArray(roiWidth * roiHeight)
+        bitmap.getPixels(pixels, 0, roiWidth, left, top, roiWidth, roiHeight)
+
         val stepSize = 4
         var gradientSum = 0f
         var pixelCount = 0
         
-        for (x in left until right - stepSize step stepSize) {
-            for (y in top until bottom - stepSize step stepSize) {
-                val current = getBrightness(bitmap, x, y)
-                val nextX = getBrightness(bitmap, x + stepSize, y)
-                val nextY = getBrightness(bitmap, x, y + stepSize)
+        for (y in 0 until roiHeight - stepSize step stepSize) {
+            for (x in 0 until roiWidth - stepSize step stepSize) {
+                val current = pixelBrightness(pixels[y * roiWidth + x])
+                val nextX = pixelBrightness(pixels[y * roiWidth + x + stepSize])
+                val nextY = pixelBrightness(pixels[(y + stepSize) * roiWidth + x])
                 
                 // Low gradient = smooth skin = potential puffiness
                 val gradient = abs(current - nextX) + abs(current - nextY)
@@ -283,15 +291,23 @@ class EdemaDetector {
         bitmap: Bitmap,
         left: Int, right: Int, top: Int, bottom: Int
     ): Float {
+        // Finding 11 fix: Batch getPixels() instead of per-pixel getBrightness()
+        val roiWidth = right - left
+        val roiHeight = bottom - top
+        if (roiWidth <= 0 || roiHeight <= 0) return 0f
+
+        val pixels = IntArray(roiWidth * roiHeight)
+        bitmap.getPixels(pixels, 0, roiWidth, left, top, roiWidth, roiHeight)
+
         val stepSize = 4
         var brightnessSum = 0f
         var varianceSum = 0f
         var pixelCount = 0
         val brightnesses = mutableListOf<Float>()
         
-        for (x in left until right step stepSize) {
-            for (y in top until bottom step stepSize) {
-                val brightness = getBrightness(bitmap, x, y)
+        for (y in 0 until roiHeight step stepSize) {
+            for (x in 0 until roiWidth step stepSize) {
+                val brightness = pixelBrightness(pixels[y * roiWidth + x])
                 brightnessSum += brightness
                 brightnesses.add(brightness)
                 pixelCount++
@@ -318,7 +334,18 @@ class EdemaDetector {
     }
     
     /**
-     * Get brightness (luminance) of a pixel
+     * Get brightness (luminance) from a raw pixel integer (batch path).
+     * Finding 11: Used with getPixels() batch reads to avoid per-pixel JNI calls.
+     */
+    private fun pixelBrightness(pixel: Int): Float {
+        val r = (pixel shr 16) and 0xFF
+        val g = (pixel shr 8) and 0xFF
+        val b = pixel and 0xFF
+        return (0.299f * r + 0.587f * g + 0.114f * b) / 255f
+    }
+
+    /**
+     * Get brightness (luminance) of a pixel at coordinates (legacy per-pixel path).
      */
     private fun getBrightness(bitmap: Bitmap, x: Int, y: Int): Float {
         val pixel = bitmap.getPixel(x.coerceIn(0, bitmap.width - 1), y.coerceIn(0, bitmap.height - 1))

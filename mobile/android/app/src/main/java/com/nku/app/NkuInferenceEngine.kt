@@ -218,8 +218,11 @@ class NkuInferenceEngine(private val context: Context) {
         var clinicalResponse: String
         var localizedResponse: String? = null
 
-        // Sanitize user input before any model processing (F-1)
-        val sanitizedInput = PromptSanitizer.sanitize(patientInput)
+        // Finding 4 fix: Do NOT sanitize patientInput here — ClinicalReasoner.generatePrompt()
+        // already sanitizes individual user symptoms (line 115). Re-sanitizing the full prompt
+        // would strip legitimate instruction tokens (SEVERITY:, URGENCY:, etc.) that guide
+        // MedGemma's structured output format.
+        val sanitizedInput = patientInput
 
         try {
             // ── Stage 1: Translate to English (skip if already English) ──

@@ -35,7 +35,13 @@ fun CameraPreview(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    // Finding 10 fix: Use DisposableEffect to properly shut down executor on disposal
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
+    androidx.compose.runtime.DisposableEffect(Unit) {
+        onDispose {
+            cameraExecutor.shutdown()
+        }
+    }
     
     AndroidView(
         factory = { ctx ->

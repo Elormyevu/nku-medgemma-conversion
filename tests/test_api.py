@@ -39,13 +39,15 @@ class TestHealthEndpoint(unittest.TestCase):
         self.assertEqual(data['status'], 'ok')
         self.assertEqual(data['service'], 'nku-inference')
     
-    def test_health_includes_version(self):
-        """Test that health endpoint includes version."""
+    def test_health_returns_correct_structure(self):
+        """Test that health endpoint returns expected fields (S-01: version hidden)."""
         response = self.client.get('/health')
         data = json.loads(response.data)
         
-        self.assertIn('version', data)
-        self.assertIsNotNone(data['version'])
+        # S-01: version intentionally omitted to prevent info leakage
+        self.assertIn('status', data)
+        self.assertIn('service', data)
+        self.assertNotIn('version', data)  # Verify version stays hidden
 
 
 class TestTranslateEndpoint(unittest.TestCase):

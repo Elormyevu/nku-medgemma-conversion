@@ -32,8 +32,9 @@ class TestTranslateWithMockedModel(unittest.TestCase):
     @patch('cloud.inference_api.main.medgemma')
     def test_translate_twi_to_english_success(self, mock_medgemma, mock_translategemma):
         """Test successful Twi to English translation with mocked model."""
-        # Setup mock
-        mock_translategemma.create_completion.return_value = {
+        # Setup mock — main.py calls the model as translategemma(prompt, ...)
+        # not translategemma.create_completion(...)
+        mock_translategemma.return_value = {
             'choices': [{'text': 'I have a headache and fever'}]
         }
         mock_medgemma.__bool__ = lambda self: True
@@ -59,7 +60,7 @@ class TestTranslateWithMockedModel(unittest.TestCase):
     @patch('cloud.inference_api.main.medgemma')
     def test_translate_english_to_twi_success(self, mock_medgemma, mock_translategemma):
         """Test successful English to Twi translation."""
-        mock_translategemma.create_completion.return_value = {
+        mock_translategemma.return_value = {
             'choices': [{'text': 'Me tirim yɛ me ya'}]
         }
         mock_medgemma.__bool__ = lambda self: True
@@ -97,7 +98,7 @@ class TestTriageWithMockedModel(unittest.TestCase):
     @patch('cloud.inference_api.main.translategemma')
     def test_triage_returns_structured_assessment(self, mock_translategemma, mock_medgemma):
         """Test that triage returns structured clinical assessment."""
-        mock_medgemma.create_completion.return_value = {
+        mock_medgemma.return_value = {
             'choices': [{
                 'text': (
                     '- Likely condition(s): Tension headache\n'
@@ -125,7 +126,7 @@ class TestTriageWithMockedModel(unittest.TestCase):
     @patch('cloud.inference_api.main.translategemma')
     def test_triage_high_severity_symptoms(self, mock_translategemma, mock_medgemma):
         """Test triage with high severity symptoms."""
-        mock_medgemma.create_completion.return_value = {
+        mock_medgemma.return_value = {
             'choices': [{
                 'text': (
                     '- Likely condition(s): Myocardial infarction\n'
@@ -167,13 +168,13 @@ class TestNkuCycleWithMockedModels(unittest.TestCase):
     @patch('cloud.inference_api.main.translategemma')
     def test_full_nku_cycle(self, mock_translategemma, mock_medgemma):
         """Test complete Nku Cycle: Twi → English → Triage → Twi."""
-        # Mock translation (Twi → English)
-        mock_translategemma.create_completion.side_effect = [
+        # Mock translation (Twi → English, then English → Twi)
+        mock_translategemma.side_effect = [
             {'choices': [{'text': 'I have a headache and fever'}]},
             {'choices': [{'text': 'Wobɛ nya headache ne fever'}]},
         ]
         # Mock triage
-        mock_medgemma.create_completion.return_value = {
+        mock_medgemma.return_value = {
             'choices': [{
                 'text': (
                     '- Likely condition(s): Malaria, viral infection\n'
@@ -196,8 +197,9 @@ class TestNkuCycleWithMockedModels(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
         # Verify full cycle response structure
-        self.assertIn('translation', data)
-        self.assertIn('assessment', data)
+        self.assertIn('english_translation', data)
+        self.assertIn('triage_assessment', data)
+        self.assertIn('twi_output', data)
 
 
 class TestModelLoadingFailure(unittest.TestCase):

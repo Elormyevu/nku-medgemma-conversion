@@ -45,8 +45,11 @@ class TestAlgos(unittest.TestCase):
         processor = RPPGProcessor(fps=30.0)
         # Create a red/green dummy frame
         frame = np.random.randint(0, 255, (224, 224, 3), dtype=np.uint8)
-        bpm = processor.process_frame(frame)
-        self.assertIsNone(bpm) # buffer not full
+        result = processor.process_frame(frame)
+        # Returns RPPGResult with bpm=None when buffer not full
+        self.assertIsNotNone(result)  # Should return an RPPGResult, not None
+        self.assertIsNone(result.bpm)  # bpm should be None (insufficient data)
+        self.assertEqual(result.signal_quality, 'insufficient')
         print("RPPGProcessor: Instantiation and single frame OK.")
 
     def test_pupil_tracker_instantiation(self):

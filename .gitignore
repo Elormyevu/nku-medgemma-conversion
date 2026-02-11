@@ -112,8 +112,8 @@ mobile/android/launch_emulator.sh
 # SmolChat (submodule — not part of submission)
 SmolChat-Android/
 
-# llama.cpp submodule at root (build artifact)
-llama.cpp/
+# llama.cpp submodule at root (build artifact — not the Android NDK copy)
+/llama.cpp/
 
 # Duplicate/scratch screenshots (keep only video_assets/ and docs/assets/)
 mobile/android/s_*.png

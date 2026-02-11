@@ -15,7 +15,7 @@ except ImportError:
         def from_preset(cls, preset, **kwargs):
             return keras.Model()
 
-from src.config import PALIGEMMA_VARIANT, MODELS_DIR
+from src.config import MEDGEMMA_VARIANT, MODELS_DIR
 
 def build_multitask_medgemma():
     """
@@ -23,14 +23,14 @@ def build_multitask_medgemma():
     Uses the PaliGemma backbone (Vision+LLM) and adds task-specific tokens/heads
     or fine-tunes via LoRA for specific prompts.
     """
-    print(f"Initializing {PALIGEMMA_VARIANT}...")
+    print(f"Initializing {MEDGEMMA_VARIANT}...")
     
     # Enable Mixed Precision for memory efficiency
     keras.mixed_precision.set_global_policy("mixed_bfloat16")
 
     # Load Base Model (Pretrained on medical data or generic PaliGemma)
     backbone = PaliGemmaCausalLM.from_preset(
-        PALIGEMMA_VARIANT,
+        MEDGEMMA_VARIANT,
         precision="mixed_bfloat16"
     )
     

@@ -13,13 +13,15 @@ THERMAL_THROTTLE_TEMP_C = 42.0  # Start cooling down
 CRITICAL_BATTERY_LEVEL = 0.15   # 15%
 
 # --- Model Parameters ---
-# MedGemma (PaliGemma)
-PALIGEMMA_VARIANT = "paligemma-3b-mix-224"
-QUANTIZATION_TYPE = "int4"  # Aggressive quantization for mobile
+# MedGemma (D-01: updated from stale PaliGemma reference)
+MEDGEMMA_VARIANT = "MedGemma-1.5-4B-PT"
+MEDGEMMA_GGUF_FILE = "MedGemma-1.5-4B-PT-Q2_K.gguf"
+QUANTIZATION_TYPE = "IQ1_M"  # Aggressive quantization for mobile GGUF
 INPUT_RES = (224, 224)
 
-# TranslateGemma
-TRANSLATION_MODEL_ID = "google/gemma-2b-it"
+# TranslateGemma (D-01: updated from stale gemma-2b-it reference)
+TRANSLATION_MODEL_ID = "TranslateGemma-4B"
+TRANSLATION_GGUF_FILE = "TranslateGemma-4B-Q2_K.gguf"
 TARGET_LANGUAGES = ["twi", "yor", "hau", "gaa", "ewe", "swa"]
 
 # --- Synthetic Data ---

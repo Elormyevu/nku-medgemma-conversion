@@ -14,7 +14,10 @@ SECURITY NOTES:
 from flask import Flask, request, jsonify, g
 from functools import wraps
 from typing import Optional, Tuple, Dict, Any
+import os
 import traceback
+import threading
+import signal
 
 from huggingface_hub import hf_hub_download
 
@@ -69,14 +72,58 @@ rate_limiter = RateLimiter(
     requests_per_hour=config.rate_limit.requests_per_hour
 )
 
-# Lazy-loaded models
+# Optional API key validation (S-04)
+_api_key = os.environ.get('NKU_API_KEY')
+
+# Lazy-loaded models with thread-safe lock (B-01/B-02)
+_model_lock = threading.Lock()
 medgemma: Optional[Llama] = None
 translategemma: Optional[Llama] = None
 
 
 # =============================================================================
+# SECURITY HEADERS (S-06)
+# =============================================================================
+
+@app.after_request
+def add_security_headers(response):
+    """Add security headers to all responses."""
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    response.headers['Content-Security-Policy'] = "default-src 'none'; frame-ancestors 'none'"
+    response.headers['Referrer-Policy'] = 'no-referrer'
+    return response
+
+
+def require_api_key(f):
+    """Decorator: require NKU_API_KEY header if configured (S-04)."""
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if _api_key:
+            provided = request.headers.get('X-API-Key', '')
+            if provided != _api_key:
+                return jsonify({
+                    'error': 'unauthorized',
+                    'message': 'Invalid or missing API key'
+                }), 401
+        return f(*args, **kwargs)
+    return decorated
+
+
+# =============================================================================
 # ERROR HANDLING
 # =============================================================================
+
+def _get_request_id() -> str:
+    """Get request correlation ID from logging context (B-04)."""
+    try:
+        from logging_config import request_id_var
+        return request_id_var.get() or 'unknown'
+    except Exception:
+        return 'unknown'
+
 
 @app.errorhandler(Exception)
 def handle_exception(e):
@@ -90,17 +137,20 @@ def handle_exception(e):
                          error_type=type(e).__name__,
                          traceback=traceback.format_exc())
     
-    # Don't expose internal errors in production
+    # Don't expose internal errors in production (B-04: include request_id)
+    rid = _get_request_id()
     if config.debug:
         return jsonify({
             'error': 'internal_error',
             'message': str(e),
-            'type': type(e).__name__
+            'type': type(e).__name__,
+            'request_id': rid
         }), 500
     else:
         return jsonify({
             'error': 'internal_error',
-            'message': 'An unexpected error occurred. Please try again later.'
+            'message': 'An unexpected error occurred. Please try again later.',
+            'request_id': rid
         }), 500
 
 
@@ -108,7 +158,8 @@ def handle_exception(e):
 def handle_bad_request(e):
     return jsonify({
         'error': 'bad_request',
-        'message': str(e.description) if hasattr(e, 'description') else 'Bad request'
+        'message': str(e.description) if hasattr(e, 'description') else 'Bad request',
+        'request_id': _get_request_id()
     }), 400
 
 
@@ -116,7 +167,8 @@ def handle_bad_request(e):
 def handle_rate_limit(e):
     return jsonify({
         'error': 'rate_limit_exceeded',
-        'message': 'Too many requests. Please slow down.'
+        'message': 'Too many requests. Please slow down.',
+        'request_id': _get_request_id()
     }), 429
 
 
@@ -124,50 +176,87 @@ def handle_rate_limit(e):
 # MODEL LOADING
 # =============================================================================
 
+class InferenceTimeout(Exception):
+    """Raised when LLM inference exceeds timeout (B-06)."""
+    pass
+
+
+def _timeout_handler(signum, frame):
+    raise InferenceTimeout("LLM inference timed out")
+
+
+def with_timeout(timeout_seconds: int = 120):
+    """Decorator: abort LLM call if it exceeds timeout_seconds (B-06)."""
+    def decorator(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            # signal.alarm only works on main thread; skip in workers
+            try:
+                old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
+                signal.alarm(timeout_seconds)
+                try:
+                    return f(*args, **kwargs)
+                finally:
+                    signal.alarm(0)
+                    signal.signal(signal.SIGALRM, old_handler)
+            except (ValueError, OSError):
+                # Not on main thread — run without timeout
+                return f(*args, **kwargs)
+        return wrapped
+    return decorator
+
+
 def load_models() -> Tuple[bool, Optional[str]]:
     """
     Download and load models on first request.
+    Thread-safe via _model_lock (B-01/B-02).
     Returns (success, error_message).
     """
     global medgemma, translategemma
     
-    try:
-        if medgemma is None:
-            request_logger.info("Downloading MedGemma...")
-            med_path = hf_hub_download(
-                config.model.medgemma_repo, 
-                config.model.medgemma_file
-            )
-            medgemma = Llama(
-                model_path=med_path,
-                n_ctx=config.model.context_size,
-                n_gpu_layers=config.model.n_gpu_layers,
-                n_threads=config.model.n_threads,
-                verbose=False
-            )
-            request_logger.info("MedGemma loaded successfully")
-        
-        if translategemma is None:
-            request_logger.info("Downloading TranslateGemma...")
-            trans_path = hf_hub_download(
-                config.model.translategemma_repo, 
-                config.model.translategemma_file
-            )
-            translategemma = Llama(
-                model_path=trans_path,
-                n_ctx=config.model.context_size,
-                n_gpu_layers=config.model.n_gpu_layers,
-                n_threads=config.model.n_threads,
-                verbose=False
-            )
-            request_logger.info("TranslateGemma loaded successfully")
-        
+    # Fast path: already loaded
+    if medgemma is not None and translategemma is not None:
         return True, None
-        
-    except Exception as e:
-        error_msg = f"Failed to load models: {str(e)}"
-        request_logger.error(error_msg, error_type=type(e).__name__)
-        return False, error_msg
+    
+    with _model_lock:
+        # Double-check inside lock
+        try:
+            if medgemma is None:
+                request_logger.info("Downloading MedGemma...")
+                med_path = hf_hub_download(
+                    config.model.medgemma_repo, 
+                    config.model.medgemma_file
+                )
+                medgemma = Llama(
+                    model_path=med_path,
+                    n_ctx=config.model.context_size,
+                    n_gpu_layers=config.model.n_gpu_layers,
+                    n_threads=config.model.n_threads,
+                    verbose=False
+                )
+                request_logger.info("MedGemma loaded successfully")
+            
+            if translategemma is None:
+                request_logger.info("Downloading TranslateGemma...")
+                trans_path = hf_hub_download(
+                    config.model.translategemma_repo, 
+                    config.model.translategemma_file
+                )
+                translategemma = Llama(
+                    model_path=trans_path,
+                    n_ctx=config.model.context_size,
+                    n_gpu_layers=config.model.n_gpu_layers,
+                    n_threads=config.model.n_threads,
+                    verbose=False
+                )
+                request_logger.info("TranslateGemma loaded successfully")
+            
+            return True, None
+            
+        except Exception as e:
+            error_msg = f"Failed to load models: {str(e)}"
+            request_logger.error(error_msg, error_type=type(e).__name__)
+            return False, error_msg
 
 
 def require_models(f):
@@ -190,11 +279,10 @@ def require_models(f):
 
 @app.route('/health', methods=['GET'])
 def health():
-    """Liveness probe — is the process alive?"""
+    """Liveness probe — is the process alive? (S-01: version hidden)"""
     return jsonify({
         "status": "ok", 
-        "service": "nku-inference",
-        "version": "2.0.0"
+        "service": "nku-inference"
     })
 
 
@@ -220,6 +308,7 @@ def ready():
 @app.route('/translate', methods=['POST'])
 @log_request(logger)
 @rate_limit(rate_limiter)
+@require_api_key
 @validate_json_request(required_fields=['text'])
 @require_models
 def translate():
@@ -260,11 +349,13 @@ def translate():
     else:
         target_lang = target_result.sanitized_value
     
-    # Build safe prompt
+    # Build safe prompt (B-05: include MEDICAL_GLOSSARY for Twi translations)
+    glossary_hint = MEDICAL_GLOSSARY if source_lang == 'twi' or target_lang == 'twi' else ''
     prompt = PromptProtector.build_translation_prompt(
         text_result.sanitized_value,
         source_lang=source_lang,
-        target_lang=target_lang
+        target_lang=target_lang,
+        glossary=glossary_hint
     )
     
     try:
@@ -307,6 +398,7 @@ def translate():
 @app.route('/triage', methods=['POST'])
 @log_request(logger)
 @rate_limit(rate_limiter)
+@require_api_key
 @validate_json_request(required_fields=['symptoms'])
 @require_models
 def triage():
@@ -367,6 +459,7 @@ def triage():
 @app.route('/nku-cycle', methods=['POST'])
 @log_request(logger)
 @rate_limit(rate_limiter)
+@require_api_key
 @validate_json_request(required_fields=['text'])
 @require_models
 def nku_cycle():

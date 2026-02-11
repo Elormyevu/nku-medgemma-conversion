@@ -253,20 +253,22 @@ Assessment:""",
     }
     
     @classmethod
-    def build_translation_prompt(cls, text: str, source_lang: str = "twi", target_lang: str = "en") -> str:
-        """Build a safe translation prompt."""
+    def build_translation_prompt(cls, text: str, source_lang: str = "twi", 
+                                  target_lang: str = "en", glossary: str = "") -> str:
+        """Build a safe translation prompt with optional medical glossary (B-05)."""
+        glossary_section = f"\nReference glossary:\n{glossary}\n" if glossary else ""
         if target_lang == "en":
             return cls.TEMPLATES['translate_to_english'].format(
                 source_lang=source_lang,
                 text=text,
                 delimiter=cls.DELIMITER
-            )
+            ) + glossary_section
         else:
             return cls.TEMPLATES['translate_from_english'].format(
                 target_lang=target_lang,
                 text=text,
                 delimiter=cls.DELIMITER
-            )
+            ) + glossary_section
     
     @classmethod
     def build_triage_prompt(cls, symptoms: str) -> str:
@@ -306,7 +308,10 @@ class RateLimiter:
     
     Falls back to in-memory when Redis is unavailable.
     M-2 fix: Shared state across Cloud Run instances via Redis.
+    S-02 fix: Max tracked clients cap to prevent memory exhaustion.
     """
+    
+    MAX_TRACKED_CLIENTS = 10000  # S-02: Evict oldest if exceeded
     
     def __init__(self, requests_per_minute: int = 30, requests_per_hour: int = 500):
         self.requests_per_minute = requests_per_minute
@@ -339,11 +344,25 @@ class RateLimiter:
             return None
     
     def _get_client_id(self, request) -> str:
-        """Get unique client identifier from request."""
+        """Get unique client identifier from request (S-03: validated)."""
         forwarded = request.headers.get('X-Forwarded-For', '')
         if forwarded:
-            return forwarded.split(',')[0].strip()
+            ip = forwarded.split(',')[0].strip()
+            # S-03: Validate that it looks like an IP address
+            if self._is_valid_ip(ip):
+                return ip
+            logger.warning(f"Invalid X-Forwarded-For value: {ip[:50]}")
         return request.remote_addr or 'unknown'
+    
+    @staticmethod
+    def _is_valid_ip(ip: str) -> bool:
+        """S-03: Basic IP format validation to prevent header injection."""
+        parts = ip.split('.')
+        if len(parts) == 4:  # IPv4
+            return all(p.isdigit() and 0 <= int(p) <= 255 for p in parts)
+        if ':' in ip:  # IPv6 (basic check)
+            return len(ip) <= 45 and all(c in '0123456789abcdefABCDEF:' for c in ip)
+        return False
     
     def _cleanup_old_entries(self, bucket: List[float], window_seconds: int) -> List[float]:
         """Remove entries older than the window."""
@@ -409,6 +428,15 @@ class RateLimiter:
         # In-memory fallback
         current_time = time.time()
         
+        # S-02: Evict oldest clients if we exceed cap
+        if len(self._minute_buckets) > self.MAX_TRACKED_CLIENTS:
+            oldest_keys = sorted(self._minute_buckets.keys(), 
+                                 key=lambda k: self._minute_buckets[k][-1] if self._minute_buckets[k] else 0
+                                 )[:len(self._minute_buckets) - self.MAX_TRACKED_CLIENTS]
+            for k in oldest_keys:
+                del self._minute_buckets[k]
+                self._hour_buckets.pop(k, None)
+        
         self._minute_buckets[client_id] = self._cleanup_old_entries(
             self._minute_buckets[client_id], 60
         )
@@ -446,6 +474,12 @@ def rate_limit(limiter: RateLimiter):
             
             is_allowed, error_info = limiter.check_rate_limit(request)
             if not is_allowed:
+                # S-08: Structured audit logging for blocked requests
+                client_id = limiter._get_client_id(request)
+                logger.warning(
+                    f"Rate limit blocked: client={client_id} "
+                    f"endpoint={request.path} method={request.method}"
+                )
                 response = jsonify(error_info)
                 response.status_code = 429
                 response.headers['Retry-After'] = str(error_info.get('retry_after', 60))

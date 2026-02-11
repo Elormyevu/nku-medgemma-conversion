@@ -29,11 +29,14 @@ jobs:
       
       - name: Audit Root Dependencies
         run: |
-          pip-audit --requirement requirements.txt --ignore-vuln PYSEC-2024-* || true
+          # CI-02: Removed blanket PYSEC-2024-* ignore. Add targeted ignores only for
+          # known false positives with expiration comments, e.g.:
+          #   --ignore-vuln PYSEC-2024-XXXX  # FP: not exploitable in our usage, review 2026-06
+          pip-audit --requirement requirements.txt --strict
       
       - name: Audit Cloud API Dependencies
         run: |
-          pip-audit --requirement cloud/inference_api/requirements.txt
+          pip-audit --requirement cloud/inference_api/requirements.txt --strict
   
   code-scanning:
     name: Code Security Analysis

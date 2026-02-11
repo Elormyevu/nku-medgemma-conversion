@@ -31,6 +31,15 @@ if [ -z "${HF_TOKEN}" ]; then
     exit 1
 fi
 
+# S-05: Warn if HF_TOKEN is being passed via env var instead of Secret Manager
+if [ -z "${HF_TOKEN_SECRET}" ]; then
+    echo "⚠️  WARNING: HF_TOKEN is set via environment variable."
+    echo "   For production, use Secret Manager instead:"
+    echo "     gcloud secrets create hf-token --data-file=- <<< \"\$HF_TOKEN\""
+    echo "     Then add --set-secrets=HF_TOKEN=hf-token:latest to deploy command."
+    echo ""
+fi
+
 # Build deployment command
 DEPLOY_CMD="gcloud run deploy $SERVICE_NAME \\
     --project=$PROJECT_ID \\

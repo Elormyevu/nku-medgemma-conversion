@@ -12,6 +12,9 @@ from pathlib import Path
 @dataclass
 class ModelConfig:
     """Model configuration settings."""
+    # D-04: Cloud uses Q2_K quantization (higher quality, ~1.6GB per model) because
+    # Cloud Run instances have 8GB RAM. Mobile uses IQ1_M (~0.78GB) for 2GB-RAM
+    # budget devices. This is an intentional quality/size trade-off, not a mismatch.
     medgemma_repo: str = "wredd/MedGemma-1.5-4B-PT-GGUF"
     medgemma_file: str = "MedGemma-1.5-4B-PT-Q2_K.gguf"
     translategemma_repo: str = "wredd/TranslateGemma-4B-GGUF"

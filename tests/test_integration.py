@@ -21,6 +21,12 @@ class TestTranslateWithMockedModel(unittest.TestCase):
         from cloud.inference_api.main import app
         app.config['TESTING'] = True
         self.client = app.test_client()
+        # S-04: Disable API key requirement in tests
+        self._api_key_patcher = patch('cloud.inference_api.main._api_key', None)
+        self._api_key_patcher.start()
+    
+    def tearDown(self):
+        self._api_key_patcher.stop()
     
     @patch('cloud.inference_api.main.translategemma')
     @patch('cloud.inference_api.main.medgemma')
@@ -43,11 +49,11 @@ class TestTranslateWithMockedModel(unittest.TestCase):
                         'target': 'en'
                     })
         
-        # Verify response structure
-        if response.status_code == 200:
-            data = json.loads(response.data)
-            self.assertIn('translation', data)
-            self.assertIsInstance(data['translation'], str)
+        # T-02: Unconditional assertion (was guarded by `if status == 200`)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertIn('translation', data)
+        self.assertIsInstance(data['translation'], str)
     
     @patch('cloud.inference_api.main.translategemma')
     @patch('cloud.inference_api.main.medgemma')
@@ -68,9 +74,10 @@ class TestTranslateWithMockedModel(unittest.TestCase):
                         'target': 'twi'
                     })
         
-        if response.status_code == 200:
-            data = json.loads(response.data)
-            self.assertIn('translation', data)
+        # T-02: Unconditional assertion
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertIn('translation', data)
 
 
 class TestTriageWithMockedModel(unittest.TestCase):
@@ -80,6 +87,11 @@ class TestTriageWithMockedModel(unittest.TestCase):
         from cloud.inference_api.main import app
         app.config['TESTING'] = True
         self.client = app.test_client()
+        self._api_key_patcher = patch('cloud.inference_api.main._api_key', None)
+        self._api_key_patcher.start()
+    
+    def tearDown(self):
+        self._api_key_patcher.stop()
     
     @patch('cloud.inference_api.main.medgemma')
     @patch('cloud.inference_api.main.translategemma')
@@ -104,9 +116,10 @@ class TestTriageWithMockedModel(unittest.TestCase):
                         'symptoms': 'mild headache for two hours'
                     })
         
-        if response.status_code == 200:
-            data = json.loads(response.data)
-            self.assertIn('assessment', data)
+        # T-02: Unconditional assertion
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertIn('assessment', data)
     
     @patch('cloud.inference_api.main.medgemma')
     @patch('cloud.inference_api.main.translategemma')
@@ -131,9 +144,10 @@ class TestTriageWithMockedModel(unittest.TestCase):
                         'symptoms': 'severe chest pain radiating to left arm with shortness of breath'
                     })
         
-        if response.status_code == 200:
-            data = json.loads(response.data)
-            self.assertIn('assessment', data)
+        # T-02: Unconditional assertion
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertIn('assessment', data)
 
 
 class TestNkuCycleWithMockedModels(unittest.TestCase):
@@ -143,6 +157,11 @@ class TestNkuCycleWithMockedModels(unittest.TestCase):
         from cloud.inference_api.main import app
         app.config['TESTING'] = True
         self.client = app.test_client()
+        self._api_key_patcher = patch('cloud.inference_api.main._api_key', None)
+        self._api_key_patcher.start()
+    
+    def tearDown(self):
+        self._api_key_patcher.stop()
     
     @patch('cloud.inference_api.main.medgemma')
     @patch('cloud.inference_api.main.translategemma')
@@ -173,11 +192,12 @@ class TestNkuCycleWithMockedModels(unittest.TestCase):
                         'text': 'Me tirim yɛ me ya na me ho hyehye me'
                     })
         
-        if response.status_code == 200:
-            data = json.loads(response.data)
-            # Verify full cycle response structure
-            self.assertIn('translation', data)
-            self.assertIn('assessment', data)
+        # T-02: Unconditional assertion
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        # Verify full cycle response structure
+        self.assertIn('translation', data)
+        self.assertIn('assessment', data)
 
 
 class TestModelLoadingFailure(unittest.TestCase):

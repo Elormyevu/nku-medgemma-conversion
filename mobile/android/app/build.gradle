@@ -99,6 +99,10 @@ dependencies {
     // Coroutines for async inference (1.9.0 required for SmolLM)
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
     
+    // Play Asset Delivery — access GGUF models from install-time asset packs
+    implementation 'com.google.android.play:asset-delivery:2.2.2'
+    implementation 'com.google.android.play:asset-delivery-ktx:2.2.2'
+    
     // Room — offline screening data persistence
     implementation 'androidx.room:room-runtime:2.6.1'
     implementation 'androidx.room:room-ktx:2.6.1'

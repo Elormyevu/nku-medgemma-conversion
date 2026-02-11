@@ -36,29 +36,39 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # Download GGUF models from HuggingFace for bundling in APK assets
-      # This is the offline-only requirement: ALL models must be in the APK
-      - name: Download GGUF models for APK assets
+      # Download GGUF models into Play Asset Delivery pack directories
+      # install-time packs: user downloads everything at install, 100% offline after
+      - name: Download GGUF models for PAD asset packs
         run: |
-          mkdir -p app/src/main/assets
+          mkdir -p medgemma/src/main/assets
+          mkdir -p translategemma/src/main/assets
           pip install huggingface-hub
           python3 -c "
           from huggingface_hub import hf_hub_download
           import shutil
-          # MedGemma 4B IQ1_M (~1.1GB)
+          # MedGemma 4B IQ1_M (~1.1GB) → medgemma asset pack
           p = hf_hub_download('wredd/medgemma-4b-gguf', 'medgemma-4b-iq1_m.gguf')
-          shutil.copy(p, 'app/src/main/assets/medgemma-4b-iq1_m.gguf')
-          print(f'MedGemma copied from {p}')
-          # TranslateGemma 4B IQ1_M (~776MB)
+          shutil.copy(p, 'medgemma/src/main/assets/medgemma-4b-iq1_m.gguf')
+          print(f'MedGemma → medgemma pack ({p})')
+          # TranslateGemma 4B IQ1_M (~776MB) → translategemma asset pack
           p = hf_hub_download('wredd/translategemma-4b-gguf', 'translategemma-4b-iq1_m.gguf')
-          shutil.copy(p, 'app/src/main/assets/translategemma-4b-iq1_m.gguf')
-          print(f'TranslateGemma copied from {p}')
+          shutil.copy(p, 'translategemma/src/main/assets/translategemma-4b-iq1_m.gguf')
+          print(f'TranslateGemma → translategemma pack ({p})')
           "
-          ls -lh app/src/main/assets/*.gguf
+          echo "--- Asset pack contents ---"
+          ls -lh medgemma/src/main/assets/*.gguf
+          ls -lh translategemma/src/main/assets/*.gguf
 
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest --no-daemon
 
+      # Build AAB (Android App Bundle) with Play Asset Delivery packs
+      # AAB is required for Play Store and supports asset packs up to 2GB
+      - name: Build release AAB with PAD
+        run: ./gradlew bundleRelease --no-daemon
+        continue-on-error: true
+
+      # Also build debug APK for emulator testing (without bundled models)
       - name: Build debug APK
         run: ./gradlew assembleDebug --no-daemon
 
@@ -68,6 +78,14 @@ jobs:
         with:
           name: test-results
           path: mobile/android/app/build/reports/tests/
+
+      - name: Upload release AAB
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-aab
+          path: mobile/android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: warn
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4

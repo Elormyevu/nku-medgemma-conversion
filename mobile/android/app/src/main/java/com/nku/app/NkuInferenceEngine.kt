@@ -3,6 +3,7 @@ package com.nku.app
 import android.content.Context
 import android.os.Environment
 import android.util.Log
+import com.google.android.play.core.assetpacks.AssetPackManagerFactory
 import io.shubham0204.smollm.SmolLM
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,9 +52,15 @@ class NkuInferenceEngine(private val context: Context) {
     companion object {
         private const val TAG = "NkuEngine"
 
-        // Model paths (extracted from APK assets on first run)
+        // Model paths (extracted from PAD asset packs on first run)
         private const val MEDGEMMA_MODEL = "medgemma-4b-iq1_m.gguf"
         private const val TRANSLATE_MODEL = "translategemma-4b-iq1_m.gguf"
+
+        // Play Asset Delivery pack names → model file mapping
+        private val MODEL_PACK_MAP = mapOf(
+            MEDGEMMA_MODEL to "medgemma",
+            TRANSLATE_MODEL to "translategemma"
+        )
 
         // Retry config for model loading on budget devices (F-7)
         private const val MAX_LOAD_RETRIES = 3
@@ -69,16 +76,37 @@ class NkuInferenceEngine(private val context: Context) {
     private val modelDir: File by lazy {
         File(context.filesDir, "models").also { it.mkdirs() }
     }
+    private val assetPackManager by lazy {
+        AssetPackManagerFactory.getInstance(context)
+    }
 
     /**
      * Search order for model files:
-     * 1. Internal storage (filesDir/models/) — extracted from APK assets on first run
-     * 2. External storage (/sdcard/Download/) — dev/testing fallback
+     * 1. Internal storage (filesDir/models/) — extracted from asset packs on first run
+     * 2. Play Asset Delivery pack path — install-time asset packs
+     * 3. External storage (/sdcard/Download/) — dev/testing fallback
      */
     private fun resolveModelFile(modelFileName: String): File? {
-        // Primary: extracted from APK assets (production path)
+        // Primary: extracted from asset packs (cached in internal storage)
         val internal = File(modelDir, modelFileName)
         if (internal.exists()) return internal
+
+        // Secondary: Play Asset Delivery install-time asset pack
+        val packName = MODEL_PACK_MAP[modelFileName]
+        if (packName != null) {
+            try {
+                val packLocation = assetPackManager.getPackLocation(packName)
+                if (packLocation != null) {
+                    val packFile = File(packLocation.assetsPath(), modelFileName)
+                    if (packFile.exists()) {
+                        Log.i(TAG, "Model found in PAD pack '$packName': $modelFileName")
+                        return packFile
+                    }
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "PAD pack lookup failed for $packName: ${e.message}")
+            }
+        }
 
         // Fallback: /sdcard/Download/ (for development/testing)
         val sdcard = File(Environment.getExternalStoragePublicDirectory(
@@ -354,48 +382,53 @@ class NkuInferenceEngine(private val context: Context) {
 
     /**
      * Extract model files from APK assets to internal storage (first run only).
-     * Uses chunked streaming with progress reporting to avoid ANR. (F-4)
+     * With Play Asset Delivery, install-time packs provide direct filesystem
+     * access — extraction is only needed for legacy APK-bundled assets. (F-4)
      */
     suspend fun extractModelsFromAssets() = withContext(Dispatchers.IO) {
         listOf(MEDGEMMA_MODEL, TRANSLATE_MODEL).forEach { modelName ->
+            // Skip if model is already accessible (filesDir, PAD pack, or sdcard)
+            if (resolveModelFile(modelName) != null) {
+                Log.i(TAG, "Model already accessible, skipping extraction: $modelName")
+                return@forEach
+            }
+
             val outFile = File(modelDir, modelName)
-            if (!outFile.exists()) {
-                _progress.value = "Extracting $modelName..."
-                try {
-                    val afd = context.assets.openFd(modelName)
-                    val totalBytes = afd.length
-                    afd.close()
+            _progress.value = "Extracting $modelName..."
+            try {
+                val afd = context.assets.openFd(modelName)
+                val totalBytes = afd.length
+                afd.close()
 
-                    context.assets.open(modelName).use { input ->
-                        outFile.outputStream().use { output ->
-                            val buffer = ByteArray(1024 * 1024) // 1MB chunks
-                            var bytesWritten = 0L
-                            var lastReportedPercent = -1
+                context.assets.open(modelName).use { input ->
+                    outFile.outputStream().use { output ->
+                        val buffer = ByteArray(1024 * 1024) // 1MB chunks
+                        var bytesWritten = 0L
+                        var lastReportedPercent = -1
 
-                            while (true) {
-                                val read = input.read(buffer)
-                                if (read == -1) break
-                                output.write(buffer, 0, read)
-                                bytesWritten += read
+                        while (true) {
+                            val read = input.read(buffer)
+                            if (read == -1) break
+                            output.write(buffer, 0, read)
+                            bytesWritten += read
 
-                                val percent = if (totalBytes > 0) {
-                                    ((bytesWritten * 100) / totalBytes).toInt()
-                                } else {
-                                    -1
-                                }
-                                if (percent != lastReportedPercent && percent >= 0) {
-                                    lastReportedPercent = percent
-                                    _progress.value = "Extracting $modelName… $percent%"
-                                }
+                            val percent = if (totalBytes > 0) {
+                                ((bytesWritten * 100) / totalBytes).toInt()
+                            } else {
+                                -1
+                            }
+                            if (percent != lastReportedPercent && percent >= 0) {
+                                lastReportedPercent = percent
+                                _progress.value = "Extracting $modelName… $percent%"
                             }
                         }
                     }
-                    Log.i(TAG, "Extracted: $modelName (${outFile.length() / 1024 / 1024}MB)")
-                } catch (e: Exception) {
-                    Log.w(TAG, "Asset not bundled: $modelName (expected for dev builds)")
-                    // Clean up partial file
-                    if (outFile.exists()) outFile.delete()
                 }
+                Log.i(TAG, "Extracted: $modelName (${outFile.length() / 1024 / 1024}MB)")
+            } catch (e: Exception) {
+                Log.w(TAG, "Asset not bundled: $modelName (expected for dev builds)")
+                // Clean up partial file
+                if (outFile.exists()) outFile.delete()
             }
         }
     }

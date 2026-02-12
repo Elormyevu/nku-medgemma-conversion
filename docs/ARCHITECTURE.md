@@ -149,6 +149,7 @@ mobile/android/app/src/main/
 │   ├── NkuTranslator.kt        # ML Kit translation wrapper
 │   ├── RPPGProcessor.kt        # Heart rate via rPPG
 │   ├── PallorDetector.kt       # Anemia via conjunctival pallor
+│   ├── JaundiceDetector.kt     # Jaundice via scleral icterus
 │   ├── EdemaDetector.kt        # Preeclampsia via facial edema
 │   ├── SensorFusion.kt         # Vital signs aggregation
 │   ├── ClinicalReasoner.kt     # MedGemma prompts + WHO/IMCI fallback
@@ -158,7 +159,7 @@ mobile/android/app/src/main/
 │   ├── NkuTTS.kt               # Android System TTS wrapper
 │   ├── CameraPreview.kt        # Camera2 preview composable
 │   ├── FaceDetectorHelper.kt   # MediaPipe face landmark wrapper
-│   └── screens/                # CardioScreen, AnemiaScreen, PreeclampsiaScreen, TriageScreen
+│   └── screens/                # CardioScreen, AnemiaScreen, JaundiceScreen, PreeclampsiaScreen, TriageScreen
 ├── assets/                      # (models loaded from device storage)
 └── jniLibs/
     ├── arm64-v8a/libsmollm.so  # ARM64 native library

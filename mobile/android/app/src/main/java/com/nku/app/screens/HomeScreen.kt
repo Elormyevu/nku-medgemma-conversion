@@ -34,6 +34,7 @@ import androidx.compose.ui.semantics.semantics
 fun HomeScreen(
     rppgResult: RPPGResult,
     pallorResult: PallorResult,
+    jaundiceResult: JaundiceResult,
     edemaResult: EdemaResult,
     strings: LocalizedStrings.UiStrings,
     selectedLanguage: String,
@@ -47,8 +48,9 @@ fun HomeScreen(
     // Progress tracking
     val hasHR = rppgResult.bpm != null && rppgResult.confidence > 0.4f
     val hasAnemia = pallorResult.hasBeenAnalyzed
+    val hasJaundice = jaundiceResult.hasBeenAnalyzed
     val hasPreE = edemaResult.hasBeenAnalyzed
-    val completedCount = listOf(hasHR, hasAnemia, hasPreE).count { it }
+    val completedCount = listOf(hasHR, hasAnemia, hasJaundice, hasPreE).count { it }
     
     Column(
         modifier = Modifier
@@ -202,23 +204,23 @@ fun HomeScreen(
                     strings.screeningsProgress.format(completedCount),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (completedCount == 3) NkuColors.Success else NkuColors.MutedBlue
+                    color = if (completedCount == 4) NkuColors.Success else NkuColors.MutedBlue
                 )
                 Spacer(Modifier.height(8.dp))
                 LinearProgressIndicator(
-                    progress = completedCount / 3f,
+                    progress = completedCount / 4f,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp)
                         .clip(RoundedCornerShape(3.dp)),
                     color = when (completedCount) {
-                        3 -> NkuColors.Success
+                        4 -> NkuColors.Success
                         0 -> NkuColors.InactiveText
                         else -> NkuColors.Secondary
                     },
                     trackColor = NkuColors.CardBackground
                 )
-                if (completedCount == 3) {
+                if (completedCount == 4) {
                     Spacer(Modifier.height(8.dp))
                     Text(
                         strings.readyForTriage,
@@ -316,9 +318,36 @@ fun HomeScreen(
         
         Spacer(Modifier.height(10.dp))
         
-        // ── Step 3: Preeclampsia ──
+        // ── Step 3: Jaundice ──
         GuidedStepCard(
             stepNumber = 3,
+            title = strings.jaundiceScreen,
+            value = if (hasJaundice) jaundiceResult.severity.name else "—",
+            subtitle = when {
+                !hasJaundice -> strings.tapToCaptureEye
+                jaundiceResult.severity == JaundiceSeverity.NORMAL -> strings.noJaundice
+                jaundiceResult.severity == JaundiceSeverity.MILD -> strings.mildJaundice
+                jaundiceResult.severity == JaundiceSeverity.MODERATE -> strings.moderateJaundice
+                jaundiceResult.severity == JaundiceSeverity.SEVERE -> strings.severeJaundice
+                else -> "—"
+            },
+            isComplete = hasJaundice,
+            statusColor = when {
+                !hasJaundice -> Color.Gray
+                jaundiceResult.severity == JaundiceSeverity.NORMAL -> NkuColors.Success
+                jaundiceResult.severity == JaundiceSeverity.MILD -> NkuColors.TriageYellow
+                jaundiceResult.severity == JaundiceSeverity.MODERATE -> NkuColors.TriageOrange
+                jaundiceResult.severity == JaundiceSeverity.SEVERE -> NkuColors.ListeningIndicator
+                else -> Color.Gray
+            },
+            onClick = { onNavigateToTab(3) }
+        )
+        
+        Spacer(Modifier.height(10.dp))
+        
+        // ── Step 4: Preeclampsia ──
+        GuidedStepCard(
+            stepNumber = 4,
             title = strings.preeclampsiaScreen,
             value = if (hasPreE) edemaResult.severity.name else "—",
             subtitle = when {
@@ -338,7 +367,7 @@ fun HomeScreen(
                 edemaResult.severity == EdemaSeverity.SIGNIFICANT -> NkuColors.ListeningIndicator
                 else -> Color.Gray
             },
-            onClick = { onNavigateToTab(3) }
+            onClick = { onNavigateToTab(4) }
         )
         
         Spacer(Modifier.height(20.dp))

@@ -39,11 +39,12 @@ CHWs frequently lack reliable diagnostic equipment [25]. Nku Sentinel extracts v
 |:----------|:-------|:-------------|
 | **Cardio Check** | rPPG (green channel DFT, 30fps) | Verkruysse 2008: green channel strongest signal; smartphone rPPG MAE 1.32–3.95 BPM |
 | **Anemia Screen** | **Conjunctival** HSV analysis | Jay 2024: 75.4% accuracy, 92.7% for severe anemia; thresholds pending field calibration |
+| **Jaundice Screen** | **Scleral** HSV analysis | Scleral icterus visible at bilirubin ≥2.5 mg/dL; skin-tone agnostic (unpigmented scleral tissue) |
 | **Preeclampsia** | Facial geometry (EAR) | NEC/Tsukuba: 85% edema detection accuracy; EAR thresholds pending field calibration |
 
-**Fitzpatrick-Aware Design**: Pallor uses conjunctiva-only analysis (skin-tone agnostic). Edema uses geometry ratios (skin-color independent). These explicit design choices are intended to support consistent performance across Fitzpatrick V-VI skin tones — the primary target demographic — though field validation across diverse populations is needed.
+**Fitzpatrick-Aware Design**: Pallor uses conjunctiva-only analysis (skin-tone agnostic). Jaundice uses scleral tissue (unpigmented, consistent across all skin tones). Edema uses geometry ratios (skin-color independent). These explicit design choices are intended to support consistent performance across Fitzpatrick V-VI skin tones — the primary target demographic — though field validation across diverse populations is needed.
 
-**Clinical Reasoning Pipeline**: `SensorFusion.kt` aggregates all sensor outputs → `ClinicalReasoner.kt` generates structured MedGemma prompts with vital signs + patient context → MedGemma returns severity, urgency, and actionable CHW recommendations. If MedGemma is unavailable (device overheating), a WHO/IMCI rule-based fallback provides continued triage support.
+**Clinical Reasoning Pipeline**: `SensorFusion.kt` aggregates all four sensor outputs → `ClinicalReasoner.kt` generates structured MedGemma prompts with vital signs + patient context → MedGemma returns severity, urgency, and actionable CHW recommendations. If MedGemma is unavailable (device overheating), a WHO/IMCI rule-based fallback provides continued triage support.
 
 **Prompt Injection Protection**: All user input passes through a 6-layer `PromptSanitizer` (zero-width stripping, homoglyph normalization, base64 detection, regex pattern matching, character allowlist, delimiter wrapping) at every model boundary—input, output validation at each stage—preventing prompt injection across the multi-model pipeline.
 

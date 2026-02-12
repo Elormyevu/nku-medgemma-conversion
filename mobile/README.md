@@ -22,11 +22,12 @@ This directory contains the Android application source code for **Nku** (The Sen
 *   `NkuInferenceEngine.kt`: MedGemma orchestration (mmap loading, retry/backoff).\n*   `NkuTranslator.kt`: ML Kit on-device translation wrapper (59 languages + cloud fallback).
 *   `RPPGProcessor.kt`: Heart rate extraction via rPPG (camera-based).
 *   `PallorDetector.kt`: Anemia screening via conjunctival pallor analysis.
+*   `JaundiceDetector.kt`: Jaundice screening via scleral icterus analysis.
 *   `EdemaDetector.kt`: Preeclampsia screening via facial edema geometry.
-*   `SensorFusion.kt`: Aggregates vital signs from all three detectors.
+*   `SensorFusion.kt`: Aggregates vital signs from all four detectors.
 *   `ClinicalReasoner.kt`: MedGemma triage prompts + WHO/IMCI rule-based fallback.
 *   `LocalizedStrings.kt`: 46-language UI strings (14 Tier 1, 32 Tier 2).
-*   `screens/`: Extracted screen composables (HomeScreen, CardioScreen, AnemiaScreen, PreeclampsiaScreen, TriageScreen).
+*   `screens/`: Extracted screen composables (HomeScreen, CardioScreen, AnemiaScreen, JaundiceScreen, PreeclampsiaScreen, TriageScreen).
 
 ## Troubleshooting
 *   **Permissions**: If the camera doesn't open, ensuring you have granted Camera and Internet permissions in the dialog.

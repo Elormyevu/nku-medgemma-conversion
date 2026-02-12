@@ -48,7 +48,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 | **Ultra-Compressed** | 8GB → ~2.3GB via Q4_K_M quantization (56% MedQA on quantized model, vs. 69% unquantized) |
 | **Pan-African Languages** | 46 languages including Ewe, Hausa, Yoruba, Swahili |
 | **Budget Hardware** | Runs on $60–100 Android phones (3–4GB RAM, TECNO/Infinix) via mmap |
-| **Camera Screening** | Heart rate, anemia, & preeclampsia via phone camera |
+| **Camera Screening** | Heart rate, anemia, jaundice, & preeclampsia via phone camera |
 
 ---
 
@@ -59,7 +59,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 - 🔊 **Android System TTS** — Device-native voice synthesis for spoken clinical results
 - 💎 **Premium UI** — Glassmorphism design with localized strings
 - ⚡ **Nku Cycle** — Memory-efficient mmap orchestration on budget devices (3–4GB RAM)
-- 📷 **Nku Sentinel** — Camera-based screening for heart rate, anemia, & preeclampsia
+- 📷 **Nku Sentinel** — Camera-based screening for heart rate, anemia, jaundice, & preeclampsia
 
 ---
 
@@ -101,6 +101,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 |:----------|:-------|:-------|:-------|
 | **Cardio Check** | `RPPGProcessor.kt` | Green channel DFT (30fps) | Heart rate ±5 BPM |
 | **Anemia Screen** | `PallorDetector.kt` | Conjunctival HSV analysis | Pallor severity (0-1) |
+| **Jaundice Screen** | `JaundiceDetector.kt` | Scleral HSV analysis | Jaundice severity (0-1) |
 | **Preeclampsia** | `EdemaDetector.kt` | Facial geometry (EAR + gradients) | Edema severity (0-1) |
 | **Triage** | `ClinicalReasoner.kt` | MedGemma + WHO/IMCI fallback | Severity & recommendations |
 
@@ -109,6 +110,7 @@ All screening uses **pure signal processing** (0 MB additional weights). Sensor 
 ### Fitzpatrick-Aware Design
 
 - **Pallor**: Conjunctiva-only analysis — consistent across all skin tones
+- **Jaundice**: Scleral tissue analysis — unpigmented, consistent across all skin tones
 - **Edema**: Geometry-based ratios — skin-color independent
 - **Heart Rate**: Adaptive multi-frame averaging
 
@@ -117,7 +119,7 @@ All screening uses **pure signal processing** (0 MB additional weights). Sensor 
 | Layer | Technology |
 |:------|:-----------|
 | **UI** | Jetpack Compose (Glassmorphism) |
-| **Perception** | RPPGProcessor, PallorDetector, EdemaDetector |
+| **Perception** | RPPGProcessor, PallorDetector, JaundiceDetector, EdemaDetector |
 | **Orchestration** | ClinicalReasoner + SensorFusion + ThermalManager (42°C) |
 | **Security** | PromptSanitizer (6-layer injection protection at every model boundary) |
 | **Inference** | llama.cpp via JNI (NDK 29, ARM64 NEON) |
@@ -230,6 +232,7 @@ nku-medgemma-conversion/
 │       │   ├── NkuTranslator.kt        # ML Kit translation wrapper
 │       │   ├── RPPGProcessor.kt        # Heart rate (rPPG)
 │       │   ├── PallorDetector.kt       # Anemia (conjunctiva)
+│       │   ├── JaundiceDetector.kt     # Jaundice (scleral icterus)
 │       │   ├── EdemaDetector.kt        # Preeclampsia (edema)
 │       │   ├── SensorFusion.kt         # Vital signs aggregator
 │       │   ├── ClinicalReasoner.kt     # MedGemma + WHO fallback
@@ -239,7 +242,7 @@ nku-medgemma-conversion/
 │       │   ├── NkuTTS.kt              # Android System TTS wrapper
 │       │   ├── CameraPreview.kt       # Camera2 preview composable
 │       │   ├── FaceDetectorHelper.kt  # MediaPipe face landmark wrapper
-│       │   └── screens/               # Screen composables (Cardio, Anemia, Preeclampsia, Triage)
+│       │   └── screens/               # Screen composables (Cardio, Anemia, Jaundice, Preeclampsia, Triage)
 │       └── assets/           # App resources (models loaded from device storage)
 ├── cloud/                    # DEVELOPMENT BACKEND — optional Flask API used during prototyping.
 │                             #   NOT part of the production Android app. Shares triage logic

@@ -14,13 +14,14 @@ import org.junit.Test
  * - reset() clears all state
  *
  * Note: updateVitalSigns() requires live StateFlow from RPPGProcessor/PallorDetector/
- * EdemaDetector which need Bitmap (android.graphics), so those are covered via
- * integration tests. These tests exercise the pure-logic paths.
+ * JaundiceDetector/EdemaDetector which need Bitmap (android.graphics), so those are
+ * covered via integration tests. These tests exercise the pure-logic paths.
  */
 class SensorFusionTest {
 
     private lateinit var rppg: RPPGProcessor
     private lateinit var pallor: PallorDetector
+    private lateinit var jaundice: JaundiceDetector
     private lateinit var edema: EdemaDetector
     private lateinit var fusion: SensorFusion
 
@@ -28,8 +29,9 @@ class SensorFusionTest {
     fun setup() {
         rppg = RPPGProcessor()
         pallor = PallorDetector()
+        jaundice = JaundiceDetector()
         edema = EdemaDetector()
-        fusion = SensorFusion(rppg, pallor, edema)
+        fusion = SensorFusion(rppg, pallor, jaundice, edema)
     }
 
     // ── Symptom Lifecycle ──────────────────────────────────

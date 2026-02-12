@@ -58,6 +58,7 @@ class ClinicalReasonerTest {
         val prompt = reasoner.generatePrompt(vitals)
         assertTrue("HR should show 'Not measured'", prompt.contains("Heart Rate: Not measured"))
         assertTrue("Pallor should show 'Not performed'", prompt.contains("Pallor Assessment: Not performed"))
+        assertTrue("Jaundice should show 'Not performed'", prompt.contains("Jaundice Assessment: Not performed"))
         assertTrue("Edema should show 'Not performed'", prompt.contains("Edema Assessment: Not performed"))
     }
 
@@ -391,6 +392,80 @@ class ClinicalReasonerTest {
             prompt.contains("Mannino"))
         assertTrue("Should reference edema baseline",
             prompt.contains("Vasanthakumar"))
+    }
+
+    // ── Jaundice-specific prompt tests ──
+
+    @Test
+    fun `generatePrompt includes jaundice data when present`() {
+        val vitals = VitalSigns(
+            jaundiceScore = 0.65f,
+            jaundiceSeverity = JaundiceSeverity.MODERATE,
+            jaundiceConfidence = 0.85f,
+            scleralYellowRatio = 0.35f
+        )
+        val prompt = reasoner.generatePrompt(vitals)
+        assertTrue("Should contain jaundice section", prompt.contains("JAUNDICE SCREENING"))
+        assertTrue("Should contain scleral method", prompt.contains("HSV color space analysis of the sclera"))
+        assertTrue("Should contain yellow ratio", prompt.contains("0.35"))
+        assertTrue("Should contain jaundice score", prompt.contains("0.65"))
+        assertTrue("Should contain severity MODERATE", prompt.contains("MODERATE"))
+        assertTrue("Should reference Mariakakis", prompt.contains("Mariakakis"))
+    }
+
+    @Test
+    fun `generatePrompt excludes low-confidence jaundice from assessment`() {
+        val vitals = VitalSigns(
+            jaundiceScore = 0.5f,
+            jaundiceSeverity = JaundiceSeverity.MODERATE,
+            jaundiceConfidence = 0.3f  // Below 0.75 threshold
+        )
+        val prompt = reasoner.generatePrompt(vitals)
+        assertTrue("Should show LOW CONFIDENCE", prompt.contains("LOW CONFIDENCE"))
+        assertFalse("Should not include scleral method for low-conf", prompt.contains("HSV color space analysis of the sclera"))
+    }
+
+    @Test
+    fun `rule-based detects severe jaundice`() {
+        val vitals = VitalSigns(
+            jaundiceScore = 0.85f,
+            jaundiceSeverity = JaundiceSeverity.SEVERE,
+            jaundiceConfidence = 0.9f
+        )
+        val assessment = reasoner.createRuleBasedAssessment(vitals)
+        assertTrue("Should flag severe icterus", assessment.primaryConcerns.any { it.contains("Severe scleral icterus") })
+        assertTrue("Should recommend urgent referral", assessment.recommendations.any { it.contains("bilirubin") })
+        assertEquals("Should be HIGH severity", Severity.HIGH, assessment.overallSeverity)
+        assertEquals("Should be WITHIN_48_HOURS urgency", Urgency.WITHIN_48_HOURS, assessment.urgency)
+    }
+
+    @Test
+    fun `rule-based detects moderate jaundice`() {
+        val vitals = VitalSigns(
+            jaundiceScore = 0.6f,
+            jaundiceSeverity = JaundiceSeverity.MODERATE,
+            jaundiceConfidence = 0.85f
+        )
+        val assessment = reasoner.createRuleBasedAssessment(vitals)
+        assertTrue("Should flag moderate icterus", assessment.primaryConcerns.any { it.contains("Moderate scleral icterus") })
+        assertEquals("Should be MEDIUM severity", Severity.MEDIUM, assessment.overallSeverity)
+    }
+
+    @Test
+    fun `rule-based ignores low-confidence jaundice`() {
+        // Include a confident HR so the code doesn't abstain entirely
+        // (abstention triggers when ALL sensors are below threshold)
+        val vitals = VitalSigns(
+            heartRateBpm = 72f,
+            heartRateConfidence = 0.9f,
+            jaundiceScore = 0.85f,
+            jaundiceSeverity = JaundiceSeverity.SEVERE,
+            jaundiceConfidence = 0.3f  // Below threshold
+        )
+        val assessment = reasoner.createRuleBasedAssessment(vitals)
+        assertTrue("Should note low confidence", assessment.primaryConcerns.any { it.contains("Jaundice reading low confidence") })
+        // Should NOT flag severe icterus since confidence is below threshold
+        assertFalse("Should NOT flag severe icterus", assessment.primaryConcerns.any { it.contains("Severe scleral icterus") })
     }
 
     // ── reset() ─────────────────────────────────────────────

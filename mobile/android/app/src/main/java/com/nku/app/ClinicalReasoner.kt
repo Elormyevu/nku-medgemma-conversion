@@ -90,6 +90,7 @@ class ClinicalReasoner {
         // P2 fix: Apply same confidence gating as rule-based path
         val hrConfident = vitals.heartRateConfidence >= CONFIDENCE_THRESHOLD
         val pallorConfident = vitals.pallorConfidence >= CONFIDENCE_THRESHOLD
+        val jaundiceConfident = vitals.jaundiceConfidence >= CONFIDENCE_THRESHOLD
         val edemaConfident = vitals.edemaConfidence >= CONFIDENCE_THRESHOLD
 
         // ── Heart Rate (rPPG) ──────────────────────────────
@@ -141,6 +142,30 @@ class ClinicalReasoner {
             sb.appendLine("Note: This is a screening heuristic, not a hemoglobin measurement.")
             sb.appendLine("  Refer for laboratory hemoglobin test to confirm.")
         } ?: sb.appendLine("Pallor Assessment: Not performed")
+    
+    sb.appendLine()
+    
+    // ── Jaundice Screening (Scleral Icterus) ─────────
+    sb.appendLine("=== JAUNDICE SCREENING (Scleral Icterus) ===")
+    vitals.jaundiceScore?.let { score ->
+        if (!jaundiceConfident) {
+            sb.appendLine("Jaundice index: ${(score * 100).toInt()}% [LOW CONFIDENCE — ${(vitals.jaundiceConfidence * 100).toInt()}%, excluded from assessment]")
+            return@let
+        }
+        sb.appendLine("Method: HSV color space analysis of the sclera — fraction of scleral-region")
+        sb.appendLine("  pixels whose hue falls in the yellow band (H ≈ 15–45°). Elevated yellow")
+        sb.appendLine("  ratio correlates with bilirubin deposition in unpigmented scleral tissue.")
+        sb.appendLine("  [Mariakakis et al., Proc ACM IMWUT 2017; clinical icterus threshold ≈2.5 mg/dL bilirubin]")
+        // Raw biomarker
+        vitals.scleralYellowRatio?.let { ratio ->
+            sb.appendLine("Scleral yellow ratio: ${"%.2f".format(ratio)} (normal <0.10, icterus threshold >0.20)")
+        }
+        sb.appendLine("Jaundice index: ${"%.2f".format(score)} (0.0=normal sclera, 1.0=severe icterus)")
+        sb.appendLine("Severity: ${vitals.jaundiceSeverity?.name ?: "unknown"} — ${getJaundiceInterpretation(vitals.jaundiceSeverity)}")
+        sb.appendLine("Confidence: ${(vitals.jaundiceConfidence * 100).toInt()}%")
+        sb.appendLine("Note: This is a screening heuristic, not a bilirubin measurement.")
+        sb.appendLine("  Refer for serum bilirubin and liver function tests to confirm.")
+    } ?: sb.appendLine("Jaundice Assessment: Not performed")
         
         sb.appendLine()
         
@@ -208,7 +233,8 @@ class ClinicalReasoner {
         sb.appendLine("RECOMMENDATIONS:")
         sb.appendLine("- [list each recommendation]")
         sb.appendLine()
-        sb.appendLine("Consider anemia if pallor is detected. Consider preeclampsia if edema + pregnancy.")
+        sb.appendLine("Consider anemia if pallor is detected. Consider jaundice if scleral icterus present.")
+        sb.appendLine("Consider preeclampsia if edema + pregnancy.")
         sb.appendLine("Be concise. Recommendations should be actionable for a community health worker.")
         
         return sb.toString()
@@ -220,6 +246,16 @@ class ClinicalReasoner {
             PallorSeverity.MILD -> "possible mild anemia (Hb 10-11 g/dL)"
             PallorSeverity.MODERATE -> "likely moderate anemia (Hb 7-10 g/dL)"
             PallorSeverity.SEVERE -> "likely severe anemia (Hb <7 g/dL)"
+            null -> "not assessed"
+        }
+    }
+
+    private fun getJaundiceInterpretation(severity: JaundiceSeverity?): String {
+        return when (severity) {
+            JaundiceSeverity.NORMAL -> "bilirubin likely normal (<2.0 mg/dL)"
+            JaundiceSeverity.MILD -> "possible mild hyperbilirubinemia (2-5 mg/dL)"
+            JaundiceSeverity.MODERATE -> "likely moderate hyperbilirubinemia (5-10 mg/dL)"
+            JaundiceSeverity.SEVERE -> "likely severe hyperbilirubinemia (>10 mg/dL)"
             null -> "not assessed"
         }
     }
@@ -237,14 +273,16 @@ class ClinicalReasoner {
         // Abstention logic: track which sensors have sufficient confidence
         val hrConfident = vitals.heartRateConfidence >= CONFIDENCE_THRESHOLD
         val pallorConfident = vitals.pallorConfidence >= CONFIDENCE_THRESHOLD
+        val jaundiceConfident = vitals.jaundiceConfidence >= CONFIDENCE_THRESHOLD
         val edemaConfident = vitals.edemaConfidence >= CONFIDENCE_THRESHOLD
         val hasSymptoms = vitals.reportedSymptoms.isNotEmpty()
 
         // If ALL sensor data is below confidence threshold and no symptoms, abstain
         val hasHR = vitals.heartRateBpm != null
         val hasPallor = vitals.pallorSeverity != null
+        val hasJaundice = vitals.jaundiceSeverity != null
         val hasEdema = vitals.edemaSeverity != null
-        val allBelowThreshold = (!hasHR || !hrConfident) && (!hasPallor || !pallorConfident) && (!hasEdema || !edemaConfident)
+        val allBelowThreshold = (!hasHR || !hrConfident) && (!hasPallor || !pallorConfident) && (!hasJaundice || !jaundiceConfident) && (!hasEdema || !edemaConfident)
 
         if (allBelowThreshold && !hasSymptoms) {
             val assessment = ClinicalAssessment(
@@ -272,6 +310,9 @@ class ClinicalReasoner {
         }
         if (hasEdema && !edemaConfident) {
             concerns.add("Edema reading low confidence (${(vitals.edemaConfidence * 100).toInt()}%) — excluded from triage")
+        }
+        if (hasJaundice && !jaundiceConfident) {
+            concerns.add("Jaundice reading low confidence (${(vitals.jaundiceConfidence * 100).toInt()}%) — excluded from triage")
         }
         
         // Analyze heart rate (only if confidence >= threshold)
@@ -316,6 +357,31 @@ class ClinicalReasoner {
                 concerns.add("Severe pallor - possible severe anemia")
                 recommendations.add("URGENT: Refer for hemoglobin test within 24-48 hours")
                 recommendations.add("Monitor for shortness of breath, chest pain, weakness")
+                maxSeverity = maxOf(maxSeverity, Severity.HIGH)
+                maxUrgency = maxOf(maxUrgency, Urgency.WITHIN_48_HOURS)
+            }
+            else -> {}
+        }
+        
+        // Analyze jaundice (scleral icterus) — only if confidence >= threshold
+        if (jaundiceConfident) when (vitals.jaundiceSeverity) {
+            JaundiceSeverity.MILD -> {
+                concerns.add("Mild scleral icterus detected - possible elevated bilirubin")
+                recommendations.add("Consider liver function test at next clinic visit")
+                recommendations.add("Monitor for dark urine, pale stool, or abdominal pain")
+            }
+            JaundiceSeverity.MODERATE -> {
+                concerns.add("Moderate scleral icterus - likely elevated bilirubin")
+                recommendations.add("Liver function test recommended within 3-5 days")
+                recommendations.add("Check for hepatitis symptoms (fatigue, nausea, right upper pain)")
+                recommendations.add("Review medications for hepatotoxicity")
+                maxSeverity = maxOf(maxSeverity, Severity.MEDIUM)
+                maxUrgency = maxOf(maxUrgency, Urgency.WITHIN_WEEK)
+            }
+            JaundiceSeverity.SEVERE -> {
+                concerns.add("Severe scleral icterus - likely significantly elevated bilirubin")
+                recommendations.add("URGENT: Refer for bilirubin + liver function tests within 24-48 hours")
+                recommendations.add("Assess for signs of liver failure (confusion, easy bruising, ascites)")
                 maxSeverity = maxOf(maxSeverity, Severity.HIGH)
                 maxUrgency = maxOf(maxUrgency, Urgency.WITHIN_48_HOURS)
             }

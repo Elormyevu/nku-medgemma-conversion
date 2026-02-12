@@ -118,11 +118,13 @@ object LocalizedStrings {
         val tabCardio: String = "Cardio",
         val tabAnemia: String = "Anemia",
         val tabPreE: String = "Pre-E",
+        val tabJaundice: String = "Jaundice",
         val tabTriage: String = "Triage",
 
         // Home screen
         val heartRate: String = "Heart Rate",
         val anemiaScreen: String = "Anemia Screen",
+        val jaundiceScreen: String = "Jaundice Screen",
         val preeclampsiaScreen: String = "Preeclampsia Screen",
         val goToTab: String = "Go to %s tab to measure",
         val notYetScreened: String = "Not yet screened",
@@ -144,6 +146,22 @@ object LocalizedStrings {
         val ensureLighting: String = "Ensure good lighting",
         val tapAnalyze: String = "Tap Analyze when image is clear",
         val worksAllSkinTones: String = "Works across all skin tones",
+
+        // Jaundice
+        val jaundiceTitle: String = "Jaundice Screening",
+        val jaundiceSubtitle: String = "Scleral icterus detection",
+        val captureSclera: String = "Capture Eye (Sclera)",
+        val pointAtSclera: String = "Point camera at the white of the eye",
+        val jaundiceScoreLabel: String = "Jaundice Score",
+        val tapToCaptureEye: String = "Tap here to capture eye",
+        val noJaundice: String = "✓ No jaundice detected",
+        val mildJaundice: String = "Mild yellowing — check liver function",
+        val moderateJaundice: String = "⚠ Moderate — get liver function test",
+        val severeJaundice: String = "🚨 Severe — urgent referral",
+        val jaundiceInstructions: String = "1. Ask the patient to look up or to the side\n" +
+            "2. Point the rear camera at the white of the eye (sclera)\n" +
+            "3. Ensure good lighting (daylight preferred)\n" +
+            "4. Tap \"Analyze\" when the image is clear",
 
         // Preeclampsia
         val preETitle: String = "Preeclampsia Screen",
@@ -198,7 +216,7 @@ object LocalizedStrings {
             "4. Tap \"Analyze\" when the image is clear",
 
         // Progress text (F-2 fix)
-        val screeningsProgress: String = "%d of 3 screenings complete",
+        val screeningsProgress: String = "%d of 4 screenings complete",
         val readyForTriage: String = "✓ Ready for triage — go to Triage tab",
         val followSteps: String = "Follow the steps below to screen a patient",
 
@@ -243,6 +261,7 @@ object LocalizedStrings {
 
         // L-01 fix: Previously hardcoded English strings now localized
         val cameraPermissionPreE: String = "Preeclampsia screening needs camera access. Please enable in Settings.",
+        val cameraPermissionJaundice: String = "Jaundice screening needs camera access. Please enable in Settings.",
         val loadingAiModel: String = "Loading AI model…",
         val translatingToEnglish: String = "Translating to English…",
         val medgemmaAnalyzing: String = "MedGemma analyzing…",
@@ -306,6 +325,7 @@ object LocalizedStrings {
         val rearCameraHintAnemia: String = "📷 Uses rear camera — point at patient's lower eyelid",
         val rearCameraHintFace: String = "📷 Uses rear camera — point at patient's face",
         val rearCameraHintCardio: String = "📷 Uses rear camera — place patient's fingertip over lens",
+        val rearCameraHintJaundice: String = "📷 Uses rear camera — point at white of patient's eye",
 
         // USER-1: Theme toggle labels
         val themeLabel: String = "Theme",

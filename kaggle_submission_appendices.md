@@ -405,7 +405,7 @@ The literature demonstrates that (a) triage is substantially easier for LLMs tha
 
 ## Appendix F: Sensor-to-Prompt Signal Processing Pipeline
 
-This appendix documents the **complete signal processing chain** for each of Nku's three camera-based screening modalities — from raw pixel input through biomarker extraction to the final text prompt consumed by MedGemma Q4_K_M.
+This appendix documents the **complete signal processing chain** for each of Nku's four camera-based screening modalities — from raw pixel input through biomarker extraction to the final text prompt consumed by MedGemma Q4_K_M.
 
 ### F.1: Architecture Overview
 
@@ -422,7 +422,7 @@ graph LR
     F --> G["MedGemma\nQ4_K_M"]
 ```
 
-All three detectors produce **structured result objects** with derived scores, confidence, and raw biomarker values. `SensorFusion` merges these into a single `VitalSigns` data class, and `ClinicalReasoner.generatePrompt()` serializes everything into a clinically explicit text prompt.
+All four detectors produce **structured result objects** with derived scores, confidence, and raw biomarker values. `SensorFusion` merges these into a single `VitalSigns` data class, and `ClinicalReasoner.generatePrompt()` serializes everything into a clinically explicit text prompt.
 
 ---
 
@@ -549,7 +549,7 @@ Note: This is a novel screening heuristic. Confirm with blood pressure
 
 ### F.5: Confidence Gating
 
-All three modalities pass through **confidence gating** in `ClinicalReasoner` before reaching MedGemma:
+All four modalities pass through **confidence gating** in `ClinicalReasoner` before reaching MedGemma:
 
 | Condition | Prompt behavior |
 |:----------|:----------------|

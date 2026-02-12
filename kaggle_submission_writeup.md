@@ -48,13 +48,14 @@ Nku Sentinel extracts vital signs using only the phone's camera (zero additional
 |:----------|:-------|:-------------------|:-------|:---------------|
 | **Heart rate** | Green channel rPPG, 10s DFT | Green channel yields strongest plethysmographic signal [13]; smartphone rPPG MAE 1.32–3.95 BPM [9,14] | ±5 BPM | BPM value + quality label + confidence % |
 | **Anemia** | Conjunctival HSV analysis | 75.4% accuracy, 92.7% for severe anemia (Hb <7) [15]; HSV pallor correlates with hemoglobin [16] | Pallor score 0–1 | Conjunctival saturation + pallor index + severity + tissue coverage |
+| **Jaundice** | Scleral HSV analysis | Scleral icterus visible at bilirubin ≥2.5 mg/dL [28]; smartphone jaundice detection validated [29] | Jaundice score 0–1 | Scleral yellow ratio + jaundice index + severity + confidence |
 | **Preeclampsia** | Facial geometry (EAR + gradients) | EAR from landmarks validated [17]; facial edema detection 85% accuracy [18] | Edema score 0–1 | EAR ratio + periorbital puffiness + facial swelling + edema index |
 
 Sensor thresholds are grounded in published data but intentionally tuned to slightly over-diagnose rather than miss cases. The sensors are feature extractors — they pass continuous scores and confidence levels to MedGemma, which applies clinical reasoning with additional symptoms to produce a clinically relevant triage recommendation. Field calibration will optimize sensitivity/specificity.
 
 ### Fitzpatrick-Aware Design
 
-Medical AI has a skin-tone bias problem [6]. All Nku screening modalities are deliberately skin-tone independent: pallor uses conjunctiva only (consistent across Fitzpatrick types [10]); edema uses geometry (ratios, not color); rPPG uses adaptive thresholds.
+Medical AI has a skin-tone bias problem [6]. All Nku screening modalities are deliberately skin-tone independent: pallor uses conjunctiva only (consistent across Fitzpatrick types [10]); jaundice uses scleral tissue (unpigmented, consistent across all skin tones); edema uses geometry (ratios, not color); rPPG uses adaptive thresholds.
 
 ### Why 56% MedQA Is Sufficient for CHW Triage
 
@@ -97,7 +98,6 @@ Nku demonstrates that AI-powered clinical triage on budget smartphones is techni
 | Feature | Sensor | Method | Clinical Impact |
 |:--------|:-------|:-------|:----------------|
 | Respiratory rate | Camera | Chest wall movement detection | Pneumonia triage (top child killer in SSA) |
-| Jaundice screening | Camera | Scleral icterus analysis (like conjunctival pallor) | Neonatal jaundice — common, time-critical |
 | SpO₂ estimation | Camera + flash | Fingertip reflectance photoplethysmography | Hypoxia detection for pneumonia/respiratory illness |
 | Cough classification | Microphone | Audio pattern analysis (productive vs. dry) | TB/pneumonia screening |
 | MUAC estimation | Camera | Mid-upper arm circumference via image | Child malnutrition screening |
@@ -121,6 +121,6 @@ The promise of AI in healthcare has so far benefited those with the most access 
 
 ---
 
-**Prize Tracks**: **Main** — MedGemma-powered triage for 450M+ people, offline, on $60–100 devices. **Edge AI** — Q4_K_M compression, mmap loading, llama.cpp JNI, 100% on-device; benchmarked four quantization levels (IQ1_M 32.3%, Q2_K 34.7%, IQ2_XS 43.8%, Q4_K_M 56.0%). **Novel Task** — (1) Systematic MedGemma quantization study for offline triage; (2) novel EAR-based periorbital edema screening for preeclampsia.
+**Prize Tracks**: **Main** — MedGemma-powered triage for 450M+ people, offline, on $60–100 devices. **Edge AI** — Q4_K_M compression, mmap loading, llama.cpp JNI, 100% on-device; benchmarked four quantization levels (IQ1_M 32.3%, Q2_K 34.7%, IQ2_XS 43.8%, Q4_K_M 56.0%). **Novel Task** — (1) Systematic MedGemma quantization study for offline triage; (2) novel EAR-based periorbital edema screening for preeclampsia; (3) scleral icterus-based jaundice screening via HSV analysis.
 
 *Nku: a proof of concept for 450M+ lives • $60–100 phones • 100% on-device • 46 languages*

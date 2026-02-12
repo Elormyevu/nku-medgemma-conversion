@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * Collects data from:
  * - RPPGProcessor (heart rate)
  * - PallorDetector (anemia screening)
+ * - JaundiceDetector (jaundice screening)
  * - EdemaDetector (preeclampsia screening)
  * - User-reported symptoms
  * 
@@ -28,6 +29,12 @@ data class VitalSigns(
     val pallorConfidence: Float = 0f,
     val conjunctivalSaturation: Float? = null,   // Raw HSV saturation of conjunctival tissue
     val conjunctivalTissueCoverage: Float? = null, // Fraction of ROI classified as tissue
+    
+    // Jaundice Screening (Scleral Icterus)
+    val jaundiceScore: Float? = null,
+    val jaundiceSeverity: JaundiceSeverity? = null,
+    val jaundiceConfidence: Float = 0f,
+    val scleralYellowRatio: Float? = null,       // Raw yellow-band pixel fraction in sclera
     
     // Preeclampsia Screening (Edema)
     val edemaScore: Float? = null,
@@ -58,6 +65,7 @@ data class SymptomEntry(
 class SensorFusion(
     private val rppgProcessor: RPPGProcessor,
     private val pallorDetector: PallorDetector,
+    private val jaundiceDetector: JaundiceDetector,
     private val edemaDetector: EdemaDetector
 ) {
     private val _vitalSigns = MutableStateFlow(VitalSigns())
@@ -75,10 +83,12 @@ class SensorFusion(
     fun updateVitalSigns() {
         val rppgResult = rppgProcessor.result.value
         val pallorResult = pallorDetector.result.value
+        val jaundiceResult = jaundiceDetector.result.value
         val edemaResult = edemaDetector.result.value
         
         val hasHeartRate = rppgResult.bpm != null && rppgResult.confidence > 0.5f
         val hasPallor = pallorResult.confidence > 0.3f
+        val hasJaundice = jaundiceResult.confidence > 0.3f
         val hasEdema = edemaResult.confidence > 0.3f
         
         _vitalSigns.value = VitalSigns(
@@ -94,6 +104,12 @@ class SensorFusion(
             conjunctivalSaturation = if (hasPallor) pallorResult.avgSaturation else null,
             conjunctivalTissueCoverage = if (hasPallor) pallorResult.tissueRatio else null,
             
+            // Jaundice — raw biomarkers for clinically explicit prompt
+            jaundiceScore = if (hasJaundice) jaundiceResult.jaundiceScore else null,
+            jaundiceSeverity = if (hasJaundice) jaundiceResult.severity else null,
+            jaundiceConfidence = jaundiceResult.confidence,
+            scleralYellowRatio = if (hasJaundice) jaundiceResult.yellowRatio else null,
+            
             // Edema — raw biomarkers for clinically explicit prompt
             edemaScore = if (hasEdema) edemaResult.edemaScore else null,
             edemaSeverity = if (hasEdema) edemaResult.severity else null,
@@ -108,7 +124,7 @@ class SensorFusion(
             gestationalWeeks = gestationalWeeks,
             
             // Completion check
-            allSensorsComplete = hasHeartRate && hasPallor && hasEdema,
+            allSensorsComplete = hasHeartRate && hasPallor && hasJaundice && hasEdema,
             captureTimestamp = System.currentTimeMillis()
         )
     }
@@ -169,6 +185,17 @@ class SensorFusion(
             parts.add("Pallor: $label")
         }
         
+        vitals.jaundiceScore?.let {
+            val label = when (vitals.jaundiceSeverity) {
+                JaundiceSeverity.NORMAL -> "Normal"
+                JaundiceSeverity.MILD -> "Mild jaundice"
+                JaundiceSeverity.MODERATE -> "Moderate jaundice"
+                JaundiceSeverity.SEVERE -> "Severe jaundice"
+                null -> "Unknown"
+            }
+            parts.add("Jaundice: $label")
+        }
+        
         vitals.edemaScore?.let {
             val label = when (vitals.edemaSeverity) {
                 EdemaSeverity.NORMAL -> "Normal"
@@ -201,13 +228,18 @@ class SensorFusion(
             PallorSeverity.MODERATE, PallorSeverity.SEVERE
         )
         
+        // Moderate+ jaundice
+        val significantJaundice = vitals.jaundiceSeverity in listOf(
+            JaundiceSeverity.MODERATE, JaundiceSeverity.SEVERE
+        )
+        
         // F-5 fix: SIGNIFICANT edema always flags high risk regardless of pregnancy.
         // MODERATE edema remains pregnancy-gated. Significant facial swelling
         // warrants referral even without confirmed pregnancy status.
         val significantEdema = vitals.edemaSeverity == EdemaSeverity.SIGNIFICANT
         val moderateEdemaPregnant = vitals.edemaSeverity == EdemaSeverity.MODERATE && isPregnant
         
-        return highHR || significantPallor || significantEdema || moderateEdemaPregnant
+        return highHR || significantPallor || significantJaundice || significantEdema || moderateEdemaPregnant
     }
     
     /**
@@ -216,6 +248,7 @@ class SensorFusion(
     fun reset() {
         rppgProcessor.reset()
         pallorDetector.reset()
+        jaundiceDetector.reset()
         edemaDetector.reset()
         _symptoms.value = emptyList()
         isPregnant = false

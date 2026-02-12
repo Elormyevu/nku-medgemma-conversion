@@ -6,11 +6,11 @@
 
 ## 1. Problem
 
-In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people [1] — far below the WHO's recommended 44.5 [2]. Over 450 million people lack accessible primary care [5]. Community Health Workers (CHWs), the frontline of care, frequently lack reliable access to diagnostic tools — due to equipment deficiencies, supply stock-outs, and maintenance failures [WHO AFRO, 2023] — yet nearly all carry smartphones [3].
+In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people [1] — far below the WHO's recommended 44.5 [2]. Over 450 million people lack accessible primary care [5]. Community Health Workers (CHWs), the frontline of care, frequently lack reliable access to diagnostic tools — due to equipment deficiencies, supply stock-outs, and maintenance failures [25] — yet nearly all carry smartphones [3].
 
 The disconnect: powerful AI models like MedGemma exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, while 3G accounts for ~54% of mobile connections (GSMA 2023), coverage is unreliable — 25% of rural Africans lack mobile broadband entirely, and only 23% use the internet regularly (ITU 2024) [4]. Cloud-based AI is impractical where it is needed most.
 
-**Target user**: A CHW in rural Ghana with a $60 TECNO phone (3–4GB RAM) and no stable internet. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral to a district hospital that may be hours away by motorbike.
+**Target user**: A CHW in rural Ghana with a $60–100 TECNO or Infinix phone (2–4GB RAM) and no stable internet [26]. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral to a district hospital that may be hours away by motorbike. Transsion brands (TECNO, Infinix, itel) hold >50% of the African smartphone market [27].
 
 ---
 
@@ -116,10 +116,10 @@ The promise of AI in healthcare has so far benefited those with the most access 
 ---
 
 **Prize Tracks**:
-- **Main Track** (1st–4th, $10K–$30K): Nku addresses a real, urgent healthcare gap for 450M+ people by putting MedGemma-powered clinical reasoning directly in CHWs' hands — offline, multilingual, on their existing $50 devices.
-- **Edge AI Prize** ($5K): Nku's entire architecture — Q4_K_M compression (56% MedQA accuracy on the quantized model, vs. 69% unquantized), mmap loading on $50–100 phones, llama.cpp JNI, 100% on-device medical inference — is purpose-built for edge deployment. To validate this model selection, we systematically benchmarked four quantization levels on the full MedQA test set (n=1,273): IQ1_M (32.3%), Q2_K (34.7%), IQ2_XS with medical imatrix (43.8%), and Q4_K_M (56.0%). This study confirmed that domain-specific imatrix calibration is more important than raw bit budget at aggressive quantization levels, and that Q4_K_M provides the best accuracy for reliable clinical deployment (see Appendix D). **Only Q4_K_M is deployed in the Nku application.** The hardest technical challenge — running a medical-grade LLM on a budget phone — is solved.
-- **Novel Task Prize** ($5K): Two novel contributions: (1) A systematic quantization study comparing four MedGemma compression levels (IQ1_M through Q4_K_M) for an entirely new deployment context — offline multilingual triage on $50 smartphones — demonstrating that domain-specific imatrix calibration (used for IQ2_XS) outperforms naive quantization at aggressive compression levels. (2) A novel EAR-based periorbital edema screening heuristic, repurposing established computer vision geometry (Eye Aspect Ratio) for preeclampsia detection — grounded in palpebral fissure anthropometrics but not previously described in the literature.
+- **Main Track** (1st–4th, $10K–$30K): Nku addresses a real, urgent healthcare gap for 450M+ people by putting MedGemma-powered clinical reasoning directly in CHWs' hands — offline, multilingual, on their existing $60–100 devices.
+- **Edge AI Prize** ($5K): Nku's entire architecture — Q4_K_M compression (56% MedQA accuracy on the quantized model, vs. 69% unquantized), mmap loading on $60–100 phones, llama.cpp JNI, 100% on-device medical inference — is purpose-built for edge deployment. To validate this model selection, we systematically benchmarked four quantization levels on the full MedQA test set (n=1,273): IQ1_M (32.3%), Q2_K (34.7%), IQ2_XS with medical imatrix (43.8%), and Q4_K_M (56.0%). This study confirmed that domain-specific imatrix calibration is more important than raw bit budget at aggressive quantization levels, and that Q4_K_M provides the best accuracy for reliable clinical deployment (see Appendix D). **Only Q4_K_M is deployed in the Nku application.** The hardest technical challenge — running a medical-grade LLM on a budget phone — is solved.
+- **Novel Task Prize** ($5K): Two novel contributions: (1) A systematic quantization study comparing four MedGemma compression levels (IQ1_M through Q4_K_M) for an entirely new deployment context — offline multilingual triage on $60–100 smartphones — demonstrating that domain-specific imatrix calibration (used for IQ2_XS) outperforms naive quantization at aggressive compression levels. (2) A novel EAR-based periorbital edema screening heuristic, repurposing established computer vision geometry (Eye Aspect Ratio) for preeclampsia detection — grounded in palpebral fissure anthropometrics but not previously described in the literature.
 
 ---
 
-*Nku: a proof of concept for 450M+ lives • $50 phones • 100% on-device medical inference • 46 languages*
+*Nku: a proof of concept for 450M+ lives • $60–100 phones • 100% on-device medical inference • 46 languages*

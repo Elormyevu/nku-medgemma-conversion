@@ -4,11 +4,11 @@
 
 ## 1. Problem & Motivation
 
-In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people—far below the WHO's recommended 44.5 per 10,000. Over **450 million people** lack accessible primary care. Community Health Workers (CHWs), the frontline of healthcare delivery, frequently lack reliable access to diagnostic tools due to equipment deficiencies, supply stock-outs, and maintenance failures [WHO AFRO, 2023].
+In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people—far below the WHO's recommended 44.5 per 10,000. Over **450 million people** lack accessible primary care. Community Health Workers (CHWs), the frontline of healthcare delivery, frequently lack reliable access to diagnostic tools due to equipment deficiencies, supply stock-outs, and maintenance failures [25].
 
 Yet nearly all CHWs carry smartphones. Powerful clinical AI models like MedGemma exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, while 3G accounts for ~54% of mobile connections, network coverage is unreliable and intermittent — 25% of rural Africans lack mobile broadband entirely (ITU 2024). This makes cloud-based AI **impractical** precisely where it is needed most.
 
-**Nku** (Ewe: "eye") is a **proof-of-concept prototype** demonstrating that MedGemma can run **entirely on-device** on $50–100 Android phones (3–4GB RAM). No cloud. No internet required. Nku's sensor thresholds and clinical workflows require field validation with real CHWs before deployment, but the core technical challenge — fitting a medical-grade LLM on a budget phone — is addressed.
+**Nku** (Ewe: "eye") is a **proof-of-concept prototype** demonstrating that MedGemma can run **entirely on-device** on $60–100 Android phones (2–4GB RAM). No cloud. No internet required. Nku's sensor thresholds and clinical workflows require field validation with real CHWs before deployment, but the core technical challenge — fitting a medical-grade LLM on a budget phone — is addressed.
 
 ## 2. Technical Implementation
 

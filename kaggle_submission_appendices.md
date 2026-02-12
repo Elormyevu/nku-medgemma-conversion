@@ -395,6 +395,12 @@ The literature demonstrates that (a) triage is substantially easier for LLMs tha
 
 [24] Nissen, L., Zagar, P., Ravi, V., Zahedivash, A., Reimer, L.M., Jonas, S., Aalami, O., Schmiedmayer, P. "Medicine on the Edge: Comparative Performance Analysis of On-Device LLMs for Clinical Reasoning." *arXiv:2502.08954*, February 13, 2025. AMEGA benchmark: Med42 and Aloe achieve highest clinical accuracy on mobile devices.
 
+[25] WHO Regional Office for Africa. *Regional Strategy on Diagnostic and Laboratory Services and Systems 2023*. WHO AFRO, 2023. Documents infrastructure and equipment deficiencies, supply stock-outs, and weak diagnostic systems across the African Region.
+
+[26] TECNO Mobile. TECNO Pop 8 specifications. tecnoghana.com, 2024. 2GB/3GB/4GB RAM variants; ~$60 USD (2GB) to ~$90 USD (4GB) depending on market. See also: TECNO Spark Go 2024, 3-4GB RAM, ~$89-98 USD.
+
+[27] Canalys. *Africa Smartphone Market 2024*. Canalys Research, 2025. Transsion Holdings (TECNO, Infinix, itel) held 51% smartphone market share in Africa, shipping ~37.9 million units.
+
 ---
 
 ## Appendix F: Sensor-to-Prompt Signal Processing Pipeline

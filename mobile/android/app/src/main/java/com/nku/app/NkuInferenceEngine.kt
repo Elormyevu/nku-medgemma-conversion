@@ -50,8 +50,9 @@ class NkuInferenceEngine(private val context: Context) {
     companion object {
         private const val TAG = "NkuEngine"
 
-        // Model paths (extracted from PAD asset packs on first run)
-        private const val MEDGEMMA_MODEL = "medgemma-4b-it-Q4_K_M.gguf"
+        // MedGemma 4B Q4_K_M — the only model used for clinical reasoning.
+        // Filename matches HuggingFace artifact (hungqbui/medgemma-4b-it-Q4_K_M-GGUF).
+        private const val MEDGEMMA_MODEL = "medgemma-4b-it-q4_k_m.gguf"
         // Translation handled by Android ML Kit (not a GGUF model)
 
         // Play Asset Delivery pack names → model file mapping
@@ -119,7 +120,7 @@ class NkuInferenceEngine(private val context: Context) {
     }
 
     /**
-     * Check if GGUF model files are available on-device.
+     * Check if GGUF model file is available on-device.
      */
     fun areModelsReady(): Boolean {
         return resolveModelFile(MEDGEMMA_MODEL) != null

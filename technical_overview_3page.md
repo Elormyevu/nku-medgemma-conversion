@@ -8,13 +8,13 @@ In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people—far
 
 Yet nearly all CHWs carry smartphones. Powerful clinical AI models like MedGemma exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, while 3G accounts for ~54% of mobile connections, network coverage is unreliable and intermittent — 25% of rural Africans lack mobile broadband entirely (ITU 2024). This makes cloud-based AI **impractical** precisely where it is needed most.
 
-**Nku** (Ewe: "eye") is a **proof-of-concept prototype** demonstrating that MedGemma can run **entirely on-device** on $60–100 Android phones (2–4GB RAM). No cloud. No internet required. Nku's sensor thresholds and clinical workflows require field validation with real CHWs before deployment, but the core technical challenge — fitting a medical-grade LLM on a budget phone — is addressed.
+**Nku** (Ewe: "eye") is a **proof-of-concept prototype** demonstrating that MedGemma can run **entirely on-device** on $60–100 Android phones (3–4GB RAM). No cloud. No internet required. Nku's sensor thresholds and clinical workflows require field validation with real CHWs before deployment, but the core technical challenge — fitting a medical-grade LLM on a budget phone — is addressed.
 
 ## 2. Technical Implementation
 
 ### 2.1 The "Nku Cycle" — Edge Inference Orchestration
 
-Our core innovation is a memory-efficient orchestration pattern that runs MedGemma on budget devices (2–4GB RAM) using `mmap` — the OS pages model data on demand, so peak resident memory adapts to available RAM. Translation uses Android ML Kit (on-device, ~30MB/language) for 59 supported languages, with Google Cloud Translate API fallback for additional African languages when online:
+Our core innovation is a memory-efficient orchestration pattern that runs MedGemma on budget devices (3–4GB RAM) using `mmap` — the OS pages model data on demand, so peak resident memory adapts to available RAM. Translation uses Android ML Kit (on-device, ~30MB/language) for 59 supported languages, with Google Cloud Translate API fallback for additional African languages when online:
 
 | Stage | Component | Size | Function |
 |:------|:----------|:----:|:---------|
@@ -71,7 +71,7 @@ Nku is a **working prototype** demonstrating the technical feasibility of offlin
 | Metric | Value |
 |:-------|:------|
 | Target population | **450M+** (rural Sub-Saharan Africa) |
-| Device requirement | $60–100 Android, 2–4GB RAM [26] |
+| Device requirement | $60–100 Android, 3–4GB RAM [26] |
 | Medical inference | **100% on-device** (zero cloud dependency) |
 | Translation | On-device (ML Kit, 59 langs) + cloud fallback (Twi, Hausa, Yoruba) |
 | Languages | 46 (14 clinically verified) |

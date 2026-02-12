@@ -10,7 +10,7 @@ In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people [1] �
 
 The disconnect: powerful AI models like MedGemma exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, while 3G accounts for ~54% of mobile connections (GSMA 2023), coverage is unreliable — 25% of rural Africans lack mobile broadband entirely, and only 23% use the internet regularly (ITU 2024) [4]. Cloud-based AI is impractical where it is needed most.
 
-**Target user**: A CHW in rural Ghana with a $60–100 TECNO or Infinix phone (2–4GB RAM) and no stable internet [26]. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral to a district hospital that may be hours away by motorbike. Transsion brands (TECNO, Infinix, itel) hold >50% of the African smartphone market [27].
+**Target user**: A CHW in rural Ghana with a $60–100 TECNO or Infinix phone (3–4GB RAM) and no stable internet [26]. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral to a district hospital that may be hours away. Transsion brands (TECNO, Infinix, itel) hold >50% of the African smartphone market [27].
 
 ---
 
@@ -18,21 +18,21 @@ The disconnect: powerful AI models like MedGemma exist, but require reliable clo
 
 Nku (Ewe: "eye") is a proof-of-concept prototype demonstrating that high-quality AI-powered clinical triage can reach the communities that need it most — running MedGemma entirely on $60–100 Android smartphones, 100% on-device, zero cloud dependency. By bringing clinical reasoning to CHWs' existing devices, Nku enables effective triage in settings where the nearest district hospital may be hours away: identifying patients who need urgent escalation while ensuring that scarce higher-level resources are directed to those who truly need them. It is not a finished clinical product; it requires field deployment with CHWs to validate thresholds and assess real-world accuracy. However, a concrete path to field testing exists: the developer — born and raised in Ghana, an incoming surgery resident at NewYork-Presbyterian Queens (MD/MS, Columbia VP&S, 2025; BA Neuroscience, Amherst College, 2019) — maintains clinical connections with physicians in both urban and rural Ghana, providing a direct pathway to pilot validation with CHWs in the target population.
 
-**Architecture** — MedGemma runs entirely on-device via `mmap` loading (the OS pages model data on demand, so peak resident memory adapts to available RAM). Translation uses Android ML Kit (on-device, ~30MB/language) for its 59 supported languages, with Google Cloud Translate API fallback for additional African languages (Twi, Hausa, Yoruba, Igbo) when connectivity is available:
+**Architecture** — MedGemma processes English-language medical text on-device via `mmap` loading (the OS pages model data on demand, so peak resident memory adapts to available RAM). For non-English input/output, Android ML Kit (on-device, ~30MB/language) handles translation across 59 supported languages, with Google Cloud Translate API fallback for additional African languages (Ewe, Twi, Hausa, Yoruba, Igbo, etc.) when connectivity is available:
 
 | Stage | Component | Size | Function |
 |:------|:----------|:----:|:---------|
-| 1. Translate | Android ML Kit / Cloud Translate | ~30MB/lang | Local language → English |
-| 2. Reason | **MedGemma 4B (Q4_K_M)** | **2.3GB** | Clinical reasoning on symptoms + sensor data |
-| 3. Translate | Android ML Kit / Cloud Translate | ~30MB/lang | English → local language |
-| 4. Speak | Android System TTS | 0 MB | Spoken result in 46 languages |
+| 1. Translate | Android ML Kit / Cloud Translate | ~30MB/lang | Non-English input → English |
+| 2. Reason | **MedGemma 4B (Q4_K_M)** | **2.3GB** | Clinical reasoning on symptoms + sensor data (English) |
+| 3. Translate | Android ML Kit / Cloud Translate | ~30MB/lang | English → non-English output |
+| 4. Speak | Android System TTS | 0 MB | Spoken result in device-supported languages |
 
-All medical inference is 100% on-device — MedGemma never touches the cloud. Translation is on-device via ML Kit for 59 languages including all African official languages (English, French, Portuguese), with Cloud Translate fallback for indigenous languages (Twi, Hausa, Yoruba) when online. Since CHWs are trained in their country's official language, every CHW always has a fully offline triage path. Our Q4_K_M quantized model achieves 56% on MedQA (n=1,273), retaining 81% of the unquantized model's published 69% baseline [7,8].
+All medical inference is 100% on-device — MedGemma never touches the cloud. For non-English interactions, translation is on-device via ML Kit for 59 languages including all African official languages (English, French, Portuguese), with Cloud Translate fallback for indigenous languages (Ewe, Twi, Hausa, Yoruba, etc.) when online. Since CHWs are trained in their country's official language, every CHW always has a fully offline triage path. Our Q4_K_M quantized model achieves 56% on MedQA (n=1,273), retaining 81% of the unquantized model's published 69% baseline [7,8].
 
 | | Nku | Cloud Alternatives |
 |:--------|:---:|:------------------:|
 | Medical inference offline | **100%** | 0% |
-| 2–4GB RAM devices | ✅ | ❌ |
+| 3–4GB RAM devices | ✅ | ❌ |
 | Pan-African languages | 46 | ~5 |
 | Per-query cost | **$0** (inference) | $0.01–0.10 |
 
@@ -40,7 +40,7 @@ All medical inference is 100% on-device — MedGemma never touches the cloud. Tr
 
 ## 3. Nku Sentinel: Camera-Based Screening
 
-CHWs may or may not have access to basic diagnostic equipment — but regardless, the core challenge is clinical reasoning: synthesizing multiple signals into an actionable triage decision. Nku Sentinel extracts vital signs using only the phone's camera (zero additional hardware, zero additional ML weights), then feeds structured biomarker data to MedGemma for clinical interpretation. The result is effective triage that identifies patients requiring urgent escalation — critical when the nearest district hospital may be a multi-hour motorbike ride away.
+CHWs may or may not have access to basic diagnostic equipment — but regardless, the core challenge is clinical reasoning: synthesizing multiple signals into an actionable triage decision. Nku Sentinel extracts vital signs using only the phone's camera (zero additional hardware, zero additional ML weights), then feeds structured biomarker data to MedGemma for clinical interpretation. The result is effective triage that identifies patients requiring urgent escalation — critical when the nearest district hospital may be hours away.
 
 ### Screening Modalities (Literature-Backed)
 
@@ -50,7 +50,7 @@ CHWs may or may not have access to basic diagnostic equipment — but regardless
 | **Anemia** | Conjunctival HSV analysis | 75.4% accuracy, 92.7% for severe anemia (Hb <7) [15]; HSV pallor correlates with hemoglobin [16] | Pallor score 0–1 | Conjunctival saturation + pallor index + severity + tissue coverage |
 | **Preeclampsia** | Facial geometry (EAR + gradients) | EAR from landmarks validated [17]; facial edema detection 85% accuracy [18] | Edema score 0–1 | EAR ratio + periorbital puffiness + facial swelling + edema index |
 
-Sensor thresholds (rPPG: 40–200 BPM range; pallor: saturation 0.10–0.20; edema: EAR 2.2–2.8) are grounded in published anthropometric and physiological data but are conservative screening estimates, intentionally tuned to over-refer rather than miss cases. This is by design: the sensors are feature extractors, not diagnostic endpoints. They pass continuous scores and confidence levels to MedGemma, which provides the clinical interpretation. Field calibration against clinician assessment will optimize sensitivity/specificity for specific deployment populations.
+Sensor thresholds (rPPG: 40–200 BPM range; pallor: saturation 0.10–0.20; edema: EAR 2.2–2.8) are grounded in published anthropometric and physiological data but are conservative screening estimates, intentionally tuned to slightly over-diagnose rather than miss cases. The sensors are feature extractors, not diagnostic endpoints — they pass continuous scores and confidence levels to MedGemma, which uses its clinical reasoning in light of additional inputted symptoms to provide a more clinically relevant triage recommendation. Field calibration against clinician assessment will optimize sensitivity/specificity for specific deployment populations.
 
 ### Fitzpatrick-Aware Design
 
@@ -62,7 +62,7 @@ Does 56% on MedQA translate to reliable triage? Yes — for three key reasons (f
 
 **1. Triage ≠ MedQA.** MedQA tests USMLE-level reasoning across all of medicine. CHW triage asks a simpler question: *"urgent referral, referral within days, or routine follow-up?"* for ~5–8 common conditions. Frontier LLMs achieve ~92.4% triage accuracy — far above their MedQA scores [19,20]. Our structured prompting (quantified vitals, confidence-gated readings, explicit output format) achieves a median 53% improvement over zero-shot baselines [23]. A quantized model scoring 56% on MedQA (a broad medical exam) is expected to perform substantially better on the narrower triage task.
 
-**2. Multi-layer safety architecture.** WHO/IMCI rule-based fallback if MedGemma is unavailable [12]. Sensor thresholds tuned to over-refer (false positives over false negatives). Always-on "Consult a healthcare professional" disclaimer. Confidence gating excludes unreliable sensor data from prompts.
+**2. Multi-layer safety architecture.** WHO/IMCI rule-based fallback if MedGemma is unavailable [12]. Sensor thresholds tuned to slightly over-diagnose (false positives over false negatives), with MedGemma applying clinical reasoning to refine triage. Always-on "Consult a healthcare professional" disclaimer. Confidence gating excludes unreliable sensor data from prompts.
 
 **3. The baseline is zero.** These CHWs currently have *no* diagnostic support. A real-world study in Nairobi showed LLM decision support reduced diagnostic errors by 16% [21]. A prospective study in Rwanda is specifically validating LLM-augmented CHW triage [22]. Even imperfect AI is transformative when the alternative is nothing.
 
@@ -82,7 +82,7 @@ Does 56% on MedQA translate to reliable triage? Yes — for three key reasons (f
 
 ## 5. MedGemma: Irreplaceable Core (HAI-DEF)
 
-MedGemma 4B is the sole clinical reasoning engine, running 100% on-device via Q4_K_M quantization (4-bit). This compression — from 8 GB (unquantized) to 2.3 GB (quantized) — enables fully offline inference on $50–100 phones. The quantized model retains 81% of the unquantized model's MedQA accuracy (56% quantized vs. 69% unquantized baseline). MedGemma is irreplaceable for three specific reasons: (1) it is the required HAI-DEF model for this competition, designed specifically for medical reasoning; (2) it is the only medically fine-tuned model with a GGUF-compatible architecture enabling ARM64 edge deployment via llama.cpp; (3) our quantization study demonstrated that domain-specific imatrix calibration (used for IQ2_XS) outperforms naive quantization at aggressive compression levels, validating the importance of MedGemma's medical fine-tuning for edge deployment. Cloud inference fails without connectivity; no alternative model satisfies all three constraints simultaneously.
+MedGemma 4B is the sole clinical reasoning engine, running 100% on-device via Q4_K_M quantization (4-bit). This compression — from 8 GB (unquantized) to 2.3 GB (quantized) — enables fully offline inference on $60–100 phones. The quantized model retains 81% of the unquantized model's MedQA accuracy (56% quantized vs. 69% unquantized baseline). MedGemma is irreplaceable for three specific reasons: (1) it is the required HAI-DEF model for this competition, designed specifically for medical reasoning; (2) it is the only medically fine-tuned model with a GGUF-compatible architecture enabling ARM64 edge deployment via llama.cpp; (3) cloud inference fails without connectivity — no alternative model satisfies both constraints simultaneously.
 
 > **Note on multimodal MedGemma 4B:** We evaluated the multimodal variant (with MedSigLIP vision encoder) architecturally but did not empirically benchmark it on our use case. The design rationale for choosing text-only + structured sensor data is detailed in Appendix D — no labeled training data exists for smartphone conjunctival or periorbital images in this clinical context.
 
@@ -90,11 +90,21 @@ MedGemma 4B is the sole clinical reasoning engine, running 100% on-device via Q4
 
 ## 6. Impact: Proof of Concept → Field Validation
 
-Nku is a working prototype demonstrating that high-quality AI-powered clinical triage on budget smartphones is technically feasible — and that the communities with the fewest medical resources can access the same caliber of clinical reasoning available in well-resourced settings. What remains is the harder, more important work: field validation.
+Nku is a working prototype demonstrating that high-quality AI-powered clinical triage on budget smartphones is technically feasible — closing the gap in triage quality between low-resource and high-resource settings. What remains is the harder, more important work: field validation.
 
 **What field deployment will reveal**: sensor accuracy across Fitzpatrick V-VI patients; CHW usability in variable lighting; which screening modality provides the most actionable triage; triage accuracy vs. clinician assessment; performance across TECNO/Infinix/Samsung A-series devices.
 
-**Deployment pathway**: Pilot with 5–10 CHWs in rural Ghana (concurrent ground-truth vitals) → threshold calibration → community health organization partnerships (e.g., Ghana Health Service) → Play Asset Delivery / sideloaded APK distribution. Ghana is the natural starting point — the developer, an incoming surgery resident at NewYork-Presbyterian Queens (MD/MS, Columbia Vagelos College of Physicians & Surgeons), was born and raised there and maintains active ties to local health communities. This combination of clinical training and personal connection to the target population makes Ghana the most feasible location for hands-on pilot coordination.
+**Deployment pathway**: Pilot with 5–10 CHWs in rural Ghana (concurrent ground-truth vitals) → threshold calibration → community health organization partnerships (e.g., Ghana Health Service) → Play Asset Delivery / sideloaded APK distribution. Ghana is the natural starting point — the developer was born and raised there and maintains active clinical connections with physicians in both urban and rural Ghana, providing a direct pathway to pilot coordination and field validation with CHWs in the target population.
+
+**Future features** (using only existing sensors + MedGemma, fully offline):
+
+| Feature | Sensor | Method | Clinical Impact |
+|:--------|:-------|:-------|:----------------|
+| Respiratory rate | Camera | Chest wall movement detection | Pneumonia triage (top child killer in SSA) |
+| Jaundice screening | Camera | Scleral icterus analysis (like conjunctival pallor) | Neonatal jaundice — common, time-critical |
+| SpO₂ estimation | Camera + flash | Fingertip reflectance photoplethysmography | Hypoxia detection for pneumonia/respiratory illness |
+| Cough classification | Microphone | Audio pattern analysis (productive vs. dry) | TB/pneumonia screening |
+| MUAC estimation | Camera | Mid-upper arm circumference via image | Child malnutrition screening |
 
 The promise of AI in healthcare has so far benefited those with the most access to care. Nku demonstrates that the technical barriers to democratized AI triage are solvable. The gap between prototype and impact is field deployment. Nku is ready for that next step.
 
@@ -116,9 +126,9 @@ The promise of AI in healthcare has so far benefited those with the most access 
 ---
 
 **Prize Tracks**:
-- **Main Track** (1st–4th, $10K–$30K): Nku addresses a real, urgent healthcare gap for 450M+ people by putting MedGemma-powered clinical reasoning directly in CHWs' hands — offline, multilingual, on their existing $60–100 devices.
-- **Edge AI Prize** ($5K): Nku's entire architecture — Q4_K_M compression (56% MedQA accuracy on the quantized model, vs. 69% unquantized), mmap loading on $60–100 phones, llama.cpp JNI, 100% on-device medical inference — is purpose-built for edge deployment. To validate this model selection, we systematically benchmarked four quantization levels on the full MedQA test set (n=1,273): IQ1_M (32.3%), Q2_K (34.7%), IQ2_XS with medical imatrix (43.8%), and Q4_K_M (56.0%). This study confirmed that domain-specific imatrix calibration is more important than raw bit budget at aggressive quantization levels, and that Q4_K_M provides the best accuracy for reliable clinical deployment (see Appendix D). **Only Q4_K_M is deployed in the Nku application.** The hardest technical challenge — running a medical-grade LLM on a budget phone — is solved.
-- **Novel Task Prize** ($5K): Two novel contributions: (1) A systematic quantization study comparing four MedGemma compression levels (IQ1_M through Q4_K_M) for an entirely new deployment context — offline multilingual triage on $60–100 smartphones — demonstrating that domain-specific imatrix calibration (used for IQ2_XS) outperforms naive quantization at aggressive compression levels. (2) A novel EAR-based periorbital edema screening heuristic, repurposing established computer vision geometry (Eye Aspect Ratio) for preeclampsia detection — grounded in palpebral fissure anthropometrics but not previously described in the literature.
+- **Main Track**: Nku addresses a real, urgent healthcare gap for 450M+ people by putting MedGemma-powered clinical reasoning directly in CHWs' hands — offline, multilingual, on their existing $60–100 devices.
+- **Edge AI Prize**: Nku's entire architecture — Q4_K_M compression (56% MedQA accuracy on the quantized model, vs. 69% unquantized), mmap loading on $60–100 phones, llama.cpp JNI, 100% on-device medical inference — is purpose-built for edge deployment. To validate this model selection, we systematically benchmarked four quantization levels on the full MedQA test set (n=1,273): IQ1_M (32.3%), Q2_K (34.7%), IQ2_XS with medical imatrix (43.8%), and Q4_K_M (56.0%). **Only Q4_K_M is deployed in the Nku application.** The hardest technical challenge — running a medical-grade LLM on a budget phone — is solved.
+- **Novel Task Prize**: Two novel contributions: (1) A systematic quantization study comparing four MedGemma compression levels (IQ1_M through Q4_K_M) for an entirely new deployment context — offline multilingual triage on $60–100 smartphones. (2) A novel EAR-based periorbital edema screening heuristic, repurposing established computer vision geometry (Eye Aspect Ratio) for preeclampsia detection — grounded in palpebral fissure anthropometrics but not previously described in the literature.
 
 ---
 

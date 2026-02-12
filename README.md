@@ -47,7 +47,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 | **On-Device Translation** | ML Kit for 59 languages (incl. English, French, Portuguese) + Cloud Translate fallback for indigenous languages |
 | **Ultra-Compressed** | 8GB → ~2.3GB via Q4_K_M quantization (56% MedQA on quantized model, vs. 69% unquantized) |
 | **Pan-African Languages** | 46 languages including Ewe, Hausa, Yoruba, Swahili |
-| **Budget Hardware** | Runs on $60–100 Android phones (2–4GB RAM, TECNO/Infinix) via mmap |
+| **Budget Hardware** | Runs on $60–100 Android phones (3–4GB RAM, TECNO/Infinix) via mmap |
 | **Camera Screening** | Heart rate, anemia, & preeclampsia via phone camera |
 
 ---
@@ -58,7 +58,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 - 🌐 **Android ML Kit** — On-device translation for 59 languages + Cloud Translate fallback for indigenous African languages
 - 🔊 **Android System TTS** — Device-native voice synthesis for spoken clinical results
 - 💎 **Premium UI** — Glassmorphism design with localized strings
-- ⚡ **Nku Cycle** — Memory-efficient mmap orchestration on budget devices (2–4GB RAM)
+- ⚡ **Nku Cycle** — Memory-efficient mmap orchestration on budget devices (3–4GB RAM)
 - 📷 **Nku Sentinel** — Camera-based screening for heart rate, anemia, & preeclampsia
 
 ---

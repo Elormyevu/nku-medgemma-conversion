@@ -30,73 +30,75 @@ class NkuTranslator(private val context: Context) {
 
         /**
          * Maps Nku language codes (ISO 639-1) to ML Kit TranslateLanguage constants.
-         * Languages NOT in this map require cloud fallback (CloudInferenceClient).
+         * Languages NOT in this map require cloud fallback.
          *
-         * ML Kit on-device coverage for Nku's target regions:
-         * - Official languages: English, French, Portuguese → always on-device
-         * - Regional: Afrikaans, Swahili → on-device
-         * - Not supported by ML Kit: Twi, Hausa, Yoruba, Igbo, Wolof, Amharic, etc.
+         * ML Kit translate:17.0.3 supports 59 languages, but most are
+         * European/Asian. Only 3 African languages are available on-device:
+         * Afrikaans, Swahili, and Arabic. All indigenous African languages
+         * (Hausa, Yoruba, Igbo, Amharic, Zulu, Xhosa, etc.) require
+         * Google Cloud Translate API fallback.
          */
         private val ML_KIT_LANGUAGE_MAP: Map<String, String> = mapOf(
-            // ── Official languages (always on-device) ──
+            // ── Official/colonial languages (on-device) ──
             "en" to TranslateLanguage.ENGLISH,
             "fr" to TranslateLanguage.FRENCH,
             "pt" to TranslateLanguage.PORTUGUESE,
 
-            // ── ML Kit-supported African languages ──
+            // ── ML Kit-supported languages used in Africa ──
             "af" to TranslateLanguage.AFRIKAANS,
             "sw" to TranslateLanguage.SWAHILI,
-            "zu" to TranslateLanguage.ZULU,
-
-            // ── Other ML Kit-supported languages used in Africa ──
-            "ar" to TranslateLanguage.ARABIC,
-            "es" to TranslateLanguage.SPANISH,
-
-            // ── Widely used international languages ──
-            "de" to TranslateLanguage.GERMAN,
-            "hi" to TranslateLanguage.HINDI,
-            "zh" to TranslateLanguage.CHINESE,
-            "ja" to TranslateLanguage.JAPANESE,
-            "ko" to TranslateLanguage.KOREAN,
-            "ru" to TranslateLanguage.RUSSIAN
+            "ar" to TranslateLanguage.ARABIC
         )
 
         /**
          * Languages that require Google Cloud Translate API (not in ML Kit).
-         * These are primarily indigenous African languages.
+         * These are all African languages beyond Afrikaans, Swahili, and Arabic.
+         * Cloud Translate supports many of these (ha, yo, ig, am, zu, xh, so, etc.)
+         * but requires network connectivity.
          */
         val CLOUD_ONLY_LANGUAGES = setOf(
-            "tw",  // Twi (Akan)
+            // Tier 1 — Nku clinically verified languages (cloud-only)
             "ha",  // Hausa
             "yo",  // Yoruba
             "ig",  // Igbo
-            "wo",  // Wolof
             "am",  // Amharic
+            "ee",  // Ewe
+            "ak",  // Twi (Akan)
+            "wo",  // Wolof
+            "zu",  // Zulu
+            "xh",  // Xhosa
             "om",  // Oromo
+            "ti",  // Tigrinya
+            // Tier 2 — additional languages (cloud-only)
+            "bm",  // Bambara
+            "ny",  // Chichewa
+            "din", // Dinka
+            "ff",  // Fula
+            "gaa", // Ga
+            "ki",  // Kikuyu
             "rw",  // Kinyarwanda
+            "kg",  // Kongo
+            "ln",  // Lingala
+            "luo", // Luo
+            "lg",  // Luganda
+            "mg",  // Malagasy
+            "nd",  // Ndebele
+            "nus", // Nuer
+            "pcm", // Pidgin (Nigerian)
+            "wes", // Pidgin (Cameroonian)
+            "rn",  // Rundi
+            "st",  // Sesotho
             "sn",  // Shona
             "so",  // Somali
-            "ti",  // Tigrinya
-            "ee",  // Ewe
-            "ak",  // Akan
-            "ln",  // Lingala
-            "kg",  // Kongo
-            "ff",  // Fula
-            "bm",  // Bambara
             "tn",  // Tswana
             "ts",  // Tsonga
             "ve",  // Venda
-            "xh",  // Xhosa
-            "st",  // Sesotho
-            "ss",  // Swazi
-            "nr",  // Ndebele
-            "ny",  // Chichewa
-            "mg",  // Malagasy
-            "rn",  // Kirundi
-            "lu",  // Luba-Katanga
-            "sg",  // Sango
-            "lg",  // Ganda
+            "ss",  // Swati
             "nso", // Northern Sotho
+            "bem", // Bemba
+            "tum", // Tumbuka
+            "lua", // Luba-Kasai
+            "kj"   // Kuanyama
         )
 
         /**

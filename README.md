@@ -5,7 +5,7 @@
 <h1 align="center">Nku: Offline Medical AI for Pan-Africa</h1>
 
 <p align="center">
-  <strong>Nku Sentinel — Clinical Triage on $50 Phones</strong>
+  <strong>Nku Sentinel — Clinical Triage on $60–100 Phones</strong>
 </p>
 
 <p align="center">
@@ -39,7 +39,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 ## 💡 The Solution
 
-**Nku** ("eye" in Ewe) is designed to turn any $50-100 Android phone into an offline clinical triage engine. It is a **proof-of-concept edge system** — 100% on-device inference, zero cloud dependency for clinical reasoning.
+**Nku** ("eye" in Ewe) is designed to turn any $60-100 Android phone into an offline clinical triage engine. It is a **proof-of-concept edge system** — 100% on-device inference, zero cloud dependency for clinical reasoning.
 
 | What | How |
 |:-----|:----|
@@ -58,7 +58,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 - 🌐 **Android ML Kit** — On-device translation for 59 languages + Cloud Translate fallback for indigenous African languages
 - 🔊 **Android System TTS** — Device-native voice synthesis for spoken clinical results
 - 💎 **Premium UI** — Glassmorphism design with localized strings
-- ⚡ **Nku Cycle** — Memory-efficient mmap orchestration on budget devices (3–4GB RAM)
+- ⚡ **Nku Cycle** — Memory-efficient mmap orchestration on budget devices (2–4GB RAM)
 - 📷 **Nku Sentinel** — Camera-based screening for heart rate, anemia, & preeclampsia
 
 ---
@@ -304,7 +304,7 @@ This project is licensed under the Apache License 2.0 — see the [LICENSE](./LI
 ---
 
 <p align="center">
-  <strong>🌍 450M+ lives • 💰 $50 phones • 🧠 100% on-device medical inference • 🗣️ 46 languages</strong>
+  <strong>🌍 450M+ lives • 💰 $60–100 phones • 🧠 100% on-device medical inference • 🗣️ 46 languages</strong>
 </p>
 
 <p align="center">

@@ -14,7 +14,7 @@ Yet nearly all CHWs carry smartphones. Powerful clinical AI models like MedGemma
 
 ### 2.1 The "Nku Cycle" — Edge Inference Orchestration
 
-Our core innovation is a memory-efficient orchestration pattern that runs MedGemma on budget devices (3–4GB RAM) using `mmap` — the OS pages model data on demand, so peak resident memory adapts to available RAM. Translation uses Android ML Kit (on-device, ~30MB/language) for 59 supported languages, with Google Cloud Translate API fallback for additional African languages when online:
+Our core innovation is a memory-efficient orchestration pattern that runs MedGemma on budget devices (2–4GB RAM) using `mmap` — the OS pages model data on demand, so peak resident memory adapts to available RAM. Translation uses Android ML Kit (on-device, ~30MB/language) for 59 supported languages, with Google Cloud Translate API fallback for additional African languages when online:
 
 | Stage | Component | Size | Function |
 |:------|:----------|:----:|:---------|
@@ -33,7 +33,7 @@ Our core innovation is a memory-efficient orchestration pattern that runs MedGem
 
 ### 2.2 Nku Sentinel — Camera-Based Screening (0 MB Additional Weight)
 
-CHWs lack diagnostic equipment. Nku Sentinel extracts vital signs using **only the phone camera** via pure signal processing (no additional ML models), then feeds results to MedGemma for clinical interpretation:
+CHWs frequently lack reliable diagnostic equipment [25]. Nku Sentinel extracts vital signs using **only the phone camera** via pure signal processing (no additional ML models), then feeds results to MedGemma for clinical interpretation:
 
 | Screening | Method | Key Evidence |
 |:----------|:-------|:-------------|
@@ -71,7 +71,7 @@ Nku is a **working prototype** demonstrating the technical feasibility of offlin
 | Metric | Value |
 |:-------|:------|
 | Target population | **450M+** (rural Sub-Saharan Africa) |
-| Device requirement | $50–100 Android, 3–4GB RAM |
+| Device requirement | $60–100 Android, 2–4GB RAM [26] |
 | Medical inference | **100% on-device** (zero cloud dependency) |
 | Translation | On-device (ML Kit, 59 langs) + cloud fallback (Twi, Hausa, Yoruba) |
 | Languages | 46 (14 clinically verified) |
@@ -94,4 +94,4 @@ The promise of AI in healthcare has so far benefited those with the most access 
 
 ---
 
-*Nku: a proof of concept for 450M+ lives • $50 phones • 100% on-device medical inference • 46 languages*
+*Nku: a proof of concept for 450M+ lives • $60–100 phones • 100% on-device medical inference • 46 languages*

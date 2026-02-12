@@ -32,7 +32,7 @@ All medical inference is 100% on-device — MedGemma never touches the cloud. Tr
 | | Nku | Cloud Alternatives |
 |:--------|:---:|:------------------:|
 | Medical inference offline | **100%** | 0% |
-| 3–4GB RAM devices | ✅ | ❌ |
+| 2–4GB RAM devices | ✅ | ❌ |
 | Pan-African languages | 46 | ~5 |
 | Per-query cost | **$0** (inference) | $0.01–0.10 |
 

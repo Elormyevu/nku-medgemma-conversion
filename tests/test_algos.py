@@ -1,3 +1,13 @@
+"""
+Algorithm Prototype Tests — Python Signal Processing Validators
+
+These tests validate the PYTHON algorithm prototypes (src/rppg/, src/neuro/),
+NOT the production Kotlin implementations (mobile/android/app/src/main/java/).
+The Kotlin production code has its own JVM-side tests in app/src/test/.
+
+Purpose: Verify signal processing correctness during R&D before porting to Kotlin.
+"""
+
 import unittest
 from unittest.mock import MagicMock
 import sys

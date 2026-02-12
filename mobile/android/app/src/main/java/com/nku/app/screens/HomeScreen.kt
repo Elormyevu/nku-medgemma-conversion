@@ -63,7 +63,7 @@ fun HomeScreen(
             strings.appTitle,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            color = MaterialTheme.colorScheme.onBackground
         )
         
         Text(
@@ -92,7 +92,7 @@ fun HomeScreen(
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(Modifier.width(8.dp))
-                Text(strings.language, color = Color.White, fontSize = 13.sp)
+                Text(strings.language, color = MaterialTheme.colorScheme.onBackground, fontSize = 13.sp)
                 Spacer(Modifier.weight(1f))
                 Box {
                     TextButton(onClick = { languageExpanded = true }) {
@@ -155,7 +155,7 @@ fun HomeScreen(
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(Modifier.width(8.dp))
-                Text(strings.themeLabel, color = Color.White, fontSize = 13.sp)
+                Text(strings.themeLabel, color = MaterialTheme.colorScheme.onBackground, fontSize = 13.sp)
                 Spacer(Modifier.weight(1f))
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     val modes = listOf(
@@ -433,7 +433,7 @@ fun GuidedStepCard(
                     Icon(
                         Icons.Default.Check,
                         contentDescription = "Complete",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.size(20.dp)
                     )
                 } else {
@@ -441,7 +441,7 @@ fun GuidedStepCard(
                         "$stepNumber",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
@@ -454,7 +454,7 @@ fun GuidedStepCard(
                     value,
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (value == "—") NkuColors.InactiveText else Color.White
+                    color = if (value == "—") NkuColors.InactiveText else MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     subtitle,

@@ -163,7 +163,7 @@ class TestRateLimiter(unittest.TestCase):
         # Create mock request
         mock_request = MagicMock()
         mock_request.headers = {}
-        mock_request.remote_addr = "192.168.1.1"
+        mock_request.remote_addr = "203.0.113.1"  # RFC 5737 TEST-NET-3
         
         # First 3 requests should pass
         for i in range(3):
@@ -185,12 +185,12 @@ class TestRateLimiter(unittest.TestCase):
         # Client 1
         client1 = MagicMock()
         client1.headers = {}
-        client1.remote_addr = "192.168.1.1"
+        client1.remote_addr = "203.0.113.1"  # RFC 5737 TEST-NET-3
         
         # Client 2
         client2 = MagicMock()
         client2.headers = {}
-        client2.remote_addr = "192.168.1.2"
+        client2.remote_addr = "203.0.113.2"  # RFC 5737 TEST-NET-3
         
         # Both clients should get their own quota
         allowed, _ = limiter.check_rate_limit(client1)

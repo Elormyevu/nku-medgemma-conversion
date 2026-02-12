@@ -53,7 +53,7 @@ This is **not recommended** because it creates a window where the app can't perf
 
 | Strategy | Savings | Status |
 |----------|---------|--------|
-| Q4_K_M quantization (from 8GB) | ~3.5x from FP16 | ✅ Done (56% MedQA) |
+| Q4_K_M quantization (from 8GB) | ~3.5x from FP16 | ✅ Done (56% MedQA quantized, 81% of 69% unquantized) |
 | ML Kit replaces TranslateGemma | ~2GB saved | ✅ Done |
 | Future: Q3_K_M quantization | ~350MB more | Requires accuracy validation |
 | Future: Distillation to 2B params | ~4x | Requires retraining |

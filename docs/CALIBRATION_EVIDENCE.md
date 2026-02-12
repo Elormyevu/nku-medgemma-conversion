@@ -61,7 +61,7 @@
 | Dimauro et al. (2022) review [11] | Multiple methods | 54–90% | 73–95% | 72–92% | Systematic review |
 
 ### Assessment
-**The modality (conjunctival pallor via smartphone) is well-validated.** However, **Nku's specific saturation thresholds (0.10 and 0.20) are engineering estimates without published validation.** The severity score mapping is arbitrary. Field calibration against hemoglobin measurements is essential to determine optimal cutoffs for the target population and device cameras. **No code changes recommended until field data is available.**
+**The modality (conjunctival pallor via smartphone) has substantial published evidence.** However, **Nku's specific saturation thresholds (0.10 and 0.20) are engineering estimates without published validation.** The severity score mapping is arbitrary. Field calibration against hemoglobin measurements is essential to determine optimal cutoffs for the target population and device cameras. **No code changes recommended until field data is available.**
 
 ---
 
@@ -89,7 +89,7 @@
 | Sokolova & Cech (2017) [15] | EAR from landmarks | EAR ≥0.3 open, ~0.2 closed | Drowsiness detection (not edema) |
 
 ### Assessment
-**This is the least-supported detector.** The adaptation of EAR from drowsiness detection to edema screening is a **novel application without direct published precedent**. The NEC/Tsukuba study validates that facial edema *can* be detected from photographs (85% accuracy), but uses a different methodology. The 60/40 periorbital-facial weighting is physiologically reasonable (periorbital edema is a more specific preeclampsia sign) but is not derived from clinical data. **Field calibration against physician edema assessment is critical.**
+**This is the least-supported detector.** The adaptation of EAR from drowsiness detection to edema screening is a **novel application without direct published precedent**. The NEC/Tsukuba study reported that facial edema *can* be detected from photographs (85% accuracy in dialysis patients), but uses a different methodology. The 60/40 periorbital-facial weighting is physiologically reasonable (periorbital edema is a more specific preeclampsia sign) but is not derived from clinical data. **Field calibration against physician edema assessment is critical.**
 
 ---
 

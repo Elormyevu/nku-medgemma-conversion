@@ -39,13 +39,13 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 ## 💡 The Solution
 
-**Nku** ("eye" in Ewe) transforms any $50-100 Android phone into an offline clinical triage engine. It is a **pure edge system** — 100% on-device inference, zero cloud dependency for clinical reasoning.
+**Nku** ("eye" in Ewe) is designed to turn any $50-100 Android phone into an offline clinical triage engine. It is a **proof-of-concept edge system** — 100% on-device inference, zero cloud dependency for clinical reasoning.
 
 | What | How |
 |:-----|:----|
 | **100% On-Device Medical Inference** | All clinical reasoning runs on-device — zero cloud dependency for MedGemma |
 | **On-Device Translation** | ML Kit for 59 languages (incl. English, French, Portuguese) + Cloud Translate fallback for indigenous languages |
-| **Ultra-Compressed** | 8GB model → ~2.3GB via Q4_K_M quantization (56% MedQA accuracy) |
+| **Ultra-Compressed** | 8GB → ~2.3GB via Q4_K_M quantization (56% MedQA on quantized model, vs. 69% unquantized) |
 | **Pan-African Languages** | 46 languages including Ewe, Hausa, Yoruba, Swahili |
 | **Budget Hardware** | Runs on $50–100 Android phones (2–3GB RAM, TECNO/Infinix) via mmap |
 | **Camera Screening** | Heart rate, anemia, & preeclampsia via phone camera |
@@ -54,7 +54,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 ## ✨ Features
 
-- 🧠 **MedGemma 4B** — Google's clinical reasoning model, quantized to ~2.3GB Q4_K_M (56% MedQA)
+- 🧠 **MedGemma 4B** — Google's clinical reasoning model, quantized to ~2.3GB Q4_K_M (56% MedQA, quantized; 69% unquantized)
 - 🌐 **Android ML Kit** — On-device translation for 59 languages + Cloud Translate fallback for indigenous African languages
 - 🔊 **Android System TTS** — Device-native voice synthesis for spoken clinical results
 - 💎 **Premium UI** — Glassmorphism design with localized strings
@@ -123,7 +123,7 @@ All screening uses **pure signal processing** (0 MB additional weights). Sensor 
 | **Inference** | llama.cpp via JNI (NDK 29, ARM64 NEON) |
 | **Translation** | Android ML Kit (on-device) + Google Cloud Translate (fallback) |
 | **TTS** | Android System TTS (NkuTTS.kt) |
-| **Quantization** | Q4_K_M + 64-chunk medical imatrix (56% MedQA) |
+| **Quantization** | Q4_K_M + 64-chunk medical imatrix (56% MedQA quantized, 81% of 69% unquantized baseline) |
 
 ---
 
@@ -170,7 +170,7 @@ adb push medgemma-4b-it-Q4_K_M.gguf /sdcard/Download/
 
 ### Compression Pipeline
 
-We achieve **90% model size reduction** while preserving clinical accuracy:
+We achieve **~71% model size reduction** (8GB → 2.3GB) while retaining clinically useful accuracy (56% MedQA on the quantized model, vs. 69% unquantized):
 
 | Stage | Format | MedGemma | Total |
 |:------|:------:|:--------:|:-----:|
@@ -182,7 +182,7 @@ We achieve **90% model size reduction** while preserving clinical accuracy:
 
 ### Calibration
 
-Medical accuracy is preserved through **64-chunk imatrix calibration** using 243 clinical scenarios across 14+ African languages.
+Clinical utility is maintained through **64-chunk imatrix calibration** using 243 clinical scenarios across 14+ African languages.
 
 ```bash
 # Generate calibration imatrix

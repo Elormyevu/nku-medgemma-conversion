@@ -197,7 +197,7 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 
 [7] Gerganov, G. *llama.cpp*. GitHub, 2023. https://github.com/ggerganov/llama.cpp
 
-[8] Dettmers, T., et al. "GGML: Efficient Inference of Quantized Models." 2023.
+[8] Gerganov, G. "GGML: Machine Learning Tensor Library." GitHub, 2023. https://github.com/ggerganov/ggml
 
 [9] Meijers, L., et al. "Accuracy of remote photoplethysmography." *JMIR mHealth* 10(12), 2022. DOI: 10.2196/42178
 
@@ -225,7 +225,7 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 
 Selecting the right quantization level required balancing two competing goals: **minimizing model size** (for budget devices) and **maintaining clinical accuracy** (for medical reasoning). We systematically benchmarked multiple quantization levels before selecting Q4_K_M.
 
-### MedGemma Quantization Comparison (MedQA, n=1,273)
+### MedGemma Quantization Comparison (MedQA, n=1,273)†
 
 | Quantization | Size | MedQA Accuracy | % of Baseline (69%) | Verdict |
 |:-------------|:----:|:--------------:|:--------------------:|:--------|
@@ -235,9 +235,11 @@ Selecting the right quantization level required balancing two competing goals: *
 | IQ2_XS | 1.3 GB | ~35% | ~51% | Below acceptable threshold |
 | IQ1_M | 1.1 GB | 32.3% (411/1273) | 46.8% | ❌ Near random chance — rejected |
 
+> †Each quantized model was evaluated in a **single pass** through the full MedQA test set (no repeated runs, no best-of-N selection). This mirrors Nku's real-world use case: a CHW presents a patient once and receives a single triage response. Single-run evaluation is the most representative measure of the model's reliability in this clinical context.
+
 **Key finding**: IQ1_M (our original choice for maximum compression) scored **32.3% on the full MedQA test set** (n=1,273) — only 7.3 percentage points above the 25% random baseline. The model exhibited a severe **position bias**: 51.7% of all predictions were "B" regardless of the question, yielding 61.8% accuracy on B-correct questions but only 6.2% on A-correct questions. This pattern is consistent with extreme quantization destroying the model's ability to reason over content, leaving only residual positional patterns.
 
-#### IQ1_M Detailed Results
+#### IQ1_M Detailed Results†
 
 | Metric | IQ1_M (1.1 GB) | Q4_K_M (2.3 GB) |
 |:-------|:--------------:|:---------------:|
@@ -247,6 +249,8 @@ Selecting the right quantization level required balancing two competing goals: *
 | Position bias (% predicted B) | **51.7%** | ~25% (uniform) |
 | Avg inference time | 0.6s | ~0.8s |
 | Total benchmark time | 13.1 min | ~17 min |
+
+> †Single-pass evaluation — see methodology note above.
 
 **Decision rationale**: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The 1.2 GB size increase over IQ1_M was an acceptable tradeoff for nearly doubling medical reasoning accuracy. With `mmap` memory mapping, the 2.3 GB model runs on 2–3 GB RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
 
@@ -315,7 +319,7 @@ A real-world study at **Penda Health clinics in Nairobi, Kenya** (2024–2025) f
 
 A prospective, observational study in **Nyabihu and Musanze districts, Rwanda** (Menon et al., 2025) is evaluating LLMs for CHW decision support, measuring referral appropriateness, diagnostic accuracy, and management plan quality [22]. The study — published in *BMJ Open* — was deemed ethically and scientifically justified specifically because CHWs in these settings lack alternative diagnostic tools. Audio recordings of CHW-patient consultations are transcribed and analyzed by an LLM, with outputs compared against clinical expert consensus — the same validation paradigm Nku would require.
 
-### Evidence 4: Structured Prompting Dramatically Improves Performance
+### Evidence 4: Structured Prompting Significantly Improves Performance
 
 Research on automated prompt optimization for medical vision-language models found that structured prompting achieves a **median 53% improvement** over zero-shot baselines [23]. Nku's `ClinicalReasoner.kt` generates a highly structured, **clinically explicit** prompt that includes measurement methodology, raw biomarker values, literature references, and screening disclaimers:
 
@@ -352,7 +356,7 @@ This is not a bare medical question — it's a **guided reasoning template** wit
 
 ### Evidence 5: On-Device Clinical Models Achieve High Accuracy
 
-The AMEGA benchmark study (2025) found that medically fine-tuned on-device models like **Med42 and Aloe achieve high clinical reasoning accuracy** on mobile devices, with compact models like Phi-3 Mini offering strong accuracy-to-speed ratios [24]. This validates the feasibility of on-device medical inference and demonstrates that quantized models can retain clinically useful performance.
+The AMEGA benchmark study (2025) found that medically fine-tuned on-device models like **Med42 and Aloe achieve clinically useful reasoning accuracy** on mobile devices, with compact models like Phi-3 Mini offering favorable accuracy-to-speed ratios [24]. This validates the feasibility of on-device medical inference and demonstrates that quantized models can retain clinically useful performance.
 
 ### Evidence 6: The Safety Architecture Compensates for Model Limitations
 
@@ -368,7 +372,7 @@ Nku doesn't rely on MedGemma alone. The safety architecture provides multiple co
 
 ### Conclusion
 
-The literature demonstrates that (a) triage is substantially easier for LLMs than MedQA, (b) LLMs already outperform human experts in comparable Sub-Saharan African clinical settings, (c) structured prompting significantly improves model performance, and (d) on-device quantized models retain clinically useful accuracy. Combined with Nku's multi-layer safety architecture and the reality that the alternative for these CHWs is *zero* diagnostic support, the pipeline provides a well-grounded, defensible starting point for field validation.
+The literature demonstrates that (a) triage is substantially easier for LLMs than MedQA, (b) LLM-based decision support reduces diagnostic errors in Sub-Saharan African clinical settings, (c) structured prompting significantly improves model performance, and (d) on-device quantized models retain clinically useful accuracy. Combined with Nku's multi-layer safety architecture and the reality that the alternative for these CHWs is *zero* diagnostic support, the pipeline provides a well-grounded, defensible starting point for field validation.
 
 ---
 

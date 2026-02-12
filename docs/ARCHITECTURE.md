@@ -95,7 +95,7 @@ fun runNkuCycleLocal(patientInput: String, language: String): NkuResult {
 - **Base**: google/medgemma-4b-it
 - **Quantization**: Q4_K_M (4-bit with importance matrix)
 - **Size**: 2.3 GB
-- **MedQA Accuracy**: 56% (81% of published 69% baseline)
+- **MedQA Accuracy**: 56% quantized (81% of unquantized 69% baseline)
 - **Purpose**: Clinical reasoning and symptom triage (100% on-device)
 
 ### Android ML Kit Translation

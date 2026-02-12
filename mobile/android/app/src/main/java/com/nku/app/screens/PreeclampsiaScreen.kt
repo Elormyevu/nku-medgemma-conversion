@@ -246,6 +246,17 @@ fun PreeclampsiaScreen(
                 }
             }
             Spacer(Modifier.height(16.dp))
+            
+            // Reset button — clears result without starting camera
+            OutlinedButton(
+                onClick = { edemaDetector.reset() },
+                modifier = Modifier.fillMaxWidth(0.6f),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(6.dp))
+                Text(strings.resetReading, fontSize = 14.sp)
+            }
         }
         
         if (!isCapturing) {

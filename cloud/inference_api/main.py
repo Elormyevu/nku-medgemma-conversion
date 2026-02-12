@@ -104,7 +104,12 @@ def add_security_headers(response):
 
 
 def require_api_key(f):
-    """Decorator: require NKU_API_KEY header if configured (S-04)."""
+    """Decorator: require NKU_API_KEY header (S-04).
+
+    Finding 14 fix: In production (debug=False), if NKU_API_KEY is not
+    configured, ALL requests are denied — preventing accidental open endpoints.
+    In debug mode, missing key is tolerated for local development.
+    """
     @wraps(f)
     def decorated(*args, **kwargs):
         if _api_key:
@@ -114,6 +119,12 @@ def require_api_key(f):
                     'error': 'unauthorized',
                     'message': 'Invalid or missing API key'
                 }), 401
+        elif not config.debug:
+            # Finding 14: No API key configured in production — deny all
+            return jsonify({
+                'error': 'misconfigured',
+                'message': 'API key not configured. Set NKU_API_KEY environment variable.'
+            }), 503
         return f(*args, **kwargs)
     return decorated
 

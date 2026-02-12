@@ -42,7 +42,9 @@ data class PallorResult(
     val confidence: Float = 0f,            // 0.0 - 1.0
     val severity: PallorSeverity = PallorSeverity.NORMAL,
     val recommendation: String = "No analysis",
-    val hasBeenAnalyzed: Boolean = false
+    val hasBeenAnalyzed: Boolean = false,
+    val avgSaturation: Float = 0f,         // Mean HSV saturation of conjunctival tissue pixels
+    val tissueRatio: Float = 0f            // Fraction of ROI classified as conjunctival tissue
 )
 
 enum class PallorSeverity {
@@ -217,7 +219,9 @@ class PallorDetector {
             confidence = confidence,
             severity = severity,
             recommendation = recommendation,
-            hasBeenAnalyzed = true
+            hasBeenAnalyzed = true,
+            avgSaturation = avgSaturation,
+            tissueRatio = tissueRatio
         )
         
         _result.value = result
@@ -256,6 +260,7 @@ class PallorDetector {
     }
     
     fun reset() {
-        _result.value = PallorResult(0f, 0f, PallorSeverity.NORMAL, "No analysis", hasBeenAnalyzed = false)
+        _result.value = PallorResult(0f, 0f, PallorSeverity.NORMAL, "No analysis",
+            hasBeenAnalyzed = false, avgSaturation = 0f, tissueRatio = 0f)
     }
 }

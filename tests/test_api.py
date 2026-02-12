@@ -19,8 +19,10 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../c
 
 def _create_test_client():
     """Create a Flask test client with mocked model loading."""
-    from cloud.inference_api.main import app
+    from cloud.inference_api.main import app, config
     app.config['TESTING'] = True
+    # Finding 14: tests run without API key; enable debug to bypass production guard
+    config.debug = True
     return app.test_client()
 
 

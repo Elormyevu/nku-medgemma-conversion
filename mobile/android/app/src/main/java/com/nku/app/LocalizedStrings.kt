@@ -160,6 +160,7 @@ object LocalizedStrings {
         val analyze: String = "Analyze",
         val cancel: String = "Cancel",
         val recapture: String = "Re-capture",
+        val resetReading: String = "Reset Reading",
         val howTo: String = "How to Capture",
 
         // F-UI-1: Formerly hardcoded strings now localized

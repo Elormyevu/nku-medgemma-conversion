@@ -26,12 +26,16 @@ data class VitalSigns(
     val pallorScore: Float? = null,
     val pallorSeverity: PallorSeverity? = null,
     val pallorConfidence: Float = 0f,
+    val conjunctivalSaturation: Float? = null,   // Raw HSV saturation of conjunctival tissue
+    val conjunctivalTissueCoverage: Float? = null, // Fraction of ROI classified as tissue
     
     // Preeclampsia Screening (Edema)
     val edemaScore: Float? = null,
     val edemaSeverity: EdemaSeverity? = null,
     val periorbitalScore: Float? = null,
     val edemaConfidence: Float = 0f,
+    val eyeAspectRatio: Float? = null,           // Raw EAR from MediaPipe landmarks
+    val facialSwellingScore: Float? = null,      // Overall facial swelling component
     
     // User-reported symptoms
     val reportedSymptoms: List<String> = emptyList(),
@@ -83,16 +87,20 @@ class SensorFusion(
             heartRateConfidence = rppgResult.confidence,
             heartRateQuality = rppgResult.signalQuality,
             
-            // Pallor
+            // Pallor — raw biomarkers for clinically explicit prompt
             pallorScore = if (hasPallor) pallorResult.pallorScore else null,
             pallorSeverity = if (hasPallor) pallorResult.severity else null,
             pallorConfidence = pallorResult.confidence,
+            conjunctivalSaturation = if (hasPallor) pallorResult.avgSaturation else null,
+            conjunctivalTissueCoverage = if (hasPallor) pallorResult.tissueRatio else null,
             
-            // Edema
+            // Edema — raw biomarkers for clinically explicit prompt
             edemaScore = if (hasEdema) edemaResult.edemaScore else null,
             edemaSeverity = if (hasEdema) edemaResult.severity else null,
             periorbitalScore = if (hasEdema) edemaResult.periorbitalScore else null,
             edemaConfidence = edemaResult.confidence,
+            eyeAspectRatio = if (hasEdema) edemaResult.avgEyeAspectRatio else null,
+            facialSwellingScore = if (hasEdema) edemaResult.facialScore else null,
             
             // Context
             reportedSymptoms = _symptoms.value.map { it.symptom },

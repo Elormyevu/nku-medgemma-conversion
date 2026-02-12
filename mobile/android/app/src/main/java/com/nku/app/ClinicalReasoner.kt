@@ -58,56 +58,103 @@ class ClinicalReasoner {
     val assessment: StateFlow<ClinicalAssessment?> = _assessment.asStateFlow()
     
     /**
-     * Generate structured prompt for MedGemma based on vital signs
+     * Generate structured prompt for MedGemma based on vital signs.
+     *
+     * Key design: MedGemma receives raw biomarker values alongside derived
+     * scores, plus method descriptions, so it can reason clinically about the
+     * underlying physiology rather than treating scores as opaque numbers.
      */
     fun generatePrompt(vitals: VitalSigns): String {
         val sb = StringBuilder()
         
         sb.appendLine("You are a clinical triage assistant for community health workers in rural Africa.")
         sb.appendLine("Analyze the following screening data and provide a structured assessment.")
+        sb.appendLine("All measurements below were captured on-device using a smartphone camera.")
         sb.appendLine()
-        sb.appendLine("=== VITAL SIGNS ===")
         
         // P2 fix: Apply same confidence gating as rule-based path
         val hrConfident = vitals.heartRateConfidence >= CONFIDENCE_THRESHOLD
         val pallorConfident = vitals.pallorConfidence >= CONFIDENCE_THRESHOLD
         val edemaConfident = vitals.edemaConfidence >= CONFIDENCE_THRESHOLD
 
-        // Heart Rate
+        // ── Heart Rate (rPPG) ──────────────────────────────
+        sb.appendLine("=== HEART RATE (rPPG) ===")
         vitals.heartRateBpm?.let { hr ->
             if (!hrConfident) {
                 sb.appendLine("Heart Rate: ${hr.toInt()} bpm [LOW CONFIDENCE — ${(vitals.heartRateConfidence * 100).toInt()}%, excluded from assessment]")
+                sb.appendLine("Method: Remote photoplethysmography — green channel intensity extracted from")
+                sb.appendLine("  facial video, frequency analysis via DFT over a sliding window.")
                 return@let
             }
+            sb.appendLine("Method: Remote photoplethysmography — green channel intensity extracted from")
+            sb.appendLine("  facial video, frequency analysis via DFT over a sliding window.")
+            sb.appendLine("  [Verkruysse et al., Opt Express 2008; Poh et al., Opt Express 2010]")
             val status = when {
-                hr < 50 -> "bradycardia"
-                hr > 100 -> "tachycardia"
-                else -> "normal range"
+                hr < 50 -> "bradycardia: <50 bpm"
+                hr > 100 -> "tachycardia: >100 bpm"
+                else -> "normal range: 50-100 bpm"
             }
-            sb.appendLine("Heart Rate: ${hr.toInt()} bpm ($status)")
-            sb.appendLine("  Confidence: ${(vitals.heartRateConfidence * 100).toInt()}%")
+            sb.appendLine("Heart rate: ${hr.toInt()} bpm ($status)")
+            sb.appendLine("Signal quality: ${vitals.heartRateQuality}")
+            sb.appendLine("Confidence: ${(vitals.heartRateConfidence * 100).toInt()}%")
         } ?: sb.appendLine("Heart Rate: Not measured")
         
-        // Pallor (Anemia Screening)
+        sb.appendLine()
+        
+        // ── Anemia Screening (Conjunctival Pallor) ─────────
+        sb.appendLine("=== ANEMIA SCREENING (Conjunctival Pallor) ===")
         vitals.pallorScore?.let { score ->
             if (!pallorConfident) {
-                sb.appendLine("Pallor Score: ${(score * 100).toInt()}% [LOW CONFIDENCE — ${(vitals.pallorConfidence * 100).toInt()}%, excluded from assessment]")
+                sb.appendLine("Pallor index: ${(score * 100).toInt()}% [LOW CONFIDENCE — ${(vitals.pallorConfidence * 100).toInt()}%, excluded from assessment]")
                 return@let
             }
-            sb.appendLine("Pallor Score: ${(score * 100).toInt()}% (${vitals.pallorSeverity?.name ?: "unknown"})")
-            sb.appendLine("  Interpretation: ${getPallorInterpretation(vitals.pallorSeverity)}")
+            sb.appendLine("Method: HSV color space analysis of the palpebral conjunctiva (lower eyelid")
+            sb.appendLine("  inner surface). Mean saturation of conjunctival tissue pixels quantifies")
+            sb.appendLine("  vascular perfusion — low saturation indicates reduced hemoglobin.")
+            sb.appendLine("  [Mannino et al., Nat Commun 2018; Dimauro et al., J Biomed Inform 2018]")
+            // Raw biomarker
+            vitals.conjunctivalSaturation?.let { sat ->
+                sb.appendLine("Conjunctival saturation: ${"%.2f".format(sat)} (healthy ≥0.20, pallor threshold ≤0.10)")
+            }
+            sb.appendLine("Pallor index: ${"%.2f".format(score)} (0.0=healthy, 1.0=severe pallor)")
+            sb.appendLine("Severity: ${vitals.pallorSeverity?.name ?: "unknown"} — ${getPallorInterpretation(vitals.pallorSeverity)}")
+            // Tissue coverage
+            vitals.conjunctivalTissueCoverage?.let { cov ->
+                sb.appendLine("Tissue coverage: ${(cov * 100).toInt()}% of ROI pixels classified as conjunctival tissue")
+            }
+            sb.appendLine("Confidence: ${(vitals.pallorConfidence * 100).toInt()}%")
+            sb.appendLine("Note: This is a screening heuristic, not a hemoglobin measurement.")
+            sb.appendLine("  Refer for laboratory hemoglobin test to confirm.")
         } ?: sb.appendLine("Pallor Assessment: Not performed")
         
-        // Edema (Preeclampsia Screening)
+        sb.appendLine()
+        
+        // ── Preeclampsia Screening (Periorbital Edema) ─────
+        sb.appendLine("=== PREECLAMPSIA SCREENING (Periorbital Edema) ===")
         vitals.edemaScore?.let { score ->
             if (!edemaConfident) {
-                sb.appendLine("Edema Score: ${(score * 100).toInt()}% [LOW CONFIDENCE — ${(vitals.edemaConfidence * 100).toInt()}%, excluded from assessment]")
+                sb.appendLine("Edema index: ${(score * 100).toInt()}% [LOW CONFIDENCE — ${(vitals.edemaConfidence * 100).toInt()}%, excluded from assessment]")
                 return@let
             }
-            sb.appendLine("Edema Score: ${(score * 100).toInt()}% (${vitals.edemaSeverity?.name ?: "unknown"})")
-            vitals.periorbitalScore?.let { peri ->
-                sb.appendLine("  Periorbital puffiness: ${(peri * 100).toInt()}%")
+            sb.appendLine("Method: Eye Aspect Ratio (EAR) computed from MediaPipe 478-landmark facial")
+            sb.appendLine("  mesh — periorbital edema narrows the palpebral fissure, reducing EAR.")
+            sb.appendLine("  Supplemented by periorbital brightness gradient analysis.")
+            sb.appendLine("  [Novel screening application of EAR; baseline from Vasanthakumar et al., JCDR 2013]")
+            // Raw biomarker
+            vitals.eyeAspectRatio?.let { ear ->
+                sb.appendLine("Eye Aspect Ratio: ${"%.2f".format(ear)} (normal baseline ≈2.8, edema threshold ≤2.2)")
             }
+            vitals.periorbitalScore?.let { peri ->
+                sb.appendLine("Periorbital puffiness score: ${"%.2f".format(peri)}")
+            }
+            vitals.facialSwellingScore?.let { facial ->
+                sb.appendLine("Facial swelling score: ${"%.2f".format(facial)}")
+            }
+            sb.appendLine("Edema index: ${"%.2f".format(score)} (0.0=normal, 1.0=significant)")
+            sb.appendLine("Severity: ${vitals.edemaSeverity?.name ?: "unknown"}")
+            sb.appendLine("Confidence: ${(vitals.edemaConfidence * 100).toInt()}%")
+            sb.appendLine("Note: This is a novel screening heuristic. Confirm with blood pressure")
+            sb.appendLine("  measurement and urine protein test.")
         } ?: sb.appendLine("Edema Assessment: Not performed")
         
         // Pregnancy Context
@@ -154,11 +201,11 @@ class ClinicalReasoner {
     
     private fun getPallorInterpretation(severity: PallorSeverity?): String {
         return when (severity) {
-            PallorSeverity.NORMAL -> "No clinical pallor, hemoglobin likely adequate"
-            PallorSeverity.MILD -> "Mild pallor, possible mild anemia (Hb 10-11 g/dL)"
-            PallorSeverity.MODERATE -> "Moderate pallor, likely moderate anemia (Hb 7-10 g/dL)"
-            PallorSeverity.SEVERE -> "Severe pallor, likely severe anemia (Hb <7 g/dL)"
-            null -> "Not assessed"
+            PallorSeverity.NORMAL -> "hemoglobin likely adequate"
+            PallorSeverity.MILD -> "possible mild anemia (Hb 10-11 g/dL)"
+            PallorSeverity.MODERATE -> "likely moderate anemia (Hb 7-10 g/dL)"
+            PallorSeverity.SEVERE -> "likely severe anemia (Hb <7 g/dL)"
+            null -> "not assessed"
         }
     }
     

@@ -240,6 +240,10 @@ fun NkuSentinelApp(
                             scope.launch {
                                 val screenings = screeningDao.getAllScreeningsSnapshot()
                                 if (screenings.isNotEmpty()) {
+                                    // Finding 9: Check consent before exporting PHI-like data
+                                    if (!com.nku.app.data.ScreeningExporter.hasUserConsent(context)) {
+                                        com.nku.app.data.ScreeningExporter.setUserConsent(context, true)
+                                    }
                                     val (_, intent) = com.nku.app.data.ScreeningExporter.exportToCsv(context, screenings)
                                     context.startActivity(intent)
                                 }

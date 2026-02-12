@@ -55,7 +55,8 @@ data class EdemaResult(
     val facialScore: Float = 0f,           // Overall facial swelling
     val recommendation: String = "No analysis",
     val riskFactors: List<String> = emptyList(),
-    val hasBeenAnalyzed: Boolean = false
+    val hasBeenAnalyzed: Boolean = false,
+    val avgEyeAspectRatio: Float = 0f      // Average EAR from MediaPipe landmarks
 )
 
 enum class EdemaSeverity {

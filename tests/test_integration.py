@@ -206,8 +206,10 @@ class TestModelLoadingFailure(unittest.TestCase):
     """Tests for graceful handling when models fail to load."""
     
     def setUp(self):
-        from cloud.inference_api.main import app
+        from cloud.inference_api.main import app, config
         app.config['TESTING'] = True
+        # Finding 14: enable debug to bypass API key guard (testing model loading, not auth)
+        config.debug = True
         self.client = app.test_client()
     
     def test_translate_returns_503_when_models_unavailable(self):

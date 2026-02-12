@@ -35,6 +35,7 @@ class ClinicalReasonerTest {
         assertTrue("Should contain HR value", prompt.contains("80 bpm"))
         assertTrue("Should contain confidence", prompt.contains("90%"))
         assertTrue("Should say normal range", prompt.contains("normal range"))
+        assertTrue("Should include rPPG method", prompt.contains("Remote photoplethysmography"))
     }
 
     @Test
@@ -313,6 +314,83 @@ class ClinicalReasonerTest {
             prompt.contains("excluded from assessment"))
         assertTrue("Should label as tachycardia",
             prompt.contains("tachycardia"))
+    }
+
+    // ── Clinically explicit prompt content ──────────────────
+
+    @Test
+    fun `generatePrompt includes conjunctival saturation value`() {
+        val vitals = VitalSigns(
+            pallorScore = 0.65f,
+            pallorSeverity = PallorSeverity.MODERATE,
+            pallorConfidence = 0.85f,
+            conjunctivalSaturation = 0.14f,
+            conjunctivalTissueCoverage = 0.42f
+        )
+        val prompt = reasoner.generatePrompt(vitals)
+        assertTrue("Should contain conjunctival saturation",
+            prompt.contains("Conjunctival saturation:"))
+        assertTrue("Should contain tissue coverage",
+            prompt.contains("Tissue coverage:"))
+        assertTrue("Should contain HSV method",
+            prompt.contains("HSV color space"))
+    }
+
+    @Test
+    fun `generatePrompt includes EAR value`() {
+        val vitals = VitalSigns(
+            edemaScore = 0.55f,
+            edemaSeverity = EdemaSeverity.MODERATE,
+            edemaConfidence = 0.80f,
+            eyeAspectRatio = 2.35f,
+            periorbitalScore = 0.45f,
+            facialSwellingScore = 0.32f
+        )
+        val prompt = reasoner.generatePrompt(vitals)
+        assertTrue("Should contain Eye Aspect Ratio",
+            prompt.contains("Eye Aspect Ratio:"))
+        assertTrue("Should contain facial swelling score",
+            prompt.contains("Facial swelling score:"))
+        assertTrue("Should contain EAR method",
+            prompt.contains("MediaPipe 478-landmark"))
+    }
+
+    @Test
+    fun `generatePrompt includes screening disclaimers`() {
+        val vitals = VitalSigns(
+            pallorScore = 0.5f,
+            pallorSeverity = PallorSeverity.MODERATE,
+            pallorConfidence = 0.85f,
+            edemaScore = 0.5f,
+            edemaSeverity = EdemaSeverity.MODERATE,
+            edemaConfidence = 0.85f
+        )
+        val prompt = reasoner.generatePrompt(vitals)
+        assertTrue("Pallor section should have screening disclaimer",
+            prompt.contains("screening heuristic"))
+        assertTrue("Edema section should have screening disclaimer",
+            prompt.contains("novel screening heuristic"))
+    }
+
+    @Test
+    fun `generatePrompt includes literature references`() {
+        val vitals = VitalSigns(
+            heartRateBpm = 72f,
+            heartRateConfidence = 0.9f,
+            pallorScore = 0.3f,
+            pallorSeverity = PallorSeverity.MILD,
+            pallorConfidence = 0.85f,
+            edemaScore = 0.3f,
+            edemaSeverity = EdemaSeverity.MILD,
+            edemaConfidence = 0.85f
+        )
+        val prompt = reasoner.generatePrompt(vitals)
+        assertTrue("Should reference rPPG literature",
+            prompt.contains("Verkruysse"))
+        assertTrue("Should reference pallor literature",
+            prompt.contains("Mannino"))
+        assertTrue("Should reference edema baseline",
+            prompt.contains("Vasanthakumar"))
     }
 
     // ── reset() ─────────────────────────────────────────────

@@ -37,7 +37,7 @@ CHWs lack diagnostic equipment. Nku Sentinel extracts vital signs using **only t
 
 | Screening | Method | Key Evidence |
 |:----------|:-------|:-------------|
-| **Cardio Check** | rPPG (green channel DFT, 30fps) | Verkruysse 2008: green channel strongest signal; smartphone rPPG MAE 2.49 BPM |
+| **Cardio Check** | rPPG (green channel DFT, 30fps) | Verkruysse 2008: green channel strongest signal; smartphone rPPG MAE 1.32–3.95 BPM |
 | **Anemia Screen** | **Conjunctival** HSV analysis | Jay 2024: 75.4% accuracy, 92.7% for severe anemia; thresholds pending field calibration |
 | **Preeclampsia** | Facial geometry (EAR) | NEC/Tsukuba: 85% edema detection accuracy; EAR thresholds pending field calibration |
 

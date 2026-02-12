@@ -46,7 +46,7 @@ CHWs may or may not have access to basic diagnostic equipment — but regardless
 
 | Screening | Method | Published Evidence | Output | MedGemma Input |
 |:----------|:-------|:-------------------|:-------|:---------------|
-| **Heart rate** | Green channel rPPG, 10s DFT | Green channel yields strongest plethysmographic signal [13]; smartphone rPPG MAE 2.49 BPM [14] | ±5 BPM | BPM value + quality label + confidence % |
+| **Heart rate** | Green channel rPPG, 10s DFT | Green channel yields strongest plethysmographic signal [13]; smartphone rPPG MAE 1.32–3.95 BPM [9,14] | ±5 BPM | BPM value + quality label + confidence % |
 | **Anemia** | Conjunctival HSV analysis | 75.4% accuracy, 92.7% for severe anemia (Hb <7) [15]; HSV pallor correlates with hemoglobin [16] | Pallor score 0–1 | Conjunctival saturation + pallor index + severity + tissue coverage |
 | **Preeclampsia** | Facial geometry (EAR + gradients) | EAR from landmarks validated [17]; facial edema detection 85% accuracy [18] | Edema score 0–1 | EAR ratio + periorbital puffiness + facial swelling + edema index |
 

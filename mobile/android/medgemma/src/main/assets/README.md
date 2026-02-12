@@ -1,1 +1,1 @@
-Place medgemma-4b-iq1_m.gguf here for Play Asset Delivery
+Place medgemma-4b-it-Q4_K_M.gguf here for Play Asset Delivery

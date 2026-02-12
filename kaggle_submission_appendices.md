@@ -305,6 +305,6 @@ The literature demonstrates that (a) triage is substantially easier for LLMs tha
 
 [22] Menon, V., Shimelash, N., Rutunda, S., et al. "Assessing the potential utility of large language models for assisting community health workers: protocol for a prospective, observational study in Rwanda." *BMJ Open*, 2025. DOI: 10.1136/bmjopen-2025-110927
 
-[23] "Prompt Triage: Automated Prompt Optimization for Medical Vision-Language Models." *arXiv*, November 14, 2025. Median 53% relative improvement over zero-shot baselines across 10 open-source VLMs.
+[23] Singhvi, A., Bikia, V., Aali, A., Chaudhari, A., Daneshjou, R. "Prompt Triage: Structured Optimization Enhances Vision-Language Model Performance on Medical Imaging Benchmarks." *arXiv:2511.11898*, November 14, 2025. Median 53% relative improvement over zero-shot baselines across 10 open-source VLMs.
 
-[24] "Medicine on the Edge: Comparative Performance Analysis of On-Device LLMs for Clinical Reasoning." *arXiv*, February 13, 2025. AMEGA benchmark: Med42 and Aloe achieve highest clinical accuracy on mobile devices.
+[24] Nissen, L., Zagar, P., Ravi, V., Zahedivash, A., Reimer, L.M., Jonas, S., Aalami, O., Schmiedmayer, P. "Medicine on the Edge: Comparative Performance Analysis of On-Device LLMs for Clinical Reasoning." *arXiv:2502.08954*, February 13, 2025. AMEGA benchmark: Med42 and Aloe achieve highest clinical accuracy on mobile devices.

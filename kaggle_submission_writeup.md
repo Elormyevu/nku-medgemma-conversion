@@ -66,7 +66,21 @@ The sensors are **signal producers, not diagnostic endpoints**. Unlike a standal
 
 A heart rate of 110 BPM means one thing in a febrile child and something entirely different in a 28-week pregnant woman with facial edema. The sensors provide data; **MedGemma provides clinical judgment**.
 
-**Fallback**: If MedGemma is unavailable (thermal throttling, memory pressure), rule-based WHO/IMCI decision trees provide triage [12].
+### Why 56% MedQA Is Sufficient for CHW Triage
+
+A natural concern: does 56% on MedQA translate to reliable triage? We argue yes, for five reasons (see Appendix E for full analysis):
+
+**1. MedQA ≠ triage.** MedQA tests USMLE-level diagnostic reasoning across *all* of medicine — cardiology, oncology, psychiatry, rare genetic disorders. CHW triage asks a fundamentally simpler question: *"Does this patient need urgent referral, referral within days, or routine follow-up?"* for ~5–8 common conditions (malaria, anemia, preeclampsia, respiratory infections, diarrheal disease). Recent research shows frontier LLMs achieve ~92.4% triage accuracy — substantially higher than their MedQA scores — confirming that triage is an easier task for LLMs than medical exams [19, 20].
+
+**2. Structured input reduces the reasoning burden.** `ClinicalReasoner.kt` generates a highly structured prompt — quantified vital signs with clinical interpretations, confidence-gated sensor readings (sub-threshold data excluded), pregnancy context with gestational age, and an explicit output format (SEVERITY/URGENCY/RECOMMENDATIONS). Structured prompting achieves a median 53% improvement over zero-shot baselines in medical VLMs [23]. This gives MedGemma strong signal with minimal ambiguity.
+
+**3. Rule-based safety net.** If MedGemma is unavailable or uncertain, WHO/IMCI decision trees provide rule-based triage [12]. The system is designed so that **no patient leaves without guidance**, regardless of model performance.
+
+**4. Over-referral by design.** Sensor thresholds are tuned to flag liberally. A false positive (unnecessary referral) is an inconvenience; a false negative (missed critical case) is a catastrophe. Combined with MedGemma's conservative clinical phrasing, the system errs toward caution.
+
+**5. The baseline is zero.** Without Nku, these CHWs have *no* diagnostic support — not imperfect AI, but nothing. A 2024 study found that LLMs already outperform local medical experts in Sub-Saharan African clinical benchmarks, even in less-represented languages [21]. A prospective study in Rwanda is specifically validating LLM-augmented CHW decision support [22]. Even imperfect AI triage is transformative where the alternative is unaided clinical intuition.
+
+This requires field validation — and we are explicit about that. But the architectural argument is sound: a medical LLM performing at 81% of published baseline, given highly structured input on a narrow set of common conditions, with a rule-based fallback, is a defensible starting point for CHW triage support.
 
 ---
 

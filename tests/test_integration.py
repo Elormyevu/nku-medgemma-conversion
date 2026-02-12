@@ -18,8 +18,10 @@ class TestTranslateWithMockedModel(unittest.TestCase):
     """Tests for /translate endpoint with mocked LLM inference."""
     
     def setUp(self):
-        from cloud.inference_api.main import app
+        from cloud.inference_api.main import app, config
         app.config['TESTING'] = True
+        # Finding 14: tests run without API key; enable debug to bypass production guard
+        config.debug = True
         self.client = app.test_client()
         # S-04: Disable API key requirement in tests
         self._api_key_patcher = patch('cloud.inference_api.main._api_key', None)
@@ -85,8 +87,10 @@ class TestTriageWithMockedModel(unittest.TestCase):
     """Tests for /triage endpoint with mocked LLM inference."""
     
     def setUp(self):
-        from cloud.inference_api.main import app
+        from cloud.inference_api.main import app, config
         app.config['TESTING'] = True
+        # Finding 14: enable debug to bypass production API key guard
+        config.debug = True
         self.client = app.test_client()
         self._api_key_patcher = patch('cloud.inference_api.main._api_key', None)
         self._api_key_patcher.start()
@@ -155,8 +159,10 @@ class TestNkuCycleWithMockedModels(unittest.TestCase):
     """Tests for /nku-cycle endpoint with mocked LLM inference."""
     
     def setUp(self):
-        from cloud.inference_api.main import app
+        from cloud.inference_api.main import app, config
         app.config['TESTING'] = True
+        # Finding 14: enable debug to bypass production API key guard
+        config.debug = True
         self.client = app.test_client()
         self._api_key_patcher = patch('cloud.inference_api.main._api_key', None)
         self._api_key_patcher.start()

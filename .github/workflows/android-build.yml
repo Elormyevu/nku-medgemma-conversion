@@ -46,8 +46,10 @@ jobs:
           from huggingface_hub import hf_hub_download
           import shutil
           # MedGemma 4B Q4_K_M (~2.3GB) → medgemma asset pack
-          p = hf_hub_download('mradermacher/medgemma-4b-it-GGUF', 'medgemma-4b-it-Q4_K_M.gguf')
-          shutil.copy(p, 'medgemma/src/main/assets/medgemma-4b-it-Q4_K_M.gguf')
+          # HuggingFace uses dot separator: medgemma-4b-it.Q4_K_M.gguf
+          # Kotlin constant expects: medgemma-4b-it-q4_k_m.gguf
+          p = hf_hub_download('mradermacher/medgemma-4b-it-GGUF', 'medgemma-4b-it.Q4_K_M.gguf')
+          shutil.copy(p, 'medgemma/src/main/assets/medgemma-4b-it-q4_k_m.gguf')
           print(f'MedGemma Q4_K_M → medgemma pack ({p})')
           "
           echo "--- Asset pack contents ---"

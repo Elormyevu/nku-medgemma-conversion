@@ -136,7 +136,7 @@ python llama.cpp/convert_hf_to_gguf.py \
 
 # 3b. Q4_K_M — standard quantization (deployed model)
 # Downloaded pre-quantized from mradermacher/medgemma-4b-it-GGUF
-huggingface-cli download mradermacher/medgemma-4b-it-GGUF medgemma-4b-it-Q4_K_M.gguf
+huggingface-cli download mradermacher/medgemma-4b-it-GGUF medgemma-4b-it.Q4_K_M.gguf
 ```
 
 ## Directory Structure

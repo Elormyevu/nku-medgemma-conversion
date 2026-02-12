@@ -158,10 +158,10 @@ Models are loaded from device storage. For production, see `MODEL_DISTRIBUTION.m
 
 ```bash
 # Download MedGemma Q4_K_M from HuggingFace
-huggingface-cli download mradermacher/medgemma-4b-it-GGUF medgemma-4b-it-Q4_K_M.gguf
+huggingface-cli download mradermacher/medgemma-4b-it-GGUF medgemma-4b-it.Q4_K_M.gguf
 
-# Push to device (development)
-adb push medgemma-4b-it-Q4_K_M.gguf /sdcard/Download/
+# Push to device (rename to match Kotlin constant)
+adb push medgemma-4b-it.Q4_K_M.gguf /sdcard/Download/medgemma-4b-it-q4_k_m.gguf
 
 # ML Kit translation packs are downloaded automatically by the app
 ```

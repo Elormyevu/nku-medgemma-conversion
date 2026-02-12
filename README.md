@@ -21,7 +21,7 @@
   <img src="https://img.shields.io/badge/MedGemma-4B-blue?style=flat-square" alt="MedGemma" />
   <img src="https://img.shields.io/badge/Inference-100%25_On--Device-green?style=flat-square" alt="On-Device" />
   <img src="https://img.shields.io/badge/Languages-46-orange?style=flat-square" alt="Languages" />
-  <img src="https://img.shields.io/badge/RAM-2GB-purple?style=flat-square" alt="RAM" />
+  <img src="https://img.shields.io/badge/RAM-3GB-purple?style=flat-square" alt="RAM" />
   <img src="https://img.shields.io/badge/License-Apache%202.0-lightgrey?style=flat-square" alt="License" />
 </p>
 
@@ -265,7 +265,7 @@ nku-medgemma-conversion/
 
 This project is a submission for the [MedGemma Impact Challenge](https://www.kaggle.com/competitions/medgemma-impact-challenge) on Kaggle.
 
-**Target Track**: Edge AI Prize ($5,000)
+**Target Track**: Edge AI Prize
 
 | Criterion | Our Strength |
 |:----------|:-------------|

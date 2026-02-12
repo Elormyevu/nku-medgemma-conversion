@@ -225,19 +225,48 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 
 Selecting the right quantization level required balancing two competing goals: **minimizing model size** (for budget devices) and **maintaining clinical accuracy** (for medical reasoning). We systematically benchmarked multiple quantization levels before selecting Q4_K_M.
 
-### MedGemma Quantization Comparison (MedQA, n=500+)
+### MedGemma Quantization Comparison (MedQA, n=1,273)
 
 | Quantization | Size | MedQA Accuracy | % of Baseline (69%) | Verdict |
 |:-------------|:----:|:--------------:|:--------------------:|:--------|
 | F16 (baseline) | 8.0 GB | 69% | 100% | Too large for mobile |
-| **Q4_K_M** | **2.3 GB** | **56%** | **81%** | **✅ Selected — best accuracy/size ratio** |
+| **Q4_K_M** | **2.3 GB** | **56.0%** (713/1273) | **81%** | **✅ Selected — best accuracy/size ratio** |
 | Q3_K_M | 1.8 GB | ~45% | ~65% | Marginal for clinical use |
 | IQ2_XS | 1.3 GB | ~35% | ~51% | Below acceptable threshold |
-| IQ1_M | 1.1 GB | 29.8% | 43% | ❌ Near random chance — rejected |
+| IQ1_M | 1.1 GB | 32.3% (411/1273) | 46.8% | ❌ Near random chance — rejected |
 
-**Key finding**: IQ1_M (our original choice for maximum compression) scored 29.8% on MedQA — barely above the 25% random baseline. At this accuracy level, the model was essentially guessing on medical questions. We stopped the IQ1_M benchmark early (at n=500) once the trend was clear.
+**Key finding**: IQ1_M (our original choice for maximum compression) scored **32.3% on the full MedQA test set** (n=1,273) — only 7.3 percentage points above the 25% random baseline. The model exhibited a severe **position bias**: 51.7% of all predictions were "B" regardless of the question, yielding 61.8% accuracy on B-correct questions but only 6.2% on A-correct questions. This pattern is consistent with extreme quantization destroying the model's ability to reason over content, leaving only residual positional patterns.
 
-**Decision rationale**: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The 1.2GB size increase over IQ1_M was an acceptable tradeoff for nearly doubling medical reasoning accuracy. With `mmap` memory mapping, the 2.3GB model runs on 2–3GB RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
+#### IQ1_M Detailed Results
+
+| Metric | IQ1_M (1.1 GB) | Q4_K_M (2.3 GB) |
+|:-------|:--------------:|:---------------:|
+| Overall MedQA (n=1,273) | 32.3% (411) | 56.0% (713) |
+| Primary Care subset (n=707) | 32.4% (229) | 56.2% (397) |
+| Unparsed responses | 1 (0.08%) | 0 |
+| Position bias (% predicted B) | **51.7%** | ~25% (uniform) |
+| Avg inference time | 0.6s | ~0.8s |
+| Total benchmark time | 13.1 min | ~17 min |
+
+**Decision rationale**: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The 1.2 GB size increase over IQ1_M was an acceptable tradeoff for nearly doubling medical reasoning accuracy. With `mmap` memory mapping, the 2.3 GB model runs on 2–3 GB RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
+
+### Why Not Unquantized MedGemma 4B or MedGemma 4B Multimodal?
+
+| Alternative | Size | Why Not Viable |
+|:------------|:----:|:---------------|
+| **MedGemma 4B F16** (unquantized) | 8.0 GB | On a $50–100 phone with 2–3 GB RAM, `mmap` must page an 8 GB model through ~2 GB of available memory. The resulting page thrashing increases per-query latency from sub-second to **minutes** — unusable during a clinical encounter. Q4_K_M (2.3 GB) fits comfortably within the mmap working set. |
+| **MedGemma 4B Multimodal** | ~3.1 GB (Q4_K_M) | See detailed analysis below. |
+
+**Why not use the multimodal MedGemma 4B with raw camera images?** A natural question: MedGemma 4B multimodal includes a MedSigLIP vision encoder (400M parameters). Why not feed it raw camera images directly, skipping the sensor-to-text pipeline entirely? Four reasons:
+
+1. **rPPG requires temporal video analysis, not single images.** Heart rate detection via rPPG extracts pulse frequency from 10 seconds of facial video (300 frames) using DFT. A vision-language model processes single images — it cannot perform temporal frequency analysis across a video stream. No single frame contains heart rate information.
+
+2. **MedSigLIP was trained on clinical imagery, not smartphone selfies.** The vision encoder was fine-tuned on chest X-rays, dermatoscopy, ophthalmology scans, and histopathology slides — none of which resemble a smartphone photo of a lower eyelid (pallor) or a facial selfie (edema). It would require fine-tuning on these specific modalities, for which no labeled training data currently exists.
+
+3. **The multimodal model is larger, not smaller.** The text decoder is identical to the text-only 4B. Adding MedSigLIP (400M params, ~800 MB) increases the quantized model from 2.3 GB to ~3.1 GB — a 35% size increase with no benefit for Nku's use case. On a 2 GB RAM device, this additional memory pressure degrades inference performance.
+
+4. **Structured numerical input outperforms ambiguous visual input.** Nku's sensor pipeline outputs precise, quantified biomarkers (HR: 108 BPM, conjunctival saturation: 0.08, EAR: 2.15) with confidence scores and clinical context. Feeding the model a raw photo and asking "does this patient have anemia?" yields far less reliable results than providing "conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10), pallor index: 0.68, severity: MODERATE." The structured prompting approach achieves a median 53% improvement over zero-shot baselines [23].
+
 
 ### Translation Model Comparison
 

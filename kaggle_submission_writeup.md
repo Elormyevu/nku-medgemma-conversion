@@ -109,7 +109,7 @@ The promise of AI in healthcare has so far benefited those with the most access 
 | Calibration | `calibration/african_primary_care.txt` (243 scenarios) |
 | Build | `git clone ... && cd mobile/android && ./gradlew assembleDebug` |
 
-*See `kaggle_submission_appendices.md` for full language list (46), calibration scenario examples, MedGemma reasoning examples, and complete references [1–18].*
+*See `kaggle_submission_appendices.md` for full language list (46), calibration scenario examples, MedGemma reasoning examples, and complete references [1–27].*
 
 **Development tooling**: Google Antigravity (Gemini 3 Flash/Pro, Claude Opus 4.5/4.6); OpenAI Codex IDE (GPT 5.3 Codex).
 

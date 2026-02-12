@@ -227,32 +227,33 @@ Selecting the right quantization level required balancing two competing goals: *
 
 ### MedGemma Quantization Comparison (MedQA, n=1,273)†
 
-| Quantization | Size | MedQA Accuracy | % of Baseline (69%) | Verdict |
-|:-------------|:----:|:--------------:|:--------------------:|:--------|
-| F16 (baseline) | 8.0 GB | 69% | 100% | Too large for mobile |
-| **Q4_K_M** | **2.3 GB** | **56.0%** (713/1273) | **81%** | **✅ Selected — best accuracy/size ratio** |
-| Q3_K_M | 1.8 GB | ~45% | ~65% | Marginal for clinical use |
-| IQ2_XS | 1.3 GB | ~35% | ~51% | Below acceptable threshold |
-| IQ1_M | 1.1 GB | 32.3% (411/1273) | 46.8% | ❌ Near random chance — rejected |
+| Quantization | Size | MedQA Accuracy | Primary Care (n=707) | % of Baseline (69%) | Verdict |
+|:-------------|:----:|:--------------:|:--------------------:|:--------------------:|:--------|
+| F16 (baseline) | 8.0 GB | 69% | — | 100% | Too large for mobile |
+| **Q4_K_M** | **2.3 GB** | **56.0%** (713/1273) | **56.2%** (397/707) | **81%** | **✅ Selected — best accuracy/size ratio** |
+| IQ2_XS + medical imatrix | 1.3 GB | 43.8% (558/1273) | 45.3% (320/707) | 63.5% | Viable alternative for ultra-constrained devices |
+| Q2_K | 1.6 GB | 34.7% (442/1273) | 33.9% (240/707) | 50.3% | ❌ Worse than IQ2_XS despite being larger |
+| IQ1_M | 1.1 GB | 32.3% (411/1273) | 32.4% (229/707) | 46.8% | ❌ Near random chance — rejected |
 
 > †Each quantized model was evaluated in a **single pass** through the full MedQA test set (no repeated runs, no best-of-N selection). This mirrors Nku's real-world use case: a CHW presents a patient once and receives a single triage response. Single-run evaluation is the most representative measure of the model's reliability in this clinical context.
 
-**Key finding**: IQ1_M (our original choice for maximum compression) scored **32.3% on the full MedQA test set** (n=1,273) — only 7.3 percentage points above the 25% random baseline. The model exhibited a severe **position bias**: 51.7% of all predictions were "B" regardless of the question, yielding 61.8% accuracy on B-correct questions but only 6.2% on A-correct questions. This pattern is consistent with extreme quantization destroying the model's ability to reason over content, leaving only residual positional patterns.
+**Key finding 1: IQ1_M is near-random.** IQ1_M (our original choice for maximum compression) scored **32.3% on the full MedQA test set** (n=1,273) — only 7.3 percentage points above the 25% random baseline. The model exhibited a severe **position bias**: 51.7% of all predictions were "B" regardless of the question, yielding 61.8% accuracy on B-correct questions but only 6.2% on A-correct questions. This pattern is consistent with extreme quantization destroying the model's ability to reason over content, leaving only residual positional patterns.
 
-#### IQ1_M Detailed Results†
+**Key finding 2: Medical imatrix calibration outperforms naive quantization.** IQ2_XS (1.3 GB), quantized with a domain-specific medical imatrix, scored **43.8%** — outperforming the larger Q2_K (1.6 GB) by **+9.1 percentage points** despite being 300 MB smaller. The imatrix preserves weights critical for medical reasoning while Q2_K compresses all weights uniformly. IQ2_XS also produced only 1 unparsed response versus 17 for Q2_K, indicating far more stable output generation.
 
-| Metric | IQ1_M (1.1 GB) | Q4_K_M (2.3 GB) |
-|:-------|:--------------:|:---------------:|
-| Overall MedQA (n=1,273) | 32.3% (411) | 56.0% (713) |
-| Primary Care subset (n=707) | 32.4% (229) | 56.2% (397) |
-| Unparsed responses | 1 (0.08%) | 0 |
-| Position bias (% predicted B) | **51.7%** | ~25% (uniform) |
-| Avg inference time | 0.6s | ~0.8s |
-| Total benchmark time | 13.1 min | ~17 min |
+#### Full Benchmark Comparison†
+
+| Metric | IQ1_M (1.1 GB) | Q2_K (1.6 GB) | IQ2_XS (1.3 GB) | Q4_K_M (2.3 GB) |
+|:-------|:--------------:|:-------------:|:---------------:|:---------------:|
+| Overall MedQA (n=1,273) | 32.3% (411) | 34.7% (442) | 43.8% (558) | 56.0% (713) |
+| Primary Care subset (n=707) | 32.4% (229) | 33.9% (240) | 45.3% (320) | 56.2% (397) |
+| Unparsed responses | 1 (0.08%) | 17 (1.3%) | 1 (0.08%) | 1 (0.08%) |
+| Avg inference time | 0.6s | 0.8s | 0.7s | 0.8s |
+| Total benchmark time | 13.1 min | 17.8 min | 14.7 min | 16.9 min |
 
 > †Single-pass evaluation — see methodology note above.
 
-**Decision rationale**: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The 1.2 GB size increase over IQ1_M was an acceptable tradeoff for nearly doubling medical reasoning accuracy. With `mmap` memory mapping, the 2.3 GB model runs on 2–3 GB RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
+**Decision rationale**: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. IQ2_XS (43.8%, 1.3 GB) is a viable alternative for ultra-constrained devices, offering the strongest accuracy-per-byte ratio of any quantization tested. Q2_K (34.7%, 1.6 GB) is dominated by IQ2_XS on both accuracy and size, confirming that domain-specific imatrix calibration is essential at aggressive quantization levels. With `mmap` memory mapping, the 2.3 GB Q4_K_M model runs on 2–3 GB RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
 
 ### Why Not Unquantized MedGemma 4B or MedGemma 4B Multimodal?
 

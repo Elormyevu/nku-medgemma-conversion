@@ -20,13 +20,13 @@
 | **Channel** | Green channel | Verkruysse et al. (2008) demonstrated green channel yields strongest plethysmographic signal due to hemoglobin absorption at 520–580 nm [6] | ✅ Well-supported |
 | **Windowing** | Hamming window | Standard in FFT/DFT signal processing to reduce spectral leakage [2] | ✅ Well-supported |
 | **Min analysis frames** | 5s (150 frames) | Engineering estimate; 5s provides minimum ~3 heart cycles at 40 BPM | ⚠️ Reasonable estimate |
-| **Accuracy claim** | ±5 BPM | Smartphone rPPG achieves MAE 2.49 BPM in real-world conditions [7]; ±5 BPM is conservative | ✅ Supported by literature |
+| **Accuracy claim** | ±5 BPM | Published smartphone rPPG achieves MAE 1.32–3.95 BPM in clinical/controlled settings [8,9]; ±5 BPM is conservative | ✅ Supported by literature |
 
 ### Published Performance Metrics for Smartphone rPPG
 
 | Study | Method | MAE (BPM) | Accuracy | Notes |
 |:------|:-------|:---------:|:--------:|:------|
-| Nowara et al. (2022) [7] | Green channel, DFT | 2.49 | — | Real-world driving conditions |
+| Nowara et al. (2020) [7] | NIR iPPG, DFT | — | — | NIR video, driving conditions (validates DFT methodology, not smartphone RGB) |
 | Smartphone app validation [8] | rPPG | — | 97.34% | RMAPE 2.66% vs reference |
 | Meijers et al. (2022) [9] | Clinical rPPG | 1.73–3.95 | 96.2% | Clinical settings |
 
@@ -119,7 +119,7 @@
 [4] 10-second analysis windows used in: multiple NIH-indexed rPPG studies
 [5] Nyquist theorem: sampling rate must be ≥2× max frequency
 [6] Verkruysse 2008 (green channel hemoglobin absorption peak)
-[7] Nowara, E.M., et al. *IEEE Trans. ITS*, 2022 (MAE 2.49 BPM)
+[7] Nowara, E.M., Marks, T.K., Mansour, H., Veeraraghavan, A. *IEEE Trans. ITS* 23(4), 2022. DOI: 10.1109/TITS.2020.3038317 (NIR driving context; smartphone rPPG MAE values from broader validation literature [9])
 [8] Smartphone rPPG validation study (97.34% accuracy, medRxiv)
 [9] Meijers, L., et al. *JMIR mHealth* 10(12), 2022. DOI: 10.2196/42178
 [10] Jay, G.D., et al. *PLOS ONE* 19(1), 2024. DOI: 10.1371/journal.pone.0295563
@@ -130,5 +130,5 @@
 [15] Sokolova, T. & Cech, J. *CVWW*, 2017 (EAR from facial landmarks)
 [16] Multiple EAR studies: normal open-eye EAR ≈ 0.25–0.36
 [17] ACOG Practice Bulletin No. 222 (Preeclampsia, 2020)
-[18] NEC/Tsukuba facial edema AI, 2023 (85% accuracy)
+[18] NEC Corporation / University of Tsukuba. "Technology to Detect Edema from Facial Images Using AI." NEC Press Release, 2023. 85% accuracy in 39 dialysis patients. https://www.nec.com/en/press/202306/global_20230601_01.html
 [19] PeriorbitAI periorbital measurement system (comparable to human graders)

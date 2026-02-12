@@ -209,7 +209,7 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 
 [13] Verkruysse, W., et al. "Remote plethysmographic imaging using ambient light." *Optics Express* 16(26), 2008. DOI: 10.1364/OE.16.021434
 
-[14] Nowara, E.M., et al. *IEEE Trans. ITS*, 2022. Smartphone rPPG MAE 2.49 BPM.
+[14] Nowara, E.M., Marks, T.K., Mansour, H., Veeraraghavan, A. "Near-Infrared Imaging Photoplethysmography During Driving." *IEEE Trans. ITS* 23(4), 2022. DOI: 10.1109/TITS.2020.3038317. Note: MAE values for smartphone rPPG (e.g., 1.32–2.49 BPM) are drawn from the broader smartphone rPPG validation literature [9].
 
 [15] Jay, G.D., et al. "Smartphone anemia detection via conjunctival photographs." *PLOS ONE* 19(1), 2024. DOI: 10.1371/journal.pone.0295563
 
@@ -217,7 +217,7 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 
 [17] Sokolova, T. & Cech, J. "Real-time eye blink detection using facial landmarks." *CVWW*, 2017.
 
-[18] NEC/Tsukuba. "Facial Image Analysis for Detecting Edema." 2023. 85% accuracy.
+[18] NEC Corporation / University of Tsukuba. "Technology to Detect Edema from Facial Images Using AI." NEC Press Release, 2023. 85% accuracy in 39 dialysis patients. https://www.nec.com/en/press/202306/global_20230601_01.html
 
 ---
 
@@ -319,7 +319,7 @@ A real-world study at **Penda Health clinics in Nairobi, Kenya** (2024–2025) f
 
 A prospective, observational study in **Nyabihu and Musanze districts, Rwanda** (Menon et al., 2025) is evaluating LLMs for CHW decision support, measuring referral appropriateness, diagnostic accuracy, and management plan quality [22]. The study — published in *BMJ Open* — was deemed ethically and scientifically justified specifically because CHWs in these settings lack alternative diagnostic tools. Audio recordings of CHW-patient consultations are transcribed and analyzed by an LLM, with outputs compared against clinical expert consensus — the same validation paradigm Nku would require.
 
-### Evidence 4: Structured Prompting Significantly Improves Performance
+### Evidence 4: Structured Prompting Substantially Improves Performance
 
 Research on automated prompt optimization for medical vision-language models found that structured prompting achieves a **median 53% improvement** over zero-shot baselines [23]. Nku's `ClinicalReasoner.kt` generates a highly structured, **clinically explicit** prompt that includes measurement methodology, raw biomarker values, literature references, and screening disclaimers:
 
@@ -372,7 +372,7 @@ Nku doesn't rely on MedGemma alone. The safety architecture provides multiple co
 
 ### Conclusion
 
-The literature demonstrates that (a) triage is substantially easier for LLMs than MedQA, (b) LLM-based decision support reduces diagnostic errors in Sub-Saharan African clinical settings, (c) structured prompting significantly improves model performance, and (d) on-device quantized models retain clinically useful accuracy. Combined with Nku's multi-layer safety architecture and the reality that the alternative for these CHWs is *zero* diagnostic support, the pipeline provides a well-grounded, defensible starting point for field validation.
+The literature demonstrates that (a) triage is substantially easier for LLMs than MedQA, (b) LLM-based decision support reduces diagnostic errors in Sub-Saharan African clinical settings, (c) structured prompting substantially improves model performance, and (d) on-device quantized models retain clinically useful accuracy. Combined with Nku's multi-layer safety architecture and the reality that the alternative for these CHWs is *zero* diagnostic support, the pipeline provides a well-grounded, defensible starting point for field validation.
 
 ---
 
@@ -382,7 +382,7 @@ The literature demonstrates that (a) triage is substantially easier for LLMs tha
 
 [20] Masanneck, L., Schmidt, L., Seifert, A., et al. "Triage Performance Across Large Language Models, ChatGPT, and Untrained Doctors in Emergency Medicine." *Journal of Medical Internet Research* 26, 2024. DOI: 10.2196/53297
 
-[21] Penda Health / AI Consult Study. "AI-based Clinical Decision Support for Primary Care: A Real-World Study." Nairobi, Kenya, 2024–2025. Observed 16% reduction in diagnostic errors and 13% reduction in treatment errors among clinicians using LLM-based decision support.
+[21] Penda Health / OpenAI. "AI-based Clinical Decision Support for Primary Care." Published as OpenAI case study, 2025. Study conducted Jan–Apr 2025 across 15 Penda Health clinics in Nairobi, Kenya (~40,000 patient visits). Observed 16% reduction in diagnostic errors and 13% reduction in treatment errors among clinicians using GPT-4o-based "AI Consult" decision support tool.
 
 [22] Menon, V., Shimelash, N., Rutunda, S., et al. "Assessing the potential utility of large language models for assisting community health workers: protocol for a prospective, observational study in Rwanda." *BMJ Open*, 2025. DOI: 10.1136/bmjopen-2025-110927
 

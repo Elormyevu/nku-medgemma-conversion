@@ -15,12 +15,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nku.app.*
 import com.nku.app.ui.NkuColors
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import android.Manifest
 import android.content.pm.PackageManager
 import android.content.Intent
@@ -43,6 +48,7 @@ fun AnemiaScreen(
     strings: LocalizedStrings.UiStrings
 ) {
     var isCapturing by remember { mutableStateOf(false) }
+    var isAnalyzing by remember { mutableStateOf(false) }  // OBS-1: Loading spinner
     var lastCapturedBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var cameraPermissionDenied by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -203,22 +209,40 @@ fun AnemiaScreen(
                 Button(
                     onClick = {
                         lastCapturedBitmap?.let { bmp ->
-                            // F-10: Error boundary — prevent processor crash from killing UI
-                            try {
-                                pallorDetector.analyzeConjunctiva(bmp)
-                            } catch (e: Exception) {
-                                android.util.Log.e("AnemiaScreen", "Pallor analysis error: ${e.message}")
+                            // OBS-1: Show loading spinner during analysis
+                            isAnalyzing = true
+                            scope.launch {
+                                try {
+                                    withContext(Dispatchers.Default) {
+                                        pallorDetector.analyzeConjunctiva(bmp)
+                                    }
+                                } catch (e: Exception) {
+                                    android.util.Log.e("AnemiaScreen", "Pallor analysis error: ${e.message}")
+                                } finally {
+                                    isAnalyzing = false
+                                    isCapturing = false
+                                }
                             }
-                            isCapturing = false
                         }
                     },
+                    enabled = !isAnalyzing,
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(containerColor = NkuColors.Success),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(6.dp))
-                    Text(strings.analyze)
+                    if (isAnalyzing) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(18.dp),
+                            color = Color.White,
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(Modifier.width(6.dp))
+                        Text(strings.analyzing)
+                    } else {
+                        Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(6.dp))
+                        Text(strings.analyze)
+                    }
                 }
             }
             
@@ -238,7 +262,10 @@ fun AnemiaScreen(
                 pallorResult.severity.name,
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
-                color = scoreColor
+                color = scoreColor,
+                modifier = Modifier.semantics {
+                    contentDescription = "Pallor severity: ${pallorResult.severity.name}"
+                }
             )
             
             Text(
@@ -258,7 +285,9 @@ fun AnemiaScreen(
             // Recommendation
             Card(
                 colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().semantics {
+                    contentDescription = "Recommendation: ${pallorResult.recommendation}"
+                }
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(strings.recommendationsTitle, fontWeight = FontWeight.Bold, color = Color.White)
@@ -309,6 +338,15 @@ fun AnemiaScreen(
                     fontSize = 16.sp
                 )
             }
+
+            // OBS-3: Rear camera usage hint
+            Spacer(Modifier.height(6.dp))
+            Text(
+                strings.rearCameraHintAnemia,
+                fontSize = 11.sp,
+                color = Color.Gray,
+                textAlign = TextAlign.Center
+            )
             
             Spacer(Modifier.height(20.dp))
         }

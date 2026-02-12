@@ -403,6 +403,13 @@ def translate():
     else:
         target_lang = target_result.sanitized_value
 
+    # Normalize Twi/Akan language codes: ak=akan=tw → twi
+    twi_aliases = {'ak', 'akan', 'tw'}
+    if source_lang in twi_aliases:
+        source_lang = 'twi'
+    if target_lang in twi_aliases:
+        target_lang = 'twi'
+
     # Build safe prompt (B-05: include MEDICAL_GLOSSARY for Twi translations)
     glossary_hint = MEDICAL_GLOSSARY if source_lang == 'twi' or target_lang == 'twi' else ''
     prompt = PromptProtector.build_translation_prompt(

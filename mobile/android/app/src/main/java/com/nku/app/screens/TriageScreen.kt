@@ -22,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -113,8 +115,8 @@ fun TriageScreen(
                 Text(strings.screeningData, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 14.sp)
                 Spacer(Modifier.height(8.dp))
                 DataCheckRow(strings.heartRate, rppgResult.bpm != null && rppgResult.confidence > 0.4f, rppgResult.bpm?.let { "${it.toInt()} ${strings.bpm}" }, strings.notDone)
-                DataCheckRow(strings.anemiaScreen, pallorResult.hasBeenAnalyzed, if (pallorResult.hasBeenAnalyzed) strings.localizedSeverity(pallorResult.severity) else null, strings.notDone)
-                DataCheckRow(strings.swellingCheck, edemaResult.hasBeenAnalyzed, if (edemaResult.hasBeenAnalyzed) strings.localizedSeverity(edemaResult.severity) else null, strings.notDone)
+                DataCheckRow(strings.anemiaScreen, pallorResult.hasBeenAnalyzed, if (pallorResult.hasBeenAnalyzed) pallorResult.severity.name else null, strings.notDone)
+                DataCheckRow(strings.swellingCheck, edemaResult.hasBeenAnalyzed, if (edemaResult.hasBeenAnalyzed) edemaResult.severity.name else null, strings.notDone)
             }
         }
         
@@ -259,7 +261,10 @@ fun TriageScreen(
                 TriageCategory.ORANGE -> NkuColors.TriageOrange
                 TriageCategory.RED -> NkuColors.TriageRed
             }
-            Card(colors = CardDefaults.cardColors(containerColor = categoryColor), modifier = Modifier.fillMaxWidth()) {
+            Card(colors = CardDefaults.cardColors(containerColor = categoryColor),
+                modifier = Modifier.fillMaxWidth().semantics {
+                    contentDescription = "Triage category: ${result.triageCategory.name}, Severity: ${result.overallSeverity.name}, Urgency: ${result.urgency.name}"
+                }) {
                 Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(strings.localizedTriageCategory(result.triageCategory), fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
                     Text("${strings.severityLabel}: ${strings.localizedSeverity(result.overallSeverity)}", color = Color.White.copy(alpha = 0.8f))
@@ -287,7 +292,10 @@ fun TriageScreen(
             }
             Spacer(Modifier.height(16.dp))
             
-            Card(colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground), modifier = Modifier.fillMaxWidth()) {
+            Card(colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground),
+                modifier = Modifier.fillMaxWidth().semantics {
+                    contentDescription = "Primary concerns: ${result.primaryConcerns.joinToString(", ")}"
+                }) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(strings.primaryConcerns, fontWeight = FontWeight.Bold, color = Color.White)
                     Spacer(Modifier.height(8.dp))
@@ -295,7 +303,10 @@ fun TriageScreen(
                 }
             }
             Spacer(Modifier.height(12.dp))
-            Card(colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground), modifier = Modifier.fillMaxWidth()) {
+            Card(colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground),
+                modifier = Modifier.fillMaxWidth().semantics {
+                    contentDescription = "Recommendations: ${result.recommendations.joinToString(", ")}"
+                }) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(strings.recommendationsTitle, fontWeight = FontWeight.Bold, color = NkuColors.Success)
                     Spacer(Modifier.height(8.dp))

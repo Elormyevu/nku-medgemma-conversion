@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nku.app.*
 import com.nku.app.ui.NkuColors
+import com.nku.app.ui.NkuThemePreferences
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
 /**
  * HomeScreen — Dashboard overview with screening progress and language selector.
@@ -37,6 +40,8 @@ fun HomeScreen(
     onLanguageChange: (String) -> Unit,
     onNavigateToTab: (Int) -> Unit = {},
     savedScreeningCount: Int = 0,
+    themeMode: NkuThemePreferences.ThemeMode = NkuThemePreferences.ThemeMode.SYSTEM,
+    onThemeChange: (NkuThemePreferences.ThemeMode) -> Unit = {},
     onExportData: () -> Unit = {}
 ) {
     // Progress tracking
@@ -128,6 +133,58 @@ fun HomeScreen(
             }
         }
         
+        Spacer(Modifier.height(8.dp))
+
+        // ── Theme Selector (USER-1) ──
+        Card(
+            colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Default.Settings,
+                    contentDescription = null,
+                    tint = NkuColors.Primary,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(strings.themeLabel, color = Color.White, fontSize = 13.sp)
+                Spacer(Modifier.weight(1f))
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    val modes = listOf(
+                        NkuThemePreferences.ThemeMode.LIGHT to strings.themeLight,
+                        NkuThemePreferences.ThemeMode.DARK to strings.themeDark,
+                        NkuThemePreferences.ThemeMode.SYSTEM to strings.themeSystem
+                    )
+                    modes.forEach { (mode, label) ->
+                        val isSelected = themeMode == mode
+                        TextButton(
+                            onClick = { onThemeChange(mode) },
+                            colors = ButtonDefaults.textButtonColors(
+                                containerColor = if (isSelected)
+                                    NkuColors.Primary.copy(alpha = 0.2f)
+                                else Color.Transparent
+                            ),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text(
+                                label,
+                                color = if (isSelected) NkuColors.Primary else Color.Gray,
+                                fontSize = 11.sp,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
         Spacer(Modifier.height(12.dp))
         
         // ── Progress Indicator ──
@@ -383,6 +440,9 @@ fun GuidedStepCard(
                     .size(14.dp)
                     .clip(CircleShape)
                     .background(statusColor)
+                    .semantics {
+                        contentDescription = if (isComplete) "$title: complete" else "$title: not yet measured"
+                    }
             )
         }
     }

@@ -38,6 +38,7 @@ import androidx.lifecycle.lifecycleScope
 import java.util.concurrent.Executors
 import com.nku.app.ui.NkuTheme
 import com.nku.app.ui.NkuColors
+import com.nku.app.ui.NkuThemePreferences
 import com.nku.app.screens.*
 import com.nku.app.data.NkuDatabase
 import com.nku.app.data.ScreeningEntity
@@ -173,10 +174,20 @@ fun NkuSentinelApp(
     val screeningDao = remember { db.screeningDao() }
     val screeningCount by screeningDao.getCount().collectAsState(initial = 0)
     
+    // USER-1: Theme preference
+    var themeMode by remember {
+        mutableStateOf(NkuThemePreferences.getThemeMode(context))
+    }
+    val isDarkTheme = when (themeMode) {
+        NkuThemePreferences.ThemeMode.LIGHT -> false
+        NkuThemePreferences.ThemeMode.DARK -> true
+        NkuThemePreferences.ThemeMode.SYSTEM -> androidx.compose.foundation.isSystemInDarkTheme()
+    }
+
     val tabs = listOf(strings.tabHome, strings.tabCardio, strings.tabAnemia, strings.tabPreE, strings.tabTriage)
     
-    // Dark medical theme (F-10: extracted to NkuTheme.kt)
-    NkuTheme {
+    // USER-1: Theme-aware wrapper
+    NkuTheme(isDarkTheme = isDarkTheme) {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -236,6 +247,11 @@ fun NkuSentinelApp(
                         onLanguageChange = { selectedLanguage = it },
                         onNavigateToTab = { selectedTab = it },
                         savedScreeningCount = screeningCount,
+                        themeMode = themeMode,
+                        onThemeChange = { mode ->
+                            themeMode = mode
+                            NkuThemePreferences.setThemeMode(context, mode)
+                        },
                         onExportData = {
                             scope.launch {
                                 val screenings = screeningDao.getAllScreeningsSnapshot()

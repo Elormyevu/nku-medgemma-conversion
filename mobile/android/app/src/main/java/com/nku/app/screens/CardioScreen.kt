@@ -19,6 +19,8 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -202,7 +204,10 @@ fun CardioScreen(
                 }
             }
             
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.semantics {
+                    contentDescription = if (hasResult) "Heart rate: ${rppgResult.bpm!!.toInt()} beats per minute" else "Heart rate: not yet measured"
+                }) {
                 Text(
                     if (hasResult) "${rppgResult.bpm!!.toInt()}" else "—",
                     fontSize = 52.sp,
@@ -257,6 +262,14 @@ fun CardioScreen(
             Spacer(Modifier.width(8.dp))
             Text(if (isMeasuring) strings.stopMeasurement else strings.startMeasurement, fontSize = 16.sp)
         }
+
+        // OBS-3: Rear camera usage hint
+        Spacer(Modifier.height(6.dp))
+        Text(
+            strings.rearCameraHintCardio,
+            fontSize = 11.sp,
+            color = Color.Gray
+        )
         
         Spacer(Modifier.height(16.dp))
         

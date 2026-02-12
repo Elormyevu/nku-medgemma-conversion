@@ -29,7 +29,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r cloud/inference_api/requirements.txt
-          pip install pytest ruff
+          pip install pytest pytest-cov ruff
           # L-02 fix: Install deps needed by test_algos.py (sensor algorithm tests)
           pip install opencv-python-headless scipy mediapipe
 
@@ -38,9 +38,10 @@ jobs:
 
       - name: Run cloud API tests
         # L-02 fix: Include test_algos.py now that its deps are installed
+        # OBS-9: Added coverage reporting
         env:
           PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/cloud/inference_api
-        run: pytest tests/ -v --tb=short
+        run: pytest tests/ -v --tb=short --cov=cloud/inference_api --cov-report=term-missing
 
   # ─── Android Build + Unit Tests ───
   # CI-1 fix: Only run when Android files change
@@ -101,8 +102,20 @@ jobs:
           extra_args: --only-verified
 
       - name: pip-audit (Cloud API dependencies)
+        # OBS-8: Removed '|| true' so audit failures block the build
         run: |
           pip install pip-audit
-          # Audit only the cloud API requirements (root requirements.txt has
-          # --index-url that pip-audit cannot parse)
-          pip-audit -r cloud/inference_api/requirements.txt || true
+          pip-audit -r cloud/inference_api/requirements.txt
+
+  # ─── Release AAB Signing (OBS-10) ───
+  # To enable release AAB builds in CI, add these repository secrets:
+  #   KEYSTORE_BASE64   — base64-encoded .jks keystore file
+  #   KEYSTORE_PASSWORD — password for the keystore
+  #   KEY_ALIAS         — alias of the signing key
+  #   KEY_PASSWORD      — password for the key alias
+  #
+  # Then add a release job that:
+  #   1. Decodes KEYSTORE_BASE64 to a .jks file
+  #   2. Runs: ./gradlew bundleRelease --no-daemon
+  #   3. Signs with: jarsigner -keystore <file> -storepass <pass>
+  #   4. Uploads the signed AAB as a build artifact

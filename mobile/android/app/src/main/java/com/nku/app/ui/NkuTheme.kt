@@ -1,7 +1,9 @@
 package com.nku.app.ui
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
@@ -9,6 +11,7 @@ import androidx.compose.ui.graphics.Color
  * Nku Sentinel — Design Token System
  *
  * Centralizes all colors, gradients, and theme tokens.
+ * USER-1: Supports light/dark/system theme toggle.
  * Audit Fix: F-10 (LOW) — Replace hardcoded hex colors.
  */
 
@@ -24,10 +27,18 @@ object NkuColors {
     val SurfaceVariant = Color(0xFF252540)  // Card/elevated surface
     val SurfaceContainer = Color(0xFF16213E)// Container background
 
+    // ── Light Mode Surfaces ──
+    val LightSurface = Color(0xFFF5F5F5)
+    val LightBackground = Color(0xFFFFFFFF)
+    val LightSurfaceVariant = Color(0xFFE8E8EC)
+    val LightSurfaceContainer = Color(0xFFECEFF1)
+
     // ── Text ──
     val OnSurface = Color(0xFFE0E0E0)       // Primary text
     val OnSurfaceMuted = Color(0xFFAAAAAA)  // Secondary/muted text
     val OnPrimary = Color(0xFFFFFFFF)       // Text on primary
+    val LightOnSurface = Color(0xFF1A1A2E)  // Dark text for light mode
+    val LightOnSurfaceMuted = Color(0xFF666666)
 
     // ── Triage Severity ──
     val TriageGreen = Color(0xFF4CAF50)     // Low severity
@@ -73,10 +84,28 @@ private val NkuDarkColorScheme = darkColorScheme(
     error = NkuColors.Error,
 )
 
+private val NkuLightColorScheme = lightColorScheme(
+    primary = NkuColors.Primary,
+    secondary = NkuColors.Secondary,
+    surface = NkuColors.LightSurface,
+    background = NkuColors.LightBackground,
+    onSurface = NkuColors.LightOnSurface,
+    onPrimary = NkuColors.OnPrimary,
+    surfaceVariant = NkuColors.LightSurfaceVariant,
+    error = NkuColors.Error,
+)
+
+/**
+ * Nku Sentinel theme wrapper.
+ * USER-1: Supports isDarkTheme parameter. Defaults to system setting.
+ */
 @Composable
-fun NkuTheme(content: @Composable () -> Unit) {
+fun NkuTheme(
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
     MaterialTheme(
-        colorScheme = NkuDarkColorScheme,
+        colorScheme = if (isDarkTheme) NkuDarkColorScheme else NkuLightColorScheme,
         content = content
     )
 }

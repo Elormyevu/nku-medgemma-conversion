@@ -69,13 +69,26 @@ object LocalizedStrings {
 
     /**
      * Get language name from code (for translation prompts).
+     * Handles Twi/Akan aliases: 'twi', 'tw', 'akan' all map to 'ak' (Akan).
      */
-    fun getLanguageName(code: String): String = supportedLanguages[code] ?: "Unknown"
+    fun getLanguageName(code: String): String {
+        val normalized = normalizeLangCode(code)
+        return supportedLanguages[normalized] ?: "Unknown"
+    }
+
+    /**
+     * Normalize language codes — Twi=Akan aliasing.
+     * Cloud backend uses 'twi', Android/ML Kit uses 'ak'.
+     */
+    private fun normalizeLangCode(code: String): String = when (code.lowercase()) {
+        "twi", "tw", "akan" -> "ak"
+        else -> code
+    }
 
     /**
      * Get UI strings for a given language.
      */
-    fun forLanguage(code: String): UiStrings = when (code) {
+    fun forLanguage(code: String): UiStrings = when (normalizeLangCode(code)) {
         "ee" -> eweStrings
         "fr" -> frenchStrings
         "sw" -> swahiliStrings
@@ -284,7 +297,21 @@ object LocalizedStrings {
 
         // TTS section headers
         val ttsConcerns: String = "Concerns",
-        val ttsRecommendations: String = "Recommendations"
+        val ttsRecommendations: String = "Recommendations",
+
+        // OBS-1: Loading spinner during analysis
+        val analyzing: String = "Analyzing…",
+
+        // OBS-3: Rear camera usage hints (CHW workflow)
+        val rearCameraHintAnemia: String = "📷 Uses rear camera — point at patient's lower eyelid",
+        val rearCameraHintFace: String = "📷 Uses rear camera — point at patient's face",
+        val rearCameraHintCardio: String = "📷 Uses rear camera — place patient's fingertip over lens",
+
+        // USER-1: Theme toggle labels
+        val themeLabel: String = "Theme",
+        val themeLight: String = "Light",
+        val themeDark: String = "Dark",
+        val themeSystem: String = "System"
     ) {
         /** Map signal quality string to localized display name. */
         fun localizedSignalQuality(quality: String): String = when (quality) {
@@ -398,7 +425,15 @@ object LocalizedStrings {
         triageOrange = "Aŋɔ̃",
         triageRed = "Dzĩ",
         ttsConcerns = "Nusiwo le enu",
-        ttsRecommendations = "Kpɔɖeŋuwo"
+        ttsRecommendations = "Kpɔɖeŋuwo",
+        analyzing = "Le dzraɖoƒe wɔm…",
+        rearCameraHintAnemia = "📷 Kamera megbea — tso ŋku ƒe te",
+        rearCameraHintFace = "📷 Kamera megbea — tso nkume",
+        rearCameraHintCardio = "📷 Kamera megbea — ɖo alɔ ɖeka ŋu",
+        themeLabel = "Nuŋɔŋlɔ",
+        themeLight = "Kekeli",
+        themeDark = "Viviti",
+        themeSystem = "Mɔfiame"
     )
 
     val frenchStrings = UiStrings(
@@ -474,7 +509,15 @@ object LocalizedStrings {
         triageOrange = "Orange",
         triageRed = "Rouge",
         ttsConcerns = "Préoccupations",
-        ttsRecommendations = "Recommandations"
+        ttsRecommendations = "Recommandations",
+        analyzing = "Analyse en cours…",
+        rearCameraHintAnemia = "📷 Caméra arrière — pointez vers la paupière du patient",
+        rearCameraHintFace = "📷 Caméra arrière — pointez vers le visage du patient",
+        rearCameraHintCardio = "📷 Caméra arrière — placez le doigt du patient sur l'objectif",
+        themeLabel = "Thème",
+        themeLight = "Clair",
+        themeDark = "Sombre",
+        themeSystem = "Système"
     )
 
     val swahiliStrings = UiStrings(
@@ -549,7 +592,15 @@ object LocalizedStrings {
         triageOrange = "Machungwa",
         triageRed = "Nyekundu",
         ttsConcerns = "Wasiwasi",
-        ttsRecommendations = "Mapendekezo"
+        ttsRecommendations = "Mapendekezo",
+        analyzing = "Inachambua…",
+        rearCameraHintAnemia = "📷 Kamera ya nyuma — elekeza kwenye kope ya mgonjwa",
+        rearCameraHintFace = "📷 Kamera ya nyuma — elekeza kwenye uso wa mgonjwa",
+        rearCameraHintCardio = "📷 Kamera ya nyuma — weka kidole cha mgonjwa kwenye lenzi",
+        themeLabel = "Mandhari",
+        themeLight = "Angavu",
+        themeDark = "Giza",
+        themeSystem = "Mfumo"
     )
 
     val hausaStrings = UiStrings(
@@ -687,7 +738,15 @@ object LocalizedStrings {
         triageOrange = "Ruwan lemu",
         triageRed = "Ja",
         ttsConcerns = "Damuwa",
-        ttsRecommendations = "Shawarwari"
+        ttsRecommendations = "Shawarwari",
+        analyzing = "Ana bincike…",
+        rearCameraHintAnemia = "📷 Kyamara na baya — nuna zuwa fatar ido ta majiyyaci",
+        rearCameraHintFace = "📷 Kyamara na baya — nuna zuwa fuskar majiyyaci",
+        rearCameraHintCardio = "📷 Kyamara na baya — ɗora yatsar majiyyaci a kan lensi",
+        themeLabel = "Jigo",
+        themeLight = "Haske",
+        themeDark = "Duhu",
+        themeSystem = "Tsarin na'ura"
     )
 
     val yorubaStrings = UiStrings(
@@ -825,7 +884,15 @@ object LocalizedStrings {
         triageOrange = "Ọsan",
         triageRed = "Pupa",
         ttsConcerns = "Àwọn àníyàn",
-        ttsRecommendations = "Àwọn ìmọ̀ràn"
+        ttsRecommendations = "Àwọn ìmọ̀ràn",
+        analyzing = "Ń ṣàyẹ̀wò…",
+        rearCameraHintAnemia = "📷 Kámẹ́rà ẹ̀yìn — tọ́ka sí ìpèníjà ojú aláìsàn",
+        rearCameraHintFace = "📷 Kámẹ́rà ẹ̀yìn — tọ́ka sí ojú aláìsàn",
+        rearCameraHintCardio = "📷 Kámẹ́rà ẹ̀yìn — fi ìka aláìsàn sí orí lẹ́nsì",
+        themeLabel = "Àwòṣe",
+        themeLight = "Ìmọ́lẹ̀",
+        themeDark = "Òkùnkùn",
+        themeSystem = "Ètò ẹ̀rọ"
     )
 
     val igboStrings = UiStrings(

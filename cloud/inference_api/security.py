@@ -38,9 +38,17 @@ class InputValidator:
     MAX_LANGUAGE_CODE_LENGTH = 10
 
     # Allowed language codes for translation
+    # Twi/Akan: both 'ak' (ISO 639-1) and 'twi' (ISO 639-2) are accepted
     ALLOWED_LANGUAGES = {
-        'en', 'twi', 'yo', 'ha', 'sw', 'ewe', 'ga', 'ig', 'zu', 'xh',
+        'en', 'twi', 'ak', 'yo', 'ha', 'sw', 'ewe', 'ga', 'ig', 'zu', 'xh',
         'am', 'or', 'ti', 'so', 'fr', 'pt', 'ar'
+    }
+
+    # Language code aliases: Twi=Akan, normalize to canonical form
+    LANGUAGE_ALIASES = {
+        'ak': 'twi',      # ISO 639-1 Akan → ISO 639-2 Twi
+        'akan': 'twi',     # Full name → code
+        'tw': 'twi',       # Common abbreviation
     }
 
     # Suspicious patterns that might indicate injection attempts

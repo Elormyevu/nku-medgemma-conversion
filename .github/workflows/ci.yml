@@ -39,9 +39,10 @@ jobs:
       - name: Run cloud API tests
         # L-02 fix: Include test_algos.py now that its deps are installed
         # OBS-9: Added coverage reporting
+        # CI-3 fix: Enforce minimum 60% coverage threshold
         env:
           PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/cloud/inference_api
-        run: pytest tests/ -v --tb=short --cov=cloud/inference_api --cov-report=term-missing
+        run: pytest tests/ -v --tb=short --cov=cloud/inference_api --cov-report=term-missing --cov-fail-under=60
 
   # ─── Android Build + Unit Tests ───
   # CI-1 fix: Only run when Android files change
@@ -107,15 +108,61 @@ jobs:
           pip install pip-audit
           pip-audit -r cloud/inference_api/requirements.txt
 
-  # ─── Release AAB Signing (OBS-10) ───
-  # To enable release AAB builds in CI, add these repository secrets:
-  #   KEYSTORE_BASE64   — base64-encoded .jks keystore file
-  #   KEYSTORE_PASSWORD — password for the keystore
-  #   KEY_ALIAS         — alias of the signing key
-  #   KEY_PASSWORD      — password for the key alias
-  #
-  # Then add a release job that:
-  #   1. Decodes KEYSTORE_BASE64 to a .jks file
-  #   2. Runs: ./gradlew bundleRelease --no-daemon
-  #   3. Signs with: jarsigner -keystore <file> -storepass <pass>
-  #   4. Uploads the signed AAB as a build artifact
+  # ─── Release AAB Signing (CI-4 fix) ───
+  # Builds a signed release AAB when signing secrets are configured.
+  # To enable: add KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD
+  # as repository secrets in GitHub Settings → Secrets & Variables → Actions.
+  release:
+    runs-on: ubuntu-latest
+    needs: [android, security]
+    if: |
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push'
+    defaults:
+      run:
+        working-directory: mobile/android
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check signing secrets
+        id: check-secrets
+        run: |
+          if [ -z "${{ secrets.KEYSTORE_BASE64 }}" ]; then
+            echo "has_secrets=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Signing secrets not configured — skipping release build"
+          else
+            echo "has_secrets=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up JDK 17
+        if: steps.check-secrets.outputs.has_secrets == 'true'
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Accept Android SDK licenses
+        if: steps.check-secrets.outputs.has_secrets == 'true'
+        run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+
+      - name: Decode keystore
+        if: steps.check-secrets.outputs.has_secrets == 'true'
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release.jks
+
+      - name: Build release AAB
+        if: steps.check-secrets.outputs.has_secrets == 'true'
+        run: |
+          chmod +x gradlew
+          ./gradlew bundleRelease --no-daemon \
+            -Pandroid.injected.signing.store.file=$PWD/release.jks \
+            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload release AAB
+        if: steps.check-secrets.outputs.has_secrets == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-aab
+          path: mobile/android/app/build/outputs/bundle/release/*.aab

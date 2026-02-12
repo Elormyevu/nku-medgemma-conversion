@@ -50,7 +50,9 @@ object PromptSanitizer {
         Regex("forget\\s+(all\\s+)?previous", RegexOption.IGNORE_CASE),
         Regex("override\\s+(all\\s+)?instructions?", RegexOption.IGNORE_CASE),
         Regex("you\\s+are\\s+now", RegexOption.IGNORE_CASE),
-        Regex("act\\s+as\\s+(a\\s+)?", RegexOption.IGNORE_CASE),
+        // SEC-1 fix: Tightened from broad "act as" to specific roleplay targets.
+        // Prevents false positives on legitimate phrases like "act as quickly as possible".
+        Regex("act\\s+as\\s+(a\\s+)?(doctor|admin|system|assistant|ai|chatbot|different|hacker)", RegexOption.IGNORE_CASE),
         Regex("new\\s+instructions?:", RegexOption.IGNORE_CASE),
         Regex("system\\s*:", RegexOption.IGNORE_CASE),
         Regex("\\[\\s*system\\s*\\]", RegexOption.IGNORE_CASE),

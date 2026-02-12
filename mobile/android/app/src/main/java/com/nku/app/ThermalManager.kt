@@ -30,13 +30,24 @@ class ThermalManager(
     
     private var inCooldown = false
     private var cooldownStartTime: Long = 0
+
+    // PERF-1 fix: Cache temperature reads to avoid repeated sysfs I/O during camera streaming
+    private var cachedTemperature: Float = 35.0f
+    private var lastTempReadTime: Long = 0
+    private val TEMP_CACHE_MS = 2000L  // 2-second cache
     
     /**
      * Get current device temperature (in °C).
      * P-3 fix: Uses the higher of battery temperature and CPU thermal zone
      * for more responsive detection (battery sensor can lag 10-30s behind CPU).
+     * PERF-1 fix: Caches the result for 2 seconds to avoid repeated I/O.
      */
     fun getTemperature(): Float {
+        val now = System.currentTimeMillis()
+        if (now - lastTempReadTime < TEMP_CACHE_MS) {
+            return cachedTemperature
+        }
+
         val batteryTemp = try {
             val intentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
             val batteryStatus = context.registerReceiver(null, intentFilter)
@@ -60,7 +71,10 @@ class ThermalManager(
         } catch (_: Exception) { null }
         
         // Use the higher of battery and CPU temperatures
-        return maxOf(batteryTemp, cpuTemp ?: batteryTemp)
+        val result = maxOf(batteryTemp, cpuTemp ?: batteryTemp)
+        cachedTemperature = result
+        lastTempReadTime = now
+        return result
     }
     
     /**

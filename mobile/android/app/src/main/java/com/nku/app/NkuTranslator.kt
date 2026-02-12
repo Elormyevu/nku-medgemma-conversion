@@ -51,10 +51,15 @@ class NkuTranslator(private val context: Context) {
         )
 
         /**
-         * Languages that require Google Cloud Translate API (not in ML Kit).
-         * These are all African languages beyond Afrikaans, Swahili, and Arabic.
-         * Cloud Translate supports many of these (ha, yo, ig, am, zu, xh, so, etc.)
-         * but requires network connectivity.
+         * Languages NOT supported by ML Kit on-device translation.
+         * These are African indigenous languages beyond Afrikaans, Swahili, and Arabic.
+         *
+         * On-device behavior: NkuTranslator returns null → NkuInferenceEngine
+         * gracefully degrades by passing raw input directly to MedGemma.
+         *
+         * For production cloud fallback, Google Cloud Translate API is the
+         * recommended option (supports ha, yo, ig, am, zu, xh, so, etc.
+         * at ~$20 per million characters, no model hosting required).
          */
         val CLOUD_ONLY_LANGUAGES = setOf(
             // Tier 1 — Nku clinically verified languages (cloud-only)

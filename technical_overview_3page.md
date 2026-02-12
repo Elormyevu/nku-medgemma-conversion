@@ -4,7 +4,7 @@
 
 ## 1. Problem & Motivation
 
-In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people—far below the WHO's recommended 44.5 per 10,000. Over **450 million people** lack accessible primary care. Community Health Workers (CHWs), the frontline of healthcare delivery, operate without diagnostic tools.
+In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people—far below the WHO's recommended 44.5 per 10,000. Over **450 million people** lack accessible primary care. Community Health Workers (CHWs), the frontline of healthcare delivery, frequently lack reliable access to diagnostic tools due to equipment deficiencies, supply stock-outs, and maintenance failures [WHO AFRO, 2023].
 
 Yet nearly all CHWs carry smartphones. Powerful clinical AI models like MedGemma exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, while 3G accounts for ~54% of mobile connections, network coverage is unreliable and intermittent — 25% of rural Africans lack mobile broadband entirely (ITU 2024). This makes cloud-based AI **impractical** precisely where it is needed most.
 
@@ -27,7 +27,7 @@ Our core innovation is a memory-efficient orchestration pattern that runs MedGem
 
 **🔑 Offline guarantee for CHWs**: All African official languages (English, French, Portuguese) are fully on-device via ML Kit. Since CHWs are trained in their country's official language, **every CHW always has a fully offline triage path** — no internet required at any stage. Cloud translation only needed for indigenous languages, extending reach beyond the offline baseline. Total on-disk footprint: **~2.3GB** (MedGemma) + **~150MB** (ML Kit language packs).
 
-**Quantization**: Our Q4_K_M quantized model achieves **56% on MedQA** (n=1,273, single-pass evaluation†), retaining 81% of the unquantized model's published 69% baseline. To validate this selection, we systematically benchmarked four quantization levels — IQ1_M (32.3%), Q2_K (34.7%), IQ2_XS with medical imatrix (43.8%), and Q4_K_M (56.0%) — confirming that Q4_K_M provides the best accuracy for reliable clinical deployment and that domain-specific imatrix calibration is more important than raw bit budget at lower quantization levels. **Only Q4_K_M is deployed in the Nku application.** The quantization uses a 64-chunk **medical imatrix** derived from 243 African primary care scenarios across 14+ languages, designed to help the quantized model retain diagnostic vocabulary for malaria, anemia, pneumonia, and other regionally prevalent conditions.
+**Quantization**: Our Q4_K_M quantized model achieves **56% on MedQA** (n=1,273, single-pass evaluation†), retaining 81% of the unquantized model's published 69% baseline. To validate this selection, we systematically benchmarked four quantization levels — IQ1_M (32.3%), Q2_K (34.7%), IQ2_XS with medical imatrix (43.8%), and Q4_K_M (56.0%) — confirming that Q4_K_M provides the best accuracy for reliable clinical deployment and that domain-specific imatrix calibration (applied to IQ2_XS) is more important than raw bit budget at lower quantization levels. **Only Q4_K_M is deployed in the Nku application.** We also created a 243-scenario **African primary care calibration dataset** across 14+ languages, used to generate an importance matrix for aggressive quantization experiments (IQ2_XS). This dataset covers malaria, anemia, pneumonia, and other regionally prevalent conditions.
 
 > †Each quantized model was evaluated once through the full MedQA test set — no repeated runs or best-of-N selection — to mirror Nku's real-world single-attempt triage use case.
 
@@ -61,7 +61,7 @@ MedGemma 4B is **irreplaceable** in this system. It performs the clinical reason
 |:---------------------|:---------------|
 | Clinical reasoning | Interprets Nku Sentinel vital signs + symptoms for triage |
 | Structured output | Severity, urgency, differential considerations, CHW recommendations |
-| Medical accuracy | 56% MedQA (81% of baseline) via domain-specific imatrix calibration |
+| Medical accuracy | 56% MedQA (81% of baseline); quantization study validated via imatrix experiments |
 | Edge deployment | Q4_K_M GGUF, mmap loading, ~2.3GB footprint |
 
 ## 4. Impact

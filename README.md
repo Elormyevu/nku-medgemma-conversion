@@ -123,7 +123,7 @@ All screening uses **pure signal processing** (0 MB additional weights). Sensor 
 | **Inference** | llama.cpp via JNI (NDK 29, ARM64 NEON) |
 | **Translation** | Android ML Kit (on-device) + Google Cloud Translate (fallback) |
 | **TTS** | Android System TTS (NkuTTS.kt) |
-| **Quantization** | Q4_K_M + 64-chunk medical imatrix (56% MedQA quantized, 81% of 69% unquantized baseline) |
+| **Quantization** | Q4_K_M (56% MedQA quantized, 81% of 69% unquantized baseline); imatrix used for IQ2_XS study |
 
 ---
 
@@ -182,17 +182,17 @@ We achieve **~71% model size reduction** (8GB → 2.3GB) while retaining clinica
 
 ### Calibration
 
-Clinical utility is maintained through **64-chunk imatrix calibration** using 243 clinical scenarios across 14+ African languages.
+We created a **243-scenario African primary care calibration dataset** across 14+ African languages, used to generate an importance matrix for aggressive quantization experiments. The imatrix was used for IQ2_XS quantization (which outperformed Q2_K despite being smaller — see Appendix D). The deployed Q4_K_M model is a standard quantization from [mradermacher/medgemma-4b-it-GGUF](https://huggingface.co/mradermacher/medgemma-4b-it-GGUF).
 
 ```bash
-# Generate calibration imatrix
+# Generate calibration imatrix (used for IQ2_XS experiments)
 ./llama-imatrix -m medgemma-4b-f16.gguf \
   -f calibration/african_primary_care.txt \
   --chunks 64 \
   -o medgemma-medical.imatrix
 
-# Quantize with calibration (Q4_K_M — see Appendix D for quantization comparison)
-./llama-quantize medgemma-4b-f16.gguf medgemma-4b-Q4_K_M.gguf Q4_K_M \
+# Quantize with imatrix (used for IQ2_XS — see Appendix D)
+./llama-quantize medgemma-4b-f16.gguf medgemma-4b-IQ2_XS.gguf IQ2_XS \
   --imatrix medgemma-medical.imatrix
 ```
 

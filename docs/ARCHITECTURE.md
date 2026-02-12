@@ -127,12 +127,16 @@ python llama.cpp/convert_hf_to_gguf.py \
     --chunks 64 \
     -o medgemma-medical.imatrix
 
-# 3. Quantize with calibration (Q4_K_M — see Appendix D for comparison)
+# 3a. IQ2_XS quantization with medical imatrix (benchmarking — see Appendix D)
 ./llama-quantize \
     medgemma-4b-f16.gguf \
-    medgemma-4b-Q4_K_M.gguf \
-    Q4_K_M \
+    medgemma-4b-IQ2_XS.gguf \
+    IQ2_XS \
     --imatrix medgemma-medical.imatrix
+
+# 3b. Q4_K_M — standard quantization (deployed model)
+# Downloaded pre-quantized from mradermacher/medgemma-4b-it-GGUF
+huggingface-cli download mradermacher/medgemma-4b-it-GGUF medgemma-4b-it-Q4_K_M.gguf
 ```
 
 ## Directory Structure

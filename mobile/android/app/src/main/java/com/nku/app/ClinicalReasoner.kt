@@ -6,13 +6,28 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Clinical Reasoner - MedGemma Integration for Nku Sentinel
- * 
- * Converts sensor data into structured prompts for MedGemma 4B
+ * Clinical Reasoner — MedGemma Integration for Nku Sentinel
+ *
+ * Converts sensor data into structured prompts for MedGemma 4B (Q4_K_M)
  * and parses clinical recommendations.
- * 
- * This class generates the prompt; actual inference is handled by
- * the llama.cpp JNI layer (NkuInferenceEngine).
+ *
+ * ## Safety Architecture (5 layers)
+ * 1. **Confidence Gating** — Sensors below [CONFIDENCE_THRESHOLD] (75%) are
+ *    excluded from the MedGemma prompt. If ALL sensors are below threshold
+ *    and no symptoms are entered, triage abstains entirely (no LLM call).
+ * 2. **WHO/IMCI Fallback** — [createRuleBasedAssessment] provides deterministic
+ *    triage via WHO Integrated Management of Childhood Illness guidelines
+ *    when MedGemma is unavailable (thermal throttle, load failure, malformed output).
+ * 3. **Over-Referral Bias** — Thresholds are set conservatively (e.g., tachycardia >100,
+ *    pallor saturation ≤0.10, edema EAR ≤2.2) to favor false positives over false negatives.
+ * 4. **Always-On Disclaimer** — Every [ClinicalAssessment] includes a non-dismissible
+ *    "Consult a healthcare professional" disclaimer.
+ * 5. **Prompt Injection Defense** — All user-reported symptoms pass through
+ *    [PromptSanitizer] (6-layer defense) and are delimiter-wrapped before
+ *    inclusion in the prompt.
+ *
+ * This class generates the prompt; actual inference is handled by the
+ * llama.cpp JNI layer ([NkuInferenceEngine]).
  */
 
 data class ClinicalAssessment(

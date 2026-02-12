@@ -74,15 +74,17 @@ Does 56% on MedQA translate to reliable triage? Yes — for three key reasons (f
 |:------|:---------------|
 | **Prompt injection** | 6-layer `PromptSanitizer` at every model boundary (zero-width stripping, homoglyph normalization, Base64 detection, regex patterns, character allowlist, delimiter wrapping) |
 | **Abstention** | Sensor confidence must exceed 75% for ClinicalReasoner to include in triage; below-threshold readings excluded with advisory notes |
-| **Thermal** | Auto-pause at 42°C (`ThermalManager.kt`) |
-| **Privacy** | 100% on-device; zero data transmission |
+| **Thermal** | Auto-pause at 42°C (`ThermalManager.kt`); WHO/IMCI rule-based fallback continues triage |
+| **Privacy** | 100% on-device; zero data transmission; SQLCipher (AES-256, Android Keystore-derived passphrase) encrypts all stored screening data at rest |
 | **Disclaimer** | Always-on "Consult a healthcare professional" |
 
 ---
 
 ## 5. MedGemma: Irreplaceable Core (HAI-DEF)
 
-MedGemma 4B is the sole clinical reasoning engine, running 100% on-device via Q4_K_M quantization (4-bit, with importance-matrix calibration). This compression — from 8 GB (unquantized) to 2.3 GB (quantized) — enables fully offline inference on $50–100 phones. The quantized model retains 81% of the unquantized model's MedQA accuracy (56% quantized vs. 69% unquantized baseline). No alternative works: cloud inference fails without connectivity; smaller models lack medical knowledge; only MedGemma via llama.cpp enables the offline + accurate combination Nku requires.
+MedGemma 4B is the sole clinical reasoning engine, running 100% on-device via Q4_K_M quantization (4-bit, with importance-matrix calibration). This compression — from 8 GB (unquantized) to 2.3 GB (quantized) — enables fully offline inference on $50–100 phones. The quantized model retains 81% of the unquantized model's MedQA accuracy (56% quantized vs. 69% unquantized baseline). MedGemma is irreplaceable for three specific reasons: (1) it is the required HAI-DEF model for this competition, designed specifically for medical reasoning; (2) it is the only medically fine-tuned model with a GGUF-compatible architecture enabling ARM64 edge deployment via llama.cpp; (3) our 243-scenario medical imatrix was calibrated specifically for MedGemma's weight distribution, preserving the diagnostic vocabulary most critical for African primary care conditions. Cloud inference fails without connectivity; no alternative model satisfies all three constraints simultaneously.
+
+> **Note on multimodal MedGemma 4B:** We evaluated the multimodal variant (with MedSigLIP vision encoder) architecturally but did not empirically benchmark it on our use case. The design rationale for choosing text-only + structured sensor data is detailed in Appendix D — no labeled training data exists for smartphone conjunctival or periorbital images in this clinical context.
 
 ---
 
@@ -115,7 +117,7 @@ The promise of AI in healthcare has so far benefited those with the most access 
 
 **Prize Tracks**:
 - **Main Track** (1st–4th, $10K–$30K): Nku addresses a real, urgent healthcare gap for 450M+ people by putting MedGemma-powered clinical reasoning directly in CHWs' hands — offline, multilingual, on their existing $50 devices.
-- **Edge AI Prize** ($5K): Nku's entire architecture — Q4_K_M compression (56% MedQA accuracy on the quantized model, vs. 69% unquantized), mmap loading on $50–100 phones, llama.cpp JNI, 100% on-device medical inference — is purpose-built for edge deployment. We systematically benchmarked four quantization levels on the full MedQA test set (n=1,273): IQ1_M (32.3%), Q2_K (34.7%), IQ2_XS with medical imatrix (43.8%), and Q4_K_M (56.0%). Notably, the IQ2_XS model (1.3 GB) outperformed the larger Q2_K (1.6 GB) by +9.1pp — demonstrating that domain-specific imatrix calibration is more important than raw bit budget at aggressive quantization levels (see Appendix D). Q4_K_M was selected as the optimal accuracy/size tradeoff for clinical deployment. The hardest technical challenge — running a medical-grade LLM on a budget phone — is solved.
+- **Edge AI Prize** ($5K): Nku's entire architecture — Q4_K_M compression (56% MedQA accuracy on the quantized model, vs. 69% unquantized), mmap loading on $50–100 phones, llama.cpp JNI, 100% on-device medical inference — is purpose-built for edge deployment. To validate this model selection, we systematically benchmarked four quantization levels on the full MedQA test set (n=1,273): IQ1_M (32.3%), Q2_K (34.7%), IQ2_XS with medical imatrix (43.8%), and Q4_K_M (56.0%). This study confirmed that domain-specific imatrix calibration is more important than raw bit budget at aggressive quantization levels, and that Q4_K_M provides the best accuracy for reliable clinical deployment (see Appendix D). **Only Q4_K_M is deployed in the Nku application.** The hardest technical challenge — running a medical-grade LLM on a budget phone — is solved.
 - **Novel Task Prize** ($5K): Two novel contributions: (1) Q4_K_M quantization calibrated with a 243-scenario African primary care imatrix for an entirely new deployment context — offline multilingual triage on $50 smartphones. (2) A novel EAR-based periorbital edema screening heuristic, repurposing established computer vision geometry (Eye Aspect Ratio) for preeclampsia detection — grounded in palpebral fissure anthropometrics but not previously described in the literature.
 
 ---

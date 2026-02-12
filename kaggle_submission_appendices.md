@@ -253,7 +253,9 @@ Selecting the right quantization level required balancing two competing goals: *
 
 > †Single-pass evaluation — see methodology note above.
 
-**Decision rationale**: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. IQ2_XS (43.8%, 1.3 GB) is a viable alternative for ultra-constrained devices, offering the strongest accuracy-per-byte ratio of any quantization tested. Q2_K (34.7%, 1.6 GB) is dominated by IQ2_XS on both accuracy and size, confirming that domain-specific imatrix calibration is essential at aggressive quantization levels. With `mmap` memory mapping, the 2.3 GB Q4_K_M model runs on 2–3 GB RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
+**Decision rationale**: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The other three quantization levels (IQ1_M, Q2_K, IQ2_XS) were benchmarked to validate our model selection: they confirmed that aggressive quantization below Q4 degrades accuracy below clinically useful thresholds, and that domain-specific imatrix calibration is essential at lower bit rates. **Only Q4_K_M is deployed in the Nku application.** With `mmap` memory mapping, the 2.3 GB Q4_K_M model runs on 2–3 GB RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
+
+> **imatrix representativeness**: The 243 scenarios cover WHO/IMCI primary care conditions accounting for >80% of CHW encounters in Sub-Saharan Africa. The imatrix's purpose is weight importance estimation for quantization — it identifies which model weights are most critical for the deployment vocabulary (malaria, anemia, pneumonia, maternal health terms across 14+ languages). This is a quantization calibration technique, not clinical training data; 243 scenarios across 8 condition categories and 14 languages provides sufficient diversity for weight importance ranking.
 
 ### Why Not Unquantized MedGemma 4B or MedGemma 4B Multimodal?
 
@@ -271,6 +273,8 @@ Selecting the right quantization level required balancing two competing goals: *
 3. **The multimodal model is larger, not smaller.** The text decoder is identical to the text-only 4B. Adding MedSigLIP (400M params, ~800 MB) increases the quantized model from 2.3 GB to ~3.1 GB — a 35% size increase with no benefit for Nku's use case. On a 2 GB RAM device, this additional memory pressure degrades inference performance.
 
 4. **Structured numerical input outperforms ambiguous visual input.** Nku's sensor pipeline outputs precise, quantified biomarkers (HR: 108 BPM, conjunctival saturation: 0.08, EAR: 2.15) with confidence scores and clinical context. Feeding the model a raw photo and asking "does this patient have anemia?" yields far less reliable results than providing "conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10), pallor index: 0.68, severity: MODERATE." The structured prompting approach achieves a median 53% improvement over zero-shot baselines [23].
+
+> **Transparency note:** These four arguments are architectural and design rationale — we did not empirically benchmark multimodal MedGemma on smartphone conjunctival or periorbital images. No labeled training data exists for these modalities in this clinical context, which itself is a reason the multimodal path is not viable without significant additional data collection and fine-tuning.
 
 
 ### Translation Model Comparison
@@ -561,3 +565,44 @@ Beyond sensor data, the prompt includes:
 | **Pregnancy context** | User toggle + gestational weeks | Triggers preeclampsia risk assessment when ≥20 weeks |
 | **Reported symptoms** | Text/voice input | Sanitized via `PromptSanitizer` (6-layer injection defense), wrapped in `<<<>>>` delimiters |
 | **Output instructions** | Static template | Forces structured `SEVERITY/URGENCY/CONCERNS/RECOMMENDATIONS` format for reliable parsing |
+
+---
+
+## Appendix G: Safety Architecture
+
+Nku implements five independent safety layers to minimize risk from incorrect triage output:
+
+### Layer 1: Confidence Gating
+Sensor readings below 75% confidence are excluded from MedGemma's prompt (marked `[LOW CONFIDENCE — excluded from assessment]`). If all sensors are below threshold and no symptoms are entered, triage abstains entirely — no MedGemma call is made. This prevents the LLM from reasoning on unreliable data.
+
+### Layer 2: WHO/IMCI Rule-Based Fallback
+If MedGemma is unavailable (device overheating at >42°C, model loading failure, thermal throttling), `ClinicalReasoner.createRuleBasedAssessment()` provides deterministic triage based on WHO Integrated Management of Childhood Illness (IMCI) flowcharts. This ensures triage continues even without the LLM.
+
+### Layer 3: Over-Referral Bias
+All sensor thresholds are set conservatively to favor false positives over false negatives:
+- rPPG: flags tachycardia at >100 BPM (standard clinical threshold)
+- Pallor: flags at conjunctival saturation ≤0.10 (liberal threshold; healthy ≥0.20)
+- Edema: flags at EAR ≤2.2 (normal ≈2.8)
+
+The system intentionally over-refers — it is safer for a CHW to send a healthy patient to a clinic than to miss a critical case.
+
+### Layer 4: Always-On Disclaimers
+Every triage result displays "Consult a healthcare professional" — this is not dismissible. The system outputs severity levels and referral recommendations, never diagnoses. It answers *"should this patient be referred urgently?"* not *"what disease does this patient have?"*
+
+### Layer 5: Prompt Injection Defense
+All user input passes through a 6-layer `PromptSanitizer` at every model boundary:
+
+| Layer | Defense | Purpose |
+|:------|:--------|:--------|
+| 1 | Zero-width character stripping | Prevents invisible Unicode injection |
+| 2 | Homoglyph normalization | Cyrillic/Greek lookalike → Latin |
+| 3 | Base64 payload detection | Decodes and checks for injection patterns |
+| 4 | Regex pattern matching | 15+ injection patterns ("ignore previous," "system prompt," etc.) |
+| 5 | Character allowlist | Only permits expected character ranges |
+| 6 | Delimiter wrapping | User input enclosed in `<<<` `>>>` with instruction not to interpret |
+
+Output validation additionally checks for leaked delimiters and suspicious patterns. Tests in `test_security.py` cover 30+ injection scenarios including Unicode bypasses and nested injections.
+
+### MedQA Benchmark Methodology Note
+
+MedQA is used as a **relative** benchmark for quantization comparison — not as an absolute clinical accuracy claim. The key findings are: (1) the retention ratio (56%/69% = 81% retained), (2) the relative ordering of quantization methods, and (3) the primary care subset consistency (56.2% vs 56.0% overall). These relative comparisons remain valid regardless of potential benchmark contamination concerns. MedQA is the standard benchmark for medical LLMs; using an alternative would reduce comparability with published baselines.

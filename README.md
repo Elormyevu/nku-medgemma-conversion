@@ -222,7 +222,7 @@ Afrikaans, Arabic, Bambara, Bemba, Chichewa, Dinka, Fula, Ga, Kikuyu, Kinyarwand
 
 ```
 nku-medgemma-conversion/
-├── mobile/android/           # Android application
+├── mobile/android/           # Android application (PRODUCTION CODE)
 │   └── app/src/main/
 │       ├── java/com/nku/app/
 │       │   ├── MainActivity.kt         # UI + Compose
@@ -241,6 +241,12 @@ nku-medgemma-conversion/
 │       │   ├── FaceDetectorHelper.kt  # MediaPipe face landmark wrapper
 │       │   └── screens/               # Screen composables (Cardio, Anemia, Preeclampsia, Triage)
 │       └── assets/           # App resources (models loaded from device storage)
+├── cloud/                    # DEVELOPMENT BACKEND — optional Flask API used during prototyping.
+│                             #   NOT part of the production Android app. Shares triage logic
+│                             #   for validation. Retained as development artifact.
+├── benchmark/                # Quantization model selection study — MedQA benchmarks
+│                             #   for IQ1_M, Q2_K, IQ2_XS, Q4_K_M. Only Q4_K_M is deployed.
+├── tests/                    # Python test suite (48 tests: API, security, integration, algorithms)
 ├── scripts/
 │   ├── quantization/         # Q4_K_M quantization (see Appendix D)
 │   ├── calibration/          # Medical imatrix generation

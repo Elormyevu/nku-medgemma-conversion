@@ -1,6 +1,6 @@
 # Nku: Offline Medical AI for Pan-African Primary Care
 
-**MedGemma Impact Challenge — Edge AI Prize Track**
+**MedGemma Impact Challenge**
 
 ---
 

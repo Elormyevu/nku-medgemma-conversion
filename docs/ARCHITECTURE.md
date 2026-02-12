@@ -56,7 +56,7 @@ Nku is an **offline-first Android application** that provides medical triage in 
 
 ## The Nku Cycle
 
-The core innovation is the **Nku Cycle** — a memory-efficient orchestration pattern that performs clinical triage on budget devices (2–3GB RAM). MedGemma is loaded via `mmap` (pages loaded on demand by the OS), while ML Kit handles translation in a separate process — eliminating the model-swapping overhead of the earlier TranslateGemma approach.
+The core innovation is the **Nku Cycle** — a memory-efficient orchestration pattern that performs clinical triage on budget devices (3–4GB RAM). MedGemma is loaded via `mmap` (pages loaded on demand by the OS), while ML Kit handles translation in a separate process — eliminating the model-swapping overhead of the earlier TranslateGemma approach.
 
 ### Flow
 

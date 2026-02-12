@@ -10,7 +10,7 @@ In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people [1] �
 
 The disconnect: powerful AI models like MedGemma exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, while 3G accounts for ~54% of mobile connections (GSMA 2023), coverage is unreliable — 25% of rural Africans lack mobile broadband entirely, and only 23% use the internet regularly (ITU 2024) [4]. Cloud-based AI is impractical where it is needed most.
 
-**Target user**: A CHW in rural Ghana with a $60 TECNO phone (2–3GB RAM) and no stable internet. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral to a district hospital that may be hours away by motorbike.
+**Target user**: A CHW in rural Ghana with a $60 TECNO phone (3–4GB RAM) and no stable internet. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral to a district hospital that may be hours away by motorbike.
 
 ---
 
@@ -32,7 +32,7 @@ All medical inference is 100% on-device — MedGemma never touches the cloud. Tr
 | | Nku | Cloud Alternatives |
 |:--------|:---:|:------------------:|
 | Medical inference offline | **100%** | 0% |
-| 2–3GB RAM devices | ✅ | ❌ |
+| 3–4GB RAM devices | ✅ | ❌ |
 | Pan-African languages | 46 | ~5 |
 | Per-query cost | **$0** (inference) | $0.01–0.10 |
 

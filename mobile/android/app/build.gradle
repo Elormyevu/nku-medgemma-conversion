@@ -60,7 +60,7 @@ android {
     }
     buildFeatures {
         compose true
-        buildConfig true  // F-2: needed for CloudInferenceClient DEBUG gate
+        buildConfig true  // F-2: needed for BuildConfig access (debug/release gating)
     }
     
     // Don't compress GGUF models - they're already compressed and huge

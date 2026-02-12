@@ -246,9 +246,9 @@ class NkuInferenceEngine(private val context: Context) {
                 if (translated != null) {
                     englishText = translated
                 } else if (NkuTranslator.requiresCloud(language)) {
-                    // ML Kit doesn't support this language — needs CloudInferenceClient
+                    // ML Kit doesn't support this language on-device
                     Log.w(TAG, "ML Kit unsupported for $language, cloud fallback needed")
-                    // For now, pass through as-is; CloudInferenceClient handles this
+                    // Pass through as-is; cloud backend handles unsupported languages
                     // in the full triage flow when network is available
                     englishText = sanitizedInput
                 } else {

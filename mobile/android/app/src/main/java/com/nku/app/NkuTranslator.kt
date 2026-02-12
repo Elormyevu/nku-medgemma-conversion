@@ -136,7 +136,7 @@ class NkuTranslator(private val context: Context) {
         if (sourceLang == null || targetLang == null) {
             Log.w(TAG, "Language not supported by ML Kit on-device: " +
                     "source=$sourceLanguage ($sourceLang), target=$targetLanguage ($targetLang)")
-            return null  // Caller should use CloudInferenceClient
+            return null  // Language not supported on-device; cloud backend handles these
         }
 
         // Same language — no translation needed

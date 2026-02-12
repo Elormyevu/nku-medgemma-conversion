@@ -242,13 +242,13 @@ fun AnemiaScreen(
             )
             
             Text(
-                "Pallor Score: ${(pallorResult.pallorScore * 100).toInt()}%",
+                "${strings.pallorScoreLabel}: ${(pallorResult.pallorScore * 100).toInt()}%",
                 fontSize = 16.sp,
                 color = Color.Gray
             )
             
             Text(
-                "Confidence: ${(pallorResult.confidence * 100).toInt()}%",
+                "${strings.confidenceLabel}: ${(pallorResult.confidence * 100).toInt()}%",
                 fontSize = 13.sp,
                 color = Color.Gray
             )

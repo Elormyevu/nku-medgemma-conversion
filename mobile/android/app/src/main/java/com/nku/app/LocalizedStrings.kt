@@ -238,7 +238,21 @@ object LocalizedStrings {
         val primaryConcerns: String = "Primary Concerns",
         val savedScreenings: String = "💾 %d screening(s) saved",
         val stopLabel: String = "Stop",
-        val listenLabel: String = "🔊 Listen"
+        val listenLabel: String = "🔊 Listen",
+
+        // I-1 fix: Previously hardcoded strings in screen composables
+        val signalLabel: String = "Signal",
+        val confidenceLabel: String = "Confidence",
+        val pallorScoreLabel: String = "Pallor Score",
+        val edemaScoreLabel: String = "Edema Score",
+        val periorbitalLabel: String = "Periorbital",
+        val severityLabel: String = "Severity",
+        val urgencyLabel: String = "Urgency",
+        val voiceInput: String = "Voice input",
+        val addSymptom: String = "Add symptom",
+        val symptomPlaceholder: String = "e.g. headache, dizziness...",
+        val listeningPrompt: String = "🎤 Listening... speak now",
+        val geometryInstructions: String = "Uses geometry-based analysis (facial proportions). Works across all skin tones. Best with photos in consistent lighting."
     )
 
     // ─── Tier 1 Languages ───────────────────────────────────────
@@ -288,7 +302,19 @@ object LocalizedStrings {
         primaryConcerns = "Nuŋlɔɖiwo tiatia",
         savedScreenings = "💾 Kpɔkpɔ %d wotsɔ axa",
         stopLabel = "Etsɔ asi le eŋu",
-        listenLabel = "🔊 Ɖo to"
+        listenLabel = "🔊 Ɖo to",
+        signalLabel = "Dzesi",
+        confidenceLabel = "Ŋuɖoɖo",
+        pallorScoreLabel = "Ŋku ƒe xɔxɔ",
+        edemaScoreLabel = "Fuflu ƒe xɔxɔ",
+        periorbitalLabel = "Ŋku ƒe ŋgɔ",
+        severityLabel = "Sesẽ",
+        urgencyLabel = "Kpekpeame",
+        voiceInput = "Gbe ƒe nyaŋuɖoɖo",
+        addSymptom = "Tsɔ dɔlele kpe ɖe eŋu",
+        symptomPlaceholder = "ke.n. ta ƒe veve, akpɔme…",
+        listeningPrompt = "🎤 Le toto sem… ƒo nu fifia",
+        geometryInstructions = "Ezãa nkume ƒe ɖoɖo kpɔkpɔ. Ewɔ dɔ na anyigba ƒe amewo katã. Enyo wu le kekeli maɖe la te."
     )
 
     val frenchStrings = UiStrings(
@@ -332,7 +358,19 @@ object LocalizedStrings {
         primaryConcerns = "Préoccupations principales",
         savedScreenings = "💾 %d dépistage(s) enregistré(s)",
         stopLabel = "Arrêter",
-        listenLabel = "🔊 Écouter"
+        listenLabel = "🔊 Écouter",
+        signalLabel = "Signal",
+        confidenceLabel = "Confiance",
+        pallorScoreLabel = "Score de pâleur",
+        edemaScoreLabel = "Score d'œdème",
+        periorbitalLabel = "Périorbitaire",
+        severityLabel = "Gravité",
+        urgencyLabel = "Urgence",
+        voiceInput = "Saisie vocale",
+        addSymptom = "Ajouter un symptôme",
+        symptomPlaceholder = "ex. maux de tête, vertiges…",
+        listeningPrompt = "🎤 Écoute en cours… parlez maintenant",
+        geometryInstructions = "Utilise l'analyse géométrique (proportions faciales). Fonctionne sur tous les tons de peau. Meilleur avec un éclairage constant."
     )
 
     val swahiliStrings = UiStrings(
@@ -375,7 +413,19 @@ object LocalizedStrings {
         primaryConcerns = "Wasiwasi Wakuu",
         savedScreenings = "💾 Uchunguzi %d umehifadhiwa",
         stopLabel = "Simamisha",
-        listenLabel = "🔊 Sikiliza"
+        listenLabel = "🔊 Sikiliza",
+        signalLabel = "Ishara",
+        confidenceLabel = "Uhakika",
+        pallorScoreLabel = "Alama ya weupe",
+        edemaScoreLabel = "Alama ya uvimbe",
+        periorbitalLabel = "Karibu na jicho",
+        severityLabel = "Ukali",
+        urgencyLabel = "Haraka",
+        voiceInput = "Ingizo la sauti",
+        addSymptom = "Ongeza dalili",
+        symptomPlaceholder = "mf. maumivu ya kichwa, kizunguzungu…",
+        listeningPrompt = "🎤 Inasikiliza… sema sasa",
+        geometryInstructions = "Inatumia uchambuzi wa jiometri (uwiano wa uso). Inafanya kazi kwa rangi zote za ngozi. Bora na picha katika mwanga thabiti."
     )
 
     val hausaStrings = UiStrings(
@@ -481,7 +531,19 @@ object LocalizedStrings {
         primaryConcerns = "Manyan Damuwa",
         savedScreenings = "💾 An ajiye gwaje-gwaje %d",
         stopLabel = "Tsaya",
-        listenLabel = "🔊 Saurara"
+        listenLabel = "🔊 Saurara",
+        signalLabel = "Sigina",
+        confidenceLabel = "Tabbaci",
+        pallorScoreLabel = "Makin farar ido",
+        edemaScoreLabel = "Makin kumburi",
+        periorbitalLabel = "Kewayen ido",
+        severityLabel = "Tsanani",
+        urgencyLabel = "Gaggawa",
+        voiceInput = "Shigar da murya",
+        addSymptom = "Ƙara alamar rashin lafiya",
+        symptomPlaceholder = "misali ciwon kai, jiri…",
+        listeningPrompt = "🎤 Yana saurara… yi magana yanzu",
+        geometryInstructions = "Yana amfani da nazarin siffar fuska. Yana aiki da kowane launin fata. Ya fi kyau da hotuna a cikin haske daidai."
     )
 
     val yorubaStrings = UiStrings(
@@ -587,7 +649,19 @@ object LocalizedStrings {
         primaryConcerns = "Àwọn Àníyàn Pàtàkì",
         savedScreenings = "💾 Àyẹ̀wò %d ti fipamọ́",
         stopLabel = "Dúró",
-        listenLabel = "🔊 Gbọ́"
+        listenLabel = "🔊 Gbọ́",
+        signalLabel = "Àmì",
+        confidenceLabel = "Ìgbàgbọ́",
+        pallorScoreLabel = "Iye ìfúnpá",
+        edemaScoreLabel = "Iye wíwú",
+        periorbitalLabel = "Àyíká ojú",
+        severityLabel = "Ìwọ̀n líle",
+        urgencyLabel = "Ìkánjú",
+        voiceInput = "Ohùn ìsọ̀rọ̀",
+        addSymptom = "Fi àmì àìsàn kún",
+        symptomPlaceholder = "àp. orí fífọ́, ìyípo…",
+        listeningPrompt = "🎤 Ó ń tẹ́tí sí… sọ̀rọ̀ báyìí",
+        geometryInstructions = "Ó ń lo àyẹ̀wò geometry (ìwọ̀n ojú). Ó ṣiṣẹ́ fún gbogbo àwọ̀ ara. Ó dára jù pẹ̀lú àwòrán nínú ìmọ́lẹ̀ kan náà."
     )
 
     val igboStrings = UiStrings(

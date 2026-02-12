@@ -112,9 +112,9 @@ fun TriageScreen(
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(strings.screeningData, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 14.sp)
                 Spacer(Modifier.height(8.dp))
-                DataCheckRow(strings.heartRate, rppgResult.bpm != null && rppgResult.confidence > 0.4f, rppgResult.bpm?.let { "${it.toInt()} ${strings.bpm}" })
-                DataCheckRow(strings.anemiaScreen, pallorResult.hasBeenAnalyzed, if (pallorResult.hasBeenAnalyzed) pallorResult.severity.name else null)
-                DataCheckRow(strings.swellingCheck, edemaResult.hasBeenAnalyzed, if (edemaResult.hasBeenAnalyzed) edemaResult.severity.name else null)
+                DataCheckRow(strings.heartRate, rppgResult.bpm != null && rppgResult.confidence > 0.4f, rppgResult.bpm?.let { "${it.toInt()} ${strings.bpm}" }, strings.notDone)
+                DataCheckRow(strings.anemiaScreen, pallorResult.hasBeenAnalyzed, if (pallorResult.hasBeenAnalyzed) pallorResult.severity.name else null, strings.notDone)
+                DataCheckRow(strings.swellingCheck, edemaResult.hasBeenAnalyzed, if (edemaResult.hasBeenAnalyzed) edemaResult.severity.name else null, strings.notDone)
             }
         }
         
@@ -151,7 +151,7 @@ fun TriageScreen(
                     ) {
                         Icon(
                             if (isListening) Icons.Default.Hearing else Icons.Default.Mic,
-                            contentDescription = "Voice input",
+                            contentDescription = strings.voiceInput,
                             tint = if (isListening) NkuColors.ListeningIndicator else NkuColors.AccentCyan,
                             modifier = Modifier.size(24.dp)
                         )
@@ -159,7 +159,7 @@ fun TriageScreen(
                     Spacer(Modifier.width(8.dp))
                     OutlinedTextField(
                         value = symptomText, onValueChange = { symptomText = it },
-                        placeholder = { Text("e.g. headache, dizziness...", color = Color(0xFF555555)) },
+                        placeholder = { Text(strings.symptomPlaceholder, color = Color(0xFF555555)) },
                         modifier = Modifier.weight(1f), singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = NkuColors.Success, unfocusedBorderColor = NkuColors.InactiveElement,
@@ -170,12 +170,12 @@ fun TriageScreen(
                     IconButton(onClick = {
                         if (symptomText.isNotBlank()) { sensorFusion.addSymptom(symptomText.trim()); symptomText = "" }
                     }) {
-                        Icon(Icons.Default.Add, contentDescription = "Add symptom", tint = NkuColors.Success, modifier = Modifier.size(28.dp))
+                        Icon(Icons.Default.Add, contentDescription = strings.addSymptom, tint = NkuColors.Success, modifier = Modifier.size(28.dp))
                     }
                 }
                 if (isListening) {
                     Spacer(Modifier.height(6.dp))
-                    Text("🎤 Listening... speak now", fontSize = 12.sp, color = NkuColors.ListeningIndicator)
+                    Text(strings.listeningPrompt, fontSize = 12.sp, color = NkuColors.ListeningIndicator)
                 }
                 if (micPermissionDenied) {
                     Spacer(Modifier.height(6.dp))
@@ -262,16 +262,16 @@ fun TriageScreen(
             Card(colors = CardDefaults.cardColors(containerColor = categoryColor), modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(result.triageCategory.name, fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                    Text("Severity: ${result.overallSeverity.name}", color = Color.White.copy(alpha = 0.8f))
-                    Text("Urgency: ${result.urgency.name.replace("_", " ")}", color = Color.White.copy(alpha = 0.8f))
+                    Text("${strings.severityLabel}: ${result.overallSeverity.name}", color = Color.White.copy(alpha = 0.8f))
+                    Text("${strings.urgencyLabel}: ${result.urgency.name.replace("_", " ")}", color = Color.White.copy(alpha = 0.8f))
                 }
             }
             Spacer(Modifier.height(12.dp))
             
             // Listen button
             val speakableText = buildString {
-                append("Severity: ${result.overallSeverity.name}. ")
-                append("Urgency: ${result.urgency.name.replace("_", " ")}. ")
+                append("${strings.severityLabel}: ${result.overallSeverity.name}. ")
+                append("${strings.urgencyLabel}: ${result.urgency.name.replace("_", " ")}. ")
                 if (result.primaryConcerns.isNotEmpty()) { append("Concerns: "); result.primaryConcerns.forEach { append("$it. ") } }
                 if (result.recommendations.isNotEmpty()) { append("Recommendations: "); result.recommendations.forEach { append("$it. ") } }
             }
@@ -309,7 +309,7 @@ fun TriageScreen(
 }
 
 @Composable
-fun DataCheckRow(label: String, isComplete: Boolean, detail: String?) {
+fun DataCheckRow(label: String, isComplete: Boolean, detail: String?, notDoneText: String = "Not done") {
     Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
         Icon(
             if (isComplete) Icons.Default.CheckCircle else Icons.Default.Close,
@@ -319,6 +319,6 @@ fun DataCheckRow(label: String, isComplete: Boolean, detail: String?) {
         )
         Spacer(Modifier.width(8.dp))
         Text(label, color = Color.White, fontSize = 13.sp, modifier = Modifier.weight(1f))
-        Text(detail ?: "Not done", color = if (isComplete) NkuColors.Success else NkuColors.InactiveText, fontSize = 12.sp)
+        Text(detail ?: notDoneText, color = if (isComplete) NkuColors.Success else NkuColors.InactiveText, fontSize = 12.sp)
     }
 }

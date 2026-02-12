@@ -209,15 +209,15 @@ fun CardioScreen(
                     fontWeight = FontWeight.Bold,
                     color = if (hasResult) NkuColors.Success else Color.White
                 )
-                Text("BPM", fontSize = 16.sp, color = Color.Gray)
+                Text(strings.bpm, fontSize = 16.sp, color = Color.Gray)
             }
         }
         
         Spacer(Modifier.height(8.dp))
         
         if (isMeasuring) {
-            Text("Signal: ${rppgResult.signalQuality}", color = Color.Gray, fontSize = 13.sp)
-            Text("Confidence: ${(rppgResult.confidence * 100).toInt()}%", color = Color.Gray, fontSize = 13.sp)
+            Text("${strings.signalLabel}: ${rppgResult.signalQuality}", color = Color.Gray, fontSize = 13.sp)
+            Text("${strings.confidenceLabel}: ${(rppgResult.confidence * 100).toInt()}%", color = Color.Gray, fontSize = 13.sp)
         }
         
         Spacer(Modifier.height(20.dp))

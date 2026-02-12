@@ -224,9 +224,9 @@ fun PreeclampsiaScreen(
                 EdemaSeverity.SIGNIFICANT -> NkuColors.ListeningIndicator
             }
             Text(edemaResult.severity.name, fontSize = 36.sp, fontWeight = FontWeight.Bold, color = scoreColor)
-            Text("Edema Score: ${(edemaResult.edemaScore * 100).toInt()}%", color = Color.Gray)
-            Text("Periorbital: ${(edemaResult.periorbitalScore * 100).toInt()}%", color = Color.Gray, fontSize = 12.sp)
-            Text("Confidence: ${(edemaResult.confidence * 100).toInt()}%", color = Color.Gray, fontSize = 12.sp)
+            Text("${strings.edemaScoreLabel}: ${(edemaResult.edemaScore * 100).toInt()}%", color = Color.Gray)
+            Text("${strings.periorbitalLabel}: ${(edemaResult.periorbitalScore * 100).toInt()}%", color = Color.Gray, fontSize = 12.sp)
+            Text("${strings.confidenceLabel}: ${(edemaResult.confidence * 100).toInt()}%", color = Color.Gray, fontSize = 12.sp)
             Spacer(Modifier.height(16.dp))
             
             if (edemaResult.riskFactors.isNotEmpty()) {
@@ -274,7 +274,7 @@ fun PreeclampsiaScreen(
         
         Card(colors = CardDefaults.cardColors(containerColor = NkuColors.InstructionCard), modifier = Modifier.fillMaxWidth()) {
             Text(
-                "Uses geometry-based analysis (facial proportions). Works across all skin tones. Best with photos in consistent lighting.",
+                strings.geometryInstructions,
                 color = Color.Gray, fontSize = 12.sp, modifier = Modifier.padding(12.dp)
             )
         }

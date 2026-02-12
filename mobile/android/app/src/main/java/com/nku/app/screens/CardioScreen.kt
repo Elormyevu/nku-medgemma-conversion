@@ -162,7 +162,7 @@ fun CardioScreen(
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
                         Text(
-                            "Buffer: ${rppgResult.bufferFillPercent.toInt()}%",
+                            "${strings.bufferLabel}: ${rppgResult.bufferFillPercent.toInt()}%",
                             fontSize = 10.sp,
                             color = Color.White
                         )
@@ -216,7 +216,7 @@ fun CardioScreen(
         Spacer(Modifier.height(8.dp))
         
         if (isMeasuring) {
-            Text("${strings.signalLabel}: ${rppgResult.signalQuality}", color = Color.Gray, fontSize = 13.sp)
+            Text("${strings.signalLabel}: ${strings.localizedSignalQuality(rppgResult.signalQuality)}", color = Color.Gray, fontSize = 13.sp)
             Text("${strings.confidenceLabel}: ${(rppgResult.confidence * 100).toInt()}%", color = Color.Gray, fontSize = 13.sp)
         }
         

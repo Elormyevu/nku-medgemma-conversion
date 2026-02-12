@@ -113,8 +113,8 @@ fun TriageScreen(
                 Text(strings.screeningData, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 14.sp)
                 Spacer(Modifier.height(8.dp))
                 DataCheckRow(strings.heartRate, rppgResult.bpm != null && rppgResult.confidence > 0.4f, rppgResult.bpm?.let { "${it.toInt()} ${strings.bpm}" }, strings.notDone)
-                DataCheckRow(strings.anemiaScreen, pallorResult.hasBeenAnalyzed, if (pallorResult.hasBeenAnalyzed) pallorResult.severity.name else null, strings.notDone)
-                DataCheckRow(strings.swellingCheck, edemaResult.hasBeenAnalyzed, if (edemaResult.hasBeenAnalyzed) edemaResult.severity.name else null, strings.notDone)
+                DataCheckRow(strings.anemiaScreen, pallorResult.hasBeenAnalyzed, if (pallorResult.hasBeenAnalyzed) strings.localizedSeverity(pallorResult.severity) else null, strings.notDone)
+                DataCheckRow(strings.swellingCheck, edemaResult.hasBeenAnalyzed, if (edemaResult.hasBeenAnalyzed) strings.localizedSeverity(edemaResult.severity) else null, strings.notDone)
             }
         }
         
@@ -190,7 +190,7 @@ fun TriageScreen(
                         Row(modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp), verticalAlignment = Alignment.CenterVertically) {
                             Text("• ${symptom.symptom}", color = NkuColors.MutedBlue, fontSize = 13.sp, modifier = Modifier.weight(1f))
                             IconButton(onClick = { sensorFusion.removeSymptom(symptom.symptom) }, modifier = Modifier.size(20.dp)) {
-                                Icon(Icons.Default.Close, contentDescription = "Remove", tint = NkuColors.InactiveText, modifier = Modifier.size(14.dp))
+                                Icon(Icons.Default.Close, contentDescription = strings.removeLabel, tint = NkuColors.InactiveText, modifier = Modifier.size(14.dp))
                             }
                         }
                     }
@@ -261,19 +261,19 @@ fun TriageScreen(
             }
             Card(colors = CardDefaults.cardColors(containerColor = categoryColor), modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(result.triageCategory.name, fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                    Text("${strings.severityLabel}: ${result.overallSeverity.name}", color = Color.White.copy(alpha = 0.8f))
-                    Text("${strings.urgencyLabel}: ${result.urgency.name.replace("_", " ")}", color = Color.White.copy(alpha = 0.8f))
+                    Text(strings.localizedTriageCategory(result.triageCategory), fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text("${strings.severityLabel}: ${strings.localizedSeverity(result.overallSeverity)}", color = Color.White.copy(alpha = 0.8f))
+                    Text("${strings.urgencyLabel}: ${strings.localizedUrgency(result.urgency)}", color = Color.White.copy(alpha = 0.8f))
                 }
             }
             Spacer(Modifier.height(12.dp))
             
             // Listen button
             val speakableText = buildString {
-                append("${strings.severityLabel}: ${result.overallSeverity.name}. ")
-                append("${strings.urgencyLabel}: ${result.urgency.name.replace("_", " ")}. ")
-                if (result.primaryConcerns.isNotEmpty()) { append("Concerns: "); result.primaryConcerns.forEach { append("$it. ") } }
-                if (result.recommendations.isNotEmpty()) { append("Recommendations: "); result.recommendations.forEach { append("$it. ") } }
+                append("${strings.severityLabel}: ${strings.localizedSeverity(result.overallSeverity)}. ")
+                append("${strings.urgencyLabel}: ${strings.localizedUrgency(result.urgency)}. ")
+                if (result.primaryConcerns.isNotEmpty()) { append("${strings.ttsConcerns}: "); result.primaryConcerns.forEach { append("$it. ") } }
+                if (result.recommendations.isNotEmpty()) { append("${strings.ttsRecommendations}: "); result.recommendations.forEach { append("$it. ") } }
             }
             Button(
                 onClick = { if (ttsState == TTSState.SPEAKING) nkuTTS.stop() else nkuTTS.speak(speakableText, selectedLanguage) },

@@ -30,15 +30,17 @@ jobs:
           pip install --upgrade pip
           pip install -r cloud/inference_api/requirements.txt
           pip install pytest ruff
+          # L-02 fix: Install deps needed by test_algos.py (sensor algorithm tests)
+          pip install opencv-python-headless scipy mediapipe
 
       - name: Lint cloud API
         run: ruff check cloud/inference_api/ --select=E,F,W --ignore=E501
 
       - name: Run cloud API tests
-        # Note: test_algos.py requires opencv/mediapipe/scipy (not in cloud deps)
+        # L-02 fix: Include test_algos.py now that its deps are installed
         env:
           PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/cloud/inference_api
-        run: pytest tests/ --ignore=tests/test_algos.py -v --tb=short
+        run: pytest tests/ -v --tb=short
 
   # ─── Android Build + Unit Tests ───
   # CI-1 fix: Only run when Android files change

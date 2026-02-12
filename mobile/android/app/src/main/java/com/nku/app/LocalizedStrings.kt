@@ -253,8 +253,71 @@ object LocalizedStrings {
         val addSymptom: String = "Add symptom",
         val symptomPlaceholder: String = "e.g. headache, dizziness...",
         val listeningPrompt: String = "🎤 Listening... speak now",
-        val geometryInstructions: String = "Uses geometry-based analysis (facial proportions). Works across all skin tones. Best with photos in consistent lighting."
-    )
+        val geometryInstructions: String = "Uses geometry-based analysis (facial proportions). Works across all skin tones. Best with photos in consistent lighting.",
+
+        // L-01 fix: Localize remaining hardcoded English strings
+        // Signal quality display values (used in CardioScreen)
+        val signalInsufficient: String = "Insufficient",
+        val signalPoor: String = "Poor",
+        val signalGood: String = "Good",
+        val signalExcellent: String = "Excellent",
+        val bufferLabel: String = "Buffer",
+        val removeLabel: String = "Remove",
+
+        // Severity display names (used in TriageScreen)
+        val severityLow: String = "Low",
+        val severityMedium: String = "Medium",
+        val severityHigh: String = "High",
+        val severityCritical: String = "Critical",
+
+        // Urgency display names
+        val urgencyRoutine: String = "Routine",
+        val urgencyWithinWeek: String = "Within 1 week",
+        val urgencyWithin48h: String = "Within 48 hours",
+        val urgencyImmediate: String = "Immediate",
+
+        // Triage category names
+        val triageGreen: String = "Green",
+        val triageYellow: String = "Yellow",
+        val triageOrange: String = "Orange",
+        val triageRed: String = "Red",
+
+        // TTS section headers
+        val ttsConcerns: String = "Concerns",
+        val ttsRecommendations: String = "Recommendations"
+    ) {
+        /** Map signal quality string to localized display name. */
+        fun localizedSignalQuality(quality: String): String = when (quality) {
+            "excellent" -> signalExcellent
+            "good" -> signalGood
+            "poor" -> signalPoor
+            else -> signalInsufficient
+        }
+
+        /** Map Severity enum to localized display name. */
+        fun localizedSeverity(severity: Severity): String = when (severity) {
+            Severity.LOW -> severityLow
+            Severity.MEDIUM -> severityMedium
+            Severity.HIGH -> severityHigh
+            Severity.CRITICAL -> severityCritical
+        }
+
+        /** Map Urgency enum to localized display name. */
+        fun localizedUrgency(urgency: Urgency): String = when (urgency) {
+            Urgency.ROUTINE -> urgencyRoutine
+            Urgency.WITHIN_WEEK -> urgencyWithinWeek
+            Urgency.WITHIN_48_HOURS -> urgencyWithin48h
+            Urgency.IMMEDIATE -> urgencyImmediate
+        }
+
+        /** Map TriageCategory enum to localized display name. */
+        fun localizedTriageCategory(category: TriageCategory): String = when (category) {
+            TriageCategory.GREEN -> triageGreen
+            TriageCategory.YELLOW -> triageYellow
+            TriageCategory.ORANGE -> triageOrange
+            TriageCategory.RED -> triageRed
+        }
+    }
 
     // ─── Tier 1 Languages ───────────────────────────────────────
 
@@ -315,7 +378,27 @@ object LocalizedStrings {
         addSymptom = "Tsɔ dɔlele kpe ɖe eŋu",
         symptomPlaceholder = "ke.n. ta ƒe veve, akpɔme…",
         listeningPrompt = "🎤 Le toto sem… ƒo nu fifia",
-        geometryInstructions = "Ezãa nkume ƒe ɖoɖo kpɔkpɔ. Ewɔ dɔ na anyigba ƒe amewo katã. Enyo wu le kekeli maɖe la te."
+        geometryInstructions = "Ezãa nkume ƒe ɖoɖo kpɔkpɔ. Ewɔ dɔ na anyigba ƒe amewo katã. Enyo wu le kekeli maɖe la te.",
+        signalInsufficient = "Mese o",
+        signalPoor = "Menya o",
+        signalGood = "Enyo",
+        signalExcellent = "Nyui ŋutɔ",
+        bufferLabel = "Agbalẽ",
+        removeLabel = "Ɖe asi le eŋu",
+        severityLow = "Kpui",
+        severityMedium = "Titina",
+        severityHigh = "Lolo",
+        severityCritical = "Vevie ŋutɔ",
+        urgencyRoutine = "Gbɔdonuma",
+        urgencyWithinWeek = "Le kɔsiɖa 1 me",
+        urgencyWithin48h = "Le gaƒoƒo 48 me",
+        urgencyImmediate = "Fifia",
+        triageGreen = "Gbemɔ",
+        triageYellow = "Akpɔ",
+        triageOrange = "Aŋɔ̃",
+        triageRed = "Dzĩ",
+        ttsConcerns = "Nusiwo le enu",
+        ttsRecommendations = "Kpɔɖeŋuwo"
     )
 
     val frenchStrings = UiStrings(
@@ -371,7 +454,27 @@ object LocalizedStrings {
         addSymptom = "Ajouter un symptôme",
         symptomPlaceholder = "ex. maux de tête, vertiges…",
         listeningPrompt = "🎤 Écoute en cours… parlez maintenant",
-        geometryInstructions = "Utilise l'analyse géométrique (proportions faciales). Fonctionne sur tous les tons de peau. Meilleur avec un éclairage constant."
+        geometryInstructions = "Utilise l'analyse géométrique (proportions faciales). Fonctionne sur tous les tons de peau. Meilleur avec un éclairage constant.",
+        signalInsufficient = "Insuffisant",
+        signalPoor = "Faible",
+        signalGood = "Bon",
+        signalExcellent = "Excellent",
+        bufferLabel = "Tampon",
+        removeLabel = "Supprimer",
+        severityLow = "Faible",
+        severityMedium = "Moyen",
+        severityHigh = "Élevé",
+        severityCritical = "Critique",
+        urgencyRoutine = "Routine",
+        urgencyWithinWeek = "Sous 1 semaine",
+        urgencyWithin48h = "Sous 48 heures",
+        urgencyImmediate = "Immédiat",
+        triageGreen = "Vert",
+        triageYellow = "Jaune",
+        triageOrange = "Orange",
+        triageRed = "Rouge",
+        ttsConcerns = "Préoccupations",
+        ttsRecommendations = "Recommandations"
     )
 
     val swahiliStrings = UiStrings(
@@ -426,7 +529,27 @@ object LocalizedStrings {
         addSymptom = "Ongeza dalili",
         symptomPlaceholder = "mf. maumivu ya kichwa, kizunguzungu…",
         listeningPrompt = "🎤 Inasikiliza… sema sasa",
-        geometryInstructions = "Inatumia uchambuzi wa jiometri (uwiano wa uso). Inafanya kazi kwa rangi zote za ngozi. Bora na picha katika mwanga thabiti."
+        geometryInstructions = "Inatumia uchambuzi wa jiometri (uwiano wa uso). Inafanya kazi kwa rangi zote za ngozi. Bora na picha katika mwanga thabiti.",
+        signalInsufficient = "Haitoshi",
+        signalPoor = "Duni",
+        signalGood = "Nzuri",
+        signalExcellent = "Bora",
+        bufferLabel = "Kihifadhi",
+        removeLabel = "Ondoa",
+        severityLow = "Chini",
+        severityMedium = "Wastani",
+        severityHigh = "Juu",
+        severityCritical = "Hatari sana",
+        urgencyRoutine = "Kawaida",
+        urgencyWithinWeek = "Ndani ya wiki 1",
+        urgencyWithin48h = "Ndani ya saa 48",
+        urgencyImmediate = "Mara moja",
+        triageGreen = "Kijani",
+        triageYellow = "Njano",
+        triageOrange = "Machungwa",
+        triageRed = "Nyekundu",
+        ttsConcerns = "Wasiwasi",
+        ttsRecommendations = "Mapendekezo"
     )
 
     val hausaStrings = UiStrings(
@@ -544,7 +667,27 @@ object LocalizedStrings {
         addSymptom = "Ƙara alamar rashin lafiya",
         symptomPlaceholder = "misali ciwon kai, jiri…",
         listeningPrompt = "🎤 Yana saurara… yi magana yanzu",
-        geometryInstructions = "Yana amfani da nazarin siffar fuska. Yana aiki da kowane launin fata. Ya fi kyau da hotuna a cikin haske daidai."
+        geometryInstructions = "Yana amfani da nazarin siffar fuska. Yana aiki da kowane launin fata. Ya fi kyau da hotuna a cikin haske daidai.",
+        signalInsufficient = "Bai isa ba",
+        signalPoor = "Mara kyau",
+        signalGood = "Mai kyau",
+        signalExcellent = "Nagari sosai",
+        bufferLabel = "Ma'ajiya",
+        removeLabel = "Cire",
+        severityLow = "Ƙasa",
+        severityMedium = "Matsakaici",
+        severityHigh = "Babba",
+        severityCritical = "Mai tsanani sosai",
+        urgencyRoutine = "Na yau da kullum",
+        urgencyWithinWeek = "A cikin mako 1",
+        urgencyWithin48h = "A cikin awa 48",
+        urgencyImmediate = "Nan da nan",
+        triageGreen = "Kore",
+        triageYellow = "Rawaya",
+        triageOrange = "Ruwan lemu",
+        triageRed = "Ja",
+        ttsConcerns = "Damuwa",
+        ttsRecommendations = "Shawarwari"
     )
 
     val yorubaStrings = UiStrings(
@@ -662,7 +805,27 @@ object LocalizedStrings {
         addSymptom = "Fi àmì àìsàn kún",
         symptomPlaceholder = "àp. orí fífọ́, ìyípo…",
         listeningPrompt = "🎤 Ó ń tẹ́tí sí… sọ̀rọ̀ báyìí",
-        geometryInstructions = "Ó ń lo àyẹ̀wò geometry (ìwọ̀n ojú). Ó ṣiṣẹ́ fún gbogbo àwọ̀ ara. Ó dára jù pẹ̀lú àwòrán nínú ìmọ́lẹ̀ kan náà."
+        geometryInstructions = "Ó ń lo àyẹ̀wò geometry (ìwọ̀n ojú). Ó ṣiṣẹ́ fún gbogbo àwọ̀ ara. Ó dára jù pẹ̀lú àwòrán nínú ìmọ́lẹ̀ kan náà.",
+        signalInsufficient = "Kò tó",
+        signalPoor = "Kò dára",
+        signalGood = "Dára",
+        signalExcellent = "Dára púpọ̀",
+        bufferLabel = "Ìpamọ́",
+        removeLabel = "Yọ kúrò",
+        severityLow = "Kékeré",
+        severityMedium = "Àárín",
+        severityHigh = "Ga",
+        severityCritical = "Pàtàkì jù",
+        urgencyRoutine = "Déédéé",
+        urgencyWithinWeek = "Nínú ọ̀sẹ̀ kan",
+        urgencyWithin48h = "Nínú wákàtí 48",
+        urgencyImmediate = "Lẹ́sẹ̀kẹsẹ̀",
+        triageGreen = "Ewé",
+        triageYellow = "Ìyẹ̀fun",
+        triageOrange = "Ọsan",
+        triageRed = "Pupa",
+        ttsConcerns = "Àwọn àníyàn",
+        ttsRecommendations = "Àwọn ìmọ̀ràn"
     )
 
     val igboStrings = UiStrings(

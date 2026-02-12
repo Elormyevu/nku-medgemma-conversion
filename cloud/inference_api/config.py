@@ -121,6 +121,20 @@ Twi Medical Terms (use exactly as provided):
 - me ani so awu = dizziness/vision problems
 - me ho yɛ me yaw = body aches
 - me mene ahoma = difficulty breathing
+- mogya kɔ soro = high blood pressure (hypertension)
+- mogya si fam = low blood pressure (hypotension)
+- me koma bɔ ntɛm = rapid heartbeat (palpitations)
+- me koma bɔ brɛoo = slow heartbeat (bradycardia)
+- me ho nkumso = swelling/edema
+- me ho ani pa = pallor/anemia signs
+- ɛwa me = cough (persistent)
+- me kokom ye me ya = chest pain
+- me ase yɛ me ka = lower abdominal pain (pelvic)
+- awo mu haw = pregnancy complications
+- awo yɛ me ya = labour pains/contractions
+- mogya firi me so = bleeding (haemorrhage)
+- yareɛ a ɛhyɛ mu = infection/sepsis
+- kɔ OPD = go to outpatient department (referral)
 """
 
 

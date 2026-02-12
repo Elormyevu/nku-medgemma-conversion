@@ -104,9 +104,12 @@ jobs:
 
       - name: pip-audit (Cloud API dependencies)
         # OBS-8: Removed '|| true' so audit failures block the build
+        # CVE-2025-69872: diskcache pickle deserialization — unpatched upstream,
+        # not exploitable (requires local write access to cache dir; Cloud Run
+        # uses read-only filesystem). Re-evaluate when a fix is released.
         run: |
           pip install pip-audit
-          pip-audit -r cloud/inference_api/requirements.txt
+          pip-audit -r cloud/inference_api/requirements.txt --ignore-vuln CVE-2025-69872
 
   # ─── Release AAB Signing (CI-4 fix) ───
   # Builds a signed release AAB when signing secrets are configured.

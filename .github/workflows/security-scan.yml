@@ -28,15 +28,15 @@ jobs:
           pip install pip-audit
       
       - name: Audit Root Dependencies
+        # CVE-2025-69872: diskcache pickle deserialization — unpatched upstream,
+        # not exploitable (requires local cache write access). Re-evaluate when fixed.
         run: |
-          # Root requirements.txt contains --index-url (for PyTorch CPU) which
-          # pip-audit cannot parse directly. Strip it before auditing.
           grep -v '^--' requirements.txt > /tmp/root-requirements-clean.txt
-          pip-audit --requirement /tmp/root-requirements-clean.txt --strict
+          pip-audit --requirement /tmp/root-requirements-clean.txt --strict --ignore-vuln CVE-2025-69872
       
       - name: Audit Cloud API Dependencies
         run: |
-          pip-audit --requirement cloud/inference_api/requirements.txt --strict
+          pip-audit --requirement cloud/inference_api/requirements.txt --strict --ignore-vuln CVE-2025-69872
   
   code-scanning:
     name: Code Security Analysis

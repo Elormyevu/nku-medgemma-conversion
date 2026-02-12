@@ -78,7 +78,7 @@ A natural concern: does 56% on MedQA translate to reliable triage? We argue yes,
 
 **4. Over-referral by design.** Sensor thresholds are tuned to flag liberally. A false positive (unnecessary referral) is an inconvenience; a false negative (missed critical case) is a catastrophe. Combined with MedGemma's conservative clinical phrasing, the system errs toward caution.
 
-**5. The baseline is zero.** Without Nku, these CHWs have *no* diagnostic support — not imperfect AI, but nothing. A 2024 study found that LLMs already outperform local medical experts in Sub-Saharan African clinical benchmarks, even in less-represented languages [21]. A prospective study in Rwanda is specifically validating LLM-augmented CHW decision support [22]. Even imperfect AI triage is transformative where the alternative is unaided clinical intuition.
+**5. The baseline is zero.** Without Nku, these CHWs have *no* diagnostic support — not imperfect AI, but nothing. A real-world study in Nairobi found that clinicians using LLM-based decision support made 16% fewer diagnostic errors [21]. A prospective study in Rwanda is specifically validating LLM-augmented CHW decision support [22]. Even imperfect AI triage is transformative where the alternative is unaided clinical intuition.
 
 This requires field validation — and we are explicit about that. But the architectural argument is sound: a medical LLM performing at 81% of published baseline, given highly structured input on a narrow set of common conditions, with a rule-based fallback, is a defensible starting point for CHW triage support.
 

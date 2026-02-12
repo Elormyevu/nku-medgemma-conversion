@@ -234,13 +234,13 @@ Recent research confirms this distinction:
 
 If frontier LLMs score ~85–90% on MedQA but ~92% on triage, the gap between MedQA and triage performance is ~+7 percentage points. Applying a similar offset to our Q4_K_M (56% MedQA) suggests ~63–70% on comparable triage tasks — before accounting for the significant advantage of structured input.
 
-### Evidence 2: LLMs Already Outperform Local Experts in Sub-Saharan Africa
+### Evidence 2: LLM Decision Support Reduces Errors in African Primary Care
 
-A 2024 study evaluating LLMs for clinical decision-making in Sub-Saharan Africa found that **LLMs outperformed local medical experts** in some benchmarks, even when operating in less-represented languages [21]. The study highlights the potential for AI-augmented decision support in contexts where specialist access is minimal. This directly parallels Nku's use case: providing decision support where the alternative is unaided CHW intuition.
+A real-world study at **Penda Health clinics in Nairobi, Kenya** (2024–2025) found that clinicians using an LLM-based "AI Consult" tool made **16% fewer diagnostic errors** and **13% fewer treatment errors** compared to unaided clinicians [21]. The study's authors note that "state-of-the-art LLMs now often outperform physicians on benchmarks" — and this was demonstrated in a real clinical setting, not just on paper. This directly parallels Nku's use case: providing decision support where specialist access is minimal.
 
 ### Evidence 3: Active Research Validates LLM-CHW Decision Support
 
-A prospective, observational study in **Rwanda** (2024) is evaluating LLMs for CHW decision support, measuring referral appropriateness, diagnostic accuracy, and management plan quality [22]. The study was deemed ethically and scientifically justified specifically because CHWs in these settings lack alternative diagnostic tools — the same rationale underlying Nku.
+A prospective, observational study in **Nyabihu and Musanze districts, Rwanda** (Menon et al., 2025) is evaluating LLMs for CHW decision support, measuring referral appropriateness, diagnostic accuracy, and management plan quality [22]. The study — published in *BMJ Open* — was deemed ethically and scientifically justified specifically because CHWs in these settings lack alternative diagnostic tools. Audio recordings of CHW-patient consultations are transcribed and analyzed by an LLM, with outputs compared against clinical expert consensus — the same validation paradigm Nku would require.
 
 ### Evidence 4: Structured Prompting Dramatically Improves Performance
 
@@ -297,14 +297,14 @@ The literature demonstrates that (a) triage is substantially easier for LLMs tha
 
 ## References (continued)
 
-[19] Friederichs, H., et al. "Evaluation of Large Language Models for Medical Triage Accuracy." *BMC Medical Informatics and Decision Making*, 2024. DOI: 10.1186/s12911-024-02709-7
+[19] Sorich, M.J., Mangoni, A.A., Bacchi, S., Menz, B.D., Hopkins, A.M. "The Triage and Diagnostic Accuracy of Frontier Large Language Models: Updated Comparison to Physician Performance." *Journal of Medical Internet Research* 26, 2024. DOI: 10.2196/67409
 
-[20] Mullins, T., et al. "Performance of Large Language Models in Emergency Department Triage." *Annals of Emergency Medicine*, 2024. DOI: 10.1016/j.annemergmed.2024.02.019
+[20] Masanneck, L., Schmidt, L., Seifert, A., et al. "Triage Performance Across Large Language Models, ChatGPT, and Untrained Doctors in Emergency Medicine." *Journal of Medical Internet Research* 26, 2024. DOI: 10.2196/53297
 
-[21] Owoyemi, A., et al. "Large Language Models for Clinical Decision-Making in Sub-Saharan Africa." *PLOS Digital Health*, 2024. DOI: 10.1371/journal.pdig.0000402
+[21] Penda Health / AI Consult Study. "AI-based Clinical Decision Support for Primary Care: A Real-World Study." Nairobi, Kenya, 2024–2025. Observed 16% reduction in diagnostic errors and 13% reduction in treatment errors among clinicians using LLM-based decision support.
 
-[22] Habimana, R., et al. "Evaluating LLM-Augmented Community Health Worker Decision Support in Rwanda: A Prospective Observational Study Protocol." *BMJ Open*, 2024. PATH Global Health Innovation.
+[22] Menon, V., Shimelash, N., Rutunda, S., et al. "Assessing the potential utility of large language models for assisting community health workers: protocol for a prospective, observational study in Rwanda." *BMJ Open*, 2025. DOI: 10.1136/bmjopen-2025-110927
 
-[23] Chen, Z., et al. "Prompt Triage: Automated Prompt Optimization for Medical Vision-Language Models." *arXiv:2501.xxxxx*, 2025.
+[23] "Prompt Triage: Automated Prompt Optimization for Medical Vision-Language Models." *arXiv*, November 14, 2025. Median 53% relative improvement over zero-shot baselines across 10 open-source VLMs.
 
-[24] Clusmann, J., et al. "Benchmarking On-Device LLMs for Clinical Reasoning: The AMEGA Dataset." *arXiv:2501.xxxxx*, 2025.
+[24] "Medicine on the Edge: Comparative Performance Analysis of On-Device LLMs for Clinical Reasoning." *arXiv*, February 13, 2025. AMEGA benchmark: Med42 and Aloe achieve highest clinical accuracy on mobile devices.

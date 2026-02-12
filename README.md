@@ -233,10 +233,13 @@ nku-medgemma-conversion/
 │       │   ├── EdemaDetector.kt        # Preeclampsia (edema)
 │       │   ├── SensorFusion.kt         # Vital signs aggregator
 │       │   ├── ClinicalReasoner.kt     # MedGemma + WHO fallback
+│       │   ├── PromptSanitizer.kt      # 6-layer prompt injection defense
 │       │   ├── ThermalManager.kt       # 42°C auto-throttle
 │       │   ├── LocalizedStrings.kt     # 46-language UI strings
 │       │   ├── NkuTTS.kt              # Android System TTS wrapper
-│       │   └── CloudInferenceClient.kt # Cloud fallback (dev only)
+│       │   ├── CameraPreview.kt       # Camera2 preview composable
+│       │   ├── FaceDetectorHelper.kt  # MediaPipe face landmark wrapper
+│       │   └── screens/               # Screen composables (Cardio, Anemia, Preeclampsia, Triage)
 │       └── assets/           # App resources (models loaded from device storage)
 ├── scripts/
 │   ├── quantization/         # Q4_K_M quantization (see Appendix D)

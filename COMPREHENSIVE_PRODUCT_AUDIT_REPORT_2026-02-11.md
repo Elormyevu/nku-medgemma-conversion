@@ -4,6 +4,26 @@
 - Auditor: Codex (non-invasive audit only; no source changes)
 - Scope: Frontend, backend, performance/efficiency, security, prompt-injection posture, build/release readiness, docs/submission alignment, architecture mapping
 
+## Remediation Addendum (2026-02-11, post-audit)
+
+The following findings from this report have been remediated since the audit:
+
+| Finding | Status | Commit |
+|:--------|:-------|:-------|
+| **#6: Cloud auth mismatch** (`CloudInferenceClient.kt`) | **RESOLVED** — `CloudInferenceClient.kt` deleted; file no longer exists in codebase | `248d31b` |
+| **#12: Hardcoded English strings** in screen composables | **RESOLVED** — 14 strings extracted to `LocalizedStrings.kt` (12 new keys, 5 Tier-1 translations) | `248d31b` |
+| **#13 (partial): CI quality gate — ktlint** | **RESOLVED** — `|| true` removed from `ci.yml`; ktlint now blocks merges | `248d31b` |
+| **Architecture diagram (L110)**: Shows `TranslateGemma GGUF` | **STALE** — TranslateGemma was replaced by ML Kit in prior work; diagram predates this change |
+| **L130-131**: References `CloudInferenceClient` dotted-line to cloud API | **STALE** — file deleted |
+| **L176**: References `assets/translategemma-4b-iq1_m.gguf` | **STALE** — TranslateGemma asset removed; translation is ML Kit |
+| **L204, L391**: File path references to `CloudInferenceClient.kt` | **STALE** — file deleted |
+| **Abstention threshold**: Writeup said 0.4, code uses 0.75 | **RESOLVED** — `kaggle_submission_writeup.md` corrected to 75% (matching `CONFIDENCE_THRESHOLD = 0.75f`) | `248d31b` |
+
+> [!NOTE]
+> This audit report is preserved as a historical artifact. The findings above that are marked STALE or RESOLVED reflect the codebase state at audit time, not the current state. All submission writeups have been updated to reflect the current architecture.
+
+---
+
 ## Executive Verdict
 
 The product is **not currently in a state where the writeup/submission claims can be considered fully accurate or fully validated**. The largest blockers are:

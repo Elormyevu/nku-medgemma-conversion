@@ -34,7 +34,8 @@ Nku is an **offline-first Android application** that provides medical triage in 
 │  ├── loadModel()              (GGUF loading via mmap)       │
 │  └── unloadModel()            (RAM management)              │
 ├─────────────────────────────────────────────────────────────┤
-│  CloudInferenceClient.kt      (Cloud fallback for emulators) │
+│  PromptSanitizer.kt           (6-layer prompt injection      │
+│                                defense at every boundary)    │
 ├─────────────────────────────────────────────────────────────┤
 │  NkuTTS.kt                                                    │
 │  ├── speak()                  (Text-to-speech)              │
@@ -147,10 +148,13 @@ mobile/android/app/src/main/
 │   ├── EdemaDetector.kt        # Preeclampsia via facial edema
 │   ├── SensorFusion.kt         # Vital signs aggregation
 │   ├── ClinicalReasoner.kt     # MedGemma prompts + WHO/IMCI fallback
+│   ├── PromptSanitizer.kt      # 6-layer prompt injection defense
 │   ├── ThermalManager.kt       # 42°C auto-throttle
 │   ├── LocalizedStrings.kt     # 46-language UI strings
 │   ├── NkuTTS.kt               # Android System TTS wrapper
-│   └── CloudInferenceClient.kt # Cloud fallback (dev/emulator only)
+│   ├── CameraPreview.kt        # Camera2 preview composable
+│   ├── FaceDetectorHelper.kt   # MediaPipe face landmark wrapper
+│   └── screens/                # CardioScreen, AnemiaScreen, PreeclampsiaScreen, TriageScreen
 ├── assets/                      # (models loaded from device storage)
 └── jniLibs/
     ├── arm64-v8a/libsmollm.so  # ARM64 native library

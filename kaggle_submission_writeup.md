@@ -89,7 +89,7 @@ This requires field validation — and we are explicit about that. But the archi
 | Layer | Implementation |
 |:------|:---------------|
 | **Prompt injection** | 6-layer `PromptSanitizer` at every model boundary (zero-width stripping, homoglyph normalization, Base64 detection, regex patterns, character allowlist, delimiter wrapping) |
-| **Abstention** | Sensor confidence must exceed 0.4 to display results; MedGemma reasons only on quality data |
+| **Abstention** | Sensor confidence must exceed 75% for ClinicalReasoner to include in triage; below-threshold readings excluded with advisory notes |
 | **Thermal** | Auto-pause at 42°C (`ThermalManager.kt`) |
 | **Privacy** | 100% on-device; zero data transmission |
 | **Disclaimer** | Always-on "Consult a healthcare professional" |

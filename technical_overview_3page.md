@@ -6,11 +6,11 @@
 
 ### Your team
 
-**W. Elorm Yevudza Jnr, MD/MS** — Solo developer. Born and raised in Ghana. Incoming surgery resident, NewYork-Presbyterian Queens. MD/MS Columbia VP&S (2025); BA Neuroscience, Amherst College (2019). Maintains clinical connections with physicians across Ghana for pilot coordination and field validation.
+**W. Elorm Yevudza Jnr, MD/MS** — Solo developer. Born and raised in Ghana. Incoming surgery resident, NewYork-Presbyterian Queens. MD/MS Columbia VP&S (2025); BA Neuroscience, Amherst College (2019). Maintains clinical connections with health professionals across Ghana for pilot coordination and field validation.
 
 ### Problem statement
 
-In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people — far below the WHO's recommended 44.5 [1,2]. Over **450 million people** lack accessible primary care. CHWs frequently lack diagnostic tools due to equipment deficiencies and supply stock-outs [4] — yet nearly all carry smartphones [5]. Cloud-based AI requires connectivity that 25% of rural Africans lack entirely (ITU 2024) [6].
+In Sub-Saharan Africa, fewer than 2.3 health professionals serve every 10,000 people — far below the WHO's recommended 44.5 [1,2]. Over **450 million people** lack accessible primary care. CHWs frequently lack diagnostic tools due to equipment deficiencies and supply stock-outs [4] — yet nearly all carry smartphones [5]. Cloud-based AI requires connectivity that 25% of rural Africans lack entirely (ITU 2024) [6].
 
 **Target user**: A CHW in rural Ghana with a $60–100 TECNO/Infinix phone (3–4GB RAM, no stable internet) [7] who needs immediate offline triage guidance. Transsion brands hold >50% African smartphone market share [8].
 

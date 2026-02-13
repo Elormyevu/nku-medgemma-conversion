@@ -84,14 +84,16 @@ Nku is a **working prototype** demonstrating the technical feasibility of offlin
 
 The promise of AI in healthcare has so far benefited those with the most access to medical care. Nku demonstrates that the **technical barriers to democratized AI triage are solvable** — what remains is the harder, more important work of field validation and community partnership.
 
-## 5. Reproducibility
+## 5. Open Source & Reproducibility
 
-| Resource | Link |
-|:---------|:-----|
-| GitHub | [github.com/Elormyevu/nku-medgemma-conversion](https://github.com/Elormyevu/nku-medgemma-conversion) |
-| HuggingFace | [huggingface.co/wredd/medgemma-4b-gguf](https://huggingface.co/wredd/medgemma-4b-gguf) |
-| Calibration | `calibration/african_primary_care.txt` (243 scenarios) |
-| Build | `git clone ... && cd mobile/android && ./gradlew assembleDebug` |
+**Nku is fully open source.** All application source code, build scripts, calibration data, and quantization artifacts are released under the **Apache License 2.0** — free to download, fork, modify, and use with attribution. Quantized model weights are available on HuggingFace (subject to Google Gemma Terms of Use).
+
+| Resource | License | Link |
+|:---------|:--------|:-----|
+| Source Code | Apache 2.0 | [github.com/Elormyevu/nku-medgemma-conversion](https://github.com/Elormyevu/nku-medgemma-conversion) |
+| Model Weights | Gemma Terms | [huggingface.co/wredd/medgemma-4b-gguf](https://huggingface.co/wredd/medgemma-4b-gguf) |
+| Calibration | Apache 2.0 | `calibration/african_primary_care.txt` (243 scenarios) |
+| Build | — | `git clone ... && cd mobile/android && ./gradlew assembleDebug` |
 
 ---
 

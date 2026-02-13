@@ -106,14 +106,16 @@ The promise of AI in healthcare has so far benefited those with the most access 
 
 ---
 
-## 7. Reproducibility
+## 7. Open Source & Reproducibility
 
-| Resource | Link |
-|:---------|:-----|
-| GitHub | [github.com/Elormyevu/nku-medgemma-conversion](https://github.com/Elormyevu/nku-medgemma-conversion) |
-| HuggingFace | [huggingface.co/wredd/medgemma-4b-gguf](https://huggingface.co/wredd/medgemma-4b-gguf) |
-| Calibration | `calibration/african_primary_care.txt` (243 scenarios) |
-| Build | `git clone ... && cd mobile/android && ./gradlew assembleDebug` |
+**Nku is fully open source.** All application source code, build scripts, calibration data, and quantization artifacts are released under the **Apache License 2.0** — free to download, fork, modify, and use with attribution. Quantized model weights are available on HuggingFace (subject to Google Gemma Terms of Use).
+
+| Resource | License | Link |
+|:---------|:--------|:-----|
+| Source Code | Apache 2.0 | [github.com/Elormyevu/nku-medgemma-conversion](https://github.com/Elormyevu/nku-medgemma-conversion) |
+| Model Weights | Gemma Terms | [huggingface.co/wredd/medgemma-4b-gguf](https://huggingface.co/wredd/medgemma-4b-gguf) |
+| Calibration | Apache 2.0 | `calibration/african_primary_care.txt` (243 scenarios) |
+| Build | — | `git clone ... && cd mobile/android && ./gradlew assembleDebug` |
 
 *See `kaggle_submission_appendices.md` for full language list (46), calibration scenario examples, MedGemma reasoning examples, and complete references [1–27].*
 

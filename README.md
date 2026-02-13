@@ -290,11 +290,13 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 
 ## 📄 License
 
-This project is licensed under the Apache License 2.0 — see the [LICENSE](./LICENSE) file for details.
+**Nku is fully open source.** All application source code, build scripts, calibration data, and quantization artifacts are free to download, fork, modify, and use with attribution.
 
-**Model Licenses:**
-- MedGemma: [Google Health AI Terms](https://aistudio.google.com/app/prompts/new_chat?model=medlm-1.5-4b)
-- Android ML Kit: [Google APIs Terms of Service](https://developers.google.com/terms)
+| Component | License |
+|:----------|:--------|
+| Application source code, scripts, calibration data | [Apache License 2.0](./LICENSE) |
+| MedGemma model weights | [Google Gemma Terms of Use](https://ai.google.dev/gemma/terms) |
+| Android ML Kit | [Google APIs Terms of Service](https://developers.google.com/terms) |
 
 ---
 

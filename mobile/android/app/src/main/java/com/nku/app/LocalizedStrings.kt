@@ -337,7 +337,8 @@ object LocalizedStrings {
         val triageSourceAI: String = "AI-Assisted Triage (MedGemma)",
         val triageSourceGuideline: String = "Guideline-Based Triage",
         val fallbackExplanation: String = "AI model not available. Results use WHO/IMCI clinical guidelines \u2014 safe and validated.",
-        val fallbackRecoveryTip: String = "To restore AI: close background apps or restart Nku."
+        val fallbackRecoveryTip: String = "To restore AI: close background apps or restart Nku.",
+        val lowConfidenceWarning: String = "\u26A0 Low confidence \u2014 this reading may be excluded from triage. Re-capture in better lighting."
     ) {
         /** Map signal quality string to localized display name. */
         fun localizedSignalQuality(quality: String): String = when (quality) {
@@ -463,7 +464,8 @@ object LocalizedStrings {
         triageSourceAI = "AI Kpɔkpɔ (MedGemma)",
         triageSourceGuideline = "Alɔdza Kpɔkpɔ",
         fallbackExplanation = "AI ƒe dɔwɔnu meli o. Esiwo wotsɔ WHO/IMCI ƒe alɔdza — ewɔ dɔ nyuie.",
-        fallbackRecoveryTip = "Nàtrɔ AI: tsɔ dɔwɔnu bubuwo ɖa le megbe alo gbugbɔ Nku."
+        fallbackRecoveryTip = "Nàtrɔ AI: tsɔ dɔwɔnu bubuwo ɖa le megbe alo gbugbɔ Nku.",
+        lowConfidenceWarning = "\u26A0 Ŋuɖoɖo me ga o — nusi wotsoe ƒe axa makpɔ ɖe kpɔkpɔ me o. Tsɔ foto bubu le kekeli nyui me."
     )
 
     val frenchStrings = UiStrings(
@@ -551,7 +553,8 @@ object LocalizedStrings {
         triageSourceAI = "Triage assisté par IA (MedGemma)",
         triageSourceGuideline = "Triage basé sur les lignes directrices",
         fallbackExplanation = "Modèle IA indisponible. Les résultats suivent les lignes directrices cliniques OMS/PCIME — sûres et validées.",
-        fallbackRecoveryTip = "Pour restaurer l'IA : fermez les applications en arrière-plan ou redémarrez Nku."
+        fallbackRecoveryTip = "Pour restaurer l'IA : fermez les applications en arrière-plan ou redémarrez Nku.",
+        lowConfidenceWarning = "\u26A0 Confiance faible \u2014 cette mesure pourrait être exclue du triage. Recapturez avec un meilleur éclairage."
     )
 
     val swahiliStrings = UiStrings(
@@ -638,7 +641,8 @@ object LocalizedStrings {
         triageSourceAI = "Hatua za AI (MedGemma)",
         triageSourceGuideline = "Hatua za Miongozo",
         fallbackExplanation = "Muundo wa AI haupatikani. Matokeo yanafuata miongozo ya WHO/IMCI — salama na yaliyothibitishwa.",
-        fallbackRecoveryTip = "Kurudisha AI: funga programu za nyuma au anzisha upya Nku."
+        fallbackRecoveryTip = "Kurudisha AI: funga programu za nyuma au anzisha upya Nku.",
+        lowConfidenceWarning = "\u26A0 Uhakika mdogo \u2014 usomaji huu unaweza kutengwa na hatua. Chukua picha tena katika mwanga bora."
     )
 
     val hausaStrings = UiStrings(
@@ -788,7 +792,8 @@ object LocalizedStrings {
         triageSourceAI = "Bincike na AI (MedGemma)",
         triageSourceGuideline = "Bincike bisa ka'idoji",
         fallbackExplanation = "Ba a samu tsarin AI ba. Sakamakon yana bin ka'idojin asibiti na WHO/IMCI — mai aminci kuma tabbatacce.",
-        fallbackRecoveryTip = "Don dawo da AI: rufe manhajar baya ko sake kunna Nku."
+        fallbackRecoveryTip = "Don dawo da AI: rufe manhajar baya ko sake kunna Nku.",
+        lowConfidenceWarning = "\u26A0 Tabbaci ya yi ƙasa \u2014 wannan sakamakon bazai shiga bincike ba. Sake ɗauka a haske mai kyau."
     )
 
     val yorubaStrings = UiStrings(
@@ -938,7 +943,8 @@ object LocalizedStrings {
         triageSourceAI = "Àyẹ̀wò AI (MedGemma)",
         triageSourceGuideline = "Àyẹ̀wò bí ìlànà ṣe sọ",
         fallbackExplanation = "Àwòṣe AI kò sí. Àbájáde tẹ̀lé àwọn ìlànà ìṣègùn WHO/IMCI — ó wà láàbò, ó sì jẹ́ ẹ̀rí.",
-        fallbackRecoveryTip = "Láti mú AI padà: pa àwọn ohun èlò ẹ̀yìn tàbí tún Nku bẹ̀rẹ̀."
+        fallbackRecoveryTip = "Láti mú AI padà: pa àwọn ohun èlò ẹ̀yìn tàbí tún Nku bẹ̀rẹ̀.",
+        lowConfidenceWarning = "\u26A0 Ìgbàgbọ́ kéré jù \u2014 àbájáde yìí lè máa kòpà nínú àyẹ̀wò. Tún ya nínú ìmọ́lẹ̀ tó dára."
     )
 
     val igboStrings = UiStrings(
@@ -976,7 +982,8 @@ object LocalizedStrings {
         triageSourceAI = "Nlele AI (MedGemma)",
         triageSourceGuideline = "Nlele iwu ndụ",
         fallbackExplanation = "Ùdị AI adịghị. Nsoputara na-eso usoro WHO/IMCI — nchekwa ma enyochaala.",
-        fallbackRecoveryTip = "Iji weghachi AI: mechie ngwa ndị ọzọ ma ọ bụ malitegharịa Nku."
+        fallbackRecoveryTip = "Iji weghachi AI: mechie ngwa ndị ọzọ ma ọ bụ malitegharịa Nku.",
+        lowConfidenceWarning = "\u26A0 Ễkwèsịrị dị ala \u2014 a gaghị etinye nke a na nlele. Tugharịa na ọ kụ karịa."
     )
 
     val amharicStrings = UiStrings(
@@ -1009,7 +1016,8 @@ object LocalizedStrings {
         triageSourceAI = "በ AI የተደገፈ ምርመራ (MedGemma)",
         triageSourceGuideline = "በመመሪያ ላይ የተመሰረተ ምርመራ",
         fallbackExplanation = "የ AI ሞዴል አልተገኘም። ውጤቶች የ WHO/IMCI ክሊኒካል መመሪያዎችን ይከተላሉ — ደህንና የተረጋገጠ።",
-        fallbackRecoveryTip = "AI ን ለመመለስ: የበስተ ጀርባ መተግበሪያዎችን ይዝጉ ወይም Nku ን ዳግም ያስጀምሩ።"
+        fallbackRecoveryTip = "AI ን ለመመለስ: የበስተ ጀርባ መተግበሪያዎችን ይዝጉ ወይም Nku ን ዳግም ያስጀምሩ።",
+        lowConfidenceWarning = "\u26A0 የተባበሮ ሙንጩ ዝቅተኛ \u2014 ይህ ስዋመ ወደ ምርመራ ላይጋበር ይችላል። በተሽለ ብርሃን ዳግም አንሱ።"
     )
 
     val twiStrings = UiStrings(
@@ -1042,7 +1050,8 @@ object LocalizedStrings {
         triageSourceAI = "AI Nhwehwɛmu (MedGemma)",
         triageSourceGuideline = "Nkyerɛwdeɛ so nhwehwɛmu",
         fallbackExplanation = "AI model no nni hɔ. Nsoano di WHO/IMCI nkyerɛwdeɛ akyi — eye safe na wɔaɛserɛ.",
-        fallbackRecoveryTip = "Sɛ wopɛ AI: to apps a ɛwɔ akyi no mu anaa san bue Nku."
+        fallbackRecoveryTip = "Sɛ wopɛ AI: to apps a ɛwɔ akyi no mu anaa san bue Nku.",
+        lowConfidenceWarning = "\u26A0 Ŋuɖoɖo sɔ \u2014 ebia wɔrenfa nkyerɛwdeɛ yi nhwɛhwɛmu no mu. San kɔ foto no wɔ hann nyinaa mu."
     )
 
     val wolofStrings = UiStrings(
@@ -1071,7 +1080,8 @@ object LocalizedStrings {
         triageSourceAI = "Saytul AI (MedGemma)",
         triageSourceGuideline = "Saytul bu yoon yi",
         fallbackExplanation = "Model AI bi amul. Natalu yi di jëm ci yoonu WHO/IMCI — bu aar te.",
-        fallbackRecoveryTip = "Ngir délusi AI: tëj appli yi ci ginnaaw wala dooraat Nku."
+        fallbackRecoveryTip = "Ngir délusi AI: tëj appli yi ci ginnaaw wala dooraat Nku.",
+        lowConfidenceWarning = "\u26A0 Gis-gis bu néew \u2014 natalu bii bées na ko ci saytul bi. Def ko kenn ci leer bu baax."
     )
 
     val zuluStrings = UiStrings(
@@ -1100,7 +1110,8 @@ object LocalizedStrings {
         triageSourceAI = "Ukuhlola nge-AI (MedGemma)",
         triageSourceGuideline = "Ukuhlola okwemithetho",
         fallbackExplanation = "Imodeli ye-AI ayitholakali. Imiphumela ilandela imihlahlandlela ye-WHO/IMCI — ephephile futhi eqinisekisiwe.",
-        fallbackRecoveryTip = "Ukubuyisela i-AI: vala izinhlelo ezingemuva noma uqale kabusha i-Nku."
+        fallbackRecoveryTip = "Ukubuyisela i-AI: vala izinhlelo ezingemuva noma uqale kabusha i-Nku.",
+        lowConfidenceWarning = "\u26A0 Ithemba eliphansi \u2014 lokhu kungase kungafakwa ekuhlolweni. Thatha kabusha ekukhanyeni okuhle."
     )
 
     val xhosaStrings = UiStrings(
@@ -1129,7 +1140,8 @@ object LocalizedStrings {
         triageSourceAI = "Ukuhlolwa nge-AI (MedGemma)",
         triageSourceGuideline = "Ukuhlolwa ngemigaqo",
         fallbackExplanation = "Imodeli ye-AI ayifumaneki. Iziphumo zilandela imigaqo ye-WHO/IMCI — ikhuselekile kwaye iqinisekisiwe.",
-        fallbackRecoveryTip = "Ukubuyisela i-AI: vala izicelo ezingemva okanye uqalise kwakhona i-Nku."
+        fallbackRecoveryTip = "Ukubuyisela i-AI: vala izicelo ezingemva okanye uqalise kwakhona i-Nku.",
+        lowConfidenceWarning = "\u26A0 Ukuthemba okuphantsi \u2014 oku kungangeniswa ekuhlolweni. Thatha kwakhona ekukhanyeni okuhle."
     )
 
     val oromoStrings = UiStrings(
@@ -1158,7 +1170,8 @@ object LocalizedStrings {
         triageSourceAI = "Qorannoo AI (MedGemma)",
         triageSourceGuideline = "Qorannoo qajeelfama irratti hundaa'e",
         fallbackExplanation = "Moodeelli AI hin argamne. Bu'aan qajeelfama kilinika WHO/IMCI hordofa — nageenya fi mirkanaa'e.",
-        fallbackRecoveryTip = "AI deebisuuf: appii duubatti jiran cufi ykn Nku irra deebi'i."
+        fallbackRecoveryTip = "AI deebisuuf: appii duubatti jiran cufi ykn Nku irra deebi'i.",
+        lowConfidenceWarning = "\u26A0 Amantaa gad-aanaa \u2014 lakkoofsi kun qorannoo keessa hin galuu ta'uu. Ifa keessatti irra deebi'i."
     )
 
     val tigrinyaStrings = UiStrings(
@@ -1187,6 +1200,7 @@ object LocalizedStrings {
         triageSourceAI = "ብ AI ዝተሓገዘ ምርመራ (MedGemma)",
         triageSourceGuideline = "ብመምርሒ ዝተመስረተ ምርመራ",
         fallbackExplanation = "ሞዴል AI ኣይተረኽበን። ውጽኢታት ናይ WHO/IMCI ክሊኒካዊ መምርሒታት ይኽተሉ — ውሑስን ዝተረጋገጸን።",
-        fallbackRecoveryTip = "AI ንምምላስ: ናይ ድሕሪት ኣፕሊኬሽናት ዕጸው ወይ Nku ዳግም ጀምር።"
+        fallbackRecoveryTip = "AI ንምምላስ: ናይ ድሕሪት ኣፕሊኬሽናት ዕጸው ወይ Nku ዳግም ጀምር።",
+        lowConfidenceWarning = "\u26A0 ትሑት ዙሁል ኢሉ \u2014 እዚ ንባብ ኣብ ምርመራ ኣይእተውን ይኽእል። ኣብ ጽቡሕ ብርሃን ዳግም ኣንሱ።"
     )
 }

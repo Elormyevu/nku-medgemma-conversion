@@ -253,6 +253,17 @@ fun PreeclampsiaScreen(
             Text("${strings.edemaScoreLabel}: ${(edemaResult.edemaScore * 100).toInt()}%", color = Color.Gray)
             Text("${strings.periorbitalLabel}: ${(edemaResult.periorbitalScore * 100).toInt()}%", color = Color.Gray, fontSize = 12.sp)
             Text("${strings.confidenceLabel}: ${(edemaResult.confidence * 100).toInt()}%", color = Color.Gray, fontSize = 12.sp)
+
+            // FT-2: Low-confidence recapture warning
+            if (edemaResult.confidence < 0.75f) {
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    strings.lowConfidenceWarning,
+                    fontSize = 12.sp,
+                    color = NkuColors.TriageOrange
+                )
+            }
+
             Spacer(Modifier.height(16.dp))
             
             if (edemaResult.riskFactors.isNotEmpty()) {

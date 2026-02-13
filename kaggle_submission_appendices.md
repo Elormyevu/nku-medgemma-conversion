@@ -583,10 +583,10 @@ Beyond sensor data, the prompt includes:
 Nku implements five independent safety layers to minimize risk from incorrect triage output:
 
 ### Layer 1: Confidence Gating
-Sensor readings below 75% confidence are excluded from MedGemma's prompt (marked `[LOW CONFIDENCE — excluded from assessment]`). If all sensors are below threshold and no symptoms are entered, triage abstains entirely — no MedGemma call is made. This prevents the LLM from reasoning on unreliable data.
+Sensor readings below 75% confidence are excluded from MedGemma's prompt (marked `[LOW CONFIDENCE — excluded from assessment]`). If all sensors are below threshold and no symptoms are entered, triage abstains entirely — no MedGemma call is made. This prevents the LLM from reasoning on unreliable data. **The CHW sees a localized ⚠ warning on the capture screen** prompting re-capture in better conditions.
 
 ### Layer 2: WHO/IMCI Rule-Based Fallback
-If MedGemma is unavailable (device overheating at >42°C, model loading failure, thermal throttling), `ClinicalReasoner.createRuleBasedAssessment()` provides deterministic triage based on WHO Integrated Management of Childhood Illness (IMCI) flowcharts. This ensures triage continues even without the LLM.
+If MedGemma is unavailable (device overheating at >42°C, model loading failure, thermal throttling), `ClinicalReasoner.createRuleBasedAssessment()` provides deterministic triage based on WHO Integrated Management of Childhood Illness (IMCI) flowcharts. This ensures triage continues even without the LLM. **A localized transparency banner** identifies the result as "Guideline-Based Triage" and provides recovery steps (e.g., close background apps, restart Nku) — all in the CHW's selected language.
 
 ### Layer 3: Over-Referral Bias
 All sensor thresholds are set conservatively to favor false positives over false negatives:

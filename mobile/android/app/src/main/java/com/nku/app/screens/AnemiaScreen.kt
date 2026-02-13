@@ -279,6 +279,16 @@ fun AnemiaScreen(
                 fontSize = 13.sp,
                 color = Color.Gray
             )
+
+            // FT-2: Low-confidence recapture warning
+            if (pallorResult.confidence < 0.75f) {
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    strings.lowConfidenceWarning,
+                    fontSize = 12.sp,
+                    color = NkuColors.TriageOrange
+                )
+            }
             
             Spacer(Modifier.height(20.dp))
             

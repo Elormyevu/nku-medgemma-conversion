@@ -22,9 +22,9 @@ Powerful clinical AI models exist, but require reliable cloud connectivity. In r
 
 **MedGemma 4B is irreplaceable** in this system. It is the sole clinical reasoning engine, performing the interpretation that transforms raw sensor data and symptoms into structured triage assessments — a capability no smaller model possesses. Cloud inference fails completely in low-connectivity zones. Only MedGemma, quantized to Q4_K_M and deployed via llama.cpp JNI on ARM64, enables the **offline + accurate** combination Nku requires.
 
-**The Nku Cycle** is an agentic orchestration pipeline where MedGemma serves as the clinical reasoning agent within a self-adapting multi-stage workflow:
+**The Nku Cycle** is a multi-stage orchestration pipeline where MedGemma serves as the clinical reasoning engine within a self-adapting workflow:
 
-| Stage | Agent | Size | Function |
+| Stage | Component | Size | Function |
 |:------|:------|:----:|:---------|
 | 1. Sense | Nku Sentinel (4 detectors) | 0 MB | Camera → structured vital signs |
 | 2. Translate | Android ML Kit / Cloud Translate | ~30MB/lang | Non-English input → English |
@@ -33,7 +33,7 @@ Powerful clinical AI models exist, but require reliable cloud connectivity. In r
 | 5. Speak | Android System TTS | 0 MB | Spoken result in local language |
 | Fallback | WHO/IMCI rules | 0 MB | Deterministic triage if MedGemma unavailable |
 
-Each stage operates autonomously. Safety agents (confidence gating, thermal management) make autonomous decisions — including rerouting to WHO/IMCI rule-based triage if the device overheats. All medical inference is 100% on-device. ML Kit provides on-device translation for 59 languages; Cloud Translate extends reach to indigenous languages (Ewe, Twi, Hausa, Yoruba, etc.) when online. Every CHW always has a fully offline triage path.
+Each stage operates independently. Built-in safety checks (confidence gating, thermal management) automatically reroute to WHO/IMCI rule-based triage if sensor data is unreliable or the device overheats. All medical inference is 100% on-device. ML Kit provides on-device translation for 59 languages; Cloud Translate extends reach to indigenous languages (Ewe, Twi, Hausa, Yoruba, etc.) when online. Every CHW always has a fully offline triage path.
 
 **Before/after — why structured prompting matters**: MedGemma was trained on clinical text, not smartphone sensor data. A naive prompt like *"the patient looks pale and her eyes are puffy"* yields generic advice. Nku's `ClinicalReasoner` instead feeds MedGemma quantified biomarkers with methodology and confidence:
 

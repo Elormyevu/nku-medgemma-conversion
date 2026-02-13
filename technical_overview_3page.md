@@ -22,9 +22,9 @@ In Sub-Saharan Africa, fewer than 2.3 health professionals serve every 10,000 pe
 
 **MedGemma 4B is irreplaceable**: the sole clinical reasoning engine, interpreting raw sensor data and symptoms into structured triage. Cloud inference fails without connectivity. Only MedGemma, quantized to Q4_K_M (2.3GB) and deployed via llama.cpp JNI on ARM64, enables the **offline + accurate** combination required.
 
-**The Nku Cycle** — an agentic orchestration pipeline deploying MedGemma as the clinical reasoning agent:
+**The Nku Cycle** — a multi-stage orchestration pipeline with MedGemma as the clinical reasoning engine:
 
-| Stage | Agent | Function |
+| Stage | Component | Function |
 |:------|:------|:---------|
 | 1. Sense | Nku Sentinel (4 detectors) | Camera → structured vital signs (0 MB) |
 | 2. Translate | ML Kit / Cloud Translate | Non-English → English (~30MB/lang) |
@@ -33,7 +33,7 @@ In Sub-Saharan Africa, fewer than 2.3 health professionals serve every 10,000 pe
 | 5. Speak | Android System TTS | Spoken result in local language |
 | Fallback | WHO/IMCI rules | Deterministic triage if MedGemma unavailable |
 
-Safety agents (confidence gating, thermal management) make autonomous decisions — rerouting to WHO/IMCI rule-based fallback if the device overheats. ML Kit provides translation for 59 languages on-device; Cloud Translate extends to indigenous African languages when online. **Every CHW always has a fully offline triage path.**
+Built-in safety checks (confidence gating, thermal management) automatically reroute to WHO/IMCI rule-based fallback if sensor data is unreliable or the device overheats. ML Kit provides translation for 59 languages on-device; Cloud Translate extends to indigenous African languages when online. **Every CHW always has a fully offline triage path.**
 
 ### Technical details
 

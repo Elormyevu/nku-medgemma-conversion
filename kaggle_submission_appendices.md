@@ -207,9 +207,9 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 
 [12] Nowara, E.M., Marks, T.K., Mansour, H., Veeraraghavan, A. "Near-Infrared Imaging Photoplethysmography During Driving." *IEEE Trans. ITS* 23(4), 2022. DOI: 10.1109/TITS.2020.3038317. Note: MAE values for smartphone rPPG (e.g., 1.32–2.49 BPM) are drawn from the broader smartphone rPPG validation literature [10].
 
-[13] Jay, G.D., et al. "Smartphone anemia detection via conjunctival photographs." *PLOS ONE* 19(1), 2024. DOI: 10.1371/journal.pone.0295563
+[13] Zhao, L., Jay, G.D., et al. "Prediction of anemia in real-time using a smartphone camera processing conjunctival images." *PLOS ONE* 19(5), 2024. DOI: 10.1371/journal.pone.0302883
 
-[14] Dimauro, G., et al. "Anemia detection using smartphone images." *Artif. Intell. Med.* 126, 2022.
+[14] Dimauro, G., et al. "An intelligent non-invasive system for automated diagnosis of anemia exploiting a novel dataset." *Artif. Intell. Med.* 136, 2023. DOI: 10.1016/j.artmed.2022.102477
 
 [15] Mariakakis, A., Banks, M.A., Phillipi, L., Yu, L., Taylor, J., Patel, S.N. "BiliScreen: Smartphone-Based Scleral Jaundice Monitoring for Liver and Pancreatic Disorders." *Proc. ACM Interact. Mob. Wearable Ubiquittic Technol.* 1(2), 2017. DOI: 10.1145/3090085
 

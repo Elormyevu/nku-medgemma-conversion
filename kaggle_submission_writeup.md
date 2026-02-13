@@ -8,7 +8,7 @@
 
 ### Problem statement
 
-In Sub-Saharan Africa, fewer than 2.3 health professionals serve every 10,000 people — far below the WHO's recommended 44.5 [1,2]. Over **450 million people** lack accessible primary care [3]. Community Health Workers (CHWs), the frontline of care, frequently lack reliable diagnostic tools due to equipment deficiencies and supply stock-outs [4] — yet nearly all carry smartphones [5].
+In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people — far below the WHO's recommended 44.5 health workers [1,2]. Over **450 million people** lack accessible primary care [3]. Community Health Workers (CHWs), the frontline of care, frequently lack reliable diagnostic tools due to equipment deficiencies and supply stock-outs [4] — yet nearly all carry smartphones [5].
 
 Powerful clinical AI models exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, 25% of rural Africans lack mobile broadband entirely (ITU 2024) [6]. **Cloud-based AI is impractical where it is needed most.**
 

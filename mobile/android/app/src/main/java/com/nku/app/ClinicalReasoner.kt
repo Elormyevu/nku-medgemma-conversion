@@ -36,6 +36,7 @@ data class ClinicalAssessment(
     val recommendations: List<String>,
     val urgency: Urgency,
     val triageCategory: TriageCategory,
+    val triageSource: TriageSource = TriageSource.RULE_BASED,
     val disclaimer: String = "This is an AI-assisted screening tool. Always consult a healthcare professional for diagnosis and treatment.",
     val prompt: String = "",           // The generated prompt (for debugging)
     val rawResponse: String = ""       // MedGemma's raw response (for debugging)
@@ -60,6 +61,13 @@ enum class TriageCategory {
     YELLOW,  // Semi-urgent, needs evaluation
     ORANGE,  // Urgent, priority care
     RED      // Emergency, immediate care
+}
+
+/** Indicates which reasoning engine produced the triage result. */
+enum class TriageSource {
+    MEDGEMMA,    // Full AI triage via MedGemma 4B
+    RULE_BASED,  // WHO/IMCI deterministic fallback
+    ABSTAINED    // All sensors below confidence threshold
 }
 
 class ClinicalReasoner {
@@ -289,6 +297,7 @@ class ClinicalReasoner {
                 triageCategory = TriageCategory.GREEN,
                 overallSeverity = Severity.LOW,
                 urgency = Urgency.ROUTINE,
+                triageSource = TriageSource.ABSTAINED,
                 primaryConcerns = listOf("Insufficient data confidence for triage — all sensors below 75% threshold"),
                 recommendations = listOf(
                     "Re-capture readings in better conditions (lighting, steadier hold)",
@@ -467,6 +476,7 @@ class ClinicalReasoner {
             recommendations = recommendations,
             urgency = maxUrgency,
             triageCategory = triageCategory,
+            triageSource = TriageSource.RULE_BASED,
             prompt = generatePrompt(vitals)
         )
         
@@ -543,6 +553,7 @@ class ClinicalReasoner {
                 recommendations = recommendations.ifEmpty { listOf("See full response") },
                 urgency = urgency,
                 triageCategory = triageCategory,
+                triageSource = TriageSource.MEDGEMMA,
                 prompt = generatePrompt(vitals),
                 rawResponse = response
             )

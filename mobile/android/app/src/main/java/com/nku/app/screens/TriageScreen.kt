@@ -272,6 +272,50 @@ fun TriageScreen(
                 }
             }
             Spacer(Modifier.height(12.dp))
+
+            // FT-1: Fallback transparency banner — tell the CHW which engine produced the result
+            if (result.triageSource != TriageSource.MEDGEMMA) {
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = NkuColors.AccentCyan.copy(alpha = 0.12f)
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(14.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Icon(
+                            Icons.Default.Info,
+                            contentDescription = null,
+                            tint = NkuColors.AccentCyan,
+                            modifier = Modifier.size(22.dp)
+                        )
+                        Spacer(Modifier.width(10.dp))
+                        Column {
+                            Text(
+                                strings.triageSourceGuideline,
+                                fontWeight = FontWeight.Bold,
+                                color = NkuColors.AccentCyan,
+                                fontSize = 14.sp
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                strings.fallbackExplanation,
+                                color = Color.White.copy(alpha = 0.85f),
+                                fontSize = 12.sp
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                strings.fallbackRecoveryTip,
+                                color = Color.White.copy(alpha = 0.6f),
+                                fontSize = 11.sp
+                            )
+                        }
+                    }
+                }
+                Spacer(Modifier.height(12.dp))
+            }
             
             // Listen button
             val speakableText = buildString {

@@ -33,13 +33,13 @@ Powerful clinical AI models exist, but require reliable cloud connectivity. In r
 | 5. Speak | Android System TTS | 0 MB | Spoken result in local language |
 | Fallback | WHO/IMCI rules | 0 MB | Deterministic triage if MedGemma unavailable |
 
-Each stage operates autonomously. Safety agents (confidence gating, thermal management) make autonomous decisions — including rerouting to WHO/IMCI rule-based triage if the device overheats. All medical inference is 100% on-device. ML Kit provides on-device translation for 59 languages; Cloud Translate extends reach to indigenous languages (Ewe, Twi, Hausa, Yoruba) when online. Every CHW always has a fully offline triage path.
+Each stage operates autonomously. Safety agents (confidence gating, thermal management) make autonomous decisions — including rerouting to WHO/IMCI rule-based triage if the device overheats. All medical inference is 100% on-device. ML Kit provides on-device translation for 59 languages; Cloud Translate extends reach to indigenous languages (Ewe, Twi, Hausa, Yoruba, etc.) when online. Every CHW always has a fully offline triage path.
 
 **Before/after — why structured prompting matters**: MedGemma was trained on clinical text, not smartphone sensor data. A naive prompt like *"the patient looks pale and her eyes are puffy"* yields generic advice. Nku's `ClinicalReasoner` instead feeds MedGemma quantified biomarkers with methodology and confidence:
 
 > `Conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10), pallor index: 0.68, severity: MODERATE. EAR: 2.15 (normal ≈2.8, edema threshold ≤2.2), edema index: 0.52. Patient pregnant, 32 weeks.`
 
-This structured prompting achieves a median 53% improvement over zero-shot baselines [9] — transforming MedGemma from a general medical QA model into a structured sensor data interpreter for CHW triage: a task it was never originally trained for.
+This structured prompting achieves a median 53% improvement over zero-shot baselines [9] — transforming MedGemma from a general medical QA model into a structured sensor data interpreter for CHW triage.
 
 ### Technical details
 
@@ -54,7 +54,7 @@ This structured prompting achieves a median 53% improvement over zero-shot basel
 
 **Key finding**: IQ2_XS with medical imatrix calibration outperforms the larger Q2_K by +9.1pp — domain-specific calibration matters more than raw bit budget. We created a 243-scenario African primary care calibration dataset across 14+ languages for imatrix generation.
 
-**Nku Sentinel — Camera-Based Screening (0 MB additional weights)**: CHWs lack equipment [4]. Nku extracts vital signs using only the phone camera via pure signal processing, then feeds structured biomarkers to MedGemma for clinical interpretation:
+**Nku Sentinel — Camera-Based Screening (0 MB additional weights)**: CHWs often lack equipment [4]. Nku extracts vital signs using only the phone camera via pure signal processing, then feeds structured biomarkers to MedGemma for clinical interpretation:
 
 | Screening | Method | Output | Fitzpatrick-aware |
 |:----------|:-------|:-------|:-----------------:|

@@ -479,4 +479,47 @@ class ClinicalReasonerTest {
         reasoner.reset()
         assertNull("Assessment should be null after reset", reasoner.assessment.value)
     }
+
+    // ── FT-1: Triage source transparency ────────────────────
+
+    @Test
+    fun `parseMedGemmaResponse sets triageSource to MEDGEMMA`() {
+        val response = """
+            SEVERITY: HIGH
+            URGENCY: WITHIN_48_HOURS
+            PRIMARY_CONCERNS:
+            - Severe pallor detected
+            RECOMMENDATIONS:
+            - Urgent hemoglobin test
+        """.trimIndent()
+        val vitals = VitalSigns()
+        val assessment = reasoner.parseMedGemmaResponse(response, vitals)
+        assertEquals("Successful parse should set MEDGEMMA source",
+            TriageSource.MEDGEMMA, assessment.triageSource)
+    }
+
+    @Test
+    fun `createRuleBasedAssessment sets triageSource to RULE_BASED`() {
+        val vitals = VitalSigns(
+            heartRateBpm = 72f,
+            heartRateConfidence = 0.9f
+        )
+        val assessment = reasoner.createRuleBasedAssessment(vitals)
+        assertEquals("Normal rule-based path should set RULE_BASED source",
+            TriageSource.RULE_BASED, assessment.triageSource)
+    }
+
+    @Test
+    fun `createRuleBasedAssessment sets triageSource to ABSTAINED when all below threshold`() {
+        val vitals = VitalSigns(
+            heartRateBpm = 80f,
+            heartRateConfidence = 0.3f,
+            pallorScore = 0.5f,
+            pallorSeverity = PallorSeverity.MODERATE,
+            pallorConfidence = 0.4f
+        )
+        val assessment = reasoner.createRuleBasedAssessment(vitals)
+        assertEquals("All-below-threshold should set ABSTAINED source",
+            TriageSource.ABSTAINED, assessment.triageSource)
+    }
 }

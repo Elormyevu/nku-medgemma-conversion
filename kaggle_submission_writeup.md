@@ -18,6 +18,8 @@ Powerful clinical AI models exist, but require reliable cloud connectivity. In r
 
 ### Overall solution
 
+**Nku runs entirely offline — no cloud, no API keys, no connectivity required. Every line of clinical reasoning executes on the phone itself.**
+
 **Nku** (Ewe: "eye") runs MedGemma **entirely on $60–100 Android smartphones** — 100% on-device, zero cloud dependency. It is a proof-of-concept prototype; field validation with CHWs is the critical next step.
 
 **MedGemma 4B is irreplaceable** in this system. It is the sole clinical reasoning engine, performing the interpretation that transforms raw sensor data and symptoms into structured triage assessments — a capability no smaller model possesses. Cloud inference fails completely in low-connectivity zones. Only MedGemma, quantized to Q4_K_M and deployed via llama.cpp JNI on ARM64, enables the **offline + accurate** combination Nku requires.
@@ -38,6 +40,10 @@ Each stage operates independently. Built-in safety checks (confidence gating, th
 **Before/after — why structured prompting matters**: MedGemma was trained on clinical text, not smartphone sensor data. A naive prompt like *"the patient looks pale and her eyes are puffy"* yields generic advice. Nku's `ClinicalReasoner` instead feeds MedGemma quantified biomarkers with methodology and confidence:
 
 > `Conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10), pallor index: 0.68, severity: MODERATE. EAR: 2.15 (normal ≈2.8, edema threshold ≤2.2), edema index: 0.52. Patient pregnant, 32 weeks.`
+
+MedGemma's response to this structured input:
+
+> `SEVERITY: HIGH | URGENCY: IMMEDIATE` — Identifies the classic preeclampsia triad (edema + headache + pregnancy >20 weeks), flags concurrent anemia, and recommends same-day facility referral with specific danger signs to communicate to the patient. Full reasoning example in Appendix C.
 
 This structured prompting achieves a median 53% improvement over zero-shot baselines [9] — transforming MedGemma from a general medical QA model into a structured sensor data interpreter for CHW triage.
 

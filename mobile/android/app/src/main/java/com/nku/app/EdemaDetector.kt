@@ -372,19 +372,6 @@ class EdemaDetector {
         val b = pixel and 0xFF
         return (0.299f * r + 0.587f * g + 0.114f * b) / 255f
     }
-
-    /**
-     * Get brightness (luminance) of a pixel at coordinates (legacy per-pixel path).
-     */
-    private fun getBrightness(bitmap: Bitmap, x: Int, y: Int): Float {
-        val pixel = bitmap.getPixel(x.coerceIn(0, bitmap.width - 1), y.coerceIn(0, bitmap.height - 1))
-        val r = (pixel shr 16) and 0xFF
-        val g = (pixel shr 8) and 0xFF
-        val b = pixel and 0xFF
-        
-        // Luminance formula
-        return (0.299f * r + 0.587f * g + 0.114f * b) / 255f
-    }
     
     /**
      * Estimate image quality for confidence scoring

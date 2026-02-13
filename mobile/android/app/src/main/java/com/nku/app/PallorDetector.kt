@@ -87,6 +87,8 @@ class PallorDetector {
     val result: StateFlow<PallorResult> = _result.asStateFlow()
     
     // F-PF-3: Reusable pixel buffer to avoid per-call allocations
+    // F-1 fix: Buffer is a shared mutable field — analyzeConjunctiva() is
+    // @Synchronized to prevent concurrent camera frames from corrupting it.
     private var pixelBuffer: IntArray = IntArray(0)
     private var lastBufferWidth = 0
     private var lastBufferHeight = 0
@@ -100,6 +102,7 @@ class PallorDetector {
      * 3. Ensure good lighting (natural daylight preferred)
      * 4. Hold steady for 2-3 seconds
      */
+    @Synchronized
     fun analyzeConjunctiva(bitmap: Bitmap): PallorResult {
         // Sample pixels efficiently
         val stepSize = max(1, min(bitmap.width, bitmap.height) / 100)

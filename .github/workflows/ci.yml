@@ -2,9 +2,12 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
     branches: [main]
+  schedule:
+    # Weekly security scan — Sundays 00:00 UTC (from security-scan.yml)
+    - cron: '0 0 * * 0'
 
 jobs:
   # ─── Python Tests (Cloud API) ───
@@ -45,12 +48,14 @@ jobs:
         run: pytest tests/ -v --tb=short --cov=cloud/inference_api --cov-report=term-missing --cov-fail-under=60
 
   # ─── Android Build + Unit Tests ───
-  # CI-1 fix: Only run when Android files change
+  # CI-1 fix: Only run when Android files change (skip on scheduled runs)
   android:
     runs-on: ubuntu-latest
     if: |
-      github.event_name == 'pull_request' ||
-      contains(join(github.event.commits.*.modified, ','), 'mobile/android')
+      github.event_name != 'schedule' && (
+        github.event_name == 'pull_request' ||
+        contains(join(github.event.commits.*.modified, ','), 'mobile/android')
+      )
     defaults:
       run:
         working-directory: mobile/android
@@ -71,6 +76,29 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      # F-4 fix: Cache 2.3GB MedGemma model to avoid re-downloading each run
+      - name: Cache MedGemma GGUF model
+        id: model-cache
+        uses: actions/cache@v4
+        with:
+          path: mobile/android/medgemma/src/main/assets/medgemma-4b-it-q4_k_m.gguf
+          key: medgemma-q4km-${{ hashFiles('mobile/android/medgemma/build.gradle') }}
+
+      - name: Download MedGemma GGUF for PAD asset pack
+        if: steps.model-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p medgemma/src/main/assets
+          pip install huggingface-hub
+          python3 -c "
+          from huggingface_hub import hf_hub_download
+          import shutil
+          p = hf_hub_download('mradermacher/medgemma-4b-it-GGUF', 'medgemma-4b-it.Q4_K_M.gguf')
+          shutil.copy(p, 'medgemma/src/main/assets/medgemma-4b-it-q4_k_m.gguf')
+          print(f'MedGemma Q4_K_M → medgemma pack ({p})')
+          "
+          echo "--- Asset pack contents ---"
+          ls -lh medgemma/src/main/assets/*.gguf
+
       # CI-3 fix: Add Kotlin linter
       - name: Lint Kotlin with ktlint
         run: |
@@ -81,6 +109,8 @@ jobs:
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest --no-daemon
 
+      # F-5 fix: Only build debug APK for verification.
+      # Release AAB is built in the signed 'release' job below.
       - name: Build debug APK
         run: ./gradlew assembleDebug --no-daemon
 
@@ -91,15 +121,25 @@ jobs:
           name: test-results
           path: mobile/android/app/build/reports/tests/
 
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: mobile/android/app/build/outputs/apk/debug/app-debug.apk
+
   # ─── Security Scan ───
   security:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: TruffleHog secret scan
         uses: trufflesecurity/trufflehog@main
         with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
           extra_args: --only-verified
 
       - name: pip-audit (Cloud API dependencies)
@@ -110,6 +150,22 @@ jobs:
         run: |
           pip install pip-audit
           pip-audit -r cloud/inference_api/requirements.txt --ignore-vuln CVE-2025-69872
+
+  # ─── CodeQL Static Analysis (from security-scan.yml) ───
+  codeql:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: python
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
 
   # ─── Release AAB Signing (CI-4 fix) ───
   # Builds a signed release AAB when signing secrets are configured.

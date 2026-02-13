@@ -4,15 +4,15 @@
 
 ### Your team
 
-**Elorm Yevudza, MD/MS** — Solo developer. Born and raised in Ghana. Incoming surgery resident, NewYork-Presbyterian Queens. MD/MS Columbia VP&S (2025); BA Neuroscience, Amherst College (2019). Maintains clinical connections with physicians across Ghana for pilot coordination and field validation.
+**W. Elorm Yevudza Jnr, MD/MS** — Solo developer. Born and raised in Ghana. Incoming surgery resident, NewYork-Presbyterian Queens. MD/MS Columbia VP&S (2025); BA Neuroscience, Amherst College (2019). Maintains clinical connections with physicians across Ghana for pilot coordination and field validation.
 
 ### Problem statement
 
-In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people — far below the WHO's recommended 44.5 [1,2]. Over **450 million people** lack accessible primary care [5]. Community Health Workers (CHWs), the frontline of care, frequently lack reliable diagnostic tools due to equipment deficiencies and supply stock-outs [25] — yet nearly all carry smartphones [3].
+In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people — far below the WHO's recommended 44.5 [1,2]. Over **450 million people** lack accessible primary care [3]. Community Health Workers (CHWs), the frontline of care, frequently lack reliable diagnostic tools due to equipment deficiencies and supply stock-outs [4] — yet nearly all carry smartphones [5].
 
-Powerful clinical AI models exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, 25% of rural Africans lack mobile broadband entirely (ITU 2024) [4]. **Cloud-based AI is impractical where it is needed most.**
+Powerful clinical AI models exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, 25% of rural Africans lack mobile broadband entirely (ITU 2024) [6]. **Cloud-based AI is impractical where it is needed most.**
 
-**Target user**: A CHW in rural Ghana with a $60–100 TECNO or Infinix phone (3–4GB RAM) and no stable internet [26]. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral. Transsion brands (TECNO, Infinix, itel) hold >50% of the African smartphone market [27].
+**Target user**: A CHW in rural Ghana with a $60–100 TECNO or Infinix phone (3–4GB RAM) and no stable internet [7]. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral. Transsion brands (TECNO, Infinix, itel) hold >50% of the African smartphone market [8].
 
 **Impact**: Nku demonstrates that AI-powered clinical triage on budget smartphones is technically feasible. **Deployment pathway**: Pilot with 5–10 CHWs in rural Ghana → threshold calibration → Ghana Health Service partnerships → Play Asset Delivery / sideloaded APK distribution.
 
@@ -39,7 +39,7 @@ Each stage operates autonomously. Safety agents (confidence gating, thermal mana
 
 > `Conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10), pallor index: 0.68, severity: MODERATE. EAR: 2.15 (normal ≈2.8, edema threshold ≤2.2), edema index: 0.52. Patient pregnant, 32 weeks.`
 
-This structured prompting achieves a median 53% improvement over zero-shot baselines [23] — transforming MedGemma from a general medical QA model into a structured sensor data interpreter for CHW triage: a task it was never originally trained for.
+This structured prompting achieves a median 53% improvement over zero-shot baselines [9] — transforming MedGemma from a general medical QA model into a structured sensor data interpreter for CHW triage: a task it was never originally trained for.
 
 ### Technical details
 
@@ -54,13 +54,13 @@ This structured prompting achieves a median 53% improvement over zero-shot basel
 
 **Key finding**: IQ2_XS with medical imatrix calibration outperforms the larger Q2_K by +9.1pp — domain-specific calibration matters more than raw bit budget. We created a 243-scenario African primary care calibration dataset across 14+ languages for imatrix generation.
 
-**Nku Sentinel — Camera-Based Screening (0 MB additional weights)**: CHWs lack equipment [25]. Nku extracts vital signs using only the phone camera via pure signal processing, then feeds structured biomarkers to MedGemma for clinical interpretation:
+**Nku Sentinel — Camera-Based Screening (0 MB additional weights)**: CHWs lack equipment [4]. Nku extracts vital signs using only the phone camera via pure signal processing, then feeds structured biomarkers to MedGemma for clinical interpretation:
 
 | Screening | Method | Output | Fitzpatrick-aware |
 |:----------|:-------|:-------|:-----------------:|
-| **Heart rate** | Green channel rPPG, 10s DFT [9,13,14] | ±5 BPM | Adaptive thresholds |
-| **Anemia** | Conjunctival HSV analysis [15,16] | Pallor score 0–1 | Conjunctiva only |
-| **Jaundice** | Scleral HSV analysis [28,29] | Jaundice score 0–1 | Scleral tissue (unpigmented) |
+| **Heart rate** | Green channel rPPG, 10s DFT [10,11,12] | ±5 BPM | Adaptive thresholds |
+| **Anemia** | Conjunctival HSV analysis [13,14] | Pallor score 0–1 | Conjunctiva only |
+| **Jaundice** | Scleral HSV analysis [15,16] | Jaundice score 0–1 | Scleral tissue (unpigmented) |
 | **Preeclampsia** | Facial geometry EAR [17,18] | Edema score 0–1 | Geometry (color-independent) |
 
 All screening modalities are deliberately **skin-tone independent** — critical for Fitzpatrick V-VI populations. Sensor confidence must exceed 75% for inclusion in MedGemma's prompt; below-threshold readings are excluded.

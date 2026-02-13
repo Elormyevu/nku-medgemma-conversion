@@ -187,33 +187,33 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 
 [2] World Health Organization. *Global Strategy on Human Resources for Health: Workforce 2030*. WHO, 2016.
 
-[3] Agarwal, S., et al. "Mobile technology in support of community health workers." *Human Resources for Health* 13(1), 2015. DOI: 10.1186/s12960-015-0079-7
+[3] Kruk, M.E., et al. "High-quality health systems in the SDG era." *The Lancet Global Health* 6(11), 2018. DOI: 10.1016/S2214-109X(18)30386-3
 
-[4] GSMA. *The Mobile Economy Sub-Saharan Africa 2023*. GSMA Intelligence, 2023.
+[4] WHO Regional Office for Africa. *Regional Strategy on Diagnostic and Laboratory Services and Systems 2023*. WHO AFRO, 2023. Documents infrastructure and equipment deficiencies, supply stock-outs, and weak diagnostic systems across the African Region.
 
-[5] Kruk, M.E., et al. "High-quality health systems in the SDG era." *The Lancet Global Health* 6(11), 2018. DOI: 10.1016/S2214-109X(18)30386-3
+[5] Agarwal, S., et al. "Mobile technology in support of community health workers." *Human Resources for Health* 13(1), 2015. DOI: 10.1186/s12960-015-0079-7
 
-[6] Daneshjou, R., et al. "Disparities in dermatology AI performance across skin tones." *Science Advances* 8(31), 2022. DOI: 10.1126/sciadv.abq6147
+[6] GSMA. *The Mobile Economy Sub-Saharan Africa 2023*. GSMA Intelligence, 2023.
 
-[7] Gerganov, G. *llama.cpp*. GitHub, 2023. https://github.com/ggerganov/llama.cpp
+[7] TECNO Mobile. TECNO Pop 8 specifications. tecnoghana.com, 2024. 2GB/3GB/4GB RAM variants; ~$60 USD (2GB) to ~$90 USD (4GB) depending on market. See also: TECNO Spark Go 2024, 3-4GB RAM, ~$89-98 USD.
 
-[8] Gerganov, G. "GGML: Machine Learning Tensor Library." GitHub, 2023. https://github.com/ggerganov/ggml
+[8] Canalys. *Africa Smartphone Market 2024*. Canalys Research, 2025. Transsion Holdings (TECNO, Infinix, itel) held 51% smartphone market share in Africa, shipping ~37.9 million units.
 
-[9] Meijers, L., et al. "Accuracy of remote photoplethysmography." *JMIR mHealth* 10(12), 2022. DOI: 10.2196/42178
+[9] Singhvi, A., Bikia, V., Aali, A., Chaudhari, A., Daneshjou, R. "Prompt Triage: Structured Optimization Enhances Vision-Language Model Performance on Medical Imaging Benchmarks." *arXiv:2511.11898*, November 14, 2025. Median 53% relative improvement over zero-shot baselines across 10 open-source VLMs.
 
-[10] Zucker, J.R., et al. "Clinical signs for anaemia recognition in western Kenya." *Bull. WHO* 75(Suppl 1), 1997.
+[10] Meijers, L., et al. "Accuracy of remote photoplethysmography." *JMIR mHealth* 10(12), 2022. DOI: 10.2196/42178
 
-[11] ACOG Practice Bulletin No. 222: Preeclampsia. 2020.
+[11] Verkruysse, W., et al. "Remote plethysmographic imaging using ambient light." *Optics Express* 16(26), 2008. DOI: 10.1364/OE.16.021434
 
-[12] WHO. *IMCI Chart Booklet*. 2014.
+[12] Nowara, E.M., Marks, T.K., Mansour, H., Veeraraghavan, A. "Near-Infrared Imaging Photoplethysmography During Driving." *IEEE Trans. ITS* 23(4), 2022. DOI: 10.1109/TITS.2020.3038317. Note: MAE values for smartphone rPPG (e.g., 1.32–2.49 BPM) are drawn from the broader smartphone rPPG validation literature [10].
 
-[13] Verkruysse, W., et al. "Remote plethysmographic imaging using ambient light." *Optics Express* 16(26), 2008. DOI: 10.1364/OE.16.021434
+[13] Jay, G.D., et al. "Smartphone anemia detection via conjunctival photographs." *PLOS ONE* 19(1), 2024. DOI: 10.1371/journal.pone.0295563
 
-[14] Nowara, E.M., Marks, T.K., Mansour, H., Veeraraghavan, A. "Near-Infrared Imaging Photoplethysmography During Driving." *IEEE Trans. ITS* 23(4), 2022. DOI: 10.1109/TITS.2020.3038317. Note: MAE values for smartphone rPPG (e.g., 1.32–2.49 BPM) are drawn from the broader smartphone rPPG validation literature [9].
+[14] Dimauro, G., et al. "Anemia detection using smartphone images." *Artif. Intell. Med.* 126, 2022.
 
-[15] Jay, G.D., et al. "Smartphone anemia detection via conjunctival photographs." *PLOS ONE* 19(1), 2024. DOI: 10.1371/journal.pone.0295563
+[15] Mariakakis, A., Banks, M.A., Phillipi, L., Yu, L., Taylor, J., Patel, S.N. "BiliScreen: Smartphone-Based Scleral Jaundice Monitoring for Liver and Pancreatic Disorders." *Proc. ACM Interact. Mob. Wearable Ubiquittic Technol.* 1(2), 2017. DOI: 10.1145/3090085
 
-[16] Dimauro, G., et al. "Anemia detection using smartphone images." *Artif. Intell. Med.* 126, 2022.
+[16] Outlaw, F., Enweronu-Laryea, C., Leung, T.S., et al. "Validating a Sclera-Based Smartphone Application for Screening Jaundiced Newborns in Ghana." *Pediatrics* 150(3), 2022. DOI: 10.1542/peds.2021-053600
 
 [17] Sokolova, T. & Cech, J. "Real-time eye blink detection using facial landmarks." *CVWW*, 2017.
 
@@ -272,7 +272,7 @@ Selecting the right quantization level required balancing two competing goals: *
 
 3. **The multimodal model is larger, not smaller.** The text decoder is identical to the text-only 4B. Adding MedSigLIP (400M params, ~800 MB) increases the quantized model from 2.3 GB to ~3.1 GB — a 35% size increase with no benefit for Nku's use case. On a 2 GB RAM device, this additional memory pressure degrades inference performance.
 
-4. **Structured numerical input outperforms ambiguous visual input.** Nku's sensor pipeline outputs precise, quantified biomarkers (HR: 108 BPM, conjunctival saturation: 0.08, EAR: 2.15) with confidence scores and clinical context. Feeding the model a raw photo and asking "does this patient have anemia?" yields far less reliable results than providing "conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10), pallor index: 0.68, severity: MODERATE." The structured prompting approach achieves a median 53% improvement over zero-shot baselines [23].
+4. **Structured numerical input outperforms ambiguous visual input.** Nku's sensor pipeline outputs precise, quantified biomarkers (HR: 108 BPM, conjunctival saturation: 0.08, EAR: 2.15) with confidence scores and clinical context. Feeding the model a raw photo and asking "does this patient have anemia?" yields far less reliable results than providing "conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10), pallor index: 0.68, severity: MODERATE." The structured prompting approach achieves a median 53% improvement over zero-shot baselines [9].
 
 > **Transparency note:** These four arguments are architectural and design rationale — we did not empirically benchmark multimodal MedGemma on smartphone conjunctival or periorbital images. No labeled training data exists for these modalities in this clinical context, which itself is a reason the multimodal path is not viable without significant additional data collection and fine-tuning.
 
@@ -326,7 +326,7 @@ A prospective, observational study in **Nyabihu and Musanze districts, Rwanda** 
 
 ### Evidence 4: Structured Prompting Substantially Improves Performance
 
-Research on automated prompt optimization for medical vision-language models found that structured prompting achieves a **median 53% improvement** over zero-shot baselines [23]. Nku's `ClinicalReasoner.kt` generates a highly structured, **clinically explicit** prompt that includes measurement methodology, raw biomarker values, literature references, and screening disclaimers:
+Research on automated prompt optimization for medical vision-language models found that structured prompting achieves a **median 53% improvement** over zero-shot baselines [9]. Nku's `ClinicalReasoner.kt` generates a highly structured, **clinically explicit** prompt that includes measurement methodology, raw biomarker values, literature references, and screening disclaimers:
 
 ```
 === HEART RATE (rPPG) ===
@@ -361,7 +361,7 @@ This is not a bare medical question — it's a **guided reasoning template** wit
 
 ### Evidence 5: On-Device Clinical Models Achieve High Accuracy
 
-The AMEGA benchmark study (2025) found that medically fine-tuned on-device models like **Med42 and Aloe achieve clinically useful reasoning accuracy** on mobile devices, with compact models like Phi-3 Mini offering favorable accuracy-to-speed ratios [24]. This validates the feasibility of on-device medical inference and demonstrates that quantized models can retain clinically useful performance.
+The AMEGA benchmark study (2025) found that medically fine-tuned on-device models like **Med42 and Aloe achieve clinically useful reasoning accuracy** on mobile devices, with compact models like Phi-3 Mini offering favorable accuracy-to-speed ratios [23]. This validates the feasibility of on-device medical inference and demonstrates that quantized models can retain clinically useful performance.
 
 ### Evidence 6: The Safety Architecture Compensates for Model Limitations
 
@@ -391,15 +391,19 @@ The literature demonstrates that (a) triage is substantially easier for LLMs tha
 
 [22] Menon, V., Shimelash, N., Rutunda, S., et al. "Assessing the potential utility of large language models for assisting community health workers: protocol for a prospective, observational study in Rwanda." *BMJ Open*, 2025. DOI: 10.1136/bmjopen-2025-110927
 
-[23] Singhvi, A., Bikia, V., Aali, A., Chaudhari, A., Daneshjou, R. "Prompt Triage: Structured Optimization Enhances Vision-Language Model Performance on Medical Imaging Benchmarks." *arXiv:2511.11898*, November 14, 2025. Median 53% relative improvement over zero-shot baselines across 10 open-source VLMs.
+[23] Nissen, L., Zagar, P., Ravi, V., Zahedivash, A., Reimer, L.M., Jonas, S., Aalami, O., Schmiedmayer, P. "Medicine on the Edge: Comparative Performance Analysis of On-Device LLMs for Clinical Reasoning." *arXiv:2502.08954*, February 13, 2025. AMEGA benchmark: Med42 and Aloe achieve highest clinical accuracy on mobile devices.
 
-[24] Nissen, L., Zagar, P., Ravi, V., Zahedivash, A., Reimer, L.M., Jonas, S., Aalami, O., Schmiedmayer, P. "Medicine on the Edge: Comparative Performance Analysis of On-Device LLMs for Clinical Reasoning." *arXiv:2502.08954*, February 13, 2025. AMEGA benchmark: Med42 and Aloe achieve highest clinical accuracy on mobile devices.
+[24] Daneshjou, R., et al. "Disparities in dermatology AI performance across skin tones." *Science Advances* 8(31), 2022. DOI: 10.1126/sciadv.abq6147
 
-[25] WHO Regional Office for Africa. *Regional Strategy on Diagnostic and Laboratory Services and Systems 2023*. WHO AFRO, 2023. Documents infrastructure and equipment deficiencies, supply stock-outs, and weak diagnostic systems across the African Region.
+[25] Gerganov, G. *llama.cpp*. GitHub, 2023. https://github.com/ggerganov/llama.cpp
 
-[26] TECNO Mobile. TECNO Pop 8 specifications. tecnoghana.com, 2024. 2GB/3GB/4GB RAM variants; ~$60 USD (2GB) to ~$90 USD (4GB) depending on market. See also: TECNO Spark Go 2024, 3-4GB RAM, ~$89-98 USD.
+[26] Gerganov, G. "GGML: Machine Learning Tensor Library." GitHub, 2023. https://github.com/ggerganov/ggml
 
-[27] Canalys. *Africa Smartphone Market 2024*. Canalys Research, 2025. Transsion Holdings (TECNO, Infinix, itel) held 51% smartphone market share in Africa, shipping ~37.9 million units.
+[27] Zucker, J.R., et al. "Clinical signs for anaemia recognition in western Kenya." *Bull. WHO* 75(Suppl 1), 1997.
+
+[28] ACOG Practice Bulletin No. 222: Preeclampsia. 2020.
+
+[29] WHO. *IMCI Chart Booklet*. 2014.
 
 ---
 

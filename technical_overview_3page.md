@@ -6,13 +6,13 @@
 
 ### Your team
 
-**Elorm Yevudza, MD/MS** — Solo developer. Born and raised in Ghana. Incoming surgery resident, NewYork-Presbyterian Queens. MD/MS Columbia VP&S (2025); BA Neuroscience, Amherst College (2019). Maintains clinical connections with physicians across Ghana for pilot coordination and field validation.
+**W. Elorm Yevudza Jnr, MD/MS** — Solo developer. Born and raised in Ghana. Incoming surgery resident, NewYork-Presbyterian Queens. MD/MS Columbia VP&S (2025); BA Neuroscience, Amherst College (2019). Maintains clinical connections with physicians across Ghana for pilot coordination and field validation.
 
 ### Problem statement
 
-In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people — far below the WHO's recommended 44.5 [1,2]. Over **450 million people** lack accessible primary care. CHWs frequently lack diagnostic tools due to equipment deficiencies and supply stock-outs [25] — yet nearly all carry smartphones [3]. Cloud-based AI requires connectivity that 25% of rural Africans lack entirely (ITU 2024) [4].
+In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people — far below the WHO's recommended 44.5 [1,2]. Over **450 million people** lack accessible primary care. CHWs frequently lack diagnostic tools due to equipment deficiencies and supply stock-outs [4] — yet nearly all carry smartphones [5]. Cloud-based AI requires connectivity that 25% of rural Africans lack entirely (ITU 2024) [6].
 
-**Target user**: A CHW in rural Ghana with a $60–100 TECNO/Infinix phone (3–4GB RAM, no stable internet) [26] who needs immediate offline triage guidance. Transsion brands hold >50% African smartphone market share [27].
+**Target user**: A CHW in rural Ghana with a $60–100 TECNO/Infinix phone (3–4GB RAM, no stable internet) [7] who needs immediate offline triage guidance. Transsion brands hold >50% African smartphone market share [8].
 
 **Impact**: Nku demonstrates that AI-powered triage on budget smartphones is technically feasible. **Next step**: Pilot with 5–10 CHWs in rural Ghana → threshold calibration → Ghana Health Service partnerships → Play Asset Delivery distribution.
 
@@ -52,9 +52,9 @@ Safety agents (confidence gating, thermal management) make autonomous decisions 
 
 | Screening | Method | Fitzpatrick-aware |
 |:----------|:-------|:-----------------:|
-| Heart rate | Green channel rPPG, DFT [9,13] | Adaptive thresholds |
-| Anemia | Conjunctival HSV [15,16] | Conjunctiva only |
-| Jaundice | Scleral HSV [28,29] | Unpigmented tissue |
+| Heart rate | Green channel rPPG, DFT [10,11] | Adaptive thresholds |
+| Anemia | Conjunctival HSV [13,14] | Conjunctiva only |
+| Jaundice | Scleral HSV [15,16] | Unpigmented tissue |
 | Preeclampsia | Facial geometry EAR [17,18] | Color-independent |
 
 All screening is deliberately **skin-tone independent** for Fitzpatrick V–VI populations. Sensor confidence >75% required for MedGemma prompt inclusion.

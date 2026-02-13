@@ -51,12 +51,14 @@ This structured prompting achieves a median 53% improvement over zero-shot basel
 
 **Edge AI — Quantization & Memory**: We achieve **71% model size reduction** (8GB → 2.3GB) via Q4_K_M quantization while retaining 81% of MedQA accuracy (56% quantized vs. 69% unquantized baseline). The model runs on 3–4GB RAM devices via `mmap` — the OS pages model data on demand, so peak resident memory adapts to available RAM. We systematically benchmarked four quantization levels:
 
-| Quant | Size | MedQA (n=1,273) | Primary Care (n=707) | Verdict |
+| Quant | Size | MedQA | Primary Care | Verdict |
 |:------|:----:|:---------------:|:--------------------:|:--------|
 | **Q4_K_M** | **2.3 GB** | **56.0%** | **56.2%** | ✅ Deployed |
 | IQ2_XS + imatrix | 1.3 GB | 43.8% | 45.3% | Viable ultra-compact |
 | Q2_K | 1.6 GB | 34.7% | 33.9% | ❌ Worse than IQ2_XS |
 | IQ1_M | 1.1 GB | 32.3% | 32.4% | ❌ Near random |
+
+*Each model evaluated single-shot on the full MedQA test set (1,273 questions) and the primary care subset (707 questions) — one attempt per question, no repeated runs or best-of-N selection.*
 
 **Key finding**: IQ2_XS with medical imatrix calibration outperforms the larger Q2_K by +9.1pp — domain-specific calibration matters more than raw bit budget. We created a 243-scenario African primary care calibration dataset across 14+ languages for imatrix generation.
 

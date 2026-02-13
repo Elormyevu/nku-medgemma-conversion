@@ -18,16 +18,14 @@ import numpy as np
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Mock modules if they are missing
-try:
-    import cv2
-except ImportError:
+import importlib.util
+
+if importlib.util.find_spec("cv2") is None:
     sys.modules['cv2'] = MagicMock()
     sys.modules['cv2'].cvtColor = MagicMock(return_value=np.zeros((100,100,3)))
     sys.modules['cv2'].COLOR_BGR2RGB = 1
 
-try:
-    import scipy.signal as signal
-except ImportError:
+if importlib.util.find_spec("scipy") is None:
     sys.modules['scipy.signal'] = MagicMock()
     sys.modules['scipy'] = MagicMock()
     sys.modules['scipy'].signal = MagicMock()

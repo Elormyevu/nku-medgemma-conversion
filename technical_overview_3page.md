@@ -2,7 +2,7 @@
 
 **Nku** — Offline Medical AI for Pan-African Primary Care
 
-*MedGemma Impact Challenge — Edge AI Prize Track*
+*MedGemma Impact Challenge — Main Track + Edge AI Prize*
 
 ### Your team
 
@@ -61,7 +61,7 @@ All screening is deliberately **skin-tone independent** for Fitzpatrick V–VI p
 
 **Safety**: 6-layer PromptSanitizer at every model boundary. Thermal auto-pause at 42°C. SQLCipher AES-256 encryption at rest. Always-on "Consult a healthcare professional."
 
-**46 Pan-African languages** (14 clinically verified). Fully open source: Apache 2.0 on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion); model weights on [HuggingFace](https://huggingface.co/wredd/medgemma-4b-gguf) (Gemma Terms).
+**46 Pan-African languages** (14 clinically verified). Fully open source: Apache 2.0 (compatible with CC BY 4.0) on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion); model weights on [HuggingFace](https://huggingface.co/wredd/medgemma-4b-gguf) (Gemma Terms).
 
 ---
 

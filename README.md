@@ -290,7 +290,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 
 ## 📄 License
 
-**Nku is fully open source.** All application source code, build scripts, calibration data, and quantization artifacts are free to download, fork, modify, and use with attribution.
+**Nku is fully open source.** All application source code, build scripts, calibration data, and quantization artifacts are free to download, fork, modify, and use with attribution. Apache 2.0 is compatible with the MedGemma Impact Challenge's CC BY 4.0 requirement (Apache 2.0 is strictly more permissive).
 
 | Component | License |
 |:----------|:--------|

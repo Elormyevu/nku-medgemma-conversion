@@ -1,6 +1,6 @@
 ### Project name
 
-**Nku** — Offline Medical AI for Pan-African Primary Care
+**Nku** — Offline Medical AI for Pan-African Triage
 
 ### Your team
 
@@ -60,7 +60,7 @@ This structured prompting achieves a median 53% improvement over zero-shot basel
 
 *Each model evaluated single-shot on the full MedQA test set (1,273 questions) and the primary care subset (707 questions) — one attempt per question, no repeated runs or best-of-N selection.*
 
-**Key finding**: IQ2_XS with medical imatrix calibration outperforms the larger Q2_K by +9.1pp — domain-specific calibration matters more than raw bit budget. We created a 243-scenario African primary care calibration dataset across 14+ languages for imatrix generation.
+**Key finding**: IQ2_XS with medical imatrix calibration outperforms the larger Q2_K by +9.1pp — domain-specific calibration matters more than raw bit budget. We created a 243-scenario African clinical triage calibration dataset across 14+ languages for imatrix generation.
 
 **Nku Sentinel — Camera-Based Screening (0 MB additional weights)**: CHWs often lack equipment [4]. Nku extracts vital signs using only the phone camera via pure signal processing, then feeds structured biomarkers to MedGemma for clinical interpretation:
 

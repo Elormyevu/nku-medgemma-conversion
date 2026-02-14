@@ -285,7 +285,7 @@ Selecting the right quantization level required balancing two competing goals: *
 
 **Decision rationale**: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The Q4_K_M model is a standard quantization (from [mradermacher/medgemma-4b-it-GGUF](https://huggingface.co/mradermacher/medgemma-4b-it-GGUF)). The other three quantization levels (IQ1_M, Q2_K, IQ2_XS) were benchmarked to validate our model selection: they confirmed that aggressive quantization below Q4 degrades accuracy below clinically useful thresholds, and that domain-specific imatrix calibration (applied to IQ2_XS) is essential at lower bit rates. **Only Q4_K_M is deployed in the Nku application.** With `mmap` memory mapping, the 2.3 GB Q4_K_M model runs on 2–3 GB RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
 
-> **imatrix representativeness**: The 243 scenarios cover WHO/IMCI primary care conditions accounting for >80% of CHW encounters in Sub-Saharan Africa. The imatrix was used for the IQ2_XS quantization experiment — its purpose is weight importance estimation, identifying which model weights are most critical for the deployment vocabulary (malaria, anemia, pneumonia, maternal health terms across 14+ languages). This is a quantization calibration technique, not clinical training data; 243 scenarios across 8 condition categories and 14 languages provides sufficient diversity for weight importance ranking. The deployed Q4_K_M does not use this imatrix.
+> **imatrix representativeness**: The 243 scenarios cover WHO/IMCI triage conditions accounting for >80% of CHW encounters in Sub-Saharan Africa. The imatrix was used for the IQ2_XS quantization experiment — its purpose is weight importance estimation, identifying which model weights are most critical for the deployment vocabulary (malaria, anemia, pneumonia, maternal health terms across 14+ languages). This is a quantization calibration technique, not clinical training data; 243 scenarios across 8 condition categories and 14 languages provides sufficient diversity for weight importance ranking. The deployed Q4_K_M does not use this imatrix.
 
 ### Why Not Unquantized MedGemma 4B or MedGemma 4B Multimodal?
 
@@ -346,7 +346,7 @@ Recent research confirms this distinction:
 
 If frontier LLMs score ~85–90% on MedQA but ~92% on triage, the gap between MedQA and triage performance is ~+7 percentage points. Applying a similar offset to our Q4_K_M (56% MedQA) suggests ~63–70% on comparable triage tasks — before accounting for the significant advantage of structured input.
 
-### Evidence 2: LLM Decision Support Reduces Errors in African Primary Care
+### Evidence 2: LLM Decision Support Reduces Errors in African Clinical Settings
 
 A real-world study at **Penda Health clinics in Nairobi, Kenya** (2024–2025) found that clinicians using an LLM-based "AI Consult" tool made **16% fewer diagnostic errors** and **13% fewer treatment errors** compared to unaided clinicians [21]. The study's authors note that "state-of-the-art LLMs now often outperform physicians on benchmarks" — and this was demonstrated in a real clinical setting, not just on paper. This directly parallels Nku's use case: providing decision support where specialist access is minimal.
 

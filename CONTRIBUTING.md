@@ -18,7 +18,7 @@ We especially welcome contributions in these areas:
 
 ### 3. Clinical Validation
 - **Field testing**: Partnering with CHWs for real-world validation
-- **Calibration data**: Expanding the African primary care calibration dataset (used for imatrix quantization experiments)
+- **Calibration data**: Expanding the African clinical triage calibration dataset (used for imatrix quantization experiments)
 - **Safety guardrails**: Improving uncertainty quantification and abstention logic
 
 ### 4. UI/UX Improvements

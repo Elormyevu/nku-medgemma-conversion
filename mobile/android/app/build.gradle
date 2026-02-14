@@ -111,6 +111,10 @@ dependencies {
     // Replaces TranslateGemma GGUF, zero RAM contention with MedGemma
     implementation 'com.google.mlkit:translate:17.0.3'
     
+    // TensorFlow Lite — HeAR event detector (MobileNetV3-based health sound classifier)
+    implementation 'org.tensorflow:tensorflow-lite:2.16.1'
+    implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:2.16.1'  // Flex delegate for PCEN RNN ops
+    
     // Room — offline screening data persistence
     implementation 'androidx.room:room-runtime:2.6.1'
     implementation 'androidx.room:room-ktx:2.6.1'

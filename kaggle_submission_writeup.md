@@ -72,6 +72,8 @@ This structured prompting achieves a median 53% improvement over zero-shot basel
 | **Preeclampsia** | Facial geometry EAR [17,18] | Edema score 0–1 | Geometry (color-independent) |
 | **TB/Respiratory** | HeAR cough analysis [27] | Risk score 0–1 | Audio (skin-tone independent) |
 
+**Why cough-based respiratory screening?** Sub-Saharan Africa bears a disproportionate respiratory disease burden: 10.8M new TB cases globally in 2023, with only 44% of MDR-TB cases diagnosed and treated (WHO 2024). COPD prevalence in SSA is projected to rise 59% by 2050 due to biomass fuel exposure, prior TB, and weak diagnostic infrastructure. Pneumonia remains the leading infectious cause of child death, claiming ~500,000 under-5 lives annually. Nku integrates Google's HeAR (Health Acoustic Representations) event detector — a MobileNetV3 model (~1.1MB INT8 on-device) trained on >300M health audio clips — enabling CHWs to screen for cough patterns indicative of TB/COPD/pneumonia using only a phone microphone. This is the **first mobile CHW triage system to combine a bioacoustic AI foundation model with clinical LLM reasoning** for respiratory screening in resource-limited settings.
+
 All screening modalities are deliberately **skin-tone independent** — critical for Fitzpatrick V-VI populations. Sensor confidence must exceed 75% for inclusion in MedGemma's prompt; below-threshold readings trigger a localized ⚠ warning prompting the CHW to re-capture in better conditions. When MedGemma is unavailable, the app displays a transparency banner identifying the triage as guideline-based (WHO/IMCI) with actionable recovery steps — all in the CHW's selected language.
 
 **Safety**: 6-layer `PromptSanitizer` at every model boundary (zero-width stripping, homoglyph normalization, base64 detection, regex patterns, character allowlist, delimiter wrapping). Auto-pause at 42°C. SQLCipher AES-256 encryption at rest. Always-on "Consult a healthcare professional" disclaimer.
@@ -80,7 +82,7 @@ All screening modalities are deliberately **skin-tone independent** — critical
 
 ---
 
-**Prize Track**: **Main** + **Edge AI** — Q4_K_M compression (8GB→2.3GB), mmap loading on $60–100 phones (3–4GB RAM), llama.cpp JNI (NDK 29, ARM64 NEON), systematic 4-level quantization benchmark (IQ2_XS with medical imatrix calibration), 100% on-device inference. **Novel Task** — HeAR cough analysis for TB/respiratory screening; the first integration of Google's health acoustic foundation model into a mobile CHW triage workflow.
+**Prize Track**: **Main** + **Edge AI** — Q4_K_M compression (8GB→2.3GB), mmap loading on $60–100 phones (3–4GB RAM), llama.cpp JNI (NDK 29, ARM64 NEON), systematic 4-level quantization benchmark (IQ2_XS with medical imatrix calibration), 100% on-device inference. **Novel Task** — HeAR event detector (MobileNetV3-Small, 1.1MB INT8 TFLite) for cough/breath classification from 2-second audio clips; probabilities feed into MedGemma's clinical reasoning prompt for TB/COPD/pneumonia triage — the first integration of Google's health acoustic foundation model into a mobile CHW triage workflow in sub-Saharan Africa.
 
 **Open source**: Nku is fully open source under the Apache License 2.0 (compatible with the competition's CC BY 4.0 requirement — Apache 2.0 is strictly more permissive). Source code, scripts, and calibration data on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion). Quantized model weights on [HuggingFace](https://huggingface.co/wredd/medgemma-4b-gguf) (subject to Google Gemma Terms of Use).
 

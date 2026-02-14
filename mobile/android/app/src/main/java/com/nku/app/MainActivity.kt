@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
     private val pallorDetector = PallorDetector()
     private val jaundiceDetector = JaundiceDetector()
     private val edemaDetector = EdemaDetector()
-    private val respiratoryDetector = RespiratoryDetector()
+    private val respiratoryDetector by lazy { RespiratoryDetector(applicationContext) }
     
     // Integration layer
     private lateinit var thermalManager: ThermalManager

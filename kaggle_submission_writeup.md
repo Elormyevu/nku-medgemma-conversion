@@ -28,7 +28,7 @@ Powerful clinical AI models exist, but require reliable cloud connectivity. In r
 
 | Stage | Component | Size | Function |
 |:------|:------|:----:|:---------|
-| 1. Sense | Nku Sentinel (4 detectors) | 0 MB | Camera → structured vital signs |
+| 1. Sense | Nku Sentinel (5 detectors) | 0 MB | Camera + microphone → structured vital signs |
 | 2. Translate | Android ML Kit / Cloud Translate | ~30MB/lang | Non-English input → English |
 | 3. Reason | **MedGemma 4B (Q4_K_M)** | **2.3GB** | Clinical reasoning on symptoms + sensor data |
 | 4. Translate | Android ML Kit / Cloud Translate | ~30MB/lang | English → non-English output |
@@ -70,6 +70,7 @@ This structured prompting achieves a median 53% improvement over zero-shot basel
 | **Anemia** | Conjunctival HSV analysis [13,14] | Pallor score 0–1 | Conjunctiva only |
 | **Jaundice** | Scleral HSV analysis [15,16] | Jaundice score 0–1 | Scleral tissue (unpigmented) |
 | **Preeclampsia** | Facial geometry EAR [17,18] | Edema score 0–1 | Geometry (color-independent) |
+| **TB/Respiratory** | HeAR cough analysis [27] | Risk score 0–1 | Audio (skin-tone independent) |
 
 All screening modalities are deliberately **skin-tone independent** — critical for Fitzpatrick V-VI populations. Sensor confidence must exceed 75% for inclusion in MedGemma's prompt; below-threshold readings trigger a localized ⚠ warning prompting the CHW to re-capture in better conditions. When MedGemma is unavailable, the app displays a transparency banner identifying the triage as guideline-based (WHO/IMCI) with actionable recovery steps — all in the CHW's selected language.
 
@@ -79,7 +80,7 @@ All screening modalities are deliberately **skin-tone independent** — critical
 
 ---
 
-**Prize Track**: **Main** + **Edge AI** — Q4_K_M compression (8GB→2.3GB), mmap loading on $60–100 phones (3–4GB RAM), llama.cpp JNI (NDK 29, ARM64 NEON), systematic 4-level quantization benchmark (IQ2_XS with medical imatrix calibration), 100% on-device inference.
+**Prize Track**: **Main** + **Edge AI** — Q4_K_M compression (8GB→2.3GB), mmap loading on $60–100 phones (3–4GB RAM), llama.cpp JNI (NDK 29, ARM64 NEON), systematic 4-level quantization benchmark (IQ2_XS with medical imatrix calibration), 100% on-device inference. **Novel Task** — HeAR cough analysis for TB/respiratory screening; the first integration of Google's health acoustic foundation model into a mobile CHW triage workflow.
 
 **Open source**: Nku is fully open source under the Apache License 2.0 (compatible with the competition's CC BY 4.0 requirement — Apache 2.0 is strictly more permissive). Source code, scripts, and calibration data on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion). Quantized model weights on [HuggingFace](https://huggingface.co/wredd/medgemma-4b-gguf) (subject to Google Gemma Terms of Use).
 

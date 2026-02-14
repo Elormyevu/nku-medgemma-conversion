@@ -522,4 +522,81 @@ class ClinicalReasonerTest {
         assertEquals("All-below-threshold should set ABSTAINED source",
             TriageSource.ABSTAINED, assessment.triageSource)
     }
+
+    // ── Respiratory Screening ─────────────────────────────
+
+    @Test
+    fun `generatePrompt includes respiratory section when data present`() {
+        val vitals = VitalSigns(
+            respiratoryRiskScore = 0.75f,
+            respiratoryRisk = RespiratoryRisk.HIGH_RISK,
+            respiratoryConfidence = 0.85f,
+            coughDetected = true
+        )
+        val prompt = reasoner.generatePrompt(vitals)
+        assertTrue("Should include respiratory section", prompt.contains("RESPIRATORY SCREENING"))
+        assertTrue("Should include HeAR method", prompt.contains("HeAR"))
+        assertTrue("Should include risk score", prompt.contains("0.75"))
+        assertTrue("Should note cough detection", prompt.contains("Yes"))
+    }
+
+    @Test
+    fun `generatePrompt excludes respiratory when confidence below threshold`() {
+        val vitals = VitalSigns(
+            respiratoryRiskScore = 0.6f,
+            respiratoryRisk = RespiratoryRisk.MODERATE_RISK,
+            respiratoryConfidence = 0.5f,  // Below 0.75 threshold
+            coughDetected = true
+        )
+        val prompt = reasoner.generatePrompt(vitals)
+        assertTrue("Should flag low confidence", prompt.contains("LOW CONFIDENCE"))
+        assertFalse("Should NOT include HeAR method details when low confidence", prompt.contains("ViT-L encoder"))
+    }
+
+    @Test
+    fun `generatePrompt shows Not performed for missing respiratory`() {
+        val vitals = VitalSigns()
+        val prompt = reasoner.generatePrompt(vitals)
+        assertTrue("Should show respiratory not performed", prompt.contains("Respiratory Assessment: Not performed"))
+    }
+
+    @Test
+    fun `createRuleBasedAssessment elevates for high respiratory risk`() {
+        val vitals = VitalSigns(
+            respiratoryRiskScore = 0.8f,
+            respiratoryRisk = RespiratoryRisk.HIGH_RISK,
+            respiratoryConfidence = 0.9f,
+            coughDetected = true
+        )
+        val assessment = reasoner.createRuleBasedAssessment(vitals)
+        assertTrue("Should mention TB reference",
+            assessment.recommendations.any { it.contains("sputum") || it.contains("chest X-ray") })
+        assertTrue("Should be at least HIGH severity",
+            assessment.overallSeverity >= Severity.HIGH)
+    }
+
+    @Test
+    fun `createRuleBasedAssessment ignores low-confidence respiratory`() {
+        val vitals = VitalSigns(
+            heartRateBpm = 72f,                // Need at least one confident sensor
+            heartRateConfidence = 0.9f,         // so assessment doesn't abstain entirely
+            respiratoryRiskScore = 0.9f,
+            respiratoryRisk = RespiratoryRisk.HIGH_RISK,
+            respiratoryConfidence = 0.3f,  // Below 0.75 threshold
+            coughDetected = true
+        )
+        val assessment = reasoner.createRuleBasedAssessment(vitals)
+        assertTrue("Should note low confidence exclusion",
+            assessment.primaryConcerns.any { it.contains("Respiratory reading low confidence") })
+        assertFalse("Should NOT recommend sputum test for low-confidence",
+            assessment.recommendations.any { it.contains("sputum") })
+    }
+
+    @Test
+    fun `generatePrompt includes TB guidance in instructions`() {
+        val vitals = VitalSigns()
+        val prompt = reasoner.generatePrompt(vitals)
+        assertTrue("Should mention TB in guidelines",
+            prompt.contains("TB") || prompt.contains("respiratory illness"))
+    }
 }

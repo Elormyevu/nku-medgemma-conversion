@@ -119,6 +119,7 @@ object LocalizedStrings {
         val tabAnemia: String = "Anemia",
         val tabPreE: String = "Pre-E",
         val tabJaundice: String = "Jaundice",
+        val tabRespiratory: String = "Resp",
         val tabTriage: String = "Triage",
 
         // Home screen
@@ -126,6 +127,7 @@ object LocalizedStrings {
         val anemiaScreen: String = "Anemia Screen",
         val jaundiceScreen: String = "Jaundice Screen",
         val preeclampsiaScreen: String = "Preeclampsia Screen",
+        val respiratoryScreen: String = "Respiratory Screen",
         val goToTab: String = "Go to %s tab to measure",
         val notYetScreened: String = "Not yet screened",
 
@@ -170,6 +172,29 @@ object LocalizedStrings {
         val pregnant: String = "Pregnant?",
         val gestationalWeeks: String = "Gestational weeks",
         val centerFace: String = "Center your face",
+
+        // Respiratory
+        val respiratoryTitle: String = "Respiratory Screen",
+        val respiratorySubtitle: String = "TB/respiratory screening via cough analysis",
+        val startRecording: String = "Start Recording",
+        val stopRecording: String = "Stop Recording",
+        val recording: String = "Recording…",
+        val tapToRecordCough: String = "Tap here to record cough",
+        val respiratoryNormal: String = "✓ No respiratory concerns",
+        val respiratoryLowRisk: String = "Low risk — monitor symptoms",
+        val respiratoryModerateRisk: String = "⚠ Moderate — refer for testing",
+        val respiratoryHighRisk: String = "🚨 High risk — urgent TB referral",
+        val respiratoryInstructions: String = "1. Ask the patient to cough 3 times into the microphone\n" +
+            "2. Hold the phone 15-30 cm from the patient's mouth\n" +
+            "3. Tap \"Start Recording\" and record for 5 seconds\n" +
+            "4. Ensure a quiet environment for best results",
+        val coughsDetected: String = "Coughs detected",
+        val audioQualityLabel: String = "Audio quality",
+        val micPermissionTitle: String = "⚠ Microphone permission required",
+        val micPermissionMessage: String = "Respiratory screening needs microphone access. Please enable in Settings.",
+        val poweredByHeAR: String = "Powered by HeAR",
+        val hearDescription: String = "Health Acoustic Representations — Google's audio foundation model pre-trained on 300M+ health audio clips for respiratory screening.",
+
 
         // Triage
         val triageTitle: String = "Clinical Triage",
@@ -216,7 +241,7 @@ object LocalizedStrings {
             "4. Tap \"Analyze\" when the image is clear",
 
         // Progress text (F-2 fix)
-        val screeningsProgress: String = "%d of 4 screenings complete",
+        val screeningsProgress: String = "%d of 5 screenings complete",
         val readyForTriage: String = "✓ Ready for triage — go to Triage tab",
         val followSteps: String = "Follow the steps below to screen a patient",
 

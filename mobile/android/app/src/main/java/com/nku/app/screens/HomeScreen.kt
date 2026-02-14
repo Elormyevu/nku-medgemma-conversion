@@ -36,6 +36,7 @@ fun HomeScreen(
     pallorResult: PallorResult,
     jaundiceResult: JaundiceResult,
     edemaResult: EdemaResult,
+    respiratoryResult: RespiratoryResult,
     strings: LocalizedStrings.UiStrings,
     selectedLanguage: String,
     onLanguageChange: (String) -> Unit,
@@ -50,7 +51,8 @@ fun HomeScreen(
     val hasAnemia = pallorResult.hasBeenAnalyzed
     val hasJaundice = jaundiceResult.hasBeenAnalyzed
     val hasPreE = edemaResult.hasBeenAnalyzed
-    val completedCount = listOf(hasHR, hasAnemia, hasJaundice, hasPreE).count { it }
+    val hasRespiratory = respiratoryResult.confidence > 0.4f
+    val completedCount = listOf(hasHR, hasAnemia, hasJaundice, hasPreE, hasRespiratory).count { it }
     
     Column(
         modifier = Modifier
@@ -204,23 +206,23 @@ fun HomeScreen(
                     strings.screeningsProgress.format(completedCount),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (completedCount == 4) NkuColors.Success else NkuColors.MutedBlue
+                    color = if (completedCount == 5) NkuColors.Success else NkuColors.MutedBlue
                 )
                 Spacer(Modifier.height(8.dp))
                 LinearProgressIndicator(
-                    progress = completedCount / 4f,
+                    progress = completedCount / 5f,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp)
                         .clip(RoundedCornerShape(3.dp)),
                     color = when (completedCount) {
-                        4 -> NkuColors.Success
+                        5 -> NkuColors.Success
                         0 -> NkuColors.InactiveText
                         else -> NkuColors.Secondary
                     },
                     trackColor = NkuColors.CardBackground
                 )
-                if (completedCount == 4) {
+                if (completedCount == 5) {
                     Spacer(Modifier.height(8.dp))
                     Text(
                         strings.readyForTriage,
@@ -368,6 +370,33 @@ fun HomeScreen(
                 else -> Color.Gray
             },
             onClick = { onNavigateToTab(4) }
+        )
+        
+        Spacer(Modifier.height(10.dp))
+        
+        // ── Step 5: Respiratory/TB ──
+        GuidedStepCard(
+            stepNumber = 5,
+            title = strings.respiratoryScreen,
+            value = if (hasRespiratory) respiratoryResult.classification.name else "—",
+            subtitle = when {
+                !hasRespiratory -> strings.tapToRecordCough
+                respiratoryResult.classification == RespiratoryRisk.NORMAL -> strings.respiratoryNormal
+                respiratoryResult.classification == RespiratoryRisk.LOW_RISK -> strings.respiratoryLowRisk
+                respiratoryResult.classification == RespiratoryRisk.MODERATE_RISK -> strings.respiratoryModerateRisk
+                respiratoryResult.classification == RespiratoryRisk.HIGH_RISK -> strings.respiratoryHighRisk
+                else -> "—"
+            },
+            isComplete = hasRespiratory,
+            statusColor = when {
+                !hasRespiratory -> Color.Gray
+                respiratoryResult.classification == RespiratoryRisk.NORMAL -> NkuColors.Success
+                respiratoryResult.classification == RespiratoryRisk.LOW_RISK -> NkuColors.TriageYellow
+                respiratoryResult.classification == RespiratoryRisk.MODERATE_RISK -> NkuColors.TriageOrange
+                respiratoryResult.classification == RespiratoryRisk.HIGH_RISK -> NkuColors.ListeningIndicator
+                else -> Color.Gray
+            },
+            onClick = { onNavigateToTab(5) }
         )
         
         Spacer(Modifier.height(20.dp))

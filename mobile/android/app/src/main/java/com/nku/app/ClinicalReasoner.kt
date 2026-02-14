@@ -92,7 +92,7 @@ class ClinicalReasoner {
         
         sb.appendLine("You are a clinical triage assistant for community health workers in rural Africa.")
         sb.appendLine("Analyze the following screening data and provide a structured assessment.")
-        sb.appendLine("All measurements below were captured on-device using a smartphone camera.")
+        sb.appendLine("All measurements below were captured on-device using a smartphone camera and microphone.")
         sb.appendLine()
         
         // P2 fix: Apply same confidence gating as rule-based path
@@ -100,6 +100,7 @@ class ClinicalReasoner {
         val pallorConfident = vitals.pallorConfidence >= CONFIDENCE_THRESHOLD
         val jaundiceConfident = vitals.jaundiceConfidence >= CONFIDENCE_THRESHOLD
         val edemaConfident = vitals.edemaConfidence >= CONFIDENCE_THRESHOLD
+        val respiratoryConfident = vitals.respiratoryConfidence >= CONFIDENCE_THRESHOLD
 
         // ── Heart Rate (rPPG) ──────────────────────────────
         sb.appendLine("=== HEART RATE (rPPG) ===")
@@ -205,6 +206,28 @@ class ClinicalReasoner {
             sb.appendLine("  measurement and urine protein test.")
         } ?: sb.appendLine("Edema Assessment: Not performed")
         
+        sb.appendLine()
+        
+        // ── Respiratory Screening (HeAR Cough Analysis) ─────
+        sb.appendLine("=== RESPIRATORY SCREENING (HeAR Cough Analysis) ===")
+        vitals.respiratoryRiskScore?.let { score ->
+            if (!respiratoryConfident) {
+                sb.appendLine("Respiratory risk: ${(score * 100).toInt()}% [LOW CONFIDENCE — ${(vitals.respiratoryConfidence * 100).toInt()}%, excluded from assessment]")
+                return@let
+            }
+            sb.appendLine("Method: Health Acoustic Representations (HeAR) — masked autoencoder")
+            sb.appendLine("  pre-trained on 300M+ health-related audio clips. ViT-L encoder")
+            sb.appendLine("  produces 512-dim embedding from 2-second cough audio segments.")
+            sb.appendLine("  Linear classifier head maps embeddings to respiratory risk scores.")
+            sb.appendLine("  [Tobin et al., arXiv 2403.02522, 2024; HeAR google/hear]")
+            sb.appendLine("Respiratory risk score: ${"%.2f".format(score)} (0.0=healthy, 1.0=high risk)")
+            sb.appendLine("Classification: ${vitals.respiratoryRisk?.name ?: "unknown"}")
+            sb.appendLine("Cough detected: ${if (vitals.coughDetected) "Yes" else "No"}")
+            sb.appendLine("Confidence: ${(vitals.respiratoryConfidence * 100).toInt()}%")
+            sb.appendLine("Note: This is a screening tool for TB/respiratory illness risk.")
+            sb.appendLine("  Refer for sputum test, chest X-ray, or clinical evaluation to confirm.")
+        } ?: sb.appendLine("Respiratory Assessment: Not performed")
+        
         // Pregnancy Context
         if (vitals.isPregnant) {
             sb.appendLine()
@@ -243,6 +266,7 @@ class ClinicalReasoner {
         sb.appendLine()
         sb.appendLine("Consider anemia if pallor is detected. Consider jaundice if scleral icterus present.")
         sb.appendLine("Consider preeclampsia if edema + pregnancy.")
+        sb.appendLine("Consider TB or respiratory illness if cough analysis shows elevated risk.")
         sb.appendLine("Be concise. Recommendations should be actionable for a community health worker.")
         
         return sb.toString()
@@ -283,6 +307,7 @@ class ClinicalReasoner {
         val pallorConfident = vitals.pallorConfidence >= CONFIDENCE_THRESHOLD
         val jaundiceConfident = vitals.jaundiceConfidence >= CONFIDENCE_THRESHOLD
         val edemaConfident = vitals.edemaConfidence >= CONFIDENCE_THRESHOLD
+        val respiratoryConfident = vitals.respiratoryConfidence >= CONFIDENCE_THRESHOLD
         val hasSymptoms = vitals.reportedSymptoms.isNotEmpty()
 
         // If ALL sensor data is below confidence threshold and no symptoms, abstain
@@ -290,7 +315,8 @@ class ClinicalReasoner {
         val hasPallor = vitals.pallorSeverity != null
         val hasJaundice = vitals.jaundiceSeverity != null
         val hasEdema = vitals.edemaSeverity != null
-        val allBelowThreshold = (!hasHR || !hrConfident) && (!hasPallor || !pallorConfident) && (!hasJaundice || !jaundiceConfident) && (!hasEdema || !edemaConfident)
+        val hasRespiratory = vitals.respiratoryRisk != null
+        val allBelowThreshold = (!hasHR || !hrConfident) && (!hasPallor || !pallorConfident) && (!hasJaundice || !jaundiceConfident) && (!hasEdema || !edemaConfident) && (!hasRespiratory || !respiratoryConfident)
 
         if (allBelowThreshold && !hasSymptoms) {
             val assessment = ClinicalAssessment(
@@ -322,6 +348,9 @@ class ClinicalReasoner {
         }
         if (hasJaundice && !jaundiceConfident) {
             concerns.add("Jaundice reading low confidence (${(vitals.jaundiceConfidence * 100).toInt()}%) — excluded from triage")
+        }
+        if (hasRespiratory && !respiratoryConfident) {
+            concerns.add("Respiratory reading low confidence (${(vitals.respiratoryConfidence * 100).toInt()}%) — excluded from triage")
         }
         
         // Analyze heart rate (only if confidence >= threshold)
@@ -427,6 +456,31 @@ class ClinicalReasoner {
             concerns.add("Facial edema detected (non-pregnant)")
             recommendations.add("Consider kidney function check")
             recommendations.add("Evaluate for other causes of edema")
+        }
+        
+        // Analyze respiratory risk (HeAR cough analysis) — only if confidence >= threshold
+        if (respiratoryConfident) when (vitals.respiratoryRisk) {
+            RespiratoryRisk.LOW_RISK -> {
+                concerns.add("Low respiratory risk detected from cough analysis")
+                recommendations.add("Monitor for persistent cough, fever, or weight loss")
+                recommendations.add("Consider follow-up if symptoms persist beyond 2 weeks")
+            }
+            RespiratoryRisk.MODERATE_RISK -> {
+                concerns.add("Moderate respiratory risk — possible respiratory illness")
+                recommendations.add("Refer for sputum test or chest X-ray within 5 days")
+                recommendations.add("Screen for TB symptoms: persistent cough >2 weeks, night sweats, weight loss")
+                maxSeverity = maxOf(maxSeverity, Severity.MEDIUM)
+                maxUrgency = maxOf(maxUrgency, Urgency.WITHIN_WEEK)
+            }
+            RespiratoryRisk.HIGH_RISK -> {
+                concerns.add("High respiratory risk — possible TB or severe respiratory disease")
+                recommendations.add("URGENT: Refer for sputum AFB test and chest X-ray within 24-48 hours")
+                recommendations.add("Isolate patient from vulnerable individuals if TB suspected")
+                recommendations.add("Screen household contacts for TB symptoms")
+                maxSeverity = maxOf(maxSeverity, Severity.HIGH)
+                maxUrgency = maxOf(maxUrgency, Urgency.WITHIN_48_HOURS)
+            }
+            else -> {}
         }
         
         // Add symptom-based concerns

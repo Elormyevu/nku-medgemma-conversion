@@ -51,6 +51,7 @@ import com.nku.app.data.ScreeningEntity
  * - Anemia Screening (HSV pallor detection)
  * - Jaundice Screening (scleral icterus detection)
  * - Preeclampsia Screening (edema geometry analysis)
+ * - Respiratory/TB Screening (HeAR cough analysis)
  * - Clinical reasoning via MedGemma or rule-based fallback
  * 
  * All processing on-device, zero cloud dependency.
@@ -66,6 +67,7 @@ class MainActivity : ComponentActivity() {
     private val pallorDetector = PallorDetector()
     private val jaundiceDetector = JaundiceDetector()
     private val edemaDetector = EdemaDetector()
+    private val respiratoryDetector = RespiratoryDetector()
     
     // Integration layer
     private lateinit var thermalManager: ThermalManager
@@ -86,7 +88,7 @@ class MainActivity : ComponentActivity() {
         
         // Initialize components
         thermalManager = ThermalManager(this)
-        sensorFusion = SensorFusion(rppgProcessor, pallorDetector, jaundiceDetector, edemaDetector)
+        sensorFusion = SensorFusion(rppgProcessor, pallorDetector, jaundiceDetector, edemaDetector, respiratoryDetector)
         clinicalReasoner = ClinicalReasoner()
         
         // Initialize TTS for spoken results
@@ -123,6 +125,7 @@ class MainActivity : ComponentActivity() {
                 pallorDetector = pallorDetector,
                 jaundiceDetector = jaundiceDetector,
                 edemaDetector = edemaDetector,
+                respiratoryDetector = respiratoryDetector,
                 sensorFusion = sensorFusion,
                 clinicalReasoner = clinicalReasoner,
                 nkuTTS = nkuTTS,
@@ -141,6 +144,7 @@ class MainActivity : ComponentActivity() {
         pallorDetector.reset()
         jaundiceDetector.reset()
         edemaDetector.reset()
+        respiratoryDetector.reset()
     }
 }
 
@@ -152,6 +156,7 @@ fun NkuSentinelApp(
     pallorDetector: PallorDetector,
     jaundiceDetector: JaundiceDetector,
     edemaDetector: EdemaDetector,
+    respiratoryDetector: RespiratoryDetector,
     sensorFusion: SensorFusion,
     clinicalReasoner: ClinicalReasoner,
     nkuTTS: NkuTTS,
@@ -163,6 +168,7 @@ fun NkuSentinelApp(
     val pallorResult by pallorDetector.result.collectAsState()
     val jaundiceResult by jaundiceDetector.result.collectAsState()
     val edemaResult by edemaDetector.result.collectAsState()
+    val respiratoryResult by respiratoryDetector.result.collectAsState()
     val vitalSigns by sensorFusion.vitalSigns.collectAsState()
     val assessment by clinicalReasoner.assessment.collectAsState()
     val ttsState by nkuTTS.state.collectAsState()
@@ -190,7 +196,7 @@ fun NkuSentinelApp(
         NkuThemePreferences.ThemeMode.SYSTEM -> androidx.compose.foundation.isSystemInDarkTheme()
     }
 
-    val tabs = listOf(strings.tabHome, strings.tabCardio, strings.tabAnemia, strings.tabJaundice, strings.tabPreE, strings.tabTriage)
+    val tabs = listOf(strings.tabHome, strings.tabCardio, strings.tabAnemia, strings.tabJaundice, strings.tabPreE, strings.tabRespiratory, strings.tabTriage)
     
     // USER-1: Theme-aware wrapper
     NkuTheme(isDarkTheme = isDarkTheme) {
@@ -221,6 +227,7 @@ fun NkuSentinelApp(
                                         2 -> Icons.Default.Face
                                         3 -> Icons.Default.Visibility
                                         4 -> Icons.Default.Warning
+                                        5 -> Icons.Default.Mic
                                         else -> Icons.Default.CheckCircle
                                     },
                                     contentDescription = title
@@ -250,6 +257,7 @@ fun NkuSentinelApp(
                         pallorResult = pallorResult,
                         jaundiceResult = jaundiceResult,
                         edemaResult = edemaResult,
+                        respiratoryResult = respiratoryResult,
                         strings = strings,
                         selectedLanguage = selectedLanguage,
                         onLanguageChange = { selectedLanguage = it },
@@ -304,7 +312,12 @@ fun NkuSentinelApp(
                             sensorFusion.setPregnancyContext(pregnant, weeks.toIntOrNull())
                         }
                     )
-                    5 -> TriageScreen(
+                    5 -> RespiratoryScreen(
+                        respiratoryResult = respiratoryResult,
+                        respiratoryDetector = respiratoryDetector,
+                        strings = strings
+                    )
+                    6 -> TriageScreen(
                         vitalSigns = vitalSigns,
                         rppgResult = rppgResult,
                         pallorResult = pallorResult,

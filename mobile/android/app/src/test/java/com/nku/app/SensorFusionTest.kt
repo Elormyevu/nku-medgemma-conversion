@@ -23,6 +23,7 @@ class SensorFusionTest {
     private lateinit var pallor: PallorDetector
     private lateinit var jaundice: JaundiceDetector
     private lateinit var edema: EdemaDetector
+    private lateinit var respiratory: RespiratoryDetector
     private lateinit var fusion: SensorFusion
 
     @Before
@@ -31,7 +32,8 @@ class SensorFusionTest {
         pallor = PallorDetector()
         jaundice = JaundiceDetector()
         edema = EdemaDetector()
-        fusion = SensorFusion(rppg, pallor, jaundice, edema)
+        respiratory = RespiratoryDetector()
+        fusion = SensorFusion(rppg, pallor, jaundice, edema, respiratory)
     }
 
     // ── Symptom Lifecycle ──────────────────────────────────

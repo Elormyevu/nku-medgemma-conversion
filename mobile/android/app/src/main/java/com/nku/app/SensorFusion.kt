@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * - PallorDetector (anemia screening)
  * - JaundiceDetector (jaundice screening)
  * - EdemaDetector (preeclampsia screening)
+ * - RespiratoryDetector (respiratory/TB screening via HeAR)
  * - User-reported symptoms
  * 
  * Outputs structured VitalSigns for ClinicalReasoner
@@ -44,6 +45,12 @@ data class VitalSigns(
     val eyeAspectRatio: Float? = null,           // Raw EAR from MediaPipe landmarks
     val facialSwellingScore: Float? = null,      // Overall facial swelling component
     
+    // Respiratory Screening (HeAR cough analysis)
+    val respiratoryRiskScore: Float? = null,
+    val respiratoryRisk: RespiratoryRisk? = null,
+    val respiratoryConfidence: Float = 0f,
+    val coughDetected: Boolean = false,
+    
     // User-reported symptoms
     val reportedSymptoms: List<String> = emptyList(),
     
@@ -66,7 +73,8 @@ class SensorFusion(
     private val rppgProcessor: RPPGProcessor,
     private val pallorDetector: PallorDetector,
     private val jaundiceDetector: JaundiceDetector,
-    private val edemaDetector: EdemaDetector
+    private val edemaDetector: EdemaDetector,
+    private val respiratoryDetector: RespiratoryDetector
 ) {
     private val _vitalSigns = MutableStateFlow(VitalSigns())
     val vitalSigns: StateFlow<VitalSigns> = _vitalSigns.asStateFlow()
@@ -85,11 +93,13 @@ class SensorFusion(
         val pallorResult = pallorDetector.result.value
         val jaundiceResult = jaundiceDetector.result.value
         val edemaResult = edemaDetector.result.value
+        val respiratoryResult = respiratoryDetector.result.value
         
         val hasHeartRate = rppgResult.bpm != null && rppgResult.confidence > 0.5f
         val hasPallor = pallorResult.confidence > 0.3f
         val hasJaundice = jaundiceResult.confidence > 0.3f
         val hasEdema = edemaResult.confidence > 0.3f
+        val hasRespiratory = respiratoryResult.confidence > 0.3f
         
         _vitalSigns.value = VitalSigns(
             // Heart rate
@@ -118,13 +128,19 @@ class SensorFusion(
             eyeAspectRatio = if (hasEdema) edemaResult.avgEyeAspectRatio else null,
             facialSwellingScore = if (hasEdema) edemaResult.facialScore else null,
             
+            // Respiratory — HeAR cough analysis
+            respiratoryRiskScore = if (hasRespiratory) respiratoryResult.riskScore else null,
+            respiratoryRisk = if (hasRespiratory) respiratoryResult.classification else null,
+            respiratoryConfidence = respiratoryResult.confidence,
+            coughDetected = respiratoryResult.coughDetected,
+            
             // Context
             reportedSymptoms = _symptoms.value.map { it.symptom },
             isPregnant = isPregnant,
             gestationalWeeks = gestationalWeeks,
             
             // Completion check
-            allSensorsComplete = hasHeartRate && hasPallor && hasJaundice && hasEdema,
+            allSensorsComplete = hasHeartRate && hasPallor && hasJaundice && hasEdema && hasRespiratory,
             captureTimestamp = System.currentTimeMillis()
         )
     }
@@ -207,6 +223,17 @@ class SensorFusion(
             parts.add("Edema: $label")
         }
         
+        vitals.respiratoryRiskScore?.let {
+            val label = when (vitals.respiratoryRisk) {
+                RespiratoryRisk.NORMAL -> "Normal"
+                RespiratoryRisk.LOW_RISK -> "Low risk"
+                RespiratoryRisk.MODERATE_RISK -> "Moderate risk"
+                RespiratoryRisk.HIGH_RISK -> "High risk"
+                null -> "Unknown"
+            }
+            parts.add("Respiratory: $label")
+        }
+        
         if (vitals.reportedSymptoms.isNotEmpty()) {
             parts.add("Symptoms: ${vitals.reportedSymptoms.joinToString(", ")}")
         }
@@ -239,7 +266,12 @@ class SensorFusion(
         val significantEdema = vitals.edemaSeverity == EdemaSeverity.SIGNIFICANT
         val moderateEdemaPregnant = vitals.edemaSeverity == EdemaSeverity.MODERATE && isPregnant
         
-        return highHR || significantPallor || significantJaundice || significantEdema || moderateEdemaPregnant
+        // High respiratory risk (HeAR cough analysis)
+        val highRespiratoryRisk = vitals.respiratoryRisk in listOf(
+            RespiratoryRisk.MODERATE_RISK, RespiratoryRisk.HIGH_RISK
+        )
+        
+        return highHR || significantPallor || significantJaundice || significantEdema || moderateEdemaPregnant || highRespiratoryRisk
     }
     
     /**
@@ -250,6 +282,7 @@ class SensorFusion(
         pallorDetector.reset()
         jaundiceDetector.reset()
         edemaDetector.reset()
+        respiratoryDetector.reset()
         _symptoms.value = emptyList()
         isPregnant = false
         gestationalWeeks = null

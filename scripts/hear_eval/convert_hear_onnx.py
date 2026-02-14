@@ -109,8 +109,7 @@ def validate_saved_model(saved_model_dir: str):
 def convert_to_onnx_fp32(saved_model_dir: str) -> str:
     """Convert TF SavedModel to ONNX FP32 using tf2onnx.
     
-    Uses the Python API first (better XLA/StableHLO handling),
-    falls back to CLI if that fails.
+    Uses CLI conversion (most reliable for XLA/StableHLO SavedModels).
     """
     output_path = os.path.join(OUTPUT_DIR, "hear_encoder_fp32.onnx")
     
@@ -122,33 +121,9 @@ def convert_to_onnx_fp32(saved_model_dir: str) -> str:
     log("Converting SavedModel → ONNX FP32 (opset 17)...")
     log("This may take 5-10 minutes for the ViT-L encoder...")
     
-    # Approach 1: tf2onnx Python API with concrete function tracing
-    try:
-        import tensorflow as tf
-        import tf2onnx
-        
-        model = tf.saved_model.load(saved_model_dir)
-        if hasattr(model, 'signatures') and 'serving_default' in model.signatures:
-            concrete_fn = model.signatures['serving_default']
-            input_spec = [tf.TensorSpec((1, CLIP_SAMPLES), tf.float32, name='x')]
-            model_proto, _ = tf2onnx.convert.from_function(
-                concrete_fn,
-                input_signature=input_spec,
-                opset=17,
-                output_path=output_path
-            )
-            if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
-                size_mb = os.path.getsize(output_path) / 1e6
-                log(f"✅ FP32 ONNX (API): {output_path} ({size_mb:.1f} MB)")
-                return output_path
-    except Exception as e:
-        log(f"⚠ Python API conversion failed: {type(e).__name__}: {str(e)[:300]}")
-        log("  Falling back to CLI conversion...")
-        # Clean up partial
-        if os.path.exists(output_path):
-            os.remove(output_path)
-    
-    # Approach 2: tf2onnx CLI (processes graph without eager execution)
+    # Approach 1: tf2onnx CLI (most reliable for XLA/StableHLO SavedModels)
+    # CLI processes the graph statically via protobuf, avoiding eager execution issues.
+    log("Running tf2onnx CLI conversion...")
     result = subprocess.run([
         sys.executable, "-m", "tf2onnx.convert",
         "--saved-model", saved_model_dir,
@@ -159,10 +134,13 @@ def convert_to_onnx_fp32(saved_model_dir: str) -> str:
     ], capture_output=True, text=True, timeout=1200)
     
     if result.returncode != 0:
-        log(f"❌ CLI conversion also failed:")
-        log(result.stdout[-500:] if result.stdout else "No stdout")
-        log(result.stderr[-500:] if result.stderr else "No stderr")
-        raise RuntimeError("tf2onnx conversion failed (both API and CLI)")
+        log(f"tf2onnx CLI conversion failed with error code {result.returncode}.")
+        log("STDOUT:\n" + result.stdout)
+        log("STDERR:\n" + result.stderr)
+        raise RuntimeError("tf2onnx conversion failed (CLI approach)")
+
+    if not os.path.exists(output_path):
+        raise RuntimeError("tf2onnx conversion failed (output file not found)")
     
     size_mb = os.path.getsize(output_path) / 1e6
     log(f"✅ FP32 ONNX (CLI): {output_path} ({size_mb:.1f} MB)")

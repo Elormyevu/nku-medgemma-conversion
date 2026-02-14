@@ -126,6 +126,7 @@ fun runNkuCycleLocal(patientInput: String, language: String): NkuResult {
 - **Base**: HeAR ViT-L Masked AutoEncoder
 - **Format**: ONNX Runtime Mobile (INT8 quantized)
 - **Size**: ~300 MB
+- **Delivery**: Play Asset Delivery (`hear_encoder` pack, install-time)
 - **Input**: 1×32000 float32 (2s audio @16kHz)
 - **Output**: 1×512 float32 (health acoustic embedding)
 - **Purpose**: Deep respiratory analysis. Loaded on demand when cough detected, unloaded before MedGemma.
@@ -180,7 +181,7 @@ mobile/android/app/src/main/
 │   ├── CameraPreview.kt        # Camera2 preview composable
 │   ├── FaceDetectorHelper.kt   # MediaPipe face landmark wrapper
 │   └── screens/                # CardioScreen, AnemiaScreen, JaundiceScreen, PreeclampsiaScreen, TriageScreen
-├── assets/                      # (models loaded from device storage)
+├── assets/                      # HeAR Event Detector TFLite (1.1MB, bundled in APK)
 └── jniLibs/
     ├── arm64-v8a/libsmollm.so  # ARM64 native library
     └── x86_64/libsmollm.so     # Emulator native library

@@ -153,9 +153,9 @@ cd nku-medgemma-conversion/mobile/android
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-### Download Models
+### Models
 
-Models are loaded from device storage. For production, see `MODEL_DISTRIBUTION.md` for Play Asset Delivery integration.
+All inference models ship with the app via Play Asset Delivery (see `MODEL_DISTRIBUTION.md`). For development/testing, models can be sideloaded:
 
 ```bash
 # Download MedGemma Q4_K_M from HuggingFace
@@ -245,7 +245,7 @@ nku-medgemma-conversion/
 │       │   ├── CameraPreview.kt       # Camera2 preview composable
 │       │   ├── FaceDetectorHelper.kt  # MediaPipe face landmark wrapper
 │       │   └── screens/               # Screen composables (Cardio, Anemia, Jaundice, Preeclampsia, Respiratory, Triage)
-│       └── assets/           # App resources (models loaded from device storage)
+│       └── assets/           # HeAR Event Detector TFLite (1.1MB); large models via PAD asset packs
 ├── cloud/                    # DEVELOPMENT BACKEND — optional Flask API used during prototyping.
 │                             #   NOT part of the production Android app. Shares triage logic
 │                             #   for validation. Retained as development artifact.

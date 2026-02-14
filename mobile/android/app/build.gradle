@@ -6,7 +6,7 @@ plugins {
 }
 
 // Play Asset Delivery — MedGemma model pack (translation handled by ML Kit)
-android.assetPacks = [":medgemma"]
+android.assetPacks = [":medgemma", ":hear_encoder"]
 
 // Force all modules to use the same coroutines version
 configurations.all {

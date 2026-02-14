@@ -2,24 +2,18 @@
 # Converts Google HeAR ViT-L to ONNX format and quantizes to INT8
 # Output: hear_encoder_int8.onnx (~300MB) for on-device inference
 #
-# Triggered manually or on push to conversion script.
-# Downloads artifact → place in mobile/android/hear_encoder/src/main/assets/
+# Manual trigger only — conversion takes 5-10 minutes.
+# Download artifact → place in mobile/android/hear_encoder/src/main/assets/
 
 name: Convert HeAR ONNX
 
 on:
-  workflow_dispatch:   # Manual trigger
-  push:
-    paths:
-      - 'scripts/hear_eval/convert_hear_onnx.py'
+  workflow_dispatch:   # Manual trigger only
 
 jobs:
   convert:
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    concurrency:
-      group: hear-onnx-convert
-      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@v4

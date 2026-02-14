@@ -215,15 +215,48 @@ class ClinicalReasoner {
                 sb.appendLine("Respiratory risk: ${(score * 100).toInt()}% [LOW CONFIDENCE — ${(vitals.respiratoryConfidence * 100).toInt()}%, excluded from assessment]")
                 return@let
             }
-            sb.appendLine("Method: Health Acoustic Representations (HeAR) — masked autoencoder")
-            sb.appendLine("  pre-trained on 300M+ health-related audio clips. ViT-L encoder")
-            sb.appendLine("  produces 512-dim embedding from 2-second cough audio segments.")
-            sb.appendLine("  Linear classifier head maps embeddings to respiratory risk scores.")
-            sb.appendLine("  [Tobin et al., arXiv 2403.02522, 2024; HeAR google/hear]")
+            // Analysis source and method description
+            val sourceLabel = when (vitals.respiratoryAnalysisSource) {
+                AnalysisSource.VIT_L_ENCODER -> "HeAR ViT-L Encoder (full pipeline)"
+                AnalysisSource.EVENT_DETECTOR -> "HeAR Event Detector (MobileNetV3)"
+                AnalysisSource.HEURISTIC -> "Audio heuristic (no ML model)"
+            }
+            sb.appendLine("Analysis tier: $sourceLabel")
+            if (vitals.respiratoryAnalysisSource == AnalysisSource.VIT_L_ENCODER) {
+                sb.appendLine("Method: HeAR ViT-L encoder — Vision Transformer (Large) Masked AutoEncoder")
+                sb.appendLine("  trained on 300M+ health audio clips. Produces 512-dim health acoustic")
+                sb.appendLine("  embedding from 2-second cough audio. Run on-device via ONNX Runtime.")
+                sb.appendLine("  [Tobin et al., arXiv 2403.02522, 2024; HeAR google/hear]")
+            } else {
+                sb.appendLine("Method: HeAR Event Detector — MobileNetV3-Small classifier for health")
+                sb.appendLine("  sound events (cough, snore, breathe, etc.) from 2-second audio clips.")
+                sb.appendLine("  [Tobin et al., arXiv 2403.02522, 2024; HeAR google/hear]")
+            }
             sb.appendLine("Respiratory risk score: ${"%.2f".format(score)} (0.0=healthy, 1.0=high risk)")
             sb.appendLine("Classification: ${vitals.respiratoryRisk?.name ?: "unknown"}")
             sb.appendLine("Cough detected: ${if (vitals.coughDetected) "Yes" else "No"}")
             sb.appendLine("Confidence: ${(vitals.respiratoryConfidence * 100).toInt()}%")
+
+            // Include ViT-L embedding summary if available
+            vitals.hearEmbedding?.let { emb ->
+                if (emb.size == RespiratoryResult.EMBEDDING_DIM) {
+                    val l2Norm = kotlin.math.sqrt(emb.sumOf { (it * it).toDouble() }).toFloat()
+                    val mean = emb.average().toFloat()
+                    val maxVal = emb.max()
+                    val minVal = emb.min()
+                    // Top-5 most activated dimensions
+                    val topDims = emb.mapIndexed { idx, v -> idx to v }
+                        .sortedByDescending { kotlin.math.abs(it.second) }
+                        .take(5)
+                        .joinToString(", ") { "d${it.first}=${"%.3f".format(it.second)}" }
+                    sb.appendLine("HeAR embedding (512-dim): L2=${String.format("%.2f", l2Norm)}, " +
+                            "mean=${String.format("%.4f", mean)}, range=[${String.format("%.3f", minVal)}, ${String.format("%.3f", maxVal)}]")
+                    sb.appendLine("Top-5 active dimensions: $topDims")
+                    sb.appendLine("Note: Embedding encodes learned health acoustic patterns from")
+                    sb.appendLine("  self-supervised pre-training on 300M+ audio clips.")
+                }
+            }
+
             sb.appendLine("Note: This is a screening tool for TB/respiratory illness risk.")
             sb.appendLine("  Refer for sputum test, chest X-ray, or clinical evaluation to confirm.")
         } ?: sb.appendLine("Respiratory Assessment: Not performed")

@@ -112,6 +112,25 @@ fun runNkuCycleLocal(patientInput: String, language: String): NkuResult {
 - **Size**: 0 MB (uses device-installed TTS engine)
 - **Languages**: All languages supported by device Google TTS
 
+### HeAR Two-Tier Pipeline (RespiratoryDetector.kt)
+
+#### Event Detector (Tier 1)
+- **Base**: HeAR MobileNetV3-Small
+- **Format**: TFLite INT8
+- **Size**: 1.1 MB
+- **Input**: 1×32000 float32 (2s audio @16kHz)
+- **Output**: 1×8 float32 (health sound class probabilities)
+- **Purpose**: Rapid cough/breath classification (~50ms). Always loaded.
+
+#### ViT-L Encoder (Tier 2)
+- **Base**: HeAR ViT-L Masked AutoEncoder
+- **Format**: ONNX Runtime Mobile (INT8 quantized)
+- **Size**: ~300 MB
+- **Input**: 1×32000 float32 (2s audio @16kHz)
+- **Output**: 1×512 float32 (health acoustic embedding)
+- **Purpose**: Deep respiratory analysis. Loaded on demand when cough detected, unloaded before MedGemma.
+- **Reference**: Tobin et al., arXiv 2403.02522, 2024
+
 ## Quantization Pipeline
 
 ```bash
@@ -148,6 +167,7 @@ mobile/android/app/src/main/
 │   ├── NkuInferenceEngine.kt   # MedGemma orchestration
 │   ├── NkuTranslator.kt        # ML Kit translation wrapper
 │   ├── RPPGProcessor.kt        # Heart rate via rPPG
+│   ├── RespiratoryDetector.kt  # TB/Respiratory (HeAR two-tier: Event Detector + ViT-L)
 │   ├── PallorDetector.kt       # Anemia via conjunctival pallor
 │   ├── JaundiceDetector.kt     # Jaundice via scleral icterus
 │   ├── EdemaDetector.kt        # Preeclampsia via facial edema

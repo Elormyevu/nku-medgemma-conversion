@@ -50,6 +50,8 @@ data class VitalSigns(
     val respiratoryRisk: RespiratoryRisk? = null,
     val respiratoryConfidence: Float = 0f,
     val coughDetected: Boolean = false,
+    val hearEmbedding: FloatArray? = null,              // 512-dim ViT-L embedding (null if unavailable)
+    val respiratoryAnalysisSource: AnalysisSource = AnalysisSource.HEURISTIC,
     
     // User-reported symptoms
     val reportedSymptoms: List<String> = emptyList(),
@@ -128,11 +130,13 @@ class SensorFusion(
             eyeAspectRatio = if (hasEdema) edemaResult.avgEyeAspectRatio else null,
             facialSwellingScore = if (hasEdema) edemaResult.facialScore else null,
             
-            // Respiratory — HeAR cough analysis
+            // Respiratory — HeAR cough analysis + optional ViT-L embedding
             respiratoryRiskScore = if (hasRespiratory) respiratoryResult.riskScore else null,
             respiratoryRisk = if (hasRespiratory) respiratoryResult.classification else null,
             respiratoryConfidence = respiratoryResult.confidence,
             coughDetected = respiratoryResult.coughDetected,
+            hearEmbedding = respiratoryResult.embedding,
+            respiratoryAnalysisSource = respiratoryResult.analysisSource,
             
             // Context
             reportedSymptoms = _symptoms.value.map { it.symptom },

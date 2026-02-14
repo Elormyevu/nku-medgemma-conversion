@@ -66,7 +66,7 @@ android {
     // Don't compress GGUF models - they're already compressed and huge
     // This prevents Gradle OOM during asset packaging
     aaptOptions {
-        noCompress 'gguf', 'tflite', 'task'
+        noCompress 'gguf', 'tflite', 'task', 'onnx'
     }
 
     testOptions {
@@ -114,6 +114,10 @@ dependencies {
     // TensorFlow Lite — HeAR event detector (MobileNetV3-based health sound classifier)
     implementation 'org.tensorflow:tensorflow-lite:2.16.1'
     implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:2.16.1'  // Flex delegate for PCEN RNN ops
+    
+    // ONNX Runtime Mobile — HeAR ViT-L encoder (512-dim health acoustic embeddings)
+    // Solves TFLite incompatibility with ViT-L XLA/StableHLO ops
+    implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.24.1'
     
     // Room — offline screening data persistence
     implementation 'androidx.room:room-runtime:2.6.1'

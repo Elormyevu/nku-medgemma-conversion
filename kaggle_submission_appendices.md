@@ -1,4 +1,4 @@
-# Nku: Submission Appendices
+# Nku: Submission Appendix
 
 **Companion document to the Kaggle submission writeup.**
 

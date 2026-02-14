@@ -820,6 +820,8 @@ Note: This is a novel screening heuristic. Confirm with blood pressure
 
 > **ViT-L Encoder — future upgrade path**: The codebase includes full architectural support for HeAR's ViT-L encoder (ONNX Runtime Mobile integration, on-demand loading, sequential RAM management for 512-dim health acoustic embeddings). However, the ViT-L model uses `XlaCallModule` nodes with serialized StableHLO bytecode — an XLA-specific format that no current conversion tool (tf2onnx, TFLite converter) can process into a mobile inference format. We attempted 7 conversion approaches across 3 toolchains before documenting this as a technical limitation. The ViT-L upgrade will activate once Google's AI Edge toolchain supports StableHLO-to-TFLite conversion.
 
+**Why the Event Detector + MedGemma still delivers clinical triage value**: The Event Detector provides structured respiratory signals — cough probability, event class distribution across 8 health sound types, and composite risk score — that MedGemma interprets alongside the patient's other vital signs (heart rate, pallor, jaundice, edema) and reported symptoms. In Sub-Saharan Africa, where 10.8M new TB cases occur annually (only 44% of MDR-TB diagnosed), COPD prevalence is projected to rise 59% by 2050 due to biomass fuel exposure, and pneumonia claims ~500,000 children under five each year [27], even a binary cough detection signal combined with clinical LLM reasoning provides a screening capability CHWs currently lack. The Event Detector's 8-class health sound classification exceeds what any standard clinical auscultation tool offers at the community health level — where the alternative is no respiratory screening at all.
+
 **Output → VitalSigns:**
 ```kotlin
 respiratoryRiskScore: Float?              // e.g. 0.72

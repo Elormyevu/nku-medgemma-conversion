@@ -6,28 +6,98 @@
 
 ## Appendix A: Clinical Calibration Scenarios (243 Total)
 
-Representative sample from `calibration/african_primary_care.txt`:
+Source: `scripts/calibration/african_primary_care.txt`
+
+This dataset trains the medical imatrix for IQ2_XS quantization. It contains 243 clinical dialogue scenarios spanning 8 disease categories across 14+ African languages, structured as patient-clinician conversational pairs. Each scenario is presented in English plus 3–4 local language variants.
 
 ### Category 1: Malaria & Febrile Illness (52 scenarios)
-| # | Scenario | Expected Triage |
-|:--|:---------|:----------------|
-| 1 | Child with fever >38.5°C for 3 days, recent rainy season | Malaria test urgent |
-| 2 | Adult with intermittent fever, chills, sweating pattern | Malaria suspected, refer |
-| 3 | Pregnant woman with fever and headache | High priority, malaria + other |
+
+| # | Language | Patient Presentation | Expected Triage |
+|:--|:---------|:---------------------|:----------------|
+| 1 | English | Fever >38.5°C for 3 days, body aches, chills | Malaria test urgent |
+| 2 | Twi | "Me tirim yɛ me ya na me ho hyehye. Ɛyɛ nnansa ni." | Malaria suspected |
+| 3 | Hausa | "Ina da zazzabi da sanyi da ciwon kai tsawon kwana uku." | Blood test required |
+| 4 | Yoruba | "Mo ti n dun mi, ara mi gbona pupọ. O ti di ọjọ mẹta." | Refer for testing |
+| … | +48 variants | Covering pregnant women, children, recurrent cases | Range: urgent → routine |
 
 ### Category 2: Anemia Screening (38 scenarios)
-| # | Scenario | Expected Triage |
-|:--|:---------|:----------------|
-| 54 | Child with pale conjunctiva, fatigue, poor appetite | Moderate anemia, Hb test |
-| 55 | Pregnant woman with fatigue, shortness of breath | Severe anemia screen, urgent |
-| 56 | Adolescent girl with heavy menstruation, dizziness | Anemia likely, refer |
+
+| # | Language | Patient Presentation | Expected Triage |
+|:--|:---------|:---------------------|:----------------|
+| 54 | English | Child with pale conjunctiva, fatigue, poor appetite | Moderate anemia, Hb test |
+| 55 | English | Pregnant woman with fatigue, shortness of breath | Severe anemia screen, urgent |
+| 56 | English | Adolescent girl with heavy menstruation, dizziness | Anemia likely, refer |
+| … | +35 variants | Multilingual presentations across age groups | Range: urgent → monitor |
 
 ### Category 3: Respiratory Infections (41 scenarios)
+
+| # | Language | Patient Presentation | Expected Triage |
+|:--|:---------|:---------------------|:----------------|
+| 93 | English | Coughing for 2 weeks, sometimes with blood, night sweats, weight loss | TB screening urgent |
+| 94 | Twi | "Merenkekaho ɛyɛ nnawɔtwe abien. Ɛtɔ da a mogya ba mu." | X-ray needed |
+| 95 | Hausa | "Ina tari tsawon mako biyu, wani lokaci da jini." | Sputum test required |
+| 96 | Yoruba | "Mo ti n kọ ikọ fun ọsẹ meji, nigba kan pẹlu ẹjẹ." | Refer for TB screening |
+| … | +37 variants | Including pneumonia, bronchitis, childhood ARI | Range: urgent → routine |
+
 ### Category 4: Maternal Health (35 scenarios)
+
+| # | Language | Patient Presentation | Expected Triage |
+|:--|:---------|:---------------------|:----------------|
+| 134 | English | Pregnant with severe headaches, swollen feet, visual spots | Preeclampsia — IMMEDIATE |
+| 135 | Twi | "Me nsem na me tirim yɛ me ya paa. Me nan nso afura." | BP check urgent |
+| 136 | Hausa | "Ina da ciki kuma ina da ciwon kai mai tsanani. Kafafuna sun kumbura." | Urgent referral |
+| 137 | Yoruba | "Mo loyun mo si ni orififo nla. Ẹsẹ mi wu." | Same-day facility |
+| … | +31 variants | Bleeding, gestational diabetes, eclampsia warning signs | Range: emergency → routine ANC |
+
 ### Category 5: Diarrheal Disease (28 scenarios)
-### Category 6: Skin Conditions (22 scenarios)
+
+| # | Language | Patient Presentation | Expected Triage |
+|:--|:---------|:---------------------|:----------------|
+| 169 | English | Child with diarrhea for 3 days, not eating, weak and listless | Dehydration — ORS immediately |
+| 170 | Twi | "Me ba no ayam mu atu nnansa na onnidi." | Start ORS |
+| 171 | English | Watery diarrhea like rice water since morning, very thirsty and dizzy | Cholera suspected — IV fluids |
+| 172 | Hausa | "Gudawa ta kama ni tun safe, ruwa kamar ruwan shinkafa." | Isolation + IV fluids |
+| … | +24 variants | Including dysentery, chronic diarrhea, dehydration grading | Range: emergency → self-care |
+
+### Category 6: Skin Conditions & Wound Care (22 scenarios)
+
+| # | Language | Patient Presentation | Expected Triage |
+|:--|:---------|:---------------------|:----------------|
+| 197 | English | Foot cut 3 days ago, now red, swollen, pus | Infected wound — antibiotics |
+| 198 | Twi | "Metwitwaa me nan nnansa ni. Afei akɔkɔ na ɛho afura." | Clean + antibiotics + tetanus |
+| 199 | Hausa | "Na yanke kafa kwana uku da suka wuce, yanzu ta yi ja, ta kumbura." | Same-day treatment |
+| … | +19 variants | Rashes, burns, abscesses, snakebites | Range: emergency → routine |
+
 ### Category 7: Child Nutrition (15 scenarios)
-### Category 8: Chronic Conditions (12 scenarios)
+
+Scenarios covering malnutrition screening (MUAC assessment), exclusive breastfeeding counseling, vitamin A deficiency, and growth faltering. All in multilingual variants.
+
+### Category 8: Emergency & Triage Protocols (12 scenarios)
+
+Severity classification reference scenarios:
+- **HIGH SEVERITY**: Fever >39°C with confusion, severe abdominal pain with vomiting, difficulty breathing at rest, snakebite — urgent referral
+- **MEDIUM SEVERITY**: Persistent cough >2 weeks (TB screen), rash with fever in child (measles/meningitis), diarrhea with blood (dysentery)
+- **LOW SEVERITY**: Mild headache without fever (paracetamol), joint pain without systemic symptoms
+
+### Language Coverage
+
+Each clinical category includes scenarios in all of the following languages:
+
+| Language Group | Languages | Example Greeting |
+|:---------------|:----------|:-----------------|
+| West African (Kwa) | Twi, Ewe, Ga, Yoruba, Igbo | "Me tirim yɛ me ya" (Twi) |
+| West African (Chadic) | Hausa | "Ina da zazzabi" |
+| East African (Bantu) | Swahili, Kinyarwanda | "Nina homa kali" (Swahili) |
+| Southern African (Bantu) | Zulu, Shona | "Nginomkhuhlane" (Zulu) |
+| West African (Atlantic) | Wolof | "Am na febar" |
+| Central African (Bantu) | Lingala | "Nazali na fièvre makasi" |
+| Horn of Africa (Semitic) | Amharic | "ከፍተኛ ትኩሳት አለኝ" |
+| Horn of Africa (Cushitic) | Somali | "Waxaan qabaa xummad" |
+| Colonial languages | French, Portuguese | "J'ai de la fièvre" (French) |
+
+### Medication & Preventive Care Scenarios
+
+The dataset also includes reference scenarios for common medications (paracetamol, ORS, artemether-lumefantrine, amoxicillin, metronidazole, zinc) and preventive care (bed nets, hand hygiene, safe water, vaccination schedules, breastfeeding, antenatal care).
 
 ---
 

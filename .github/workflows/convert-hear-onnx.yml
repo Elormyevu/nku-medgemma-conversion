@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install tensorflow==2.16.1 tf2onnx==1.16.1 onnxruntime==1.17.1 onnx numpy huggingface_hub
+          pip install tensorflow==2.18.0 tf2onnx onnxruntime onnx numpy huggingface_hub
 
       - name: Run HeAR ONNX conversion
         env:

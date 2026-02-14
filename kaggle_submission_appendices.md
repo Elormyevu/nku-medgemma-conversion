@@ -181,46 +181,6 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 
 ---
 
-## References
-
-[1] World Health Organization. *Health Workforce in the WHO African Region*. WHO AFRO, 2018.
-
-[2] World Health Organization. *Global Strategy on Human Resources for Health: Workforce 2030*. WHO, 2016.
-
-[3] Kruk, M.E., et al. "High-quality health systems in the SDG era." *The Lancet Global Health* 6(11), 2018. DOI: 10.1016/S2214-109X(18)30386-3
-
-[4] WHO Regional Office for Africa. *Regional Strategy on Diagnostic and Laboratory Services and Systems 2023*. WHO AFRO, 2023. Documents infrastructure and equipment deficiencies, supply stock-outs, and weak diagnostic systems across the African Region.
-
-[5] Agarwal, S., et al. "Mobile technology in support of community health workers." *Human Resources for Health* 13(1), 2015. DOI: 10.1186/s12960-015-0079-7
-
-[6] GSMA. *The Mobile Economy Sub-Saharan Africa 2023*. GSMA Intelligence, 2023.
-
-[7] TECNO Mobile. TECNO Pop 8 specifications. tecnoghana.com, 2024. 2GB/3GB/4GB RAM variants; ~$60 USD (2GB) to ~$90 USD (4GB) depending on market. See also: TECNO Spark Go 2024, 3-4GB RAM, ~$89-98 USD.
-
-[8] Canalys. *Africa Smartphone Market 2024*. Canalys Research, 2025. Transsion Holdings (TECNO, Infinix, itel) held 51% smartphone market share in Africa, shipping ~37.9 million units.
-
-[9] Singhvi, A., Bikia, V., Aali, A., Chaudhari, A., Daneshjou, R. "Prompt Triage: Structured Optimization Enhances Vision-Language Model Performance on Medical Imaging Benchmarks." *arXiv:2511.11898*, November 14, 2025. Median 53% relative improvement over zero-shot baselines across 10 open-source VLMs.
-
-[10] Meijers, L., et al. "Accuracy of remote photoplethysmography." *JMIR mHealth* 10(12), 2022. DOI: 10.2196/42178
-
-[11] Verkruysse, W., et al. "Remote plethysmographic imaging using ambient light." *Optics Express* 16(26), 2008. DOI: 10.1364/OE.16.021434
-
-[12] Nowara, E.M., Marks, T.K., Mansour, H., Veeraraghavan, A. "Near-Infrared Imaging Photoplethysmography During Driving." *IEEE Trans. ITS* 23(4), 2022. DOI: 10.1109/TITS.2020.3038317. Note: MAE values for smartphone rPPG (e.g., 1.32–2.49 BPM) are drawn from the broader smartphone rPPG validation literature [10].
-
-[13] Zhao, L., Jay, G.D., et al. "Prediction of anemia in real-time using a smartphone camera processing conjunctival images." *PLOS ONE* 19(5), 2024. DOI: 10.1371/journal.pone.0302883
-
-[14] Dimauro, G., et al. "An intelligent non-invasive system for automated diagnosis of anemia exploiting a novel dataset." *Artif. Intell. Med.* 136, 2023. DOI: 10.1016/j.artmed.2022.102477
-
-[15] Mariakakis, A., Banks, M.A., Phillipi, L., Yu, L., Taylor, J., Patel, S.N. "BiliScreen: Smartphone-Based Scleral Jaundice Monitoring for Liver and Pancreatic Disorders." *Proc. ACM Interact. Mob. Wearable Ubiquittic Technol.* 1(2), 2017. DOI: 10.1145/3090085
-
-[16] Outlaw, F., Enweronu-Laryea, C., Leung, T.S., et al. "Validating a Sclera-Based Smartphone Application for Screening Jaundiced Newborns in Ghana." *Pediatrics* 150(3), 2022. DOI: 10.1542/peds.2021-053600
-
-[17] Sokolova, T. & Cech, J. "Real-time eye blink detection using facial landmarks." *CVWW*, 2017.
-
-[18] NEC Corporation / University of Tsukuba. "Technology to Detect Edema from Facial Images Using AI." NEC Press Release, 2023. 85% accuracy in 39 dialysis patients. https://www.nec.com/en/press/202306/global_20230601_01.html
-
----
-
 ## Appendix D: Quantization & Translation Model Selection
 
 Selecting the right quantization level required balancing two competing goals: **minimizing model size** (for budget devices) and **maintaining clinical accuracy** (for medical reasoning). We systematically benchmarked multiple quantization levels before selecting Q4_K_M.
@@ -378,32 +338,6 @@ Nku doesn't rely on MedGemma alone. The safety architecture provides multiple co
 ### Conclusion
 
 The literature demonstrates that (a) triage is substantially easier for LLMs than MedQA, (b) LLM-based decision support reduces diagnostic errors in Sub-Saharan African clinical settings, (c) structured prompting substantially improves model performance, and (d) on-device quantized models retain clinically useful accuracy. Combined with Nku's multi-layer safety architecture and the reality that the alternative for these CHWs is *zero* diagnostic support, the pipeline provides a well-grounded, defensible starting point for field validation.
-
----
-
-## References (continued)
-
-[19] Sorich, M.J., Mangoni, A.A., Bacchi, S., Menz, B.D., Hopkins, A.M. "The Triage and Diagnostic Accuracy of Frontier Large Language Models: Updated Comparison to Physician Performance." *Journal of Medical Internet Research* 26, 2024. DOI: 10.2196/67409
-
-[20] Masanneck, L., Schmidt, L., Seifert, A., et al. "Triage Performance Across Large Language Models, ChatGPT, and Untrained Doctors in Emergency Medicine." *Journal of Medical Internet Research* 26, 2024. DOI: 10.2196/53297
-
-[21] Penda Health / OpenAI. "AI-based Clinical Decision Support for Primary Care." Published as OpenAI case study, 2025. Study conducted Jan–Apr 2025 across 15 Penda Health clinics in Nairobi, Kenya (~40,000 patient visits). Observed 16% reduction in diagnostic errors and 13% reduction in treatment errors among clinicians using GPT-4o-based "AI Consult" decision support tool.
-
-[22] Menon, V., Shimelash, N., Rutunda, S., et al. "Assessing the potential utility of large language models for assisting community health workers: protocol for a prospective, observational study in Rwanda." *BMJ Open*, 2025. DOI: 10.1136/bmjopen-2025-110927
-
-[23] Nissen, L., Zagar, P., Ravi, V., Zahedivash, A., Reimer, L.M., Jonas, S., Aalami, O., Schmiedmayer, P. "Medicine on the Edge: Comparative Performance Analysis of On-Device LLMs for Clinical Reasoning." *arXiv:2502.08954*, February 13, 2025. AMEGA benchmark: Med42 and Aloe achieve highest clinical accuracy on mobile devices.
-
-[24] Daneshjou, R., et al. "Disparities in dermatology AI performance across skin tones." *Science Advances* 8(31), 2022. DOI: 10.1126/sciadv.abq6147
-
-[25] Gerganov, G. *llama.cpp*. GitHub, 2023. https://github.com/ggerganov/llama.cpp
-
-[26] Gerganov, G. "GGML: Machine Learning Tensor Library." GitHub, 2023. https://github.com/ggerganov/ggml
-
-[27] Zucker, J.R., et al. "Clinical signs for anaemia recognition in western Kenya." *Bull. WHO* 75(Suppl 1), 1997.
-
-[28] ACOG Practice Bulletin No. 222: Preeclampsia. 2020.
-
-[29] WHO. *IMCI Chart Booklet*. 2014.
 
 ---
 
@@ -616,3 +550,65 @@ Output validation additionally checks for leaked delimiters and suspicious patte
 ### MedQA Benchmark Methodology Note
 
 MedQA is used as a **relative** benchmark for quantization comparison — not as an absolute clinical accuracy claim. The key findings are: (1) the retention ratio (56%/69% = 81% retained), (2) the relative ordering of quantization methods, and (3) the primary care subset consistency (56.2% vs 56.0% overall). These relative comparisons remain valid regardless of potential benchmark contamination concerns. MedQA is the standard benchmark for medical LLMs; using an alternative would reduce comparability with published baselines.
+
+---
+
+## References
+
+[1] World Health Organization. *Health Workforce in the WHO African Region*. WHO AFRO, 2018.
+
+[2] World Health Organization. *Global Strategy on Human Resources for Health: Workforce 2030*. WHO, 2016.
+
+[3] Kruk, M.E., et al. "High-quality health systems in the SDG era." *The Lancet Global Health* 6(11), 2018. DOI: 10.1016/S2214-109X(18)30386-3
+
+[4] WHO Regional Office for Africa. *Regional Strategy on Diagnostic and Laboratory Services and Systems 2023*. WHO AFRO, 2023. Documents infrastructure and equipment deficiencies, supply stock-outs, and weak diagnostic systems across the African Region.
+
+[5] Agarwal, S., et al. "Mobile technology in support of community health workers." *Human Resources for Health* 13(1), 2015. DOI: 10.1186/s12960-015-0079-7
+
+[6] GSMA. *The Mobile Economy Sub-Saharan Africa 2023*. GSMA Intelligence, 2023.
+
+[7] TECNO Mobile. TECNO Pop 8 specifications. tecnoghana.com, 2024. 2GB/3GB/4GB RAM variants; ~$60 USD (2GB) to ~$90 USD (4GB) depending on market. See also: TECNO Spark Go 2024, 3-4GB RAM, ~$89-98 USD.
+
+[8] Canalys. *Africa Smartphone Market 2024*. Canalys Research, 2025. Transsion Holdings (TECNO, Infinix, itel) held 51% smartphone market share in Africa, shipping ~37.9 million units.
+
+[9] Singhvi, A., Bikia, V., Aali, A., Chaudhari, A., Daneshjou, R. "Prompt Triage: Structured Optimization Enhances Vision-Language Model Performance on Medical Imaging Benchmarks." *arXiv:2511.11898*, November 14, 2025. Median 53% relative improvement over zero-shot baselines across 10 open-source VLMs.
+
+[10] Meijers, L., et al. "Accuracy of remote photoplethysmography." *JMIR mHealth* 10(12), 2022. DOI: 10.2196/42178
+
+[11] Verkruysse, W., et al. "Remote plethysmographic imaging using ambient light." *Optics Express* 16(26), 2008. DOI: 10.1364/OE.16.021434
+
+[12] Nowara, E.M., Marks, T.K., Mansour, H., Veeraraghavan, A. "Near-Infrared Imaging Photoplethysmography During Driving." *IEEE Trans. ITS* 23(4), 2022. DOI: 10.1109/TITS.2020.3038317. Note: MAE values for smartphone rPPG (e.g., 1.32–2.49 BPM) are drawn from the broader smartphone rPPG validation literature [10].
+
+[13] Zhao, L., Jay, G.D., et al. "Prediction of anemia in real-time using a smartphone camera processing conjunctival images." *PLOS ONE* 19(5), 2024. DOI: 10.1371/journal.pone.0302883
+
+[14] Dimauro, G., et al. "An intelligent non-invasive system for automated diagnosis of anemia exploiting a novel dataset." *Artif. Intell. Med.* 136, 2023. DOI: 10.1016/j.artmed.2022.102477
+
+[15] Mariakakis, A., Banks, M.A., Phillipi, L., Yu, L., Taylor, J., Patel, S.N. "BiliScreen: Smartphone-Based Scleral Jaundice Monitoring for Liver and Pancreatic Disorders." *Proc. ACM Interact. Mob. Wearable Ubiquitous Technol.* 1(2), 2017. DOI: 10.1145/3090085
+
+[16] Outlaw, F., Enweronu-Laryea, C., Leung, T.S., et al. "Validating a Sclera-Based Smartphone Application for Screening Jaundiced Newborns in Ghana." *Pediatrics* 150(3), 2022. DOI: 10.1542/peds.2021-053600
+
+[17] Sokolova, T. & Cech, J. "Real-time eye blink detection using facial landmarks." *CVWW*, 2017.
+
+[18] NEC Corporation / University of Tsukuba. "Technology to Detect Edema from Facial Images Using AI." NEC Press Release, 2023. 85% accuracy in 39 dialysis patients. https://www.nec.com/en/press/202306/global_20230601_01.html
+
+[19] Sorich, M.J., Mangoni, A.A., Bacchi, S., Menz, B.D., Hopkins, A.M. "The Triage and Diagnostic Accuracy of Frontier Large Language Models: Updated Comparison to Physician Performance." *Journal of Medical Internet Research* 26, 2024. DOI: 10.2196/67409
+
+[20] Masanneck, L., Schmidt, L., Seifert, A., et al. "Triage Performance Across Large Language Models, ChatGPT, and Untrained Doctors in Emergency Medicine." *Journal of Medical Internet Research* 26, 2024. DOI: 10.2196/53297
+
+[21] Penda Health / OpenAI. "AI-based Clinical Decision Support for Primary Care." Published as OpenAI case study, 2025. Study conducted Jan–Apr 2025 across 15 Penda Health clinics in Nairobi, Kenya (~40,000 patient visits). Observed 16% reduction in diagnostic errors and 13% reduction in treatment errors among clinicians using GPT-4o-based "AI Consult" decision support tool.
+
+[22] Menon, V., Shimelash, N., Rutunda, S., et al. "Assessing the potential utility of large language models for assisting community health workers: protocol for a prospective, observational study in Rwanda." *BMJ Open*, 2025. DOI: 10.1136/bmjopen-2025-110927
+
+[23] Nissen, L., Zagar, P., Ravi, V., Zahedivash, A., Reimer, L.M., Jonas, S., Aalami, O., Schmiedmayer, P. "Medicine on the Edge: Comparative Performance Analysis of On-Device LLMs for Clinical Reasoning." *arXiv:2502.08954*, February 13, 2025. AMEGA benchmark: Med42 and Aloe achieve highest clinical accuracy on mobile devices.
+
+[24] Daneshjou, R., et al. "Disparities in dermatology AI performance across skin tones." *Science Advances* 8(31), 2022. DOI: 10.1126/sciadv.abq6147
+
+[25] Gerganov, G. *llama.cpp*. GitHub, 2023. https://github.com/ggerganov/llama.cpp
+
+[26] Gerganov, G. "GGML: Machine Learning Tensor Library." GitHub, 2023. https://github.com/ggerganov/ggml
+
+[27] Zucker, J.R., et al. "Clinical signs for anaemia recognition in western Kenya." *Bull. WHO* 75(Suppl 1), 1997.
+
+[28] ACOG Practice Bulletin No. 222: Preeclampsia. 2020.
+
+[29] WHO. *IMCI Chart Booklet*. 2014.

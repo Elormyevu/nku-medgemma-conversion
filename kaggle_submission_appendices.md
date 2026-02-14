@@ -4,100 +4,352 @@
 
 ---
 
-## Appendix A: Clinical Calibration Scenarios (243 Total)
+## Appendix A: Clinical Calibration Dataset (Complete)
 
 Source: `scripts/calibration/african_primary_care.txt`
 
-This dataset trains the medical imatrix for IQ2_XS quantization. It contains 243 clinical dialogue scenarios spanning 8 disease categories across 14+ African languages, structured as patient-clinician conversational pairs. Each scenario is presented in English plus 3–4 local language variants.
+This dataset generates the medical importance matrix (imatrix) for IQ2_XS quantization. It contains patient-clinician dialogue pairs across 15 medical/language sections, covering the conditions most frequently encountered by CHWs in Sub-Saharan Africa. The complete dataset is reproduced verbatim below.
 
-### Category 1: Malaria & Febrile Illness (52 scenarios)
+---
 
-| # | Language | Patient Presentation | Expected Triage |
-|:--|:---------|:---------------------|:----------------|
-| 1 | English | Fever >38.5°C for 3 days, body aches, chills | Malaria test urgent |
-| 2 | Twi | "Me tirim yɛ me ya na me ho hyehye. Ɛyɛ nnansa ni." | Malaria suspected |
-| 3 | Hausa | "Ina da zazzabi da sanyi da ciwon kai tsawon kwana uku." | Blood test required |
-| 4 | Yoruba | "Mo ti n dun mi, ara mi gbona pupọ. O ti di ọjọ mẹta." | Refer for testing |
-| … | +48 variants | Covering pregnant women, children, recurrent cases | Range: urgent → routine |
+### A.1: Malaria Symptoms and Diagnosis
 
-### Category 2: Anemia Screening (38 scenarios)
+**English:**
 
-| # | Language | Patient Presentation | Expected Triage |
-|:--|:---------|:---------------------|:----------------|
-| 54 | English | Child with pale conjunctiva, fatigue, poor appetite | Moderate anemia, Hb test |
-| 55 | English | Pregnant woman with fatigue, shortness of breath | Severe anemia screen, urgent |
-| 56 | English | Adolescent girl with heavy menstruation, dizziness | Anemia likely, refer |
-| … | +35 variants | Multilingual presentations across age groups | Range: urgent → monitor |
+> **Patient:** I have been having fever, chills, and severe headache for three days. My body is aching all over.
+> **Doctor:** These symptoms are consistent with malaria. Have you been exposed to mosquitoes recently? Let me check for other symptoms.
 
-### Category 3: Respiratory Infections (41 scenarios)
+**Twi (Ghana):**
 
-| # | Language | Patient Presentation | Expected Triage |
-|:--|:---------|:---------------------|:----------------|
-| 93 | English | Coughing for 2 weeks, sometimes with blood, night sweats, weight loss | TB screening urgent |
-| 94 | Twi | "Merenkekaho ɛyɛ nnawɔtwe abien. Ɛtɔ da a mogya ba mu." | X-ray needed |
-| 95 | Hausa | "Ina tari tsawon mako biyu, wani lokaci da jini." | Sputum test required |
-| 96 | Yoruba | "Mo ti n kọ ikọ fun ọsẹ meji, nigba kan pẹlu ẹjẹ." | Refer for TB screening |
-| … | +37 variants | Including pneumonia, bronchitis, childhood ARI | Range: urgent → routine |
+> **Patient:** Me tirim yɛ me ya na me ho hyehye. Ɛyɛ nnansa ni.
+> **Doctor:** Saa nsɛm yi kyerɛ sɛ atiridii tumi yɛ wo. Ma yɛnhwɛ wo mogya.
 
-### Category 4: Maternal Health (35 scenarios)
+**Hausa (West Africa):**
 
-| # | Language | Patient Presentation | Expected Triage |
-|:--|:---------|:---------------------|:----------------|
-| 134 | English | Pregnant with severe headaches, swollen feet, visual spots | Preeclampsia — IMMEDIATE |
-| 135 | Twi | "Me nsem na me tirim yɛ me ya paa. Me nan nso afura." | BP check urgent |
-| 136 | Hausa | "Ina da ciki kuma ina da ciwon kai mai tsanani. Kafafuna sun kumbura." | Urgent referral |
-| 137 | Yoruba | "Mo loyun mo si ni orififo nla. Ẹsẹ mi wu." | Same-day facility |
-| … | +31 variants | Bleeding, gestational diabetes, eclampsia warning signs | Range: emergency → routine ANC |
+> **Patient:** Ina da zazzabi da sanyi da ciwon kai tsawon kwana uku. Jikina yana ciwo.
+> **Doctor:** Wadannan alamomi suna nuna zazzabin cizon sauro. Ka sha magani?
 
-### Category 5: Diarrheal Disease (28 scenarios)
+**Yoruba (Nigeria):**
 
-| # | Language | Patient Presentation | Expected Triage |
-|:--|:---------|:---------------------|:----------------|
-| 169 | English | Child with diarrhea for 3 days, not eating, weak and listless | Dehydration — ORS immediately |
-| 170 | Twi | "Me ba no ayam mu atu nnansa na onnidi." | Start ORS |
-| 171 | English | Watery diarrhea like rice water since morning, very thirsty and dizzy | Cholera suspected — IV fluids |
-| 172 | Hausa | "Gudawa ta kama ni tun safe, ruwa kamar ruwan shinkafa." | Isolation + IV fluids |
-| … | +24 variants | Including dysentery, chronic diarrhea, dehydration grading | Range: emergency → self-care |
+> **Patient:** Mo ti n dun mi, ara mi gbona pupọ. O ti di ọjọ mẹta.
+> **Doctor:** Awọn ami wọnyi le jẹ iba. Jẹ ki a ṣayẹwo ẹjẹ rẹ.
 
-### Category 6: Skin Conditions & Wound Care (22 scenarios)
+---
 
-| # | Language | Patient Presentation | Expected Triage |
-|:--|:---------|:---------------------|:----------------|
-| 197 | English | Foot cut 3 days ago, now red, swollen, pus | Infected wound — antibiotics |
-| 198 | Twi | "Metwitwaa me nan nnansa ni. Afei akɔkɔ na ɛho afura." | Clean + antibiotics + tetanus |
-| 199 | Hausa | "Na yanke kafa kwana uku da suka wuce, yanzu ta yi ja, ta kumbura." | Same-day treatment |
-| … | +19 variants | Rashes, burns, abscesses, snakebites | Range: emergency → routine |
+### A.2: Typhoid Fever
 
-### Category 7: Child Nutrition (15 scenarios)
+**English:**
 
-Scenarios covering malnutrition screening (MUAC assessment), exclusive breastfeeding counseling, vitamin A deficiency, and growth faltering. All in multilingual variants.
+> **Patient:** I have high fever that comes and goes, stomach pain, and I feel very weak. I also have diarrhea.
+> **Doctor:** This could be typhoid fever. Have you been drinking unsafe water? We need to test your blood.
 
-### Category 8: Emergency & Triage Protocols (12 scenarios)
+**Twi (Ghana):**
 
-Severity classification reference scenarios:
-- **HIGH SEVERITY**: Fever >39°C with confusion, severe abdominal pain with vomiting, difficulty breathing at rest, snakebite — urgent referral
-- **MEDIUM SEVERITY**: Persistent cough >2 weeks (TB screen), rash with fever in child (measles/meningitis), diarrhea with blood (dysentery)
-- **LOW SEVERITY**: Mild headache without fever (paracetamol), joint pain without systemic symptoms
+> **Patient:** Me ho hyehye na me yafunu mu yɛ me ya. Me ho yeraw me na m'ayam mu retu.
+> **Doctor:** Eyi tumi yɛ typhoid. Wo nom nsuo a ɛnyɛ kronkron anaa?
 
-### Language Coverage
+**Hausa (West Africa):**
 
-Each clinical category includes scenarios in all of the following languages:
+> **Patient:** Ina da zazzabi mai zuwa da tafiya, ciwo a ciki, da rashin karfi. Ina da gudawa kuma.
+> **Doctor:** Wannan na iya zama zazzabin typhoid. Ka sha ruwan da ba shi da tsabta?
 
-| Language Group | Languages | Example Greeting |
-|:---------------|:----------|:-----------------|
-| West African (Kwa) | Twi, Ewe, Ga, Yoruba, Igbo | "Me tirim yɛ me ya" (Twi) |
-| West African (Chadic) | Hausa | "Ina da zazzabi" |
-| East African (Bantu) | Swahili, Kinyarwanda | "Nina homa kali" (Swahili) |
-| Southern African (Bantu) | Zulu, Shona | "Nginomkhuhlane" (Zulu) |
-| West African (Atlantic) | Wolof | "Am na febar" |
-| Central African (Bantu) | Lingala | "Nazali na fièvre makasi" |
-| Horn of Africa (Semitic) | Amharic | "ከፍተኛ ትኩሳት አለኝ" |
-| Horn of Africa (Cushitic) | Somali | "Waxaan qabaa xummad" |
-| Colonial languages | French, Portuguese | "J'ai de la fièvre" (French) |
+**Yoruba (Nigeria):**
 
-### Medication & Preventive Care Scenarios
+> **Patient:** Mo ni iba ti o maa n wa ti o si maa n lọ, inun mi n dun mi, mo si rẹwẹsi pupọ. Mo tun ni igbe gbuuru.
+> **Doctor:** Eyi le jẹ iba typhoid. Ṣe o ti mu omi ti ko mọ?
 
-The dataset also includes reference scenarios for common medications (paracetamol, ORS, artemether-lumefantrine, amoxicillin, metronidazole, zinc) and preventive care (bed nets, hand hygiene, safe water, vaccination schedules, breastfeeding, antenatal care).
+---
+
+### A.3: Respiratory Infections
+
+**English:**
+
+> **Patient:** I have been coughing for two weeks, sometimes with blood. I also have night sweats and weight loss.
+> **Doctor:** These are concerning symptoms that could indicate tuberculosis. We need to do a chest X-ray and sputum test.
+
+**Twi (Ghana):**
+
+> **Patient:** Merenkekaho ɛyɛ nnawɔtwe abien. Ɛtɔ da a mogya ba mu. Me ho bɔ fam anadwo na me nso reyɛ tɛtrɛɛ.
+> **Doctor:** Saa nsɛm yi tumi kyerɛ TB yare. Ɛsɛ sɛ yɛyɛ wo X-ray.
+
+**Hausa (West Africa):**
+
+> **Patient:** Ina tari tsawon mako biyu, wani lokaci da jini. Ina kuma zufa da dare kuma na rasa nauyi.
+> **Doctor:** Wadannan alamomi suna iya nuna cutar tarin fuka. Muna bukatar yin X-ray na kirji.
+
+**Yoruba (Nigeria):**
+
+> **Patient:** Mo ti n kọ ikọ fun ọsẹ meji, nigba kan pẹlu ẹjẹ. Mo tun n la ọgbẹ ni alẹ mo si n padanu iwuwo.
+> **Doctor:** Awọn ami wọnyi le tọka si iko. A nilo lati ṣe X-ray ati idanwo itọ.
+
+---
+
+### A.4: Maternal Health
+
+**English:**
+
+> **Patient:** I am pregnant and I have been having severe headaches and my feet are swollen. I also see spots in my vision.
+> **Doctor:** These symptoms could indicate preeclampsia, which is a serious condition. We need to check your blood pressure immediately.
+
+**Twi (Ghana):**
+
+> **Patient:** Me nsem na me tirim yɛ me ya paa. Me nan nso afura. Mehunu nneɛma wɔ m'ani mu.
+> **Doctor:** Saa nsɛm yi tumi yɛ preeclampsia. Ɛsɛ sɛ yɛhwɛ wo mogya pressure ntɛm.
+
+**Hausa (West Africa):**
+
+> **Patient:** Ina da ciki kuma ina da ciwon kai mai tsanani. Kafafuna sun kumbura. Ina ganin tabo a idona.
+> **Doctor:** Wadannan alamomi suna iya nuna preeclampsia. Muna bukatar duba matsin jinin ki nan da nan.
+
+**Yoruba (Nigeria):**
+
+> **Patient:** Mo loyun mo si ni orififo nla. Ẹsẹ mi wu. Mo tun ri awọn ami ninu oju mi.
+> **Doctor:** Awọn ami wọnyi le tọka si preeclampsia. A nilo lati ṣayẹwo ẹjẹ titẹ rẹ lẹsẹkẹsẹ.
+
+---
+
+### A.5: Childhood Illnesses
+
+**English:**
+
+> **Patient:** My child has had diarrhea for three days and is not eating. The child seems very weak and listless.
+> **Doctor:** This is concerning for dehydration. We need to start oral rehydration therapy immediately and assess the severity.
+
+**Twi (Ghana):**
+
+> **Patient:** Me ba no ayam mu atu nnansa na onnidi. Ɔhaw ne ne ho ayɛ mmerɛw paa.
+> **Doctor:** Eyi kyerɛ sɛ ne ho nsuo no redwane. Ɛsɛ sɛ yɛma no ORS.
+
+**Hausa (West Africa):**
+
+> **Patient:** Yaro na yana da gudawa tsawon kwana uku kuma ba ya cin abinci. Yaro ya yi rauni sosai.
+> **Doctor:** Wannan yana nuna rashin ruwa. Muna bukatar fara magani da ruwan sukari da gishiri nan da nan.
+
+**Yoruba (Nigeria):**
+
+> **Patient:** Ọmọ mi ti ni igbe gbuuru fun ọjọ mẹta ko si jẹun. Ọmọ naa rẹwẹsi pupọ.
+> **Doctor:** Eyi ṣe pataki fun gbigbẹ. A nilo lati bẹrẹ itọju ORS lẹsẹkẹsẹ.
+
+---
+
+### A.6: Emergency Triage
+
+**English:**
+
+> **Patient:** The patient was bitten by a snake one hour ago. The leg is swelling and very painful.
+> **Doctor:** This is an emergency. We need antivenom immediately. Keep the patient calm and the limb immobilized.
+
+**Twi (Ghana):**
+
+> **Patient:** Ɔwɔ aka no dɔnhwerew baako ni. Ne nan no refura na ɛyɛ ya paa.
+> **Doctor:** Eyi yɛ emergency. Yɛhia antivenom ntɛm. Ma ɔnnyɛ ne ho hwee.
+
+**Hausa (West Africa):**
+
+> **Patient:** An cizon maciji sa'a daya da ta wuce. Kafar tana kumbura kuma tana ciwo sosai.
+> **Doctor:** Wannan gaggawa ce. Muna bukatar maganin dafin maciji nan da nan.
+
+**Yoruba (Nigeria):**
+
+> **Patient:** Ejò bu alaisan naa ni wakati kan sẹhin. Ẹsẹ naa n wu o si n dun pupọ.
+> **Doctor:** Eyi jẹ pajawiri. A nilo antivenom lẹsẹkẹsẹ. Jẹ ki alaisan dakẹ ki o si ma ẹsẹ duro.
+
+---
+
+### A.7: Cholera and Acute Diarrhea
+
+**English:**
+
+> **Patient:** I have been having watery diarrhea like rice water since morning. I am very thirsty and dizzy.
+> **Doctor:** This could be cholera. We need to start IV fluids immediately and isolate you to prevent spread.
+
+**Twi (Ghana):**
+
+> **Patient:** Me ayam mu atu sɛ nsuo fii anɔpatutuutu. Nsukɔm de me na me tirim nso reyɛ me.
+> **Doctor:** Eyi tumi yɛ cholera. Ɛsɛ sɛ yɛde drip hyɛ wo ntɛm.
+
+**Hausa (West Africa):**
+
+> **Patient:** Gudawa ta kama ni tun safe, ruwa kamar ruwan shinkafa. Ina da kishirwa sosai kuma kaina yana juyawa.
+> **Doctor:** Wannan na iya zama cutar hauka. Muna bukatar fara ruwan jini nan da nan.
+
+**Yoruba (Nigeria):**
+
+> **Patient:** Mo ti ni igbe gbuuru omi bi omi iresi lati owurọ. Ongbẹ n gbẹ mi pupọ ori mi si n yi.
+> **Doctor:** Eyi le jẹ arun kolera. A nilo lati bẹrẹ omi IV lẹsẹkẹsẹ.
+
+---
+
+### A.8: Wound Care and Infections
+
+**English:**
+
+> **Patient:** I cut my foot three days ago and now it is red, swollen, and there is pus coming out.
+> **Doctor:** This wound is infected. We need to clean it properly and start antibiotics. When did you last have a tetanus shot?
+
+**Twi (Ghana):**
+
+> **Patient:** Metwitwaa me nan nnansa ni. Afei akɔkɔ na ɛho afura na mogya fufuo refiri mu.
+> **Doctor:** Kuro no ho ara. Ɛsɛ sɛ yɛhoro ho na yɛma wo antibiotics. Daben na wobɔɔ tetanus panee?
+
+**Hausa (West Africa):**
+
+> **Patient:** Na yanke kafa kwana uku da suka wuce, yanzu ta yi ja, ta kumbura, kuma akwai ruwan kwalara.
+> **Doctor:** Wannan rauni ya kamu da cuta. Muna bukatar wanke shi da kyau mu fara antibiotics.
+
+**Yoruba (Nigeria):**
+
+> **Patient:** Mo ge ẹsẹ mi ni ọjọ mẹta sẹhin bayi o ti pọn, o wu, ọgbẹ si n jade.
+> **Doctor:** Ọgbẹ yii ti ni akoran. A nilo lati sọ di mimọ daradara ki a si bẹrẹ antibiotics.
+
+---
+
+### A.9: Symptom Severity Triage Guide
+
+What is the severity level for a patient with:
+- **High fever above 39°C with confusion:** HIGH SEVERITY — Urgent referral needed
+- **Mild headache with no fever:** LOW SEVERITY — Self-care with paracetamol
+- **Persistent cough for more than 2 weeks:** MEDIUM SEVERITY — Visit clinic for TB screening
+- **Severe abdominal pain with vomiting:** HIGH SEVERITY — Possible surgical emergency
+- **Rash with fever in a child:** MEDIUM to HIGH — Could be measles or meningitis
+- **Difficulty breathing at rest:** HIGH SEVERITY — Urgent referral
+- **Diarrhea with blood:** MEDIUM to HIGH — Possible dysentery, needs antibiotics
+- **Joint pain and swelling:** LOW to MEDIUM — Could be arthritis or infection
+
+---
+
+### A.10: Medication Guidance
+
+Common medications for triage settings:
+- **Paracetamol:** For fever and pain, safe for all ages with proper dosing
+- **Oral Rehydration Salts (ORS):** Essential for diarrhea and dehydration
+- **Artemether-Lumefantrine (AL):** First-line treatment for uncomplicated malaria
+- **Amoxicillin:** For bacterial infections including pneumonia
+- **Metronidazole:** For amoebic dysentery and some infections
+- **Zinc supplements:** Important addition to ORS for childhood diarrhea
+
+---
+
+### A.11: Preventive Care
+
+Important preventive measures:
+- Sleep under insecticide-treated bed nets to prevent malaria
+- Wash hands with soap and water before eating and after using toilet
+- Drink only clean, boiled, or treated water
+- Complete all childhood vaccinations on schedule
+- Exclusive breastfeeding for first 6 months of life
+- Regular antenatal care visits during pregnancy
+
+---
+
+### A.12: French (Francophone Africa — Senegal, Côte d'Ivoire, DRC, etc.)
+
+> **Patient:** J'ai de la fièvre depuis trois jours avec des frissons et des maux de tête.
+> **Médecin:** Ces symptômes peuvent indiquer le paludisme. Avez-vous été piqué par des moustiques récemment?
+
+> **Patient:** J'ai des douleurs abdominales et de la diarrhée avec du sang.
+> **Médecin:** Cela pourrait être une dysenterie. Nous devons vous traiter immédiatement.
+
+> **Patient:** Je suis enceinte et j'ai des saignements.
+> **Médecin:** C'est une urgence. Nous devons vous examiner tout de suite.
+
+---
+
+### A.13: Portuguese (Lusophone Africa — Angola, Mozambique, Guinea-Bissau)
+
+> **Paciente:** Tenho febre alta há três dias com dores de cabeça fortes.
+> **Médico:** Estes sintomas podem indicar malária. Vamos fazer um teste de sangue.
+
+> **Paciente:** Estou grávida e tenho dores no estômago.
+> **Médico:** Precisamos examiná-la imediatamente para garantir a segurança do bebê.
+
+---
+
+### A.14: Ewe (Ghana, Togo, Benin)
+
+> **Patient:** Ðe nye ta me le ven nam eye ŋu me le vom nam.
+> **Dotoo:** Ale nye fia be atike le wò ŋu. Míahia be míabu te wò zeze.
+
+> **Patient:** Ðe xɔ le ðum eye mele nuɖuɖu ɖum o.
+> **Dotoo:** Ele be míana tsi kple sukli na wò.
+
+---
+
+### A.15: Swahili (East Africa — Kenya, Tanzania, Uganda, DRC)
+
+> **Mgonjwa:** Nina homa kali na maumivu ya kichwa kwa siku tatu.
+> **Daktari:** Hasa ni dalili za malaria. Unahitaji kupimwa damu.
+
+> **Mgonjwa:** Tumboni yananiuma sana na nina kuharisha.
+> **Daktari:** Hii inaweza kuwa kipindupindu. Tunahitaji kutoa maji mwilini haraka.
+
+> **Mgonjwa:** Mimi ni mjamzito na ninapata kutoka damu.
+> **Daktari:** Hii ni dharura. Lazima tukuchunguze sasa hivi.
+
+---
+
+### A.16: Amharic (Ethiopia)
+
+> **ታማሚ:** ለሦስት ቀናት ከፍተኛ ትኩሳት እና ራስ ምታት አለኝ።
+> **ዶክተር:** እነዚህ ምልክቶች ወባ ሊሆኑ ይችላሉ። የደም ምርመራ ማድረግ አለብኝ።
+
+> **ታማሚ:** ሆዴ ይጎዳኛል እና ተቅማጥ አለኝ።
+> **ዶክተር:** ORS መውሰድ እና ብዙ ውሃ መጠጣት ያስፈልግዎታል።
+
+---
+
+### A.17: Igbo (Nigeria)
+
+> **Onye ọrịa:** Enwere m ahụ ọkụ na isi ọwụwa ụbọchị atọ.
+> **Dọkịta:** Nke a nwere ike ịbụ ịba. Anyị ga-eme ule ọbara.
+
+> **Onye ọrịa:** Afọ na-eme m eme na m na-agbapụta.
+> **Dọkịta:** I nwere ike ịbụ nsogbu cholera. Anyị ga-enye gị mmiri n'ahụ ozugbo.
+
+---
+
+### A.18: Zulu (South Africa)
+
+> **Isiguli:** Nginomkhuhlane omkhulu nobuhlungu bekhanda izinsuku ezintathu.
+> **Udokotela:** Lezi zimpawu zingase zibonise ugcwalisa. Kufanele sihlole igazi.
+
+> **Isiguli:** Isisu sami sibuhlungu kakhulu futhi nginesihudo.
+> **Udokotela:** Lokhu kungaba yi-cholera. Sidinga ukukunika amanzi ngokushesha.
+
+---
+
+### A.19: Wolof (Senegal, Gambia)
+
+> **Féebar:** Am na febar bu tawal ak baat bu tar bépp fan wii.
+> **Dooter:** Loolu mën na am tat febar. War nañu di xool deretnaa.
+
+---
+
+### A.20: Shona (Zimbabwe)
+
+> **Murwere:** Ndine fiva yakanyanya nemusoro kurwadza kwemazuva matatu.
+> **Chiremba:** Izvi zvinogona kuratidza malaria. Tinofanira kuita bvunzo ropa.
+
+---
+
+### A.21: Lingala (DRC, Congo-Brazzaville)
+
+> **Malade:** Nazali na fièvre makasi mpe motó ezali kobwaka ngai mikolo misato.
+> **Monganga:** Bilembo oyo ekoki ko montrer malaria. Tosengeli kosala test ya makila.
+
+---
+
+### A.22: Kinyarwanda (Rwanda, Burundi)
+
+> **Umurwayi:** Mfite umuriro n'uburibwe bwo mu mutwe iminsi itatu.
+> **Umuganga:** Ibi bimenyetso bishobora kwerekana malariya. Tugomba gupima amaraso.
+
+---
+
+### A.23: Somali (Somalia, Djibouti)
+
+> **Bukaanka:** Waxaan qabaa xummad iyo madax xanuun saddex maalmood.
+> **Dhakhtarka:** Calaamadahan waxay tilmaamayaan malaria. Waa in aan baadhno dhiigga.
 
 ---
 

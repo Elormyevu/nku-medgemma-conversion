@@ -48,7 +48,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 | **Ultra-Compressed** | 8GB → ~2.3GB via Q4_K_M quantization (56% MedQA on quantized model, vs. 69% unquantized) |
 | **Pan-African Languages** | 46 languages including Ewe, Hausa, Yoruba, Swahili |
 | **Budget Hardware** | Runs on $60–100 Android phones (3–4GB RAM, TECNO/Infinix) via mmap |
-| **Camera + Mic Screening** | Heart rate, anemia, jaundice, preeclampsia via camera; TB/respiratory via full HeAR pipeline (Event Detector + ViT-L encoder for 512-dim embeddings) |
+| **Camera + Mic Screening** | Heart rate, anemia, jaundice, preeclampsia via camera; TB/respiratory via HeAR Event Detector (1.1MB TFLite); ViT-L encoder upgrade path architecturally complete but blocked by XLA/StableHLO conversion |
 
 ---
 
@@ -59,7 +59,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 - 🔊 **Android System TTS** — Device-native voice synthesis for spoken clinical results
 - 💎 **Premium UI** — Glassmorphism design with localized strings
 - ⚡ **Nku Cycle** — Memory-efficient mmap orchestration on budget devices (3–4GB RAM)
-- 📷 **Nku Sentinel** — Camera-based screening for heart rate, anemia, jaundice, & preeclampsia; microphone-based TB/respiratory screening via full HeAR pipeline (Event Detector + ViT-L 512-dim embeddings via ONNX Runtime)
+- 📷 **Nku Sentinel** — Camera-based screening for heart rate, anemia, jaundice, & preeclampsia; microphone-based TB/respiratory screening via HeAR Event Detector (MobileNetV3, 1.1MB TFLite)
 
 ---
 
@@ -103,10 +103,10 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 | **Anemia Screen** | `PallorDetector.kt` | Conjunctival HSV analysis | Pallor severity (0-1) |
 | **Jaundice Screen** | `JaundiceDetector.kt` | Scleral HSV analysis | Jaundice severity (0-1) |
 | **Preeclampsia** | `EdemaDetector.kt` | Facial geometry (EAR + gradients) | Edema severity (0-1) |
-| **TB/Respiratory** | `RespiratoryDetector.kt` | HeAR Event Detector (TFLite) + ViT-L encoder (ONNX) | 512-dim embedding + risk score (0-1) |
+| **TB/Respiratory** | `RespiratoryDetector.kt` | HeAR Event Detector (TFLite INT8, 1.1MB) | Risk score (0-1) + health sound class distribution |
 | **Triage** | `ClinicalReasoner.kt` | MedGemma + WHO/IMCI fallback | Severity & recommendations |
 
-All screening uses **pure signal processing** (0 MB additional weights) except TB/respiratory which uses the HeAR models: Event Detector (MobileNetV3, 1.1MB INT8 TFLite, always loaded) and ViT-L encoder (~300MB INT8 ONNX, loaded on demand). Sensor outputs are aggregated by `SensorFusion.kt` and interpreted by MedGemma for clinical reasoning.
+All screening uses **pure signal processing** (0 MB additional weights) except TB/respiratory which uses the HeAR Event Detector (MobileNetV3, 1.1MB INT8 TFLite, always loaded). The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but not shipped — its XlaCallModule/StableHLO format cannot be converted to ONNX or TFLite by any current tool (see `ARCHITECTURE.md`). Sensor outputs are aggregated by `SensorFusion.kt` and interpreted by MedGemma for clinical reasoning.
 
 ### Fitzpatrick-Aware Design
 
@@ -235,7 +235,7 @@ nku-medgemma-conversion/
 │       │   ├── PallorDetector.kt       # Anemia (conjunctiva)
 │       │   ├── JaundiceDetector.kt     # Jaundice (scleral icterus)
 │       │   ├── EdemaDetector.kt        # Preeclampsia (edema)
-│       │   ├── RespiratoryDetector.kt  # TB/Respiratory (HeAR two-tier: Event Detector + ViT-L)
+│       │   ├── RespiratoryDetector.kt  # TB/Respiratory (HeAR Event Detector; ViT-L = future upgrade)
 │       │   ├── SensorFusion.kt         # Vital signs aggregator
 │       │   ├── ClinicalReasoner.kt     # MedGemma + WHO fallback
 │       │   ├── PromptSanitizer.kt      # 6-layer prompt injection defense

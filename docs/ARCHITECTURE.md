@@ -112,9 +112,9 @@ fun runNkuCycleLocal(patientInput: String, language: String): NkuResult {
 - **Size**: 0 MB (uses device-installed TTS engine)
 - **Languages**: All languages supported by device Google TTS
 
-### HeAR Two-Tier Pipeline (RespiratoryDetector.kt)
+### HeAR Pipeline (RespiratoryDetector.kt)
 
-#### Event Detector (Tier 1)
+#### Event Detector (shipped)
 - **Base**: HeAR MobileNetV3-Small
 - **Format**: TFLite INT8
 - **Size**: 1.1 MB
@@ -122,14 +122,12 @@ fun runNkuCycleLocal(patientInput: String, language: String): NkuResult {
 - **Output**: 1×8 float32 (health sound class probabilities)
 - **Purpose**: Rapid cough/breath classification (~50ms). Always loaded.
 
-#### ViT-L Encoder (Tier 2)
+#### ViT-L Encoder (future upgrade — not shipped)
 - **Base**: HeAR ViT-L Masked AutoEncoder
-- **Format**: ONNX Runtime Mobile (INT8 quantized)
-- **Size**: ~300 MB
-- **Delivery**: Play Asset Delivery (`hear_encoder` pack, install-time)
-- **Input**: 1×32000 float32 (2s audio @16kHz)
-- **Output**: 1×512 float32 (health acoustic embedding)
-- **Purpose**: Deep respiratory analysis. Loaded on demand when cough detected, unloaded before MedGemma.
+- **Status**: ❌ Cannot be converted to mobile format
+- **Blocker**: Uses `XlaCallModule` with serialized StableHLO bytecode — no current tool (tf2onnx, TFLite converter) supports conversion to ONNX or TFLite
+- **Codebase support**: Full architectural integration exists (ONNX Runtime Mobile, on-demand loading, sequential RAM management)
+- **Activation**: When Google's AI Edge toolchain supports StableHLO-to-TFLite conversion
 - **Reference**: Tobin et al., arXiv 2403.02522, 2024
 
 ## Quantization Pipeline
@@ -168,7 +166,7 @@ mobile/android/app/src/main/
 │   ├── NkuInferenceEngine.kt   # MedGemma orchestration
 │   ├── NkuTranslator.kt        # ML Kit translation wrapper
 │   ├── RPPGProcessor.kt        # Heart rate via rPPG
-│   ├── RespiratoryDetector.kt  # TB/Respiratory (HeAR two-tier: Event Detector + ViT-L)
+│   ├── RespiratoryDetector.kt  # TB/Respiratory (HeAR Event Detector; ViT-L = future upgrade)
 │   ├── PallorDetector.kt       # Anemia via conjunctival pallor
 │   ├── JaundiceDetector.kt     # Jaundice via scleral icterus
 │   ├── EdemaDetector.kt        # Preeclampsia via facial edema

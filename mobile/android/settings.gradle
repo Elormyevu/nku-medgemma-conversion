@@ -4,5 +4,6 @@ include ':smollm'
 
 // Play Asset Delivery — model packs (see MODEL_DISTRIBUTION.md)
 // Translation handled by Android ML Kit (not a GGUF model)
+// HeAR Event Detector ships as TFLite in app assets (1.1MB)
+// HeAR ViT-L encoder: future upgrade — blocked by XLA/StableHLO conversion (see ARCHITECTURE.md)
 include ':medgemma'
-include ':hear_encoder'

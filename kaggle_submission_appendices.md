@@ -807,18 +807,18 @@ Note: This is a novel screening heuristic. Confirm with blood pressure
 
 ---
 
-### F.5: TB/Respiratory Screen — HeAR Two-Tier Pipeline
+### F.5: TB/Respiratory Screen — HeAR Event Detector Pipeline
 
 **Source file:** `RespiratoryDetector.kt`
 
 | Stage | Technique | Detail |
 |:------|:----------|:-------|
 | **Input** | 2-second audio clip | Captured at 16kHz, mono. Resampled from device mic rate |
-| **Tier 1: Event Detector** | HeAR MobileNetV3-Small (TFLite INT8, 1.1MB) | Always loaded. Classifies 8 health sound events (cough, sneeze, snore, breathe, etc.) in ~50ms |
-| **Cough trigger** | Cough probability threshold | If `P(cough) > 0.3`, triggers Tier 2 |
-| **Tier 2: ViT-L Encoder** | HeAR ViT-L (ONNX Runtime Mobile, INT8, ~300MB) | Loaded on demand. Produces 512-dim health acoustic embedding. Unloaded immediately after inference |
-| **Risk scoring** | Composite from class probs + embedding | `riskScore = max(highRiskClasses)` with embedding fed to MedGemma |
-| **Sequential loading** | RAM management | ViT-L loaded → inference → unloaded before MedGemma loads. Peak RAM ≤ 2.3GB |
+| **Event Detector** | HeAR MobileNetV3-Small (TFLite INT8, 1.1MB) | Always loaded. Classifies 8 health sound events (cough, sneeze, snore, breathe, etc.) in ~50ms |
+| **Risk scoring** | Class probability analysis | `riskScore = max(highRiskClasses)` — cough, sneeze, snore scores weighted for respiratory risk |
+| **MedGemma integration** | Clinical reasoning | Risk score + event class distribution passed to MedGemma prompt for TB/COPD/pneumonia triage |
+
+> **ViT-L Encoder — future upgrade path**: The codebase includes full architectural support for HeAR's ViT-L encoder (ONNX Runtime Mobile integration, on-demand loading, sequential RAM management for 512-dim health acoustic embeddings). However, the ViT-L model uses `XlaCallModule` nodes with serialized StableHLO bytecode — an XLA-specific format that no current conversion tool (tf2onnx, TFLite converter) can process into a mobile inference format. We attempted 7 conversion approaches across 3 toolchains before documenting this as a technical limitation. The ViT-L upgrade will activate once Google's AI Edge toolchain supports StableHLO-to-TFLite conversion.
 
 **Output → VitalSigns:**
 ```kotlin
@@ -826,26 +826,23 @@ respiratoryRiskScore: Float?              // e.g. 0.72
 respiratoryRisk: RespiratoryRisk?          // HIGH_RISK
 respiratoryConfidence: Float               // e.g. 0.88
 coughDetected: Boolean                     // true
-hearEmbedding: FloatArray?                 // 512-dim (null if ViT-L unavailable)
-respiratoryAnalysisSource: AnalysisSource  // VIT_L_ENCODER
+hearEmbedding: FloatArray?                 // null (ViT-L not available)
+respiratoryAnalysisSource: AnalysisSource  // EVENT_DETECTOR
 ```
 
-**Output → prompt (ViT-L path):**
+**Output → prompt (Event Detector path):**
 ```
 === RESPIRATORY SCREENING (HeAR Cough Analysis) ===
-Analysis tier: HeAR ViT-L Encoder (full pipeline)
-Method: HeAR ViT-L encoder — Vision Transformer (Large) Masked AutoEncoder
-  trained on 300M+ health audio clips. Produces 512-dim health acoustic
-  embedding from 2-second cough audio. Run on-device via ONNX Runtime.
+Analysis tier: HeAR Event Detector
+Method: HeAR MobileNetV3-Small — trained on 300M+ health audio clips.
+  Classifies 8 health sound event types from 2-second audio.
+  On-device via TFLite (INT8, 1.1MB). ~50ms inference.
   [Tobin et al., arXiv 2403.02522, 2024; HeAR google/hear]
 Respiratory risk score: 0.72 (0.0=healthy, 1.0=high risk)
 Classification: HIGH_RISK
 Cough detected: Yes
 Confidence: 88%
-HeAR embedding (512-dim): L2=12.34, mean=0.0241, range=[-0.892, 1.234]
-Top-5 active dimensions: d42=1.234, d187=-0.892, d301=0.876, d89=0.812, d456=-0.791
-Note: Embedding encodes learned health acoustic patterns from
-  self-supervised pre-training on 300M+ audio clips.
+Event class distribution: cough=0.72, breathe=0.18, sneeze=0.05, ...
 Note: This is a screening tool for TB/respiratory illness risk.
   Refer for sputum test, chest X-ray, or clinical evaluation to confirm.
 ```

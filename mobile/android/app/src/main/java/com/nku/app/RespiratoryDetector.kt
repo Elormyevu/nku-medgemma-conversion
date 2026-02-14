@@ -218,32 +218,22 @@ class RespiratoryDetector(private val context: Context? = null) {
 
     /**
      * Discover HeAR ViT-L encoder ONNX model.
+     *
+     * NOTE: The ViT-L encoder is a future upgrade path. Google's HeAR ViT-L
+     * uses XlaCallModule/StableHLO ops that cannot be converted to ONNX or TFLite
+     * by any current tool. The model validates correctly in TF eager mode but the
+     * serialized StableHLO bytecode has no ONNX/TFLite equivalent.
+     *
+     * For now, the app ships with the Event Detector only (MobileNetV3, 1.1MB TFLite).
+     * If a pre-converted ViT-L model is placed on device storage, this function will
+     * discover and use it.
+     *
      * Search order:
-     * 1. Play Asset Delivery pack (install-time, bundled with app)
-     * 2. Internal storage (filesDir)
-     * 3. External storage (/sdcard/Download/) — dev/testing fallback
+     * 1. Internal storage (filesDir)
+     * 2. External storage (/sdcard/Download/) — dev/testing fallback
      */
     private fun discoverViTLEncoder() {
         val ctx = context ?: return
-
-        // Primary: Play Asset Delivery — bundled for 100% offline inference
-        try {
-            val assetPackManager = com.google.android.play.core.assetpacks.AssetPackManagerFactory.getInstance(ctx)
-            val packLocation = assetPackManager.getPackLocation("hear_encoder")
-            if (packLocation != null) {
-                val packFile = File(packLocation.assetsPath(), VIT_L_MODEL_FILENAME)
-                if (packFile.exists() && packFile.length() > 0) {
-                    vitLModelPath = packFile.absolutePath
-                    val sizeMb = packFile.length() / (1024.0 * 1024.0)
-                    Log.i(TAG, "HeAR ViT-L encoder found in PAD pack: ${packFile.absolutePath} (${String.format("%.1f", sizeMb)} MB)")
-                    return
-                }
-            }
-        } catch (e: Exception) {
-            Log.w(TAG, "PAD pack lookup failed for hear_encoder: ${e.message}")
-        }
-
-        // Fallback: local storage paths (dev/testing)
         val searchPaths = listOf(
             File(ctx.filesDir, VIT_L_MODEL_FILENAME),
             File("/sdcard/Download/$VIT_L_MODEL_FILENAME"),
@@ -259,7 +249,7 @@ class RespiratoryDetector(private val context: Context? = null) {
             }
         }
 
-        Log.i(TAG, "HeAR ViT-L encoder not found — Event Detector only mode")
+        Log.i(TAG, "HeAR ViT-L encoder not found on device — Event Detector only mode")
     }
 
     /**

@@ -18,10 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Replaced TranslateGemma with Android ML Kit** for on-device translation (59 languages, ~30MB/lang)
 - Added Google Cloud Translate API fallback for indigenous African languages (Twi, Hausa, Yoruba)
 - Upgraded MedGemma from IQ1_M to **Q4_K_M** quantization (56% MedQA accuracy, 81% of baseline)
-- **Bundled HeAR ViT-L encoder via Play Asset Delivery** (`hear_encoder` asset pack, install-time)
-  - `RespiratoryDetector.discoverViTLEncoder()` now checks PAD path first, local storage as fallback
-  - `NkuInferenceEngine.MODEL_PACK_MAP` updated to include HeAR encoder
-  - All inference models (MedGemma, HeAR Event Detector, HeAR ViT-L) now ship with app — validates 100% offline claim
+- **HeAR ViT-L encoder conversion: documented limitation** — attempted 7 conversion approaches (tf2onnx CLI, TFLite INT8, TFLite StableHLO) across CI and local. All fail because ViT-L uses `XlaCallModule` with serialized StableHLO bytecode incompatible with all current mobile inference formats. Event Detector (MobileNetV3, 1.1MB TFLite) ships and provides respiratory screening; ViT-L remains a documented upgrade path once Google's AI Edge toolchain supports StableHLO-to-TFLite.
+  - Codebase includes full ViT-L architectural support (ONNX Runtime Mobile, on-demand loading, sequential RAM management)
+  - Updated all documentation to accurately reflect Event Detector-only shipping configuration
 - Updated .gitignore to exclude large model files and agent directories
 
 ---

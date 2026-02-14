@@ -54,14 +54,12 @@ class NkuInferenceEngine(private val context: Context) {
         // Filename matches HuggingFace artifact (hungqbui/medgemma-4b-it-Q4_K_M-GGUF).
         private const val MEDGEMMA_MODEL = "medgemma-4b-it-q4_k_m.gguf"
         // Translation handled by Android ML Kit (not a GGUF model)
-
-        // HeAR ViT-L encoder — bundled via PAD for 100% offline inference
-        private const val HEAR_ENCODER_MODEL = "hear_encoder_int8.onnx"
+        // HeAR Event Detector: TFLite, ships in app assets (loaded by RespiratoryDetector)
+        // HeAR ViT-L encoder: future upgrade — XLA/StableHLO ops block ONNX/TFLite conversion
 
         // Play Asset Delivery pack names → model file mapping
         private val MODEL_PACK_MAP = mapOf(
-            MEDGEMMA_MODEL to "medgemma",
-            HEAR_ENCODER_MODEL to "hear_encoder"
+            MEDGEMMA_MODEL to "medgemma"
         )
 
         // Retry config for model loading on budget devices (F-7)
@@ -136,7 +134,6 @@ class NkuInferenceEngine(private val context: Context) {
      */
     fun getModelStatus(): Map<String, Boolean> = mapOf(
         "MedGemma 4B (Q4_K_M)" to (resolveModelFile(MEDGEMMA_MODEL) != null),
-        "HeAR ViT-L Encoder (ONNX)" to (resolveModelFile(HEAR_ENCODER_MODEL) != null),
         "ML Kit Translation" to true  // ML Kit is always available via SDK
     )
 

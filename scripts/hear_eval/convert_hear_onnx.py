@@ -19,8 +19,8 @@ Prerequisites:
 Usage:
     python3 scripts/hear_eval/convert_hear_onnx.py
 
-The INT8 model (hear_encoder_int8.onnx) is deployed to device storage
-for on-device inference via ONNX Runtime Mobile in the Nku Android app.
+The INT8 model (hear_encoder_int8.onnx) is placed in the hear_encoder PAD
+asset pack for on-device inference via ONNX Runtime Mobile in the Nku Android app.
 """
 
 import os

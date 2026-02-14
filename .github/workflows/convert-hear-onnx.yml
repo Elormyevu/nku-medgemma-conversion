@@ -1,0 +1,69 @@
+# HeAR ViT-L Encoder → ONNX INT8 Conversion
+# Converts Google HeAR ViT-L to ONNX format and quantizes to INT8
+# Output: hear_encoder_int8.onnx (~300MB) for on-device inference
+#
+# Triggered manually or on push to conversion script.
+# Downloads artifact → place in mobile/android/hear_encoder/src/main/assets/
+
+name: Convert HeAR ONNX
+
+on:
+  workflow_dispatch:   # Manual trigger
+  push:
+    paths:
+      - 'scripts/hear_eval/convert_hear_onnx.py'
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install tensorflow==2.16.1 tf2onnx==1.16.1 onnxruntime==1.17.1 onnx numpy huggingface_hub
+
+      - name: Run HeAR ONNX conversion
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python3 scripts/hear_eval/convert_hear_onnx.py
+
+      - name: Copy INT8 model to PAD assets
+        run: |
+          mkdir -p mobile/android/hear_encoder/src/main/assets
+          cp models/hear/hear_encoder_int8.onnx mobile/android/hear_encoder/src/main/assets/
+
+      - name: Upload ONNX models as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: hear-encoder-onnx
+          path: |
+            models/hear/hear_encoder_int8.onnx
+            models/hear/hear_encoder_fp32.onnx
+            models/hear/onnx_conversion_results.json
+          retention-days: 90
+
+      - name: Upload PAD-ready model
+        uses: actions/upload-artifact@v4
+        with:
+          name: hear-encoder-pad-asset
+          path: mobile/android/hear_encoder/src/main/assets/hear_encoder_int8.onnx
+          retention-days: 90
+
+      - name: Report
+        run: |
+          echo "=== Conversion Results ==="
+          cat models/hear/onnx_conversion_results.json || true
+          echo ""
+          echo "=== Model Sizes ==="
+          ls -lh models/hear/*.onnx
+          echo ""
+          echo "=== PAD Asset ==="
+          ls -lh mobile/android/hear_encoder/src/main/assets/

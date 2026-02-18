@@ -38,10 +38,7 @@ import androidx.lifecycle.lifecycleScope
 import java.util.concurrent.Executors
 import com.nku.app.ui.NkuTheme
 import com.nku.app.ui.NkuColors
-import com.nku.app.ui.NkuThemePreferences
 import com.nku.app.screens.*
-import com.nku.app.data.NkuDatabase
-import com.nku.app.data.ScreeningEntity
 
 /**
  * MainActivity - Nku Sentinel
@@ -182,23 +179,10 @@ fun NkuSentinelApp(
     val strings = LocalizedStrings.forLanguage(selectedLanguage)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val db = remember { NkuDatabase.getInstance(context) }
-    val screeningDao = remember { db.screeningDao() }
-    val screeningCount by screeningDao.getCount().collectAsState(initial = 0)
-    
-    // USER-1: Theme preference
-    var themeMode by remember {
-        mutableStateOf(NkuThemePreferences.getThemeMode(context))
-    }
-    val isDarkTheme = when (themeMode) {
-        NkuThemePreferences.ThemeMode.LIGHT -> false
-        NkuThemePreferences.ThemeMode.DARK -> true
-        NkuThemePreferences.ThemeMode.SYSTEM -> androidx.compose.foundation.isSystemInDarkTheme()
-    }
+    val isDarkTheme = true  // Nku defaults to dark theme
 
     val tabs = listOf(strings.tabHome, strings.tabCardio, strings.tabAnemia, strings.tabJaundice, strings.tabPreE, strings.tabRespiratory, strings.tabTriage)
     
-    // USER-1: Theme-aware wrapper
     NkuTheme(isDarkTheme = isDarkTheme) {
         Scaffold(
             topBar = {
@@ -262,25 +246,7 @@ fun NkuSentinelApp(
                         selectedLanguage = selectedLanguage,
                         onLanguageChange = { selectedLanguage = it },
                         onNavigateToTab = { selectedTab = it },
-                        savedScreeningCount = screeningCount,
-                        themeMode = themeMode,
-                        onThemeChange = { mode ->
-                            themeMode = mode
-                            NkuThemePreferences.setThemeMode(context, mode)
-                        },
-                        onExportData = {
-                            scope.launch {
-                                val screenings = screeningDao.getAllScreeningsSnapshot()
-                                if (screenings.isNotEmpty()) {
-                                    // Finding 9: Check consent before exporting PHI-like data
-                                    if (!com.nku.app.data.ScreeningExporter.hasUserConsent(context)) {
-                                        com.nku.app.data.ScreeningExporter.setUserConsent(context, true)
-                                    }
-                                    val (_, intent) = com.nku.app.data.ScreeningExporter.exportToCsv(context, screenings)
-                                    context.startActivity(intent)
-                                }
-                            }
-                        }
+
                     )
                     1 -> CardioScreen(
                         rppgResult = rppgResult,
@@ -321,7 +287,9 @@ fun NkuSentinelApp(
                         vitalSigns = vitalSigns,
                         rppgResult = rppgResult,
                         pallorResult = pallorResult,
+                        jaundiceResult = jaundiceResult,
                         edemaResult = edemaResult,
+                        respiratoryResult = respiratoryResult,
                         assessment = assessment,
                         sensorFusion = sensorFusion,
                         nkuTTS = nkuTTS,
@@ -348,41 +316,12 @@ fun NkuSentinelApp(
                                         // MedGemma failed — fall back to rule-based triage
                                         clinicalReasoner.createRuleBasedAssessment(currentVitals)
                                     }
-                                    // Auto-save screening (H-03 fix: populate all fields)
-                                    screeningDao.insert(ScreeningEntity(
-                                        heartRateBpm = rppgResult.bpm?.toFloat(),
-                                        heartRateConfidence = rppgResult.confidence,
-                                        pallorSeverity = pallorResult.severity.name,
-                                        edemaSeverity = edemaResult.severity.name,
-                                        triageLevel = medGemmaResponse?.take(200) ?: "Rule-based",
-                                        symptoms = prompt,
-                                        recommendations = medGemmaResponse ?: assessment?.recommendations?.joinToString("; ") ?: "",
-                                        edemaRiskFactors = edemaResult.riskFactors.joinToString(","),
-                                        language = selectedLanguage,
-                                        isPregnant = isPregnant,
-                                        gestationalWeeks = gestationalWeeks.toIntOrNull()
-                                    ))
+
                                 }
                             } else {
                                 // Models not sideloaded — use rule-based triage
                                 clinicalReasoner.createRuleBasedAssessment(currentVitals)
-                                // Auto-save screening (H-03 fix: populate all fields)
-                                scope.launch {
-                                    val currentAssessment = assessment
-                                    screeningDao.insert(ScreeningEntity(
-                                        heartRateBpm = rppgResult.bpm?.toFloat(),
-                                        heartRateConfidence = rppgResult.confidence,
-                                        pallorSeverity = pallorResult.severity.name,
-                                        edemaSeverity = edemaResult.severity.name,
-                                        triageLevel = "Rule-based",
-                                        symptoms = currentVitals.toString(),
-                                        recommendations = currentAssessment?.recommendations?.joinToString("; ") ?: "",
-                                        edemaRiskFactors = edemaResult.riskFactors.joinToString(","),
-                                        language = selectedLanguage,
-                                        isPregnant = isPregnant,
-                                        gestationalWeeks = gestationalWeeks.toIntOrNull()
-                                    ))
-                                }
+
                             }
                         }
                     )

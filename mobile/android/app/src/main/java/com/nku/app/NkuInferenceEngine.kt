@@ -250,12 +250,15 @@ class NkuInferenceEngine(private val context: Context) {
                     englishText = translated
                 } else if (NkuTranslator.requiresCloud(language)) {
                     // ML Kit doesn't support this language on-device
-                    Log.w(TAG, "ML Kit unsupported for $language, cloud fallback needed")
-                    // Pass through as-is; cloud backend handles unsupported languages
-                    // in the full triage flow when network is available
+                    Log.w(TAG, "ML Kit unsupported for $language, no cloud client available — processing raw input")
+                    // F6 fix: Inform user that translation is unavailable
+                    _progress.value = "Translation unavailable for this language — processing directly..."
+                    // Pass through as-is; MedGemma may still partially understand
+                    // common medical terms in major African languages
                     englishText = sanitizedInput
                 } else {
                     Log.w(TAG, "Translation failed for $language, using raw input")
+                    _progress.value = "Translation failed — processing directly..."
                     englishText = sanitizedInput  // Fallback: use as-is
                 }
             } else {

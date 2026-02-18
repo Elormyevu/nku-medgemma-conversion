@@ -43,7 +43,9 @@ fun TriageScreen(
     vitalSigns: VitalSigns,
     rppgResult: RPPGResult,
     pallorResult: PallorResult,
+    jaundiceResult: JaundiceResult,
     edemaResult: EdemaResult,
+    respiratoryResult: RespiratoryResult,
     assessment: ClinicalAssessment?,
     sensorFusion: SensorFusion,
     nkuTTS: NkuTTS,
@@ -57,7 +59,9 @@ fun TriageScreen(
     val context = LocalContext.current
     val hasAnyData = (rppgResult.bpm != null && rppgResult.confidence > 0.4f) ||
                      pallorResult.hasBeenAnalyzed ||
-                     edemaResult.hasBeenAnalyzed
+                     jaundiceResult.hasBeenAnalyzed ||
+                     edemaResult.hasBeenAnalyzed ||
+                     respiratoryResult.confidence > 0.4f
     var symptomText by remember { mutableStateOf("") }
     var isListening by remember { mutableStateOf(false) }
     var micPermissionDenied by remember { mutableStateOf(false) }
@@ -116,7 +120,9 @@ fun TriageScreen(
                 Spacer(Modifier.height(8.dp))
                 DataCheckRow(strings.heartRate, rppgResult.bpm != null && rppgResult.confidence > 0.4f, rppgResult.bpm?.let { "${it.toInt()} ${strings.bpm}" }, strings.notDone)
                 DataCheckRow(strings.anemiaScreen, pallorResult.hasBeenAnalyzed, if (pallorResult.hasBeenAnalyzed) pallorResult.severity.name else null, strings.notDone)
+                DataCheckRow(strings.jaundiceScreen, jaundiceResult.hasBeenAnalyzed, if (jaundiceResult.hasBeenAnalyzed) jaundiceResult.severity.name else null, strings.notDone)
                 DataCheckRow(strings.swellingCheck, edemaResult.hasBeenAnalyzed, if (edemaResult.hasBeenAnalyzed) edemaResult.severity.name else null, strings.notDone)
+                DataCheckRow(strings.respiratoryScreen, respiratoryResult.confidence > 0.4f, if (respiratoryResult.confidence > 0.4f) respiratoryResult.classification.name else null, strings.notDone)
             }
         }
         

@@ -30,7 +30,9 @@ class HomeScreenTest {
             HomeScreen(
                 rppgResult = RPPGResult(),
                 pallorResult = PallorResult(),
+                jaundiceResult = JaundiceResult(),
                 edemaResult = EdemaResult(),
+                respiratoryResult = RespiratoryResult(),
                 strings = defaultStrings,
                 selectedLanguage = "en",
                 onLanguageChange = {}
@@ -48,7 +50,9 @@ class HomeScreenTest {
             HomeScreen(
                 rppgResult = RPPGResult(),
                 pallorResult = PallorResult(),
+                jaundiceResult = JaundiceResult(),
                 edemaResult = EdemaResult(),
+                respiratoryResult = RespiratoryResult(),
                 strings = defaultStrings,
                 selectedLanguage = "en",
                 onLanguageChange = {}
@@ -66,14 +70,16 @@ class HomeScreenTest {
             HomeScreen(
                 rppgResult = RPPGResult(),
                 pallorResult = PallorResult(),
+                jaundiceResult = JaundiceResult(),
                 edemaResult = EdemaResult(),
+                respiratoryResult = RespiratoryResult(),
                 strings = defaultStrings,
                 selectedLanguage = "en",
                 onLanguageChange = {}
             )
         }
 
-        composeTestRule.onNodeWithText("0 of 3 screenings complete").assertIsDisplayed()
+        composeTestRule.onNodeWithText("0 of 5 screenings complete").assertIsDisplayed()
         composeTestRule.onNodeWithText("Follow the steps below to screen a patient").assertIsDisplayed()
     }
 
@@ -86,7 +92,9 @@ class HomeScreenTest {
             HomeScreen(
                 rppgResult = RPPGResult(),
                 pallorResult = PallorResult(),
+                jaundiceResult = JaundiceResult(),
                 edemaResult = EdemaResult(),
+                respiratoryResult = RespiratoryResult(),
                 strings = defaultStrings,
                 selectedLanguage = "en",
                 onLanguageChange = {},
@@ -105,7 +113,9 @@ class HomeScreenTest {
             HomeScreen(
                 rppgResult = RPPGResult(),
                 pallorResult = PallorResult(),
+                jaundiceResult = JaundiceResult(),
                 edemaResult = EdemaResult(),
+                respiratoryResult = RespiratoryResult(),
                 strings = defaultStrings,
                 selectedLanguage = "en",
                 onLanguageChange = {},
@@ -124,7 +134,9 @@ class HomeScreenTest {
             HomeScreen(
                 rppgResult = RPPGResult(),
                 pallorResult = PallorResult(),
+                jaundiceResult = JaundiceResult(),
                 edemaResult = EdemaResult(),
+                respiratoryResult = RespiratoryResult(),
                 strings = defaultStrings,
                 selectedLanguage = "en",
                 onLanguageChange = {},
@@ -145,7 +157,9 @@ class HomeScreenTest {
             HomeScreen(
                 rppgResult = RPPGResult(),
                 pallorResult = PallorResult(),
+                jaundiceResult = JaundiceResult(),
                 edemaResult = EdemaResult(),
+                respiratoryResult = RespiratoryResult(),
                 strings = hausaStrings,
                 selectedLanguage = "ha",
                 onLanguageChange = {}
@@ -163,7 +177,9 @@ class HomeScreenTest {
             HomeScreen(
                 rppgResult = RPPGResult(),
                 pallorResult = PallorResult(),
+                jaundiceResult = JaundiceResult(),
                 edemaResult = EdemaResult(),
+                respiratoryResult = RespiratoryResult(),
                 strings = yorubaStrings,
                 selectedLanguage = "yo",
                 onLanguageChange = {}
@@ -174,95 +190,4 @@ class HomeScreenTest {
         composeTestRule.onNodeWithText("Àyẹ̀wò ẹ̀jẹ̀").assertIsDisplayed()
     }
 
-    // ── Saved Count Tests ─────────────────────────────────────────
-
-    @Test
-    fun homeScreen_showsSavedCount_whenGreaterThanZero() {
-        composeTestRule.setContent {
-            HomeScreen(
-                rppgResult = RPPGResult(),
-                pallorResult = PallorResult(),
-                edemaResult = EdemaResult(),
-                strings = defaultStrings,
-                selectedLanguage = "en",
-                onLanguageChange = {},
-                savedScreeningCount = 5
-            )
-        }
-
-        composeTestRule.onNodeWithText("💾 5 screenings saved").assertIsDisplayed()
-    }
-
-    @Test
-    fun homeScreen_hidesSavedCount_whenZero() {
-        composeTestRule.setContent {
-            HomeScreen(
-                rppgResult = RPPGResult(),
-                pallorResult = PallorResult(),
-                edemaResult = EdemaResult(),
-                strings = defaultStrings,
-                selectedLanguage = "en",
-                onLanguageChange = {},
-                savedScreeningCount = 0
-            )
-        }
-
-        composeTestRule.onNodeWithText("💾", substring = true).assertDoesNotExist()
-    }
-
-    // ── Export Button Tests ───────────────────────────────────────
-
-    @Test
-    fun homeScreen_showsExportButton_whenScreeningsSaved() {
-        composeTestRule.setContent {
-            HomeScreen(
-                rppgResult = RPPGResult(),
-                pallorResult = PallorResult(),
-                edemaResult = EdemaResult(),
-                strings = defaultStrings,
-                selectedLanguage = "en",
-                onLanguageChange = {},
-                savedScreeningCount = 3
-            )
-        }
-
-        composeTestRule.onNodeWithText(defaultStrings.exportData).assertIsDisplayed()
-    }
-
-    @Test
-    fun homeScreen_hidesExportButton_whenNoScreeningsSaved() {
-        composeTestRule.setContent {
-            HomeScreen(
-                rppgResult = RPPGResult(),
-                pallorResult = PallorResult(),
-                edemaResult = EdemaResult(),
-                strings = defaultStrings,
-                selectedLanguage = "en",
-                onLanguageChange = {},
-                savedScreeningCount = 0
-            )
-        }
-
-        composeTestRule.onNodeWithText(defaultStrings.exportData).assertDoesNotExist()
-    }
-
-    @Test
-    fun homeScreen_exportButton_triggersCallback() {
-        var exportCalled = false
-        composeTestRule.setContent {
-            HomeScreen(
-                rppgResult = RPPGResult(),
-                pallorResult = PallorResult(),
-                edemaResult = EdemaResult(),
-                strings = defaultStrings,
-                selectedLanguage = "en",
-                onLanguageChange = {},
-                savedScreeningCount = 2,
-                onExportData = { exportCalled = true }
-            )
-        }
-
-        composeTestRule.onNodeWithText(defaultStrings.exportData).performClick()
-        assert(exportCalled) { "Expected onExportData callback to be triggered" }
-    }
 }

@@ -12,6 +12,7 @@ PROJECT_ID="${GCP_PROJECT_ID:-nku-health}"
 REGION="${CLOUD_RUN_REGION:-us-central1}"
 SERVICE_NAME="nku-inference"
 SERVICE_ACCOUNT="${SERVICE_ACCOUNT:-}"
+API_KEY_SECRET_NAME="${NKU_API_KEY_SECRET:-nku-api-key}"
 
 echo "🚀 Deploying Nku Inference API to Cloud Run..."
 echo "   Project: $PROJECT_ID"
@@ -28,6 +29,15 @@ if [ -z "${HF_TOKEN}" ]; then
     echo "❌ ERROR: HF_TOKEN environment variable is not set"
     echo "   Set it with: export HF_TOKEN=your_token"
     echo "   Or use Secret Manager: gcloud secrets versions access latest --secret=hf-token"
+    exit 1
+fi
+
+# Validate API key configuration is present (required by require_api_key in production)
+if [ -z "${NKU_API_KEY}" ] && ! gcloud secrets describe "$API_KEY_SECRET_NAME" --project="$PROJECT_ID" &>/dev/null; then
+    echo "❌ ERROR: Missing API key configuration for protected endpoints"
+    echo "   Option A (recommended): create Secret Manager secret '$API_KEY_SECRET_NAME'"
+    echo "      gcloud secrets create $API_KEY_SECRET_NAME --data-file=- <<< \"your_api_key_here\""
+    echo "   Option B: export NKU_API_KEY=your_api_key"
     exit 1
 fi
 
@@ -70,6 +80,15 @@ if gcloud secrets describe hf-token --project="$PROJECT_ID" &>/dev/null; then
 else
     echo "📦 Using environment variable for HF_TOKEN"
     DEPLOY_ARGS+=("--set-env-vars=HF_TOKEN=${HF_TOKEN}")
+fi
+
+# Configure NKU_API_KEY (secret-first, env fallback)
+if gcloud secrets describe "$API_KEY_SECRET_NAME" --project="$PROJECT_ID" &>/dev/null; then
+    echo "🔐 Using Secret Manager for NKU_API_KEY ($API_KEY_SECRET_NAME)"
+    DEPLOY_ARGS+=("--set-secrets=NKU_API_KEY=${API_KEY_SECRET_NAME}:latest")
+elif [ -n "${NKU_API_KEY}" ]; then
+    echo "🔐 Using environment variable for NKU_API_KEY"
+    DEPLOY_ARGS+=("--set-env-vars=NKU_API_KEY=${NKU_API_KEY}")
 fi
 
 # Execute deployment (B-4 fix: direct execution instead of eval)

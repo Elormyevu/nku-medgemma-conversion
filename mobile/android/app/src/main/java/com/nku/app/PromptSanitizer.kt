@@ -65,6 +65,13 @@ object PromptSanitizer {
         Regex("</?\\w+>"),  // HTML/XML tags
         Regex("do\\s+not\\s+translate", RegexOption.IGNORE_CASE),
         Regex("reveal\\s+(your|the)\\s+prompt", RegexOption.IGNORE_CASE),
+        // Paraphrase-resistant override/prompt-leak patterns (cloud parity)
+        Regex("(stop|avoid|cease)\\s+following\\s+(your|the|current|previous)\\s+(instructions?|rules?|polic(y|ies)|safety|guardrails?)", RegexOption.IGNORE_CASE),
+        Regex("(prioriti[sz]e|follow)\\s+(these|new|my)\\s+(instructions?|rules?|guidance|directives?)\\s+(over|instead\\s+of)", RegexOption.IGNORE_CASE),
+        Regex("(share|reveal|disclose|output|print|dump|expose)\\s+(your|the)?\\s*(internal|hidden|system|developer|base|initial)?\\s*(prompt|instructions?|directives?|rules?|guidance)", RegexOption.IGNORE_CASE),
+        Regex("initialized\\s+with", RegexOption.IGNORE_CASE),
+        Regex("operating\\s+rules", RegexOption.IGNORE_CASE),
+        Regex("(always|must|regardless)\\s+(say|classify|output).*(high|medium|low)\\s*(severity)?", RegexOption.IGNORE_CASE),
     )
 
     /**
@@ -93,6 +100,18 @@ object PromptSanitizer {
         '$' to 's',
     )
 
+    private val OVERRIDE_VERBS = setOf(
+        "ignore", "forget", "disregard", "override", "bypass", "disable",
+        "stop", "prioritize", "prioritise", "replace", "reveal", "disclose",
+        "share", "print", "dump", "show", "output", "expose"
+    )
+
+    private val CONTROL_TARGETS = setOf(
+        "instruction", "instructions", "prompt", "system", "developer",
+        "policy", "policies", "rule", "rules", "safety", "guardrail",
+        "guardrails", "directive", "directives", "guidance", "hidden", "internal"
+    )
+
     /**
      * Normalize Unicode homoglyphs to their Latin equivalents.
      * Prevents attackers from using Cyrillic/Greek lookalike characters
@@ -117,6 +136,24 @@ object PromptSanitizer {
             sb.append(LEETSPEAK_MAP[char] ?: char)
         }
         return sb.toString()
+    }
+
+    private fun containsOverrideIntent(input: String): Boolean {
+        val normalized = normalizeLeetspeakForDetection(input.lowercase())
+        val tokenRegex = Regex("[a-z]+")
+        val tokenSet = tokenRegex.findAll(normalized).map { it.value }.toSet()
+        if (tokenSet.isEmpty()) return false
+
+        val hasOverrideVerb = tokenSet.any { it in OVERRIDE_VERBS }
+        val hasControlTarget = tokenSet.any { it in CONTROL_TARGETS }
+        if (hasOverrideVerb && hasControlTarget) return true
+
+        val mentionsInit = tokenSet.contains("initialized") || tokenSet.contains("initialised")
+        val mentionsControlDocs = tokenSet.contains("instructions") ||
+            tokenSet.contains("prompt") ||
+            tokenSet.contains("rules") ||
+            tokenSet.contains("directives")
+        return mentionsInit && mentionsControlDocs
     }
 
     /**
@@ -196,6 +233,11 @@ object PromptSanitizer {
             }
         }
 
+        if (!injectionDetected && containsOverrideIntent(cleaned)) {
+            injectionDetected = true
+            cleaned = "[filtered]"
+        }
+
         if (injectionDetected) {
             Log.w(TAG, "Prompt injection patterns detected and stripped from user input")
         }
@@ -270,6 +312,8 @@ object PromptSanitizer {
             Regex("I\\s+am\\s+now\\s+in", RegexOption.IGNORE_CASE),
             Regex("\\{\\s*\"role\""),
             Regex("system\\s*prompt", RegexOption.IGNORE_CASE),
+            Regex("developer\\s+instructions?", RegexOption.IGNORE_CASE),
+            Regex("you\\s+are\\s+now", RegexOption.IGNORE_CASE),
         )
 
         for (pattern in suspiciousPatterns) {

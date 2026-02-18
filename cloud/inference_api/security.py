@@ -82,6 +82,17 @@ class InputValidator:
         r'\bbase64\b.*\bdecode\b',
         r'eval\s*\(',
         r'exec\s*\(',
+        # Paraphrase-resistant override/prompt-leak patterns
+        r'(stop|avoid|cease)\s+following\s+(your|the|current|previous)\s+'
+        r'(instructions?|rules?|polic(y|ies)|safety|guardrails?)',
+        r'(prioriti[sz]e|follow)\s+(these|new|my)\s+'
+        r'(instructions?|rules?|guidance|directives?)\s+(over|instead\s+of)',
+        r'(share|reveal|disclose|output|print|dump|expose)\s+(your|the)?\s*'
+        r'(internal|hidden|system|developer|base|initial)?\s*'
+        r'(prompt|instructions?|directives?|rules?|guidance)',
+        r'initialized\s+with',
+        r'operating\s+rules',
+        r'(always|must|regardless)\s+(say|classify|output).*(high|medium|low)\s*(severity)?',
     ]
 
     # Normalize common leetspeak substitutions before pattern checks.
@@ -96,6 +107,18 @@ class InputValidator:
         '@': 'a',
         '$': 's',
     })
+
+    OVERRIDE_VERBS = {
+        'ignore', 'forget', 'disregard', 'override', 'bypass', 'disable',
+        'stop', 'prioritize', 'prioritise', 'replace', 'reveal', 'disclose',
+        'share', 'print', 'dump', 'show', 'output', 'expose'
+    }
+
+    CONTROL_TARGETS = {
+        'instruction', 'instructions', 'prompt', 'system', 'developer',
+        'policy', 'policies', 'rule', 'rules', 'safety', 'guardrail',
+        'guardrails', 'directive', 'directives', 'guidance', 'hidden', 'internal'
+    }
 
     def __init__(self):
         self._compiled_patterns = [
@@ -134,6 +157,11 @@ class InputValidator:
         if injection_detected:
             errors.append("Input contains potentially malicious patterns")
             logger.warning(f"Injection attempt detected: {sanitized[:100]}...")
+            return ValidationResult(False, "", errors)
+
+        if self._check_instruction_override_intent(sanitized):
+            errors.append("Input contains potentially malicious patterns")
+            logger.warning(f"Override-intent prompt injection detected: {sanitized[:100]}...")
             return ValidationResult(False, "", errors)
 
         # L-3 fix: Check for base64-encoded injection payloads
@@ -189,6 +217,25 @@ class InputValidator:
                 return True
         return False
 
+    def _check_instruction_override_intent(self, text: str) -> bool:
+        """Detect paraphrased override attempts missed by explicit regex patterns."""
+        normalized = self._normalize_leetspeak(text.lower())
+        tokens = re.findall(r'[a-z]+', normalized)
+        if not tokens:
+            return False
+
+        token_set = set(tokens)
+        has_override_verb = any(t in self.OVERRIDE_VERBS for t in token_set)
+        has_control_target = any(t in self.CONTROL_TARGETS for t in token_set)
+        if has_override_verb and has_control_target:
+            return True
+
+        # Prompt-leak intent often asks about hidden initialization directives.
+        if {'initialized', 'initialised'} & token_set and {'instructions', 'prompt', 'rules', 'directives'} & token_set:
+            return True
+
+        return False
+
     def _normalize_leetspeak(self, text: str) -> str:
         """Normalize common leetspeak substitutions for detection only."""
         return text.translate(self.LEETSPEAK_MAP)
@@ -242,7 +289,7 @@ class InputValidator:
             try:
                 decoded = base64.b64decode(match).decode('utf-8', errors='ignore').lower()
                 # Check decoded content with the same normalization pipeline.
-                if self._check_injection_patterns(decoded):
+                if self._check_injection_patterns(decoded) or self._check_instruction_override_intent(decoded):
                     return True
             except Exception:
                 continue
@@ -340,6 +387,18 @@ Assessment:""",
         if cls.DELIMITER in cleaned:
             logger.warning("Delimiter leakage detected in LLM output — rejecting")
             return False, ""
+
+        suspicious_output_patterns = [
+            r'system\s+prompt',
+            r'developer\s+instructions?',
+            r'ignore\s+(all\s+)?(previous|above|prior)',
+            r'\{?\s*"role"\s*:\s*"(system|assistant|developer)"',
+            r'you\s+are\s+now',
+        ]
+        for pattern in suspicious_output_patterns:
+            if re.search(pattern, cleaned, re.IGNORECASE):
+                logger.warning("Suspicious instruction leakage in LLM output — rejecting")
+                return False, ""
 
         return True, cleaned
 

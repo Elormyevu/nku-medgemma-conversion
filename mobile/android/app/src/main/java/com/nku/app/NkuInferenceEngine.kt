@@ -90,7 +90,12 @@ class NkuInferenceEngine(private val context: Context) {
     private fun resolveModelFile(modelFileName: String): File? {
         // Primary: extracted from asset packs (cached in internal storage)
         val internal = File(modelDir, modelFileName)
-        if (internal.exists()) return internal
+        if (internal.exists()) {
+            if (ModelFileValidator.isValidGguf(internal)) {
+                return internal
+            }
+            Log.w(TAG, "Invalid/corrupt GGUF in internal storage: $modelFileName (${internal.length()} bytes)")
+        }
 
         // Secondary: Play Asset Delivery install-time asset pack
         val packName = MODEL_PACK_MAP[modelFileName]
@@ -99,9 +104,11 @@ class NkuInferenceEngine(private val context: Context) {
                 val packLocation = assetPackManager.getPackLocation(packName)
                 if (packLocation != null) {
                     val packFile = File(packLocation.assetsPath(), modelFileName)
-                    if (packFile.exists()) {
+                    if (packFile.exists() && ModelFileValidator.isValidGguf(packFile)) {
                         Log.i(TAG, "Model found in PAD pack '$packName': $modelFileName")
                         return packFile
+                    } else if (packFile.exists()) {
+                        Log.w(TAG, "Invalid/corrupt GGUF in PAD pack '$packName': $modelFileName (${packFile.length()} bytes)")
                     }
                 }
             } catch (e: Exception) {
@@ -112,9 +119,11 @@ class NkuInferenceEngine(private val context: Context) {
         // Fallback: /sdcard/Download/ (for development/testing)
         val sdcard = File(Environment.getExternalStoragePublicDirectory(
             Environment.DIRECTORY_DOWNLOADS), modelFileName)
-        if (sdcard.exists()) {
+        if (sdcard.exists() && ModelFileValidator.isValidGguf(sdcard)) {
             Log.i(TAG, "Model found on sdcard: $modelFileName")
             return sdcard
+        } else if (sdcard.exists()) {
+            Log.w(TAG, "Invalid/corrupt GGUF on sdcard: $modelFileName (${sdcard.length()} bytes)")
         }
 
         Log.w(TAG, "Model not found anywhere: $modelFileName")

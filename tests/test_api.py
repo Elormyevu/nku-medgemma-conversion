@@ -10,6 +10,7 @@ import unittest
 import json
 import sys
 import os
+from unittest.mock import patch
 
 # Add project root to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -49,6 +50,58 @@ class TestHealthEndpoint(unittest.TestCase):
         self.assertIn('status', data)
         self.assertIn('service', data)
         self.assertNotIn('version', data)  # Verify version stays hidden
+
+
+class TestApiKeyEnforcement(unittest.TestCase):
+    """Tests for API key enforcement behavior on protected endpoints."""
+
+    def setUp(self):
+        from cloud.inference_api.main import app, config
+        app.config['TESTING'] = True
+        self.client = app.test_client()
+        self._old_debug = config.debug
+        config.debug = False  # simulate production mode
+
+    def tearDown(self):
+        from cloud.inference_api.main import config
+        config.debug = self._old_debug
+
+    def test_production_without_api_key_is_misconfigured(self):
+        """When NKU_API_KEY is missing in production, endpoint must return 503."""
+        with patch('cloud.inference_api.main._api_key', None):
+            response = self.client.post('/translate', json={
+                'text': 'hello',
+                'source': 'en',
+                'target': 'twi'
+            })
+        self.assertEqual(response.status_code, 503)
+        data = json.loads(response.data)
+        self.assertEqual(data['error'], 'misconfigured')
+
+    def test_invalid_api_key_is_rejected(self):
+        """Missing/incorrect API key must return 401."""
+        with patch('cloud.inference_api.main._api_key', 'top-secret'):
+            response = self.client.post('/translate', json={
+                'text': 'hello',
+                'source': 'en',
+                'target': 'twi'
+            }, headers={'X-API-Key': 'wrong-key'})
+        self.assertEqual(response.status_code, 401)
+        data = json.loads(response.data)
+        self.assertEqual(data['error'], 'unauthorized')
+
+    def test_valid_api_key_allows_request_to_reach_model_stage(self):
+        """Valid API key should pass auth and continue through downstream decorators."""
+        with patch('cloud.inference_api.main._api_key', 'top-secret'):
+            with patch('cloud.inference_api.main.load_models', return_value=(False, "offline")):
+                response = self.client.post('/translate', json={
+                    'text': 'hello',
+                    'source': 'en',
+                    'target': 'twi'
+                }, headers={'X-API-Key': 'top-secret'})
+        self.assertEqual(response.status_code, 503)
+        data = json.loads(response.data)
+        self.assertEqual(data['error'], 'model_load_failed')
 
 
 class TestTranslateEndpoint(unittest.TestCase):

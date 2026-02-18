@@ -80,6 +80,7 @@ class AppConfig:
         # Parse allowed origins from comma-separated list
         allowed_origins_str = os.environ.get('ALLOWED_ORIGINS', '')
         allowed_origins = [o.strip() for o in allowed_origins_str.split(',') if o.strip()]
+        default_model = ModelConfig()
 
         return cls(
             env=os.environ.get('APP_ENV', 'production'),
@@ -89,14 +90,16 @@ class AppConfig:
             log_json=os.environ.get('LOG_JSON', 'true').lower() == 'true',
 
             model=ModelConfig(
-                medgemma_repo=os.environ.get('MEDGEMMA_REPO', 'mradermacher/medgemma-4b-it-GGUF'),
-                medgemma_file=os.environ.get('MEDGEMMA_FILE', 'medgemma-4b-it.Q2_K.gguf'),
-                medgemma_revision=os.environ.get('MEDGEMMA_REVISION'),
-                translategemma_repo=os.environ.get('TRANSLATEGEMMA_REPO', 'mradermacher/medgemma-4b-it-GGUF'),
-                translategemma_file=os.environ.get('TRANSLATEGEMMA_FILE', 'medgemma-4b-it.Q2_K.gguf'),
-                translategemma_revision=os.environ.get('TRANSLATEGEMMA_REVISION'),
-                context_size=int(os.environ.get('MODEL_CONTEXT_SIZE', 2048)),
-                n_threads=int(os.environ.get('MODEL_THREADS', 4)),
+                medgemma_repo=os.environ.get('MEDGEMMA_REPO', default_model.medgemma_repo),
+                medgemma_file=os.environ.get('MEDGEMMA_FILE', default_model.medgemma_file),
+                medgemma_revision=os.environ.get('MEDGEMMA_REVISION', default_model.medgemma_revision),
+                translategemma_repo=os.environ.get('TRANSLATEGEMMA_REPO', default_model.translategemma_repo),
+                translategemma_file=os.environ.get('TRANSLATEGEMMA_FILE', default_model.translategemma_file),
+                translategemma_revision=os.environ.get('TRANSLATEGEMMA_REVISION', default_model.translategemma_revision),
+                context_size=int(os.environ.get('MODEL_CONTEXT_SIZE', default_model.context_size)),
+                n_batch=int(os.environ.get('MODEL_BATCH', default_model.n_batch)),
+                n_threads=int(os.environ.get('MODEL_THREADS', default_model.n_threads)),
+                n_gpu_layers=int(os.environ.get('MODEL_GPU_LAYERS', default_model.n_gpu_layers)),
             ),
 
             rate_limit=RateLimitConfig(

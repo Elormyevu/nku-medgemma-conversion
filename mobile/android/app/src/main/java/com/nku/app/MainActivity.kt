@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.SystemClock
 import android.speech.RecognizerIntent
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -82,6 +83,7 @@ class MainActivity : ComponentActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val onCreateStartMs = SystemClock.elapsedRealtime()
         
         // Initialize components
         thermalManager = ThermalManager(this)
@@ -114,6 +116,8 @@ class MainActivity : ComponentActivity() {
             arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
         )
         
+        Log.i("NkuPerf", "Cold-start: onCreate init took ${SystemClock.elapsedRealtime() - onCreateStartMs}ms")
+
         setContent {
             NkuSentinelApp(
                 thermalManager = thermalManager,

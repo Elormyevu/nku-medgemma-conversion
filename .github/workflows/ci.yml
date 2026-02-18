@@ -151,6 +151,11 @@ jobs:
           pip install pip-audit
           pip-audit -r cloud/inference_api/requirements.txt --ignore-vuln CVE-2025-69872
 
+      - name: Bandit SAST (Cloud API)
+        run: |
+          pip install bandit
+          bandit -r cloud/inference_api/ -ll --exclude cloud/inference_api/security_pytest_suite.py -s B104
+
   # ─── CodeQL Static Analysis (from security-scan.yml) ───
   codeql:
     runs-on: ubuntu-latest

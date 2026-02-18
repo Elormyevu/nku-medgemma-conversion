@@ -171,13 +171,21 @@ object PromptSanitizer {
                 val decoded = String(JBase64.getDecoder().decode(match.value), Charsets.UTF_8)
                 val decodedLeet = normalizeLeetspeakForDetection(decoded)
                 // Check if the decoded content contains injection patterns
+                var decodedInjection = false
                 for (pattern in INJECTION_PATTERNS) {
                     if (pattern.containsMatchIn(decoded) || pattern.containsMatchIn(decodedLeet)) {
-                        result = result.replace(match.value, "[filtered]")
-                        detected = true
-                        Log.w(TAG, "Base64-encoded injection payload detected and stripped")
+                        decodedInjection = true
                         break
                     }
+                }
+                // Cloud parity: also check override-intent heuristic on decoded content
+                if (!decodedInjection && containsOverrideIntent(decoded)) {
+                    decodedInjection = true
+                }
+                if (decodedInjection) {
+                    result = result.replace(match.value, "[filtered]")
+                    detected = true
+                    Log.w(TAG, "Base64-encoded injection payload detected and stripped")
                 }
             } catch (_: Exception) {
                 // Not valid base64 — ignore

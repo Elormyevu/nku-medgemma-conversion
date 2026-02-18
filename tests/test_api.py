@@ -234,5 +234,72 @@ class TestCORSHeaders(unittest.TestCase):
         self.assertIn(response.status_code, [200, 204, 405])
 
 
+class TestSecurityHeaders(unittest.TestCase):
+    """Regression tests for security headers (add_security_headers middleware).
+
+    These headers must be present on every response to satisfy security audit
+    requirements. A silent regression here would degrade the security posture
+    without any test catching it.
+    """
+
+    def setUp(self):
+        self.client = _create_test_client()
+
+    def test_x_content_type_options(self):
+        """Verify X-Content-Type-Options: nosniff is set."""
+        resp = self.client.get('/health')
+        self.assertEqual(resp.headers.get('X-Content-Type-Options'), 'nosniff')
+
+    def test_x_frame_options(self):
+        """Verify X-Frame-Options: DENY is set."""
+        resp = self.client.get('/health')
+        self.assertEqual(resp.headers.get('X-Frame-Options'), 'DENY')
+
+    def test_x_xss_protection(self):
+        """Verify X-XSS-Protection header is set."""
+        resp = self.client.get('/health')
+        self.assertEqual(resp.headers.get('X-XSS-Protection'), '1; mode=block')
+
+    def test_referrer_policy(self):
+        """Verify Referrer-Policy header is set."""
+        resp = self.client.get('/health')
+        self.assertEqual(resp.headers.get('Referrer-Policy'), 'no-referrer')
+
+    def test_content_security_policy(self):
+        """Verify Content-Security-Policy header is present."""
+        resp = self.client.get('/health')
+        csp = resp.headers.get('Content-Security-Policy')
+        self.assertIsNotNone(csp, "Content-Security-Policy header missing")
+        self.assertIn("default-src", csp)
+
+    def test_strict_transport_security(self):
+        """Verify Strict-Transport-Security header is set."""
+        resp = self.client.get('/health')
+        hsts = resp.headers.get('Strict-Transport-Security')
+        self.assertIsNotNone(hsts, "HSTS header missing")
+        self.assertIn('max-age', hsts)
+
+
+class TestInferenceTimeout(unittest.TestCase):
+    """Tests for the InferenceTimeout exception and with_timeout decorator."""
+
+    def test_inference_timeout_exception_exists(self):
+        """Verify InferenceTimeout can be imported and raised."""
+        from cloud.inference_api.main import InferenceTimeout
+        with self.assertRaises(InferenceTimeout):
+            raise InferenceTimeout("test timeout")
+
+    def test_with_timeout_decorator_raises_on_slow_function(self):
+        """Verify with_timeout raises InferenceTimeout for long-running functions."""
+        import time
+        from cloud.inference_api.main import with_timeout, InferenceTimeout
+        @with_timeout(1)
+        def slow_func():
+            time.sleep(5)
+            return "should not reach"
+        with self.assertRaises(InferenceTimeout):
+            slow_func()
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

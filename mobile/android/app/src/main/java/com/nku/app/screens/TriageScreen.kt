@@ -112,6 +112,36 @@ fun TriageScreen(
         Text(strings.triageSubtitle, fontSize = 14.sp, color = Color.Gray)
         
         Spacer(Modifier.height(20.dp))
+
+        // Fix 7: Show in-app warning when selected language is not ML Kit translatable
+        val mlKitLanguages = setOf("en", "fr", "pt", "af", "sw", "ar")
+        if (selectedLanguage !in mlKitLanguages) {
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = NkuColors.Warning.copy(alpha = 0.12f)
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.Translate,
+                        contentDescription = null,
+                        tint = NkuColors.Warning,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(Modifier.width(10.dp))
+                    Text(
+                        "Translation not available for this language — triage will use English.",
+                        color = NkuColors.Warning,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+            Spacer(Modifier.height(12.dp))
+        }
         
         // Data completeness
         Card(colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground), modifier = Modifier.fillMaxWidth()) {

@@ -14,10 +14,13 @@ class ModelConfig:
     # D-04: Cloud uses Q2_K quantization (higher quality, ~1.6GB per model) because
     # Cloud Run instances have 8GB RAM. Mobile uses IQ1_M (~0.78GB) for 2GB-RAM
     # budget devices. This is an intentional quality/size trade-off, not a mismatch.
-    medgemma_repo: str = "wredd/MedGemma-1.5-4B-PT-GGUF"
-    medgemma_file: str = "MedGemma-1.5-4B-PT-Q2_K.gguf"
-    translategemma_repo: str = "wredd/TranslateGemma-4B-GGUF"
-    translategemma_file: str = "TranslateGemma-4B-Q2_K.gguf"
+    medgemma_repo: str = "mradermacher/medgemma-4b-it-GGUF"
+    medgemma_file: str = "medgemma-4b-it.Q2_K.gguf"
+    # NOTE: No public TranslateGemma GGUF exists. These defaults will fail
+    # unless overridden via TRANSLATEGEMMA_REPO / TRANSLATEGEMMA_FILE env vars.
+    # The mobile app uses ML Kit for translation instead.
+    translategemma_repo: str = "google/translategemma"  # placeholder — override via env
+    translategemma_file: str = "translategemma-4b.gguf"  # placeholder — override via env
     context_size: int = 2048
     n_batch: int = 512
     n_threads: int = 4
@@ -81,10 +84,10 @@ class AppConfig:
             log_json=os.environ.get('LOG_JSON', 'true').lower() == 'true',
 
             model=ModelConfig(
-                medgemma_repo=os.environ.get('MEDGEMMA_REPO', 'wredd/MedGemma-1.5-4B-PT-GGUF'),
-                medgemma_file=os.environ.get('MEDGEMMA_FILE', 'MedGemma-1.5-4B-PT-Q2_K.gguf'),
-                translategemma_repo=os.environ.get('TRANSLATEGEMMA_REPO', 'wredd/TranslateGemma-4B-GGUF'),
-                translategemma_file=os.environ.get('TRANSLATEGEMMA_FILE', 'TranslateGemma-4B-Q2_K.gguf'),
+                medgemma_repo=os.environ.get('MEDGEMMA_REPO', 'mradermacher/medgemma-4b-it-GGUF'),
+                medgemma_file=os.environ.get('MEDGEMMA_FILE', 'medgemma-4b-it.Q2_K.gguf'),
+                translategemma_repo=os.environ.get('TRANSLATEGEMMA_REPO', 'google/translategemma'),
+                translategemma_file=os.environ.get('TRANSLATEGEMMA_FILE', 'translategemma-4b.gguf'),
                 context_size=int(os.environ.get('MODEL_CONTEXT_SIZE', 2048)),
                 n_threads=int(os.environ.get('MODEL_THREADS', 4)),
             ),

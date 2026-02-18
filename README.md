@@ -265,7 +265,7 @@ nku-medgemma-conversion/
 
 ## 🏆 MedGemma Impact Challenge
 
-This project is a submission for the [MedGemma Impact Challenge](https://www.kaggle.com/competitions/medgemma-impact-challenge) on Kaggle.
+This project is a submission for the [MedGemma Impact Challenge](https://www.kaggle.com/competitions/med-gemma-impact-challenge) on Kaggle.
 
 **Target Track**: Edge AI Prize
 

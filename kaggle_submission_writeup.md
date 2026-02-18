@@ -78,7 +78,7 @@ This structured prompting achieves a median 53% improvement over zero-shot basel
 
 All screening modalities are deliberately **skin-tone independent** — critical for Fitzpatrick V-VI populations. Sensor confidence must exceed 75% for inclusion in MedGemma's prompt; below-threshold readings trigger a localized ⚠ warning prompting the CHW to re-capture in better conditions. When MedGemma is unavailable, the app displays a transparency banner identifying the triage as guideline-based (WHO/IMCI) with actionable recovery steps — all in the CHW's selected language.
 
-**Safety**: 6-layer `PromptSanitizer` at every model boundary (zero-width stripping, homoglyph normalization, base64 detection, regex patterns, character allowlist, delimiter wrapping). Auto-pause at 42°C. SQLCipher AES-256 encryption at rest. Always-on "Consult a healthcare professional" disclaimer.
+**Safety**: 6-layer `PromptSanitizer` at every model boundary (zero-width stripping, homoglyph normalization, base64 detection, regex patterns, character allowlist, delimiter wrapping). Auto-pause at 42°C. Always-on "Consult a healthcare professional" disclaimer.
 
 **46 Pan-African languages** (14 clinically verified) via ML Kit on-device + Cloud Translate fallback.
 

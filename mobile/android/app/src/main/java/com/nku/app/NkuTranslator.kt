@@ -17,7 +17,9 @@ import kotlin.coroutines.resume
  * languages (English, French, Portuguese) for fully offline operation.
  *
  * For indigenous languages not supported by ML Kit (e.g., Twi, Hausa,
- * Yoruba), translations fall back to the cloud inference API.
+ * Yoruba), the translator returns null and the inference engine degrades
+ * gracefully — passing raw input directly to MedGemma, which may still
+ * partially understand common medical terms in major African languages.
  *
  * Key advantage over TranslateGemma: ~30MB per language pack vs ~2.3GB
  * GGUF model, and ML Kit runs in a separate process — no RAM contention

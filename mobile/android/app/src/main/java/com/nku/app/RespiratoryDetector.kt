@@ -295,7 +295,7 @@ class RespiratoryDetector(private val context: Context? = null) {
             val quality = assessAudioQuality(resampled)
 
             // Step 4: Pad/trim to exactly 2 seconds (32000 samples)
-            val clip = padOrTrimTo2Seconds(resampled)
+            val clip = selectBest2SecondWindow(resampled)
 
             // Step 5: Run HeAR inference or heuristic fallback
             val (riskScore, confidence, classScores) = if (usesTflite && interpreter != null) {
@@ -370,7 +370,7 @@ class RespiratoryDetector(private val context: Context? = null) {
                     floatSamples
                 }
                 val quality = assessAudioQuality(resampled)
-                val clip = padOrTrimTo2Seconds(resampled)
+                val clip = selectBest2SecondWindow(resampled)
 
                 // Step 2: Tier 1 — Event Detector
                 val (riskScore, confidence, classScores) = if (usesTflite && interpreter != null) {
@@ -596,12 +596,41 @@ class RespiratoryDetector(private val context: Context? = null) {
     // ── Audio Processing Utilities ─────────────────────────────────
 
     /**
-     * Pad or trim audio to exactly 2 seconds (32000 samples at 16kHz).
+     * Select the best 2-second window (32000 samples at 16kHz) from the audio.
+     *
+     * For inputs longer than 2 seconds (e.g., the 5s cough recording), this
+     * slides a 2s window and picks the segment with the highest RMS energy —
+     * most likely to contain the cough. This avoids silently discarding
+     * coughs that occur after the first 2 seconds.
+     *
+     * For inputs exactly 2s: returned as-is.
+     * For inputs shorter than 2s: zero-padded to 32000 samples.
      */
-    private fun padOrTrimTo2Seconds(samples: FloatArray): FloatArray {
+    private fun selectBest2SecondWindow(samples: FloatArray): FloatArray {
         return when {
             samples.size == CLIP_DURATION_SAMPLES -> samples
-            samples.size > CLIP_DURATION_SAMPLES -> samples.sliceArray(0 until CLIP_DURATION_SAMPLES)
+            samples.size > CLIP_DURATION_SAMPLES -> {
+                // Slide a 2s window across the buffer, pick highest energy
+                var bestStart = 0
+                var bestEnergy = -1.0
+
+                // Step size: 1600 samples (100ms) for reasonable granularity
+                val stepSize = TARGET_SAMPLE_RATE / 10
+                var offset = 0
+                while (offset + CLIP_DURATION_SAMPLES <= samples.size) {
+                    var sumSq = 0.0
+                    for (i in offset until offset + CLIP_DURATION_SAMPLES) {
+                        sumSq += samples[i] * samples[i]
+                    }
+                    if (sumSq > bestEnergy) {
+                        bestEnergy = sumSq
+                        bestStart = offset
+                    }
+                    offset += stepSize
+                }
+
+                samples.sliceArray(bestStart until bestStart + CLIP_DURATION_SAMPLES)
+            }
             else -> {
                 // Zero-pad to 2 seconds
                 val padded = FloatArray(CLIP_DURATION_SAMPLES)

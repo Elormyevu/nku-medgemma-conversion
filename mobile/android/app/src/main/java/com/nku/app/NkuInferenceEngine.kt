@@ -18,7 +18,7 @@ import java.io.File
  * ML Kit handling translation separately.
  *
  * Flow:
- *   1. ML Kit translates local language → English (on-device or cloud fallback)
+ *   1. ML Kit translates local language → English (on-device; unsupported languages pass through raw)
  *   2. Load MedGemma → clinical reasoning (100% on-device)
  *   3. Unload MedGemma
  *   4. ML Kit translates English → local language

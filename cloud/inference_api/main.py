@@ -86,6 +86,14 @@ _model_lock = threading.Lock()
 medgemma: Optional[Llama] = None
 translategemma: Optional[Llama] = None
 
+# C-6 fix: Warn at startup if TranslateGemma defaults to MedGemma
+if config.model.translategemma_repo == config.model.medgemma_repo \
+        and config.model.translategemma_file == config.model.medgemma_file:
+    logger.warning(
+        "TranslateGemma not configured separately — using MedGemma as fallback translator. "
+        "Set TRANSLATEGEMMA_REPO and TRANSLATEGEMMA_FILE env vars to override."
+    )
+
 
 # =============================================================================
 # SECURITY HEADERS (S-06)

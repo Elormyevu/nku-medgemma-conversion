@@ -95,6 +95,15 @@ cd mobile/android
 - [ ] All tests pass locally
 - [ ] No new warnings
 
+## 📊 Benchmark Artifact Policy
+
+> **Frozen as of v1.0 submission (February 2026)**
+
+- Files under `benchmark/` tagged **[DEPRECATED]** are historical snapshots and **must not** be cited as evidence for current performance claims.
+- Any PR making latency, throughput, or accuracy claims **must** include a fresh benchmark run on the target hardware with reproducible scripts.
+- Benchmark artifacts must record: device model, Android version, SDK build, model quantization variant, and commit SHA.
+- Deprecated artifacts may only be retained for historical reference and must remain clearly labeled.
+
 ## 🐛 Bug Reports
 
 Use the [GitHub Issues](https://github.com/Elormyevu/nku-medgemma-conversion/issues) template:

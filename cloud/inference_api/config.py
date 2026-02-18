@@ -16,14 +16,16 @@ class ModelConfig:
     # budget devices. This is an intentional quality/size trade-off, not a mismatch.
     medgemma_repo: str = "mradermacher/medgemma-4b-it-GGUF"
     medgemma_file: str = "medgemma-4b-it.Q2_K.gguf"
-    medgemma_revision: Optional[str] = None
+    # Pinned to exact commit SHA for submission reproducibility (audit §10 #2).
+    # Re-verify digest if updating the model: huggingface-cli repo info <repo>
+    medgemma_revision: Optional[str] = "7260922730e7f036ceae1fed95a01b980a5122ae"
     # Dedicated TranslateGemma GGUF is not publicly available.
     # Use MedGemma as a safe default translator model so /translate and /nku-cycle
     # are deployable out-of-the-box. Operators can still override to a better
     # translation model via TRANSLATEGEMMA_REPO / TRANSLATEGEMMA_FILE.
     translategemma_repo: str = "mradermacher/medgemma-4b-it-GGUF"
     translategemma_file: str = "medgemma-4b-it.Q2_K.gguf"
-    translategemma_revision: Optional[str] = None
+    translategemma_revision: Optional[str] = "7260922730e7f036ceae1fed95a01b980a5122ae"
     context_size: int = 2048
     n_batch: int = 512
     n_threads: int = 4

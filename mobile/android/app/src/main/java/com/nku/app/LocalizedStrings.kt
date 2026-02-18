@@ -267,8 +267,8 @@ object LocalizedStrings {
         val swellingCheck: String = "Swelling Check",
 
         // Symptom input labels
-        val patientSymptoms: String = "Patient-Reported Symptoms",
-        val micOrType: String = "Type or tap the mic to speak symptoms",
+        val patientSymptoms: String = "Vital Signs & Patient-Reported Symptoms",
+        val micOrType: String = "Type or tap the mic to speak",
         val micPermissionRequired: String = "⚠ Microphone permission required for voice input. Please enable in Settings.",
 
         // Safety

@@ -217,7 +217,7 @@ fun NkuSentinelApp(
                                     contentDescription = title
                                 )
                             },
-                            label = { Text(title, fontSize = 10.sp) },
+                            label = { Text(title, fontSize = 9.sp, maxLines = 1, softWrap = false) },
                             selected = selectedTab == index,
                             onClick = { selectedTab = index }
                         )

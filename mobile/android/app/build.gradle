@@ -30,6 +30,10 @@ android {
         targetSdk 35
         versionCode 1
         versionName "1.0"
+        // Required for androidx.test + Compose AndroidJUnit4 instrumentation tests.
+        // Without this, Gradle falls back to legacy android.test.InstrumentationTestRunner
+        // and connected tests crash before execution.
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {

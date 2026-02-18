@@ -145,7 +145,7 @@ class HomeScreenTest {
         }
 
         composeTestRule.onNodeWithText("Preeclampsia Screen").performClick()
-        assert(navigatedTab == 3) { "Expected tab 3 (Pre-E), got $navigatedTab" }
+        assert(navigatedTab == 4) { "Expected tab 4 (Pre-E), got $navigatedTab" }
     }
 
     // ── Localization Tests ────────────────────────────────────────

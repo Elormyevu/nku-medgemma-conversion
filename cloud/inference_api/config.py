@@ -16,11 +16,14 @@ class ModelConfig:
     # budget devices. This is an intentional quality/size trade-off, not a mismatch.
     medgemma_repo: str = "mradermacher/medgemma-4b-it-GGUF"
     medgemma_file: str = "medgemma-4b-it.Q2_K.gguf"
-    # NOTE: No public TranslateGemma GGUF exists. These defaults will fail
-    # unless overridden via TRANSLATEGEMMA_REPO / TRANSLATEGEMMA_FILE env vars.
-    # The mobile app uses ML Kit for translation instead.
-    translategemma_repo: str = "google/translategemma"  # placeholder — override via env
-    translategemma_file: str = "translategemma-4b.gguf"  # placeholder — override via env
+    medgemma_revision: Optional[str] = None
+    # Dedicated TranslateGemma GGUF is not publicly available.
+    # Use MedGemma as a safe default translator model so /translate and /nku-cycle
+    # are deployable out-of-the-box. Operators can still override to a better
+    # translation model via TRANSLATEGEMMA_REPO / TRANSLATEGEMMA_FILE.
+    translategemma_repo: str = "mradermacher/medgemma-4b-it-GGUF"
+    translategemma_file: str = "medgemma-4b-it.Q2_K.gguf"
+    translategemma_revision: Optional[str] = None
     context_size: int = 2048
     n_batch: int = 512
     n_threads: int = 4
@@ -86,8 +89,10 @@ class AppConfig:
             model=ModelConfig(
                 medgemma_repo=os.environ.get('MEDGEMMA_REPO', 'mradermacher/medgemma-4b-it-GGUF'),
                 medgemma_file=os.environ.get('MEDGEMMA_FILE', 'medgemma-4b-it.Q2_K.gguf'),
-                translategemma_repo=os.environ.get('TRANSLATEGEMMA_REPO', 'google/translategemma'),
-                translategemma_file=os.environ.get('TRANSLATEGEMMA_FILE', 'translategemma-4b.gguf'),
+                medgemma_revision=os.environ.get('MEDGEMMA_REVISION'),
+                translategemma_repo=os.environ.get('TRANSLATEGEMMA_REPO', 'mradermacher/medgemma-4b-it-GGUF'),
+                translategemma_file=os.environ.get('TRANSLATEGEMMA_FILE', 'medgemma-4b-it.Q2_K.gguf'),
+                translategemma_revision=os.environ.get('TRANSLATEGEMMA_REVISION'),
                 context_size=int(os.environ.get('MODEL_CONTEXT_SIZE', 2048)),
                 n_threads=int(os.environ.get('MODEL_THREADS', 4)),
             ),

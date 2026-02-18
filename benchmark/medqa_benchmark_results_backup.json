@@ -1,4 +1,6 @@
 {
+  "artifact_status": "deprecated",
+  "provenance_note": "Legacy backup artifact retained for traceability. Metadata and scores in this file are inconsistent and MUST NOT be used for submission claims. Use benchmark/medqa_benchmark_results.json, benchmark/medqa_iq2xs_results.json, and benchmark/medqa_q2k_results.json as canonical benchmark artifacts.",
   "model": "medgemma-4b-iq1_m.gguf",
   "quantization": "IQ1_M (1.75 bits/weight)",
   "size_gb": 1.1,

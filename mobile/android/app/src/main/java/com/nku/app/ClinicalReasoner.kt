@@ -4,6 +4,7 @@ import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.util.Locale
 
 /**
  * Clinical Reasoner — MedGemma Integration for Nku Sentinel
@@ -249,8 +250,8 @@ class ClinicalReasoner {
                         .sortedByDescending { kotlin.math.abs(it.second) }
                         .take(5)
                         .joinToString(", ") { "d${it.first}=${"%.3f".format(it.second)}" }
-                    sb.appendLine("HeAR embedding (512-dim): L2=${String.format("%.2f", l2Norm)}, " +
-                            "mean=${String.format("%.4f", mean)}, range=[${String.format("%.3f", minVal)}, ${String.format("%.3f", maxVal)}]")
+                    sb.appendLine("HeAR embedding (512-dim): L2=${String.format(Locale.US, "%.2f", l2Norm)}, " +
+                            "mean=${String.format(Locale.US, "%.4f", mean)}, range=[${String.format(Locale.US, "%.3f", minVal)}, ${String.format(Locale.US, "%.3f", maxVal)}]")
                     sb.appendLine("Top-5 active dimensions: $topDims")
                     sb.appendLine("Note: Embedding encodes learned health acoustic patterns from")
                     sb.appendLine("  self-supervised pre-training on 300M+ audio clips.")

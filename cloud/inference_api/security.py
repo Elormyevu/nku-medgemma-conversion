@@ -84,6 +84,19 @@ class InputValidator:
         r'exec\s*\(',
     ]
 
+    # Normalize common leetspeak substitutions before pattern checks.
+    # This blocks simple obfuscations like "ign0re ... pr3vious ...".
+    LEETSPEAK_MAP = str.maketrans({
+        '0': 'o',
+        '1': 'i',
+        '3': 'e',
+        '4': 'a',
+        '5': 's',
+        '7': 't',
+        '@': 'a',
+        '$': 's',
+    })
+
     def __init__(self):
         self._compiled_patterns = [
             re.compile(pattern, re.IGNORECASE)
@@ -112,6 +125,10 @@ class InputValidator:
             warnings.append(f"Text truncated from {len(sanitized)} to {max_len} characters")
             sanitized = sanitized[:max_len]
 
+        # Normalize/remove dangerous Unicode BEFORE injection checks.
+        # This prevents homoglyph payloads from bypassing regex patterns.
+        sanitized = self._sanitize_unicode(sanitized)
+
         # Check for injection patterns
         injection_detected = self._check_injection_patterns(sanitized)
         if injection_detected:
@@ -124,9 +141,6 @@ class InputValidator:
             errors.append("Input contains potentially malicious patterns")
             logger.warning("Base64 injection attempt detected")
             return ValidationResult(False, "", errors)
-
-        # Remove potentially dangerous unicode
-        sanitized = self._sanitize_unicode(sanitized)
 
         # C-04 fix: Strip delimiter tokens from user input to prevent boundary spoofing
         # Defense-in-depth: client-side PromptSanitizer also escapes these, but API
@@ -169,10 +183,15 @@ class InputValidator:
 
     def _check_injection_patterns(self, text: str) -> bool:
         """Check for prompt injection patterns."""
+        leet_normalized = self._normalize_leetspeak(text)
         for pattern in self._compiled_patterns:
-            if pattern.search(text):
+            if pattern.search(text) or pattern.search(leet_normalized):
                 return True
         return False
+
+    def _normalize_leetspeak(self, text: str) -> str:
+        """Normalize common leetspeak substitutions for detection only."""
+        return text.translate(self.LEETSPEAK_MAP)
 
     def _sanitize_unicode(self, text: str) -> str:
         """Remove potentially dangerous unicode characters."""
@@ -191,11 +210,22 @@ class InputValidator:
         # L-3 fix: Normalize Unicode homoglyphs for common Latin chars
         # Map Cyrillic/Greek lookalikes to Latin equivalents before pattern check
         homoglyph_map = {
+            # Cyrillic uppercase
             '\u0410': 'A', '\u0412': 'B', '\u0421': 'C', '\u0415': 'E',
             '\u041d': 'H', '\u041a': 'K', '\u041c': 'M', '\u041e': 'O',
             '\u0420': 'P', '\u0422': 'T', '\u0425': 'X',
-            '\u0430': 'a', '\u0435': 'e', '\u043e': 'o', '\u0440': 'p',
-            '\u0441': 'c', '\u0443': 'y', '\u0445': 'x',
+            '\u0405': 'S',
+            # Cyrillic lowercase
+            '\u0430': 'a', '\u0441': 'c', '\u0435': 'e', '\u043e': 'o',
+            '\u0440': 'p', '\u0445': 'x', '\u0443': 'y', '\u0455': 's', '\u0456': 'i',
+            '\u0458': 'j',
+            # Greek uppercase
+            '\u0391': 'A', '\u0392': 'B', '\u0395': 'E', '\u0396': 'Z',
+            '\u0397': 'H', '\u0399': 'I', '\u039a': 'K', '\u039c': 'M',
+            '\u039d': 'N', '\u039f': 'O', '\u03a1': 'P', '\u03a4': 'T',
+            '\u03a5': 'Y', '\u03a7': 'X',
+            # Greek lowercase
+            '\u03bf': 'o',
         }
         for homoglyph, replacement in homoglyph_map.items():
             text = text.replace(homoglyph, replacement)
@@ -211,10 +241,9 @@ class InputValidator:
         for match in matches:
             try:
                 decoded = base64.b64decode(match).decode('utf-8', errors='ignore').lower()
-                # Check if decoded content contains injection patterns
-                for pattern in self._compiled_patterns:
-                    if pattern.search(decoded):
-                        return True
+                # Check decoded content with the same normalization pipeline.
+                if self._check_injection_patterns(decoded):
+                    return True
             except Exception:
                 continue
 

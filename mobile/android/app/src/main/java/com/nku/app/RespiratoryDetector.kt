@@ -2,6 +2,7 @@ package com.nku.app
 
 import android.content.Context
 import android.content.res.AssetManager
+import android.os.Environment
 import android.util.Log
 import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtEnvironment
@@ -186,34 +187,36 @@ class RespiratoryDetector(private val context: Context? = null) {
      */
     private fun loadModel() {
         val ctx = context ?: return
-        try {
-            // Prefer INT8 for smaller size and faster inference on mobile
-            val modelBuffer = try {
-                loadModelFile(ctx.assets, MODEL_INT8).also {
-                    Log.i(TAG, "Loaded HeAR event detector (INT8, ~1.1MB)")
-                }
-            } catch (e: Exception) {
-                Log.w(TAG, "INT8 model not found, trying FP32: ${e.message}")
-                loadModelFile(ctx.assets, MODEL_FP32).also {
-                    Log.i(TAG, "Loaded HeAR event detector (FP32, ~3.8MB)")
-                }
-            }
-
-            val options = Interpreter.Options().apply {
-                setNumThreads(2)  // Budget phones: 2 threads is safe
-            }
-            interpreter = Interpreter(modelBuffer, options)
-            usesTflite = true
-
-            // Verify model I/O
-            val inputTensor = interpreter!!.getInputTensor(0)
-            val outputTensor = interpreter!!.getOutputTensor(0)
-            Log.i(TAG, "HeAR model loaded. Input: ${inputTensor.shape().toList()}, " +
-                    "Output: ${outputTensor.shape().toList()}")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to load HeAR TFLite model, falling back to heuristics: ${e.message}", e)
-            usesTflite = false
+        val options = Interpreter.Options().apply {
+            setNumThreads(2)  // Budget phones: 2 threads is safe
         }
+
+        val candidates = listOf(
+            MODEL_INT8 to "INT8 (~1.1MB)",
+            MODEL_FP32 to "FP32 (~3.8MB)"
+        )
+
+        for ((filename, label) in candidates) {
+            try {
+                val modelBuffer = loadModelFile(ctx.assets, filename)
+                val candidateInterpreter = Interpreter(modelBuffer, options)
+
+                // Verify model I/O before accepting this candidate.
+                val inputTensor = candidateInterpreter.getInputTensor(0)
+                val outputTensor = candidateInterpreter.getOutputTensor(0)
+
+                interpreter = candidateInterpreter
+                usesTflite = true
+                Log.i(TAG, "Loaded HeAR event detector ($label). Input: ${inputTensor.shape().toList()}, " +
+                        "Output: ${outputTensor.shape().toList()}")
+                return
+            } catch (e: Exception) {
+                Log.w(TAG, "HeAR model candidate failed ($filename), trying next: ${e.message}")
+            }
+        }
+
+        Log.e(TAG, "Failed to load any HeAR TFLite model, falling back to heuristics")
+        usesTflite = false
     }
 
     /**
@@ -236,7 +239,7 @@ class RespiratoryDetector(private val context: Context? = null) {
         val ctx = context ?: return
         val searchPaths = listOf(
             File(ctx.filesDir, VIT_L_MODEL_FILENAME),
-            File("/sdcard/Download/$VIT_L_MODEL_FILENAME"),
+            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), VIT_L_MODEL_FILENAME),
             File(ctx.getExternalFilesDir(null), VIT_L_MODEL_FILENAME)
         )
 
@@ -258,10 +261,11 @@ class RespiratoryDetector(private val context: Context? = null) {
     fun isViTLAvailable(): Boolean = vitLModelPath != null
 
     private fun loadModelFile(assets: AssetManager, filename: String): MappedByteBuffer {
-        val fd = assets.openFd(filename)
-        val fis = FileInputStream(fd.fileDescriptor)
-        val channel = fis.channel
-        return channel.map(FileChannel.MapMode.READ_ONLY, fd.startOffset, fd.declaredLength)
+        assets.openFd(filename).use { fd ->
+            FileInputStream(fd.fileDescriptor).channel.use { channel ->
+                return channel.map(FileChannel.MapMode.READ_ONLY, fd.startOffset, fd.declaredLength)
+            }
+        }
     }
 
     /**

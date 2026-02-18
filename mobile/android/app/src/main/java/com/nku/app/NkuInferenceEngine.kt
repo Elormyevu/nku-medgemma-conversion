@@ -240,26 +240,19 @@ class NkuInferenceEngine(private val context: Context) {
                 if (NkuTranslator.isOnDeviceSupported(language)) {
                     _progress.value = "Translating to English (ML Kit, on-device)..."
                     Log.i(TAG, "Stage 1: ML Kit on-device translation ($language → en)")
+                    val translated = nkuTranslator.translateToEnglish(sanitizedInput, language)
+                    if (translated != null) {
+                        englishText = translated
+                    } else {
+                        Log.w(TAG, "ML Kit translation failed for $language, using raw input")
+                        _progress.value = "Translation failed — processing directly..."
+                        englishText = sanitizedInput
+                    }
                 } else {
-                    _progress.value = "Translating to English (cloud)..."
-                    Log.i(TAG, "Stage 1: Cloud fallback translation ($language → en)")
-                }
-
-                val translated = nkuTranslator.translateToEnglish(sanitizedInput, language)
-                if (translated != null) {
-                    englishText = translated
-                } else if (NkuTranslator.requiresCloud(language)) {
-                    // ML Kit doesn't support this language on-device
-                    Log.w(TAG, "ML Kit unsupported for $language, no cloud client available — processing raw input")
-                    // F6 fix: Inform user that translation is unavailable
-                    _progress.value = "Translation unavailable for this language — processing directly..."
-                    // Pass through as-is; MedGemma may still partially understand
-                    // common medical terms in major African languages
+                    // Unsupported on-device and no cloud client in current mobile build.
+                    Log.w(TAG, "ML Kit unsupported for $language on-device — processing raw input")
+                    _progress.value = "On-device translation unavailable for this language — processing directly..."
                     englishText = sanitizedInput
-                } else {
-                    Log.w(TAG, "Translation failed for $language, using raw input")
-                    _progress.value = "Translation failed — processing directly..."
-                    englishText = sanitizedInput  // Fallback: use as-is
                 }
             } else {
                 englishText = sanitizedInput
@@ -301,12 +294,12 @@ class NkuInferenceEngine(private val context: Context) {
                     _state.value = EngineState.TRANSLATING_TO_LOCAL
                     if (NkuTranslator.isOnDeviceSupported(language)) {
                         _progress.value = "Translating result (ML Kit, on-device)..."
+                        val translated = nkuTranslator.translateFromEnglish(clinicalResponse, language)
+                        localizedResponse = translated ?: clinicalResponse  // Fallback to English
                     } else {
-                        _progress.value = "Translating result (cloud)..."
+                        _progress.value = "On-device result translation unavailable — returning English result..."
+                        localizedResponse = clinicalResponse
                     }
-
-                    val translated = nkuTranslator.translateFromEnglish(clinicalResponse, language)
-                    localizedResponse = translated ?: clinicalResponse  // Fallback to English
                 }
 
                 _state.value = EngineState.COMPLETE

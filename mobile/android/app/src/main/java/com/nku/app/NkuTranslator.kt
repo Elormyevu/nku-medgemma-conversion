@@ -32,13 +32,14 @@ class NkuTranslator(private val context: Context) {
 
         /**
          * Maps Nku language codes (ISO 639-1) to ML Kit TranslateLanguage constants.
-         * Languages NOT in this map require cloud fallback.
+         * Languages NOT in this map are unsupported for on-device translation
+         * in the current mobile build.
          *
          * ML Kit translate:17.0.3 supports 59 languages, but most are
          * European/Asian. Only 3 African languages are available on-device:
          * Afrikaans, Swahili, and Arabic. All indigenous African languages
-         * (Hausa, Yoruba, Igbo, Amharic, Zulu, Xhosa, etc.) require
-         * Google Cloud Translate API fallback.
+         * (Hausa, Yoruba, Igbo, Amharic, Zulu, Xhosa, etc.) are currently
+         * passed through untranslated to preserve full offline operation.
          */
         private val ML_KIT_LANGUAGE_MAP: Map<String, String> = mapOf(
             // ── Official/colonial languages (on-device) ──
@@ -59,12 +60,11 @@ class NkuTranslator(private val context: Context) {
          * On-device behavior: NkuTranslator returns null → NkuInferenceEngine
          * gracefully degrades by passing raw input directly to MedGemma.
          *
-         * For production cloud fallback, Google Cloud Translate API is the
-         * recommended option (supports ha, yo, ig, am, zu, xh, so, etc.
-         * at ~$20 per million characters, no model hosting required).
+         * Note: A cloud translation client can be layered on top of this list
+         * in future releases, but is not wired into the shipped mobile app.
          */
         val CLOUD_ONLY_LANGUAGES = setOf(
-            // Tier 1 — Nku clinically verified languages (cloud-only)
+            // Tier 1 — Nku clinically verified languages (unsupported on-device)
             "ha",  // Hausa
             "yo",  // Yoruba
             "ig",  // Igbo
@@ -76,7 +76,7 @@ class NkuTranslator(private val context: Context) {
             "xh",  // Xhosa
             "om",  // Oromo
             "ti",  // Tigrinya
-            // Tier 2 — additional languages (cloud-only)
+            // Tier 2 — additional languages (unsupported on-device)
             "bm",  // Bambara
             "ny",  // Chichewa
             "din", // Dinka
@@ -116,7 +116,8 @@ class NkuTranslator(private val context: Context) {
         }
 
         /**
-         * Check if a language requires cloud-only translation.
+         * Check if a language is unsupported by ML Kit on-device.
+         * (Helper retained for optional future cloud-client integration.)
          */
         fun requiresCloud(languageCode: String): Boolean {
             return CLOUD_ONLY_LANGUAGES.contains(languageCode)
@@ -143,7 +144,7 @@ class NkuTranslator(private val context: Context) {
         if (sourceLang == null || targetLang == null) {
             Log.w(TAG, "Language not supported by ML Kit on-device: " +
                     "source=$sourceLanguage ($sourceLang), target=$targetLanguage ($targetLang)")
-            return null  // Language not supported on-device; cloud backend handles these
+            return null
         }
 
         // Same language — no translation needed

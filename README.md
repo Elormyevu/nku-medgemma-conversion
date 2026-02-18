@@ -44,7 +44,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 | What | How |
 |:-----|:----|
 | **100% On-Device Medical Inference** | All clinical reasoning runs on-device — zero cloud dependency for MedGemma |
-| **On-Device Translation** | ML Kit for 59 languages (incl. English, French, Portuguese) + Cloud Translate fallback for indigenous languages |
+| **On-Device Translation** | ML Kit for 59 languages (incl. English, French, Portuguese); unsupported languages pass through unchanged in offline mode |
 | **Ultra-Compressed** | 8GB → ~2.3GB via Q4_K_M quantization (56% MedQA on quantized model, vs. 69% unquantized) |
 | **Pan-African Languages** | 46 languages including Ewe, Hausa, Yoruba, Swahili |
 | **Budget Hardware** | Runs on $60–100 Android phones (3–4GB RAM, TECNO/Infinix) via mmap |
@@ -55,7 +55,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 ## ✨ Features
 
 - 🧠 **MedGemma 4B** — Google's clinical reasoning model, quantized to ~2.3GB Q4_K_M (56% MedQA, quantized; 69% unquantized)
-- 🌐 **Android ML Kit** — On-device translation for 59 languages + Cloud Translate fallback for indigenous African languages
+- 🌐 **Android ML Kit** — On-device translation for 59 languages; unsupported languages pass through unchanged in offline mode
 - 🔊 **Android System TTS** — Device-native voice synthesis for spoken clinical results
 - 💎 **Premium UI** — Glassmorphism design with localized strings
 - ⚡ **Nku Cycle** — Memory-efficient mmap orchestration on budget devices (3–4GB RAM)
@@ -74,7 +74,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 │           ↓                                                 │
 │   ┌───────────────────┐                                    │
 │   │  Android ML Kit   │  ← On-device (~30MB/lang)           │
-│   │  Local → English  │  or Cloud Translate fallback        │
+│   │  Local → English  │  (or pass-through if unsupported)   │
 │   └────────┬──────────┘                                    │
 │            ↓                                                │
 │   ┌───────────────────┐                                    │
@@ -124,7 +124,7 @@ All screening uses **pure signal processing** (0 MB additional weights) except T
 | **Orchestration** | ClinicalReasoner + SensorFusion + ThermalManager (42°C) |
 | **Security** | PromptSanitizer (6-layer injection protection at every model boundary) |
 | **Inference** | llama.cpp via JNI (NDK 29, ARM64 NEON) |
-| **Translation** | Android ML Kit (on-device) + Google Cloud Translate (fallback) |
+| **Translation** | Android ML Kit (on-device); pass-through for unsupported languages in current mobile build |
 | **TTS** | Android System TTS (NkuTTS.kt) |
 | **Quantization** | Q4_K_M (56% MedQA quantized, 81% of 69% unquantized baseline); imatrix used for IQ2_XS study |
 

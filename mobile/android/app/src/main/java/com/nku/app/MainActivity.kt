@@ -92,10 +92,9 @@ class MainActivity : ComponentActivity() {
         nkuTTS = NkuTTS(this)
         nkuTTS.initialize()
         
-        // Initialize MediaPipe face detection
+        // Initialize MediaPipe helper.
+        // Models are lazily initialized on first use to avoid blocking cold start.
         faceDetectorHelper = FaceDetectorHelper(this)
-        faceDetectorHelper.initializeDetector()
-        faceDetectorHelper.initializeLandmarker()
         
         // Initialize MedGemma engine
         nkuEngine = NkuInferenceEngine(this)
@@ -141,6 +140,7 @@ class MainActivity : ComponentActivity() {
         pallorDetector.reset()
         jaundiceDetector.reset()
         edemaDetector.reset()
+        respiratoryDetector.close()
         respiratoryDetector.reset()
     }
 }

@@ -442,7 +442,13 @@ private suspend fun recordAndAnalyze(
                 allSamples
             }
 
-            respiratoryDetector.processAudio(capturedSamples, sampleRate)
+            // Use full two-tier path when ViT-L encoder is available on-device.
+            // Falls back to Event Detector only mode otherwise.
+            if (respiratoryDetector.isViTLAvailable()) {
+                respiratoryDetector.processAudioDeep(capturedSamples, sampleRate)
+            } else {
+                respiratoryDetector.processAudio(capturedSamples, sampleRate)
+            }
 
         } catch (e: SecurityException) {
             Log.e("RespiratoryScreen", "Microphone permission denied: ${e.message}")

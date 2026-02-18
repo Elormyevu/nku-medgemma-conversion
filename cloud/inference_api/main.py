@@ -4,10 +4,10 @@ Offloads LLM processing to cloud for low-memory devices.
 Deploy to Google Cloud Run.
 
 ARCHITECTURE NOTE:
-- The mobile app uses ML Kit for on-device translation (6 on-device + 33 cloud-only languages).
-- This cloud backend uses TranslateGemma for translation — this is intentional.
-  TranslateGemma supports indigenous African languages (Ewe, Twi, Wolof, etc.) that
-  ML Kit does not cover natively, making it the cloud fallback for broader coverage.
+- The shipped mobile app uses ML Kit for on-device translation and stays fully offline.
+- Unsupported languages in the mobile build currently pass through unchanged.
+- This backend is an optional deployment path that can be integrated as a cloud
+  translation/triage extension for languages ML Kit does not cover natively.
 
 SECURITY NOTES:
 - All endpoints require authentication (removed --allow-unauthenticated)
@@ -253,22 +253,28 @@ def with_timeout(timeout_seconds: int = 120):
     return decorator
 
 
-def load_models() -> Tuple[bool, Optional[str]]:
+def load_models(
+    require_medgemma: bool = True,
+    require_translategemma: bool = True
+) -> Tuple[bool, Optional[str]]:
     """
-    Download and load models on first request.
+    Download and load required models on first request.
     Thread-safe via _model_lock (B-01/B-02).
     Returns (success, error_message).
     """
     global medgemma, translategemma
 
-    # Fast path: already loaded
-    if medgemma is not None and translategemma is not None:
+    # Fast path: requested models already loaded
+    if (
+        (not require_medgemma or medgemma is not None) and
+        (not require_translategemma or translategemma is not None)
+    ):
         return True, None
 
     with _model_lock:
         # Double-check inside lock
         try:
-            if medgemma is None:
+            if require_medgemma and medgemma is None:
                 request_logger.info("Downloading MedGemma...")
                 # B-07: Explicitly pass token — deploy.sh may set HUGGINGFACE_TOKEN
                 # but huggingface_hub expects HF_TOKEN. Support both.
@@ -276,6 +282,7 @@ def load_models() -> Tuple[bool, Optional[str]]:
                 med_path = hf_hub_download(
                     config.model.medgemma_repo,
                     config.model.medgemma_file,
+                    revision=config.model.medgemma_revision,
                     token=hf_token
                 )
                 medgemma = Llama(
@@ -287,12 +294,13 @@ def load_models() -> Tuple[bool, Optional[str]]:
                 )
                 request_logger.info("MedGemma loaded successfully")
 
-            if translategemma is None:
+            if require_translategemma and translategemma is None:
                 request_logger.info("Downloading TranslateGemma...")
                 hf_token = os.environ.get('HF_TOKEN') or os.environ.get('HUGGINGFACE_TOKEN')
                 trans_path = hf_hub_download(
                     config.model.translategemma_repo,
                     config.model.translategemma_file,
+                    revision=config.model.translategemma_revision,
                     token=hf_token
                 )
                 translategemma = Llama(
@@ -312,18 +320,26 @@ def load_models() -> Tuple[bool, Optional[str]]:
             return False, error_msg
 
 
-def require_models(f):
-    """Decorator to ensure models are loaded before endpoint execution."""
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        success, error = load_models()
-        if not success:
-            return jsonify({
-                'error': 'model_load_failed',
-                'message': 'Failed to load AI models. Please try again later.'
-            }), 503
-        return f(*args, **kwargs)
-    return decorated_function
+def require_models(
+    require_medgemma: bool = True,
+    require_translategemma: bool = True
+):
+    """Decorator to ensure required models are loaded before endpoint execution."""
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            success, error = load_models(
+                require_medgemma=require_medgemma,
+                require_translategemma=require_translategemma
+            )
+            if not success:
+                return jsonify({
+                    'error': 'model_load_failed',
+                    'message': 'Failed to load required AI model(s). Please try again later.'
+                }), 503
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 
 # =============================================================================
@@ -363,7 +379,7 @@ def ready():
 @rate_limit(rate_limiter)
 @require_api_key
 @validate_json_request(required_fields=['text'])
-@require_models
+@require_models(require_medgemma=False, require_translategemma=True)
 @with_timeout(120)
 def translate():
     """
@@ -461,7 +477,7 @@ def translate():
 @rate_limit(rate_limiter)
 @require_api_key
 @validate_json_request(required_fields=['symptoms'])
-@require_models
+@require_models(require_medgemma=True, require_translategemma=False)
 @with_timeout(120)
 def triage():
     """
@@ -523,7 +539,7 @@ def triage():
 @rate_limit(rate_limiter)
 @require_api_key
 @validate_json_request(required_fields=['text'])
-@require_models
+@require_models(require_medgemma=True, require_translategemma=True)
 @with_timeout(300)
 def nku_cycle():
     """

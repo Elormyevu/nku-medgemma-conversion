@@ -32,8 +32,8 @@ object PromptSanitizer {
     private val HOMOGLYPH_MAP = mapOf(
         'А' to 'A', 'В' to 'B', 'С' to 'C', 'Е' to 'E', 'Н' to 'H',
         'К' to 'K', 'М' to 'M', 'О' to 'O', 'Р' to 'P', 'Т' to 'T',
-        'Х' to 'X', 'а' to 'a', 'с' to 'c', 'е' to 'e', 'о' to 'o',
-        'р' to 'p', 'х' to 'x', 'у' to 'y', 'і' to 'i', 'ј' to 'j',
+        'Х' to 'X', 'Ѕ' to 'S', 'а' to 'a', 'с' to 'c', 'е' to 'e', 'о' to 'o',
+        'р' to 'p', 'х' to 'x', 'у' to 'y', 'ѕ' to 's', 'і' to 'i', 'ј' to 'j',
         // Greek
         'Α' to 'A', 'Β' to 'B', 'Ε' to 'E', 'Ζ' to 'Z', 'Η' to 'H',
         'Ι' to 'I', 'Κ' to 'K', 'Μ' to 'M', 'Ν' to 'N', 'Ο' to 'O',
@@ -79,6 +79,21 @@ object PromptSanitizer {
     private val BASE64_CANDIDATE_REGEX = Regex("[A-Za-z0-9+/=]{20,}")
 
     /**
+     * Leetspeak substitutions used to obfuscate prompt-injection phrases.
+     * Detection-only: we do not rewrite user-visible numeric medical data.
+     */
+    private val LEETSPEAK_MAP = mapOf(
+        '0' to 'o',
+        '1' to 'i',
+        '3' to 'e',
+        '4' to 'a',
+        '5' to 's',
+        '7' to 't',
+        '@' to 'a',
+        '$' to 's',
+    )
+
+    /**
      * Normalize Unicode homoglyphs to their Latin equivalents.
      * Prevents attackers from using Cyrillic/Greek lookalike characters
      * to bypass regex-based injection pattern matching.
@@ -89,6 +104,17 @@ object PromptSanitizer {
         val sb = StringBuilder(input.length)
         for (char in input) {
             sb.append(HOMOGLYPH_MAP[char] ?: char)
+        }
+        return sb.toString()
+    }
+
+    /**
+     * Normalize common leetspeak substitutions for detection only.
+     */
+    private fun normalizeLeetspeakForDetection(input: String): String {
+        val sb = StringBuilder(input.length)
+        for (char in input) {
+            sb.append(LEETSPEAK_MAP[char] ?: char)
         }
         return sb.toString()
     }
@@ -106,9 +132,10 @@ object PromptSanitizer {
         BASE64_CANDIDATE_REGEX.findAll(input).forEach { match ->
             try {
                 val decoded = String(JBase64.getDecoder().decode(match.value), Charsets.UTF_8)
+                val decodedLeet = normalizeLeetspeakForDetection(decoded)
                 // Check if the decoded content contains injection patterns
                 for (pattern in INJECTION_PATTERNS) {
-                    if (pattern.containsMatchIn(decoded)) {
+                    if (pattern.containsMatchIn(decoded) || pattern.containsMatchIn(decodedLeet)) {
                         result = result.replace(match.value, "[filtered]")
                         detected = true
                         Log.w(TAG, "Base64-encoded injection payload detected and stripped")
@@ -153,10 +180,19 @@ object PromptSanitizer {
 
         // 5. Strip injection patterns
         var injectionDetected = false
+        val leetNormalizedForDetection = normalizeLeetspeakForDetection(cleaned)
         for (pattern in INJECTION_PATTERNS) {
-            if (pattern.containsMatchIn(cleaned)) {
+            val directMatch = pattern.containsMatchIn(cleaned)
+            val leetMatch = !directMatch && pattern.containsMatchIn(leetNormalizedForDetection)
+            if (directMatch || leetMatch) {
                 injectionDetected = true
-                cleaned = pattern.replace(cleaned, "[filtered]")
+                if (directMatch) {
+                    cleaned = pattern.replace(cleaned, "[filtered]")
+                } else {
+                    // Obfuscated (leet) injection was detected in normalized text;
+                    // fail-safe by replacing whole content.
+                    cleaned = "[filtered]"
+                }
             }
         }
 

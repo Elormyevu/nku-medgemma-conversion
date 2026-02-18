@@ -2,7 +2,7 @@
 Nku Cloud Security Test Suite
 Comprehensive tests for security.py — InputValidator, PromptProtector, RateLimiter.
 
-Run:  python3 -m pytest test_security.py -v
+Run:  python3 -m pytest security_pytest_suite.py -v
 """
 
 import base64

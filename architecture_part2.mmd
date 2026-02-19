@@ -1,0 +1,16 @@
+%%{init: {'theme':'dark', 'themeVariables':{'fontSize':'24px'}}}%%
+graph TD
+    Reasoner["ClinicalReasoner\n(Structured Prompt)"]
+    Sanitizer["PromptSanitizer\n(Injection Protection)"]
+    TransIn["ML Kit\n(Translate to English)"]
+    
+    MedGemma["MedGemma 4B Engine\n(Q4_K_M GGUF)"]
+    
+    TransOut["ML Kit\n(Translate to Local)"]
+    UI["Display Result\n(Compose UI)"]
+    
+    Reasoner --> Sanitizer
+    Sanitizer --> TransIn
+    TransIn --> MedGemma
+    MedGemma --> TransOut
+    TransOut --> UI

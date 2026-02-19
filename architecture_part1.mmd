@@ -1,0 +1,19 @@
+%%{init: {'theme':'dark', 'themeVariables':{'fontSize':'24px'}}}%%
+graph LR
+    UI["Android Native Compose UI"]
+    Cam["📷 Camera"]
+    Mic["🎤 Microphone"]
+    
+    Vision["Vision Landmarker\n(rPPG, Edema, Pallor)"]
+    Audio["HeAR Audio Predictor\n(Respiratory Risk)"]
+    
+    Reasoner["ClinicalReasoner\n(Confidence Gating)"]
+
+    UI --> Cam
+    UI --> Mic
+    
+    Cam --> Vision
+    Mic --> Audio
+    
+    Vision --> Reasoner
+    Audio --> Reasoner

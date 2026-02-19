@@ -1,48 +1,35 @@
 %%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
 graph TD
     %% Mobile Layer
-    subgraph Android["Android End-User App (Offline-First)"]
-        UI["React Native / Compose UI"]
+    subgraph Android["Android End-User App (100% Offline)"]
+        UI["Android Native Compose UI"]
         
         %% Sensors
         subgraph Sensors["Sensor Acquisition"]
-            Cam["Camera (rPPG, Edema, Pallor)"]
-            Mic["Microphone (Cough, Speech)"]
+            Cam["Camera (rPPG, Edema, Pallor, Jaundice)"]
+            Mic["Microphone (Respiratory/Cough)"]
         end
 
         %% Mobile Inference
         subgraph MobileInfer["On-Device Inference Pipeline"]
-            AudioProc["Audio/Respiratory Predictor (MobileNetV3)"]
-            VisionProc["Vision Landmarker & Predictor"]
-            Sanitizer["PromptSanitizer (Security)"]
-            Triage["MedGemma 4B Triage Engine (llama.cpp)"]
-            Translator["TranslateGemma Engine"]
-            TTS["Google System TTS"]
+            AudioProc["HeAR Audio Predictor (TFLite)"]
+            VisionProc["Vision Landmarker & MediaPipe"]
+            Sanitizer["PromptSanitizer (Injection Protection)"]
+            Triage["MedGemma 4B Engine (Q4_K_M GGUF)"]
+            Translator["ML Kit Translation (Local Language)"]
+            Reasoner["ClinicalReasoner (Confidence Gating)"]
         end
 
         UI --> Sensors
         Cam --> VisionProc
         Mic --> AudioProc
         
-        VisionProc --> Sanitizer
-        AudioProc --> Sanitizer
+        VisionProc --> Reasoner
+        AudioProc --> Reasoner
         
+        Reasoner --> Sanitizer
         Sanitizer --> Translator
         Translator --> Triage
         Triage --> Translator
-        Translator --> TTS
-        TTS --> UI
+        Translator --> UI
     end
-
-    %% Cloud Layer (Optional API)
-    subgraph CloudAPI["Cloud Inference API (Flask / GCP)"]
-        APIGW["GCP Cloud Run Gateway"]
-        Auth["Auth & Security Filter"]
-        CloudTranslate["TranslateGemma Inference"]
-        CloudTriage["MedGemma 4B Triage Inference"]
-    end
-
-    Android -- "Fallback request (if online & enabled)" --> APIGW
-    APIGW --> Auth
-    Auth --> CloudTranslate
-    Auth --> CloudTriage

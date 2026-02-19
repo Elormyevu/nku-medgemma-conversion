@@ -1,0 +1,48 @@
+%%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
+graph TD
+    %% Mobile Layer
+    subgraph Android["Android End-User App (Offline-First)"]
+        UI["React Native / Compose UI"]
+        
+        %% Sensors
+        subgraph Sensors["Sensor Acquisition"]
+            Cam["Camera (rPPG, Edema, Pallor)"]
+            Mic["Microphone (Cough, Speech)"]
+        end
+
+        %% Mobile Inference
+        subgraph MobileInfer["On-Device Inference Pipeline"]
+            AudioProc["Audio/Respiratory Predictor (MobileNetV3)"]
+            VisionProc["Vision Landmarker & Predictor"]
+            Sanitizer["PromptSanitizer (Security)"]
+            Triage["MedGemma 4B Triage Engine (llama.cpp)"]
+            Translator["TranslateGemma Engine"]
+            TTS["Google System TTS"]
+        end
+
+        UI --> Sensors
+        Cam --> VisionProc
+        Mic --> AudioProc
+        
+        VisionProc --> Sanitizer
+        AudioProc --> Sanitizer
+        
+        Sanitizer --> Translator
+        Translator --> Triage
+        Triage --> Translator
+        Translator --> TTS
+        TTS --> UI
+    end
+
+    %% Cloud Layer (Optional API)
+    subgraph CloudAPI["Cloud Inference API (Flask / GCP)"]
+        APIGW["GCP Cloud Run Gateway"]
+        Auth["Auth & Security Filter"]
+        CloudTranslate["TranslateGemma Inference"]
+        CloudTriage["MedGemma 4B Triage Inference"]
+    end
+
+    Android -- "Fallback request (if online & enabled)" --> APIGW
+    APIGW --> Auth
+    Auth --> CloudTranslate
+    Auth --> CloudTriage

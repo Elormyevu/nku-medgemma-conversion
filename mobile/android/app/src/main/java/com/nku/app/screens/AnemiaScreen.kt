@@ -86,7 +86,7 @@ fun AnemiaScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -125,7 +125,7 @@ fun AnemiaScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
-                    modifier = Modifier.padding(24.dp),
+                    modifier = Modifier.fillMaxWidth().padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
@@ -299,7 +299,7 @@ fun AnemiaScreen(
                     contentDescription = "Recommendation: ${pallorResult.recommendation}"
                 }
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                     Text(strings.recommendationsTitle, fontWeight = FontWeight.Bold, color = Color.White)
                     Spacer(Modifier.height(8.dp))
                     Text(pallorResult.recommendation, color = Color.Gray, fontSize = 14.sp)
@@ -366,7 +366,7 @@ fun AnemiaScreen(
             colors = CardDefaults.cardColors(containerColor = NkuColors.InstructionCard),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                 Text(strings.howToCapture, fontWeight = FontWeight.Bold, color = NkuColors.Secondary)
                 Spacer(Modifier.height(8.dp))
                 Text(

@@ -143,7 +143,7 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -330,7 +330,7 @@ fun HomeScreen(
                 fontSize = 12.sp,
                 color = Color.Gray,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier.fillMaxWidth().padding(12.dp)
             )
         }
     }
@@ -362,7 +362,7 @@ fun GuidedStepCard(
         else null
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Step number badge

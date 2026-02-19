@@ -110,7 +110,7 @@ fun RespiratoryScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -321,7 +321,7 @@ fun RespiratoryScreen(
             colors = CardDefaults.cardColors(containerColor = NkuColors.InstructionCard),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Column(modifier = Modifier.padding(12.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
                 Text(
                     strings.howItWorks,
                     fontWeight = FontWeight.Bold,
@@ -345,7 +345,7 @@ fun RespiratoryScreen(
             ),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Column(modifier = Modifier.padding(12.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
                 Text(
                     strings.poweredByHeAR,
                     fontWeight = FontWeight.Bold,

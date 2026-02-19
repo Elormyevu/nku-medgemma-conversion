@@ -87,7 +87,7 @@ fun PreeclampsiaScreen(
             colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(strings.pregnant, color = Color.White)
                     Spacer(Modifier.weight(1f))
@@ -119,7 +119,7 @@ fun PreeclampsiaScreen(
                 colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column(modifier = Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier.fillMaxWidth().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(Icons.Default.Warning, contentDescription = null, modifier = Modifier.size(48.dp), tint = Color.Gray)
                     Spacer(Modifier.height(12.dp))
                     Text(strings.notYetScreened, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
@@ -139,7 +139,7 @@ fun PreeclampsiaScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -268,7 +268,7 @@ fun PreeclampsiaScreen(
             
             if (edemaResult.riskFactors.isNotEmpty()) {
                 Card(colors = CardDefaults.cardColors(containerColor = NkuColors.ListeningIndicator.copy(alpha = 0.1f)), modifier = Modifier.fillMaxWidth()) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                         Text(strings.riskFactors, fontWeight = FontWeight.Bold, color = NkuColors.ListeningIndicator)
                         edemaResult.riskFactors.forEach { risk -> Text("• $risk", color = Color.White, fontSize = 14.sp) }
                     }
@@ -279,7 +279,7 @@ fun PreeclampsiaScreen(
                 modifier = Modifier.fillMaxWidth().semantics {
                     contentDescription = "Recommendation: ${edemaResult.recommendation}"
                 }) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                     Text(strings.recommendationsTitle, fontWeight = FontWeight.Bold, color = Color.White)
                     Spacer(Modifier.height(8.dp))
                     Text(edemaResult.recommendation, color = Color.Gray, fontSize = 14.sp)

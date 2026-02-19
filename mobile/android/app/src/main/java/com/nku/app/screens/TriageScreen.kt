@@ -145,7 +145,7 @@ fun TriageScreen(
         
         // Data completeness
         Card(colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground), modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                 Text(strings.screeningData, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 14.sp)
                 Spacer(Modifier.height(8.dp))
                 DataCheckRow(strings.heartRate, rppgResult.bpm != null && rppgResult.confidence > 0.4f, rppgResult.bpm?.let { "${it.toInt()} ${strings.bpm}" }, strings.notDone)
@@ -160,7 +160,7 @@ fun TriageScreen(
         
         // Symptom Input
         Card(colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground), modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                 Text(strings.patientSymptoms, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 14.sp)
                 Text(strings.micOrType, fontSize = 12.sp, color = Color.Gray)
                 Spacer(Modifier.height(8.dp))
@@ -301,7 +301,7 @@ fun TriageScreen(
                 modifier = Modifier.fillMaxWidth().semantics {
                     contentDescription = "Triage category: ${result.triageCategory.name}, Severity: ${result.overallSeverity.name}, Urgency: ${result.urgency.name}"
                 }) {
-                Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(strings.localizedTriageCategory(result.triageCategory), fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
                     Text("${strings.severityLabel}: ${strings.localizedSeverity(result.overallSeverity)}", color = Color.White.copy(alpha = 0.8f))
                     Text("${strings.urgencyLabel}: ${strings.localizedUrgency(result.urgency)}", color = Color.White.copy(alpha = 0.8f))
@@ -376,7 +376,7 @@ fun TriageScreen(
                 modifier = Modifier.fillMaxWidth().semantics {
                     contentDescription = "Primary concerns: ${result.primaryConcerns.joinToString(", ")}"
                 }) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                     Text(strings.primaryConcerns, fontWeight = FontWeight.Bold, color = Color.White)
                     Spacer(Modifier.height(8.dp))
                     result.primaryConcerns.forEach { concern -> Text("• $concern", color = Color.Gray, fontSize = 14.sp) }
@@ -387,7 +387,7 @@ fun TriageScreen(
                 modifier = Modifier.fillMaxWidth().semantics {
                     contentDescription = "Recommendations: ${result.recommendations.joinToString(", ")}"
                 }) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                     Text(strings.recommendationsTitle, fontWeight = FontWeight.Bold, color = NkuColors.Success)
                     Spacer(Modifier.height(8.dp))
                     result.recommendations.forEach { rec -> Text("• $rec", color = Color.Gray, fontSize = 14.sp) }

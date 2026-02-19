@@ -86,7 +86,7 @@ fun JaundiceScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -125,7 +125,7 @@ fun JaundiceScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
-                    modifier = Modifier.padding(24.dp),
+                    modifier = Modifier.fillMaxWidth().padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
@@ -298,7 +298,7 @@ fun JaundiceScreen(
                     contentDescription = "Recommendation: ${jaundiceResult.recommendation}"
                 }
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                     Text(strings.recommendationsTitle, fontWeight = FontWeight.Bold, color = Color.White)
                     Spacer(Modifier.height(8.dp))
                     Text(jaundiceResult.recommendation, color = Color.Gray, fontSize = 14.sp)
@@ -363,7 +363,7 @@ fun JaundiceScreen(
             colors = CardDefaults.cardColors(containerColor = NkuColors.InstructionCard),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                 Text(strings.howToCapture, fontWeight = FontWeight.Bold, color = NkuColors.Secondary)
                 Spacer(Modifier.height(8.dp))
                 Text(

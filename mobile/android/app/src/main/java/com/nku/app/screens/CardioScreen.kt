@@ -85,7 +85,7 @@ fun CardioScreen(
             Card(colors = CardDefaults.cardColors(containerColor = NkuColors.ListeningIndicator.copy(alpha = 0.2f))) {
                 Text(
                     strings.deviceCooling,
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
                     color = NkuColors.ListeningIndicator
                 )
             }
@@ -101,7 +101,7 @@ fun CardioScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -281,7 +281,7 @@ fun CardioScreen(
             colors = CardDefaults.cardColors(containerColor = NkuColors.InstructionCard),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Column(modifier = Modifier.padding(12.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
                 Text(strings.howItWorks, fontWeight = FontWeight.Bold, color = NkuColors.Secondary, fontSize = 13.sp)
                 Spacer(Modifier.height(4.dp))
                 Text(

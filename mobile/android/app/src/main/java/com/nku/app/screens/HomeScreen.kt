@@ -214,7 +214,7 @@ fun HomeScreen(
         GuidedStepCard(
             stepNumber = 2,
             title = strings.anemiaScreen,
-            value = if (hasAnemia) pallorResult.severity.name else "—",
+            value = if (hasAnemia) strings.localizedSeverity(pallorResult.severity) else "—",
             subtitle = when {
                 !hasAnemia -> strings.tapToCaptureEyelid
                 pallorResult.severity == PallorSeverity.NORMAL -> strings.noPallor
@@ -241,7 +241,7 @@ fun HomeScreen(
         GuidedStepCard(
             stepNumber = 3,
             title = strings.jaundiceScreen,
-            value = if (hasJaundice) jaundiceResult.severity.name else "—",
+            value = if (hasJaundice) strings.localizedSeverity(jaundiceResult.severity) else "—",
             subtitle = when {
                 !hasJaundice -> strings.tapToCaptureEye
                 jaundiceResult.severity == JaundiceSeverity.NORMAL -> strings.noJaundice
@@ -268,7 +268,7 @@ fun HomeScreen(
         GuidedStepCard(
             stepNumber = 4,
             title = strings.preeclampsiaScreen,
-            value = if (hasPreE) edemaResult.severity.name else "—",
+            value = if (hasPreE) strings.localizedSeverity(edemaResult.severity) else "—",
             subtitle = when {
                 !hasPreE -> strings.tapToCaptureFace
                 edemaResult.severity == EdemaSeverity.NORMAL -> strings.noSwelling
@@ -295,7 +295,7 @@ fun HomeScreen(
         GuidedStepCard(
             stepNumber = 5,
             title = strings.respiratoryScreen,
-            value = if (hasRespiratory) respiratoryResult.classification.name else "—",
+            value = if (hasRespiratory) strings.localizedRespiratoryClassification(respiratoryResult.classification) else "—",
             subtitle = when {
                 !hasRespiratory -> strings.tapToRecordCough
                 respiratoryResult.classification == RespiratoryRisk.NORMAL -> strings.respiratoryNormal

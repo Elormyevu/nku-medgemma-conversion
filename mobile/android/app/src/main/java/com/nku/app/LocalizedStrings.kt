@@ -381,6 +381,30 @@ object LocalizedStrings {
             Severity.CRITICAL -> severityCritical
         }
 
+        /** Map PallorSeverity enum to localized display name. */
+        fun localizedSeverity(severity: PallorSeverity): String = when (severity) {
+            PallorSeverity.NORMAL -> normal
+            PallorSeverity.MILD -> mild
+            PallorSeverity.MODERATE -> moderate
+            PallorSeverity.SEVERE -> severe
+        }
+
+        /** Map JaundiceSeverity enum to localized display name. */
+        fun localizedSeverity(severity: JaundiceSeverity): String = when (severity) {
+            JaundiceSeverity.NORMAL -> normal
+            JaundiceSeverity.MILD -> mild
+            JaundiceSeverity.MODERATE -> moderate
+            JaundiceSeverity.SEVERE -> severe
+        }
+
+        /** Map EdemaSeverity enum to localized display name. */
+        fun localizedSeverity(severity: EdemaSeverity): String = when (severity) {
+            EdemaSeverity.NORMAL -> normal
+            EdemaSeverity.MILD -> mild
+            EdemaSeverity.MODERATE -> moderate
+            EdemaSeverity.SIGNIFICANT -> severe
+        }
+
         /** Map Urgency enum to localized display name. */
         fun localizedUrgency(urgency: Urgency): String = when (urgency) {
             Urgency.ROUTINE -> urgencyRoutine
@@ -395,6 +419,14 @@ object LocalizedStrings {
             TriageCategory.YELLOW -> triageYellow
             TriageCategory.ORANGE -> triageOrange
             TriageCategory.RED -> triageRed
+        }
+
+        /** Map RespiratoryRisk enum to localized display name. */
+        fun localizedRespiratoryClassification(classification: RespiratoryRisk): String = when (classification) {
+            RespiratoryRisk.NORMAL -> normal
+            RespiratoryRisk.LOW_RISK -> respiratoryLowRisk
+            RespiratoryRisk.MODERATE_RISK -> respiratoryModerateRisk
+            RespiratoryRisk.HIGH_RISK -> respiratoryHighRisk
         }
     }
 

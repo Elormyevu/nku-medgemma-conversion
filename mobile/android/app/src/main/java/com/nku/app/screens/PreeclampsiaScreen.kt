@@ -248,8 +248,8 @@ fun PreeclampsiaScreen(
                 EdemaSeverity.MODERATE -> NkuColors.TriageOrange
                 EdemaSeverity.SIGNIFICANT -> NkuColors.ListeningIndicator
             }
-            Text(edemaResult.severity.name, fontSize = 36.sp, fontWeight = FontWeight.Bold, color = scoreColor,
-                modifier = Modifier.semantics { contentDescription = "Edema severity: ${edemaResult.severity.name}" })
+            Text(strings.localizedSeverity(edemaResult.severity), fontSize = 36.sp, fontWeight = FontWeight.Bold, color = scoreColor,
+                modifier = Modifier.semantics { contentDescription = "Edema severity: ${strings.localizedSeverity(edemaResult.severity)}" })
             Text("${strings.edemaScoreLabel}: ${(edemaResult.edemaScore * 100).toInt()}%", color = Color.Gray)
             Text("${strings.periorbitalLabel}: ${(edemaResult.periorbitalScore * 100).toInt()}%", color = Color.Gray, fontSize = 12.sp)
             Text("${strings.confidenceLabel}: ${(edemaResult.confidence * 100).toInt()}%", color = Color.Gray, fontSize = 12.sp)

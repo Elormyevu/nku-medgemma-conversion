@@ -92,7 +92,7 @@ fun TriageScreen(
             micPermissionDenied = false
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-                putExtra(RecognizerIntent.EXTRA_PROMPT, "Describe symptoms...")
+                putExtra(RecognizerIntent.EXTRA_PROMPT, strings.micOrType)
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
             }
             speechLauncher.launch(intent)
@@ -149,10 +149,10 @@ fun TriageScreen(
                 Text(strings.screeningData, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 14.sp)
                 Spacer(Modifier.height(8.dp))
                 DataCheckRow(strings.heartRate, rppgResult.bpm != null && rppgResult.confidence > 0.4f, rppgResult.bpm?.let { "${it.toInt()} ${strings.bpm}" }, strings.notDone)
-                DataCheckRow(strings.anemiaScreen, pallorResult.hasBeenAnalyzed, if (pallorResult.hasBeenAnalyzed) pallorResult.severity.name else null, strings.notDone)
-                DataCheckRow(strings.jaundiceScreen, jaundiceResult.hasBeenAnalyzed, if (jaundiceResult.hasBeenAnalyzed) jaundiceResult.severity.name else null, strings.notDone)
-                DataCheckRow(strings.swellingCheck, edemaResult.hasBeenAnalyzed, if (edemaResult.hasBeenAnalyzed) edemaResult.severity.name else null, strings.notDone)
-                DataCheckRow(strings.respiratoryScreen, respiratoryResult.confidence > 0.4f, if (respiratoryResult.confidence > 0.4f) respiratoryResult.classification.name else null, strings.notDone)
+                DataCheckRow(strings.anemiaScreen, pallorResult.hasBeenAnalyzed, if (pallorResult.hasBeenAnalyzed) strings.localizedSeverity(pallorResult.severity) else null, strings.notDone)
+                DataCheckRow(strings.jaundiceScreen, jaundiceResult.hasBeenAnalyzed, if (jaundiceResult.hasBeenAnalyzed) strings.localizedSeverity(jaundiceResult.severity) else null, strings.notDone)
+                DataCheckRow(strings.swellingCheck, edemaResult.hasBeenAnalyzed, if (edemaResult.hasBeenAnalyzed) strings.localizedSeverity(edemaResult.severity) else null, strings.notDone)
+                DataCheckRow(strings.respiratoryScreen, respiratoryResult.confidence > 0.4f, if (respiratoryResult.confidence > 0.4f) strings.localizedRespiratoryClassification(respiratoryResult.classification) else null, strings.notDone)
             }
         }
         
@@ -175,7 +175,7 @@ fun TriageScreen(
                                 micPermissionDenied = false
                                 val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
                                     putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-                                    putExtra(RecognizerIntent.EXTRA_PROMPT, "Describe symptoms...")
+                                    putExtra(RecognizerIntent.EXTRA_PROMPT, strings.micOrType)
                                     putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
                                 }
                                 speechLauncher.launch(intent)
@@ -299,7 +299,7 @@ fun TriageScreen(
             }
             Card(colors = CardDefaults.cardColors(containerColor = categoryColor),
                 modifier = Modifier.fillMaxWidth().semantics {
-                    contentDescription = "Triage category: ${result.triageCategory.name}, Severity: ${result.overallSeverity.name}, Urgency: ${result.urgency.name}"
+                    contentDescription = "Triage category: ${strings.localizedTriageCategory(result.triageCategory)}, Severity: ${strings.localizedSeverity(result.overallSeverity)}, Urgency: ${strings.localizedUrgency(result.urgency)}"
                 }) {
                 Column(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(strings.localizedTriageCategory(result.triageCategory), fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
@@ -400,7 +400,7 @@ fun TriageScreen(
 }
 
 @Composable
-fun DataCheckRow(label: String, isComplete: Boolean, detail: String?, notDoneText: String = "Not done") {
+fun DataCheckRow(label: String, isComplete: Boolean, detail: String?, notDoneText: String) {
     Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
         Icon(
             if (isComplete) Icons.Default.CheckCircle else Icons.Default.Close,

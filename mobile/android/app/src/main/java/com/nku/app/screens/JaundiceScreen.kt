@@ -258,12 +258,12 @@ fun JaundiceScreen(
             }
             
             Text(
-                jaundiceResult.severity.name,
+                strings.localizedSeverity(jaundiceResult.severity),
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
                 color = scoreColor,
                 modifier = Modifier.semantics {
-                    contentDescription = "Jaundice severity: ${jaundiceResult.severity.name}"
+                    contentDescription = "Jaundice severity: ${strings.localizedSeverity(jaundiceResult.severity)}"
                 }
             )
             

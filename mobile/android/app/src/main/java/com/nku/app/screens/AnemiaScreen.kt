@@ -259,12 +259,12 @@ fun AnemiaScreen(
             }
             
             Text(
-                pallorResult.severity.name,
+                strings.localizedSeverity(pallorResult.severity),
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
                 color = scoreColor,
                 modifier = Modifier.semantics {
-                    contentDescription = "Pallor severity: ${pallorResult.severity.name}"
+                    contentDescription = "Pallor severity: ${strings.localizedSeverity(pallorResult.severity)}"
                 }
             )
             

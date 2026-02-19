@@ -412,7 +412,7 @@ All measurements below were captured on-device using a smartphone camera.
 === HEART RATE (rPPG) ===
 Method: Remote photoplethysmography — green channel intensity extracted from
   facial video, frequency analysis via DFT over a sliding window.
-  [Verkruysse et al., Opt Express 2008; Poh et al., Opt Express 2010]
+  [11, 12]
 Heart rate: 108 bpm (tachycardia: >100 bpm)
 Signal quality: good
 Confidence: 87%
@@ -421,7 +421,7 @@ Confidence: 87%
 Method: HSV color space analysis of the palpebral conjunctiva (lower eyelid
   inner surface). Mean saturation of conjunctival tissue pixels quantifies
   vascular perfusion — low saturation indicates reduced hemoglobin.
-  [Mannino et al., Nat Commun 2018; Dimauro et al., J Biomed Inform 2018]
+  [13, 14]
 Conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10)
 Pallor index: 0.68 (0.0=healthy, 1.0=severe pallor)
 Severity: MODERATE — likely moderate anemia (Hb 7-10 g/dL)
@@ -434,7 +434,7 @@ Note: This is a screening heuristic, not a hemoglobin measurement.
 Method: Eye Aspect Ratio (EAR) computed from MediaPipe 478-landmark facial
   mesh — periorbital edema narrows the palpebral fissure, reducing EAR.
   Supplemented by periorbital brightness gradient analysis.
-  [Novel screening application of EAR; baseline from Vasanthakumar et al., JCDR 2013]
+  [17, 18]
 Eye Aspect Ratio: 2.15 (normal baseline ≈2.8, edema threshold ≤2.2)
 Periorbital puffiness score: 0.61
 Facial swelling score: 0.39
@@ -604,7 +604,7 @@ A real-world study at Penda Health clinics in Nairobi, Kenya (2024–2025) found
 
 ### Evidence 3: Active Research Validates LLM-CHW Decision Support
 
-A prospective, observational study in Nyabihu and Musanze districts, Rwanda (Menon et al., 2025) is evaluating LLMs for CHW decision support, measuring referral appropriateness, diagnostic accuracy, and management plan quality [22]. The study — published in *BMJ Open* — was deemed ethically and scientifically justified specifically because CHWs in these settings lack alternative diagnostic tools. Audio recordings of CHW-patient consultations are transcribed and analyzed by an LLM, with outputs compared against clinical expert consensus — the same validation paradigm Nku would require.
+A prospective, observational study in Nyabihu and Musanze districts, Rwanda is evaluating LLMs for CHW decision support, measuring referral appropriateness, diagnostic accuracy, and management plan quality [22]. The study — published in *BMJ Open* — was deemed ethically and scientifically justified specifically because CHWs in these settings lack alternative diagnostic tools. Audio recordings of CHW-patient consultations are transcribed and analyzed by an LLM, with outputs compared against clinical expert consensus — the same validation paradigm Nku would require.
 
 ### Evidence 4: Structured Prompting Substantially Improves Performance
 
@@ -614,7 +614,7 @@ Research on automated prompt optimization for medical vision-language models fou
 === HEART RATE (rPPG) ===
 Method: Remote photoplethysmography — green channel intensity extracted from
   facial video, frequency analysis via DFT over a sliding window.
-  [Verkruysse et al., Opt Express 2008; Poh et al., Opt Express 2010]
+  [11, 12]
 Heart rate: 108 bpm (tachycardia: >100 bpm)
 Signal quality: good
 Confidence: 87%
@@ -693,7 +693,7 @@ Source file: `RPPGProcessor.kt`
 | Stage | Technique | Detail |
 |:------|:----------|:-------|
 | Input | Camera video frames | 30 fps facial video |
-| Channel extraction | Green channel mean | Batch pixel copy (`getPixels()`), sample every 4th pixel for performance. Green channel shows strongest plethysmographic signal [Verkruysse 2008] |
+| Channel extraction | Green channel mean | Batch pixel copy (`getPixels()`), sample every 4th pixel for performance. Green channel shows strongest plethysmographic signal [11] |
 | Signal buffer | Sliding window | 10-second buffer (300 frames), `ArrayDeque` for O(1) push/pop |
 | Detrending | DC removal | Subtract mean from signal to eliminate baseline drift |
 | Windowing | Hamming window | `0.54 − 0.46·cos(2πn/(N−1))` reduces spectral leakage |
@@ -714,7 +714,7 @@ Output → prompt:
 === HEART RATE (rPPG) ===
 Method: Remote photoplethysmography — green channel intensity extracted from
   facial video, frequency analysis via DFT over a sliding window.
-  [Verkruysse et al., Opt Express 2008; Poh et al., Opt Express 2010]
+  [11, 12]
 Heart rate: 72 bpm (normal range: 50-100 bpm)
 Signal quality: good
 Confidence: 87%
@@ -751,7 +751,7 @@ Output → prompt:
 Method: HSV color space analysis of the palpebral conjunctiva (lower eyelid
   inner surface). Mean saturation of conjunctival tissue pixels quantifies
   vascular perfusion — low saturation indicates reduced hemoglobin.
-  [Mannino et al., Nat Commun 2018; Dimauro et al., J Biomed Inform 2018]
+  [13, 14]
 Conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10)
 Pallor index: 0.65 (0.0=healthy, 1.0=severe pallor)
 Severity: MODERATE — likely moderate anemia (Hb 7-10 g/dL)
@@ -794,7 +794,7 @@ Output → prompt:
 Method: Eye Aspect Ratio (EAR) computed from MediaPipe 478-landmark facial
   mesh — periorbital edema narrows the palpebral fissure, reducing EAR.
   Supplemented by periorbital brightness gradient analysis.
-  [Novel screening application of EAR; baseline from Vasanthakumar et al., JCDR 2013]
+  [17, 18]
 Eye Aspect Ratio: 2.15 (normal baseline ≈2.8, edema threshold ≤2.2)
 Periorbital puffiness score: 0.61
 Facial swelling score: 0.39
@@ -841,7 +841,7 @@ Analysis tier: HeAR Event Detector
 Method: HeAR MobileNetV3-Small — trained on 300M+ health audio clips.
   Classifies 8 health sound event types from 2-second audio.
   On-device via TFLite (INT8, 1.1MB). ~50ms inference.
-  [Tobin et al., arXiv 2403.02522, 2024; HeAR google/hear]
+  [27, 28]
 Respiratory risk score: 0.72 (0.0=healthy, 1.0=high risk)
 Classification: HIGH_RISK
 Cough detected: Yes

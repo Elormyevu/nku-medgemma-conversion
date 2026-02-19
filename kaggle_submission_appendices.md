@@ -1,6 +1,6 @@
 # Nku: Submission Appendix
 
-**Companion document to the Kaggle submission writeup.**
+Companion document to the Kaggle submission writeup.
 
 ---
 
@@ -14,219 +14,219 @@ This dataset generates the medical importance matrix (imatrix) for IQ2_XS quanti
 
 ### A.1: Malaria Symptoms and Diagnosis
 
-**English:**
+English:
 
-> **Patient:** I have been having fever, chills, and severe headache for three days. My body is aching all over.
-> **Doctor:** These symptoms are consistent with malaria. Have you been exposed to mosquitoes recently? Let me check for other symptoms.
+> Patient: I have been having fever, chills, and severe headache for three days. My body is aching all over.
+> Doctor: These symptoms are consistent with malaria. Have you been exposed to mosquitoes recently? Let me check for other symptoms.
 
-**Twi (Ghana):**
+Twi (Ghana):
 
-> **Patient:** Me tirim yɛ me ya na me ho hyehye. Ɛyɛ nnansa ni.
-> **Doctor:** Saa nsɛm yi kyerɛ sɛ atiridii tumi yɛ wo. Ma yɛnhwɛ wo mogya.
+> Patient: Me tirim yɛ me ya na me ho hyehye. Ɛyɛ nnansa ni.
+> Doctor: Saa nsɛm yi kyerɛ sɛ atiridii tumi yɛ wo. Ma yɛnhwɛ wo mogya.
 
-**Hausa (West Africa):**
+Hausa (West Africa):
 
-> **Patient:** Ina da zazzabi da sanyi da ciwon kai tsawon kwana uku. Jikina yana ciwo.
-> **Doctor:** Wadannan alamomi suna nuna zazzabin cizon sauro. Ka sha magani?
+> Patient: Ina da zazzabi da sanyi da ciwon kai tsawon kwana uku. Jikina yana ciwo.
+> Doctor: Wadannan alamomi suna nuna zazzabin cizon sauro. Ka sha magani?
 
-**Yoruba (Nigeria):**
+Yoruba (Nigeria):
 
-> **Patient:** Mo ti n dun mi, ara mi gbona pupọ. O ti di ọjọ mẹta.
-> **Doctor:** Awọn ami wọnyi le jẹ iba. Jẹ ki a ṣayẹwo ẹjẹ rẹ.
+> Patient: Mo ti n dun mi, ara mi gbona pupọ. O ti di ọjọ mẹta.
+> Doctor: Awọn ami wọnyi le jẹ iba. Jẹ ki a ṣayẹwo ẹjẹ rẹ.
 
 ---
 
 ### A.2: Typhoid Fever
 
-**English:**
+English:
 
-> **Patient:** I have high fever that comes and goes, stomach pain, and I feel very weak. I also have diarrhea.
-> **Doctor:** This could be typhoid fever. Have you been drinking unsafe water? We need to test your blood.
+> Patient: I have high fever that comes and goes, stomach pain, and I feel very weak. I also have diarrhea.
+> Doctor: This could be typhoid fever. Have you been drinking unsafe water? We need to test your blood.
 
-**Twi (Ghana):**
+Twi (Ghana):
 
-> **Patient:** Me ho hyehye na me yafunu mu yɛ me ya. Me ho yeraw me na m'ayam mu retu.
-> **Doctor:** Eyi tumi yɛ typhoid. Wo nom nsuo a ɛnyɛ kronkron anaa?
+> Patient: Me ho hyehye na me yafunu mu yɛ me ya. Me ho yeraw me na m'ayam mu retu.
+> Doctor: Eyi tumi yɛ typhoid. Wo nom nsuo a ɛnyɛ kronkron anaa?
 
-**Hausa (West Africa):**
+Hausa (West Africa):
 
-> **Patient:** Ina da zazzabi mai zuwa da tafiya, ciwo a ciki, da rashin karfi. Ina da gudawa kuma.
-> **Doctor:** Wannan na iya zama zazzabin typhoid. Ka sha ruwan da ba shi da tsabta?
+> Patient: Ina da zazzabi mai zuwa da tafiya, ciwo a ciki, da rashin karfi. Ina da gudawa kuma.
+> Doctor: Wannan na iya zama zazzabin typhoid. Ka sha ruwan da ba shi da tsabta?
 
-**Yoruba (Nigeria):**
+Yoruba (Nigeria):
 
-> **Patient:** Mo ni iba ti o maa n wa ti o si maa n lọ, inun mi n dun mi, mo si rẹwẹsi pupọ. Mo tun ni igbe gbuuru.
-> **Doctor:** Eyi le jẹ iba typhoid. Ṣe o ti mu omi ti ko mọ?
+> Patient: Mo ni iba ti o maa n wa ti o si maa n lọ, inun mi n dun mi, mo si rẹwẹsi pupọ. Mo tun ni igbe gbuuru.
+> Doctor: Eyi le jẹ iba typhoid. Ṣe o ti mu omi ti ko mọ?
 
 ---
 
 ### A.3: Respiratory Infections
 
-**English:**
+English:
 
-> **Patient:** I have been coughing for two weeks, sometimes with blood. I also have night sweats and weight loss.
-> **Doctor:** These are concerning symptoms that could indicate tuberculosis. We need to do a chest X-ray and sputum test.
+> Patient: I have been coughing for two weeks, sometimes with blood. I also have night sweats and weight loss.
+> Doctor: These are concerning symptoms that could indicate tuberculosis. We need to do a chest X-ray and sputum test.
 
-**Twi (Ghana):**
+Twi (Ghana):
 
-> **Patient:** Merenkekaho ɛyɛ nnawɔtwe abien. Ɛtɔ da a mogya ba mu. Me ho bɔ fam anadwo na me nso reyɛ tɛtrɛɛ.
-> **Doctor:** Saa nsɛm yi tumi kyerɛ TB yare. Ɛsɛ sɛ yɛyɛ wo X-ray.
+> Patient: Merenkekaho ɛyɛ nnawɔtwe abien. Ɛtɔ da a mogya ba mu. Me ho bɔ fam anadwo na me nso reyɛ tɛtrɛɛ.
+> Doctor: Saa nsɛm yi tumi kyerɛ TB yare. Ɛsɛ sɛ yɛyɛ wo X-ray.
 
-**Hausa (West Africa):**
+Hausa (West Africa):
 
-> **Patient:** Ina tari tsawon mako biyu, wani lokaci da jini. Ina kuma zufa da dare kuma na rasa nauyi.
-> **Doctor:** Wadannan alamomi suna iya nuna cutar tarin fuka. Muna bukatar yin X-ray na kirji.
+> Patient: Ina tari tsawon mako biyu, wani lokaci da jini. Ina kuma zufa da dare kuma na rasa nauyi.
+> Doctor: Wadannan alamomi suna iya nuna cutar tarin fuka. Muna bukatar yin X-ray na kirji.
 
-**Yoruba (Nigeria):**
+Yoruba (Nigeria):
 
-> **Patient:** Mo ti n kọ ikọ fun ọsẹ meji, nigba kan pẹlu ẹjẹ. Mo tun n la ọgbẹ ni alẹ mo si n padanu iwuwo.
-> **Doctor:** Awọn ami wọnyi le tọka si iko. A nilo lati ṣe X-ray ati idanwo itọ.
+> Patient: Mo ti n kọ ikọ fun ọsẹ meji, nigba kan pẹlu ẹjẹ. Mo tun n la ọgbẹ ni alẹ mo si n padanu iwuwo.
+> Doctor: Awọn ami wọnyi le tọka si iko. A nilo lati ṣe X-ray ati idanwo itọ.
 
 ---
 
 ### A.4: Maternal Health
 
-**English:**
+English:
 
-> **Patient:** I am pregnant and I have been having severe headaches and my feet are swollen. I also see spots in my vision.
-> **Doctor:** These symptoms could indicate preeclampsia, which is a serious condition. We need to check your blood pressure immediately.
+> Patient: I am pregnant and I have been having severe headaches and my feet are swollen. I also see spots in my vision.
+> Doctor: These symptoms could indicate preeclampsia, which is a serious condition. We need to check your blood pressure immediately.
 
-**Twi (Ghana):**
+Twi (Ghana):
 
-> **Patient:** Me nsem na me tirim yɛ me ya paa. Me nan nso afura. Mehunu nneɛma wɔ m'ani mu.
-> **Doctor:** Saa nsɛm yi tumi yɛ preeclampsia. Ɛsɛ sɛ yɛhwɛ wo mogya pressure ntɛm.
+> Patient: Me nsem na me tirim yɛ me ya paa. Me nan nso afura. Mehunu nneɛma wɔ m'ani mu.
+> Doctor: Saa nsɛm yi tumi yɛ preeclampsia. Ɛsɛ sɛ yɛhwɛ wo mogya pressure ntɛm.
 
-**Hausa (West Africa):**
+Hausa (West Africa):
 
-> **Patient:** Ina da ciki kuma ina da ciwon kai mai tsanani. Kafafuna sun kumbura. Ina ganin tabo a idona.
-> **Doctor:** Wadannan alamomi suna iya nuna preeclampsia. Muna bukatar duba matsin jinin ki nan da nan.
+> Patient: Ina da ciki kuma ina da ciwon kai mai tsanani. Kafafuna sun kumbura. Ina ganin tabo a idona.
+> Doctor: Wadannan alamomi suna iya nuna preeclampsia. Muna bukatar duba matsin jinin ki nan da nan.
 
-**Yoruba (Nigeria):**
+Yoruba (Nigeria):
 
-> **Patient:** Mo loyun mo si ni orififo nla. Ẹsẹ mi wu. Mo tun ri awọn ami ninu oju mi.
-> **Doctor:** Awọn ami wọnyi le tọka si preeclampsia. A nilo lati ṣayẹwo ẹjẹ titẹ rẹ lẹsẹkẹsẹ.
+> Patient: Mo loyun mo si ni orififo nla. Ẹsẹ mi wu. Mo tun ri awọn ami ninu oju mi.
+> Doctor: Awọn ami wọnyi le tọka si preeclampsia. A nilo lati ṣayẹwo ẹjẹ titẹ rẹ lẹsẹkẹsẹ.
 
 ---
 
 ### A.5: Childhood Illnesses
 
-**English:**
+English:
 
-> **Patient:** My child has had diarrhea for three days and is not eating. The child seems very weak and listless.
-> **Doctor:** This is concerning for dehydration. We need to start oral rehydration therapy immediately and assess the severity.
+> Patient: My child has had diarrhea for three days and is not eating. The child seems very weak and listless.
+> Doctor: This is concerning for dehydration. We need to start oral rehydration therapy immediately and assess the severity.
 
-**Twi (Ghana):**
+Twi (Ghana):
 
-> **Patient:** Me ba no ayam mu atu nnansa na onnidi. Ɔhaw ne ne ho ayɛ mmerɛw paa.
-> **Doctor:** Eyi kyerɛ sɛ ne ho nsuo no redwane. Ɛsɛ sɛ yɛma no ORS.
+> Patient: Me ba no ayam mu atu nnansa na onnidi. Ɔhaw ne ne ho ayɛ mmerɛw paa.
+> Doctor: Eyi kyerɛ sɛ ne ho nsuo no redwane. Ɛsɛ sɛ yɛma no ORS.
 
-**Hausa (West Africa):**
+Hausa (West Africa):
 
-> **Patient:** Yaro na yana da gudawa tsawon kwana uku kuma ba ya cin abinci. Yaro ya yi rauni sosai.
-> **Doctor:** Wannan yana nuna rashin ruwa. Muna bukatar fara magani da ruwan sukari da gishiri nan da nan.
+> Patient: Yaro na yana da gudawa tsawon kwana uku kuma ba ya cin abinci. Yaro ya yi rauni sosai.
+> Doctor: Wannan yana nuna rashin ruwa. Muna bukatar fara magani da ruwan sukari da gishiri nan da nan.
 
-**Yoruba (Nigeria):**
+Yoruba (Nigeria):
 
-> **Patient:** Ọmọ mi ti ni igbe gbuuru fun ọjọ mẹta ko si jẹun. Ọmọ naa rẹwẹsi pupọ.
-> **Doctor:** Eyi ṣe pataki fun gbigbẹ. A nilo lati bẹrẹ itọju ORS lẹsẹkẹsẹ.
+> Patient: Ọmọ mi ti ni igbe gbuuru fun ọjọ mẹta ko si jẹun. Ọmọ naa rẹwẹsi pupọ.
+> Doctor: Eyi ṣe pataki fun gbigbẹ. A nilo lati bẹrẹ itọju ORS lẹsẹkẹsẹ.
 
 ---
 
 ### A.6: Emergency Triage
 
-**English:**
+English:
 
-> **Patient:** The patient was bitten by a snake one hour ago. The leg is swelling and very painful.
-> **Doctor:** This is an emergency. We need antivenom immediately. Keep the patient calm and the limb immobilized.
+> Patient: The patient was bitten by a snake one hour ago. The leg is swelling and very painful.
+> Doctor: This is an emergency. We need antivenom immediately. Keep the patient calm and the limb immobilized.
 
-**Twi (Ghana):**
+Twi (Ghana):
 
-> **Patient:** Ɔwɔ aka no dɔnhwerew baako ni. Ne nan no refura na ɛyɛ ya paa.
-> **Doctor:** Eyi yɛ emergency. Yɛhia antivenom ntɛm. Ma ɔnnyɛ ne ho hwee.
+> Patient: Ɔwɔ aka no dɔnhwerew baako ni. Ne nan no refura na ɛyɛ ya paa.
+> Doctor: Eyi yɛ emergency. Yɛhia antivenom ntɛm. Ma ɔnnyɛ ne ho hwee.
 
-**Hausa (West Africa):**
+Hausa (West Africa):
 
-> **Patient:** An cizon maciji sa'a daya da ta wuce. Kafar tana kumbura kuma tana ciwo sosai.
-> **Doctor:** Wannan gaggawa ce. Muna bukatar maganin dafin maciji nan da nan.
+> Patient: An cizon maciji sa'a daya da ta wuce. Kafar tana kumbura kuma tana ciwo sosai.
+> Doctor: Wannan gaggawa ce. Muna bukatar maganin dafin maciji nan da nan.
 
-**Yoruba (Nigeria):**
+Yoruba (Nigeria):
 
-> **Patient:** Ejò bu alaisan naa ni wakati kan sẹhin. Ẹsẹ naa n wu o si n dun pupọ.
-> **Doctor:** Eyi jẹ pajawiri. A nilo antivenom lẹsẹkẹsẹ. Jẹ ki alaisan dakẹ ki o si ma ẹsẹ duro.
+> Patient: Ejò bu alaisan naa ni wakati kan sẹhin. Ẹsẹ naa n wu o si n dun pupọ.
+> Doctor: Eyi jẹ pajawiri. A nilo antivenom lẹsẹkẹsẹ. Jẹ ki alaisan dakẹ ki o si ma ẹsẹ duro.
 
 ---
 
 ### A.7: Cholera and Acute Diarrhea
 
-**English:**
+English:
 
-> **Patient:** I have been having watery diarrhea like rice water since morning. I am very thirsty and dizzy.
-> **Doctor:** This could be cholera. We need to start IV fluids immediately and isolate you to prevent spread.
+> Patient: I have been having watery diarrhea like rice water since morning. I am very thirsty and dizzy.
+> Doctor: This could be cholera. We need to start IV fluids immediately and isolate you to prevent spread.
 
-**Twi (Ghana):**
+Twi (Ghana):
 
-> **Patient:** Me ayam mu atu sɛ nsuo fii anɔpatutuutu. Nsukɔm de me na me tirim nso reyɛ me.
-> **Doctor:** Eyi tumi yɛ cholera. Ɛsɛ sɛ yɛde drip hyɛ wo ntɛm.
+> Patient: Me ayam mu atu sɛ nsuo fii anɔpatutuutu. Nsukɔm de me na me tirim nso reyɛ me.
+> Doctor: Eyi tumi yɛ cholera. Ɛsɛ sɛ yɛde drip hyɛ wo ntɛm.
 
-**Hausa (West Africa):**
+Hausa (West Africa):
 
-> **Patient:** Gudawa ta kama ni tun safe, ruwa kamar ruwan shinkafa. Ina da kishirwa sosai kuma kaina yana juyawa.
-> **Doctor:** Wannan na iya zama cutar hauka. Muna bukatar fara ruwan jini nan da nan.
+> Patient: Gudawa ta kama ni tun safe, ruwa kamar ruwan shinkafa. Ina da kishirwa sosai kuma kaina yana juyawa.
+> Doctor: Wannan na iya zama cutar hauka. Muna bukatar fara ruwan jini nan da nan.
 
-**Yoruba (Nigeria):**
+Yoruba (Nigeria):
 
-> **Patient:** Mo ti ni igbe gbuuru omi bi omi iresi lati owurọ. Ongbẹ n gbẹ mi pupọ ori mi si n yi.
-> **Doctor:** Eyi le jẹ arun kolera. A nilo lati bẹrẹ omi IV lẹsẹkẹsẹ.
+> Patient: Mo ti ni igbe gbuuru omi bi omi iresi lati owurọ. Ongbẹ n gbẹ mi pupọ ori mi si n yi.
+> Doctor: Eyi le jẹ arun kolera. A nilo lati bẹrẹ omi IV lẹsẹkẹsẹ.
 
 ---
 
 ### A.8: Wound Care and Infections
 
-**English:**
+English:
 
-> **Patient:** I cut my foot three days ago and now it is red, swollen, and there is pus coming out.
-> **Doctor:** This wound is infected. We need to clean it properly and start antibiotics. When did you last have a tetanus shot?
+> Patient: I cut my foot three days ago and now it is red, swollen, and there is pus coming out.
+> Doctor: This wound is infected. We need to clean it properly and start antibiotics. When did you last have a tetanus shot?
 
-**Twi (Ghana):**
+Twi (Ghana):
 
-> **Patient:** Metwitwaa me nan nnansa ni. Afei akɔkɔ na ɛho afura na mogya fufuo refiri mu.
-> **Doctor:** Kuro no ho ara. Ɛsɛ sɛ yɛhoro ho na yɛma wo antibiotics. Daben na wobɔɔ tetanus panee?
+> Patient: Metwitwaa me nan nnansa ni. Afei akɔkɔ na ɛho afura na mogya fufuo refiri mu.
+> Doctor: Kuro no ho ara. Ɛsɛ sɛ yɛhoro ho na yɛma wo antibiotics. Daben na wobɔɔ tetanus panee?
 
-**Hausa (West Africa):**
+Hausa (West Africa):
 
-> **Patient:** Na yanke kafa kwana uku da suka wuce, yanzu ta yi ja, ta kumbura, kuma akwai ruwan kwalara.
-> **Doctor:** Wannan rauni ya kamu da cuta. Muna bukatar wanke shi da kyau mu fara antibiotics.
+> Patient: Na yanke kafa kwana uku da suka wuce, yanzu ta yi ja, ta kumbura, kuma akwai ruwan kwalara.
+> Doctor: Wannan rauni ya kamu da cuta. Muna bukatar wanke shi da kyau mu fara antibiotics.
 
-**Yoruba (Nigeria):**
+Yoruba (Nigeria):
 
-> **Patient:** Mo ge ẹsẹ mi ni ọjọ mẹta sẹhin bayi o ti pọn, o wu, ọgbẹ si n jade.
-> **Doctor:** Ọgbẹ yii ti ni akoran. A nilo lati sọ di mimọ daradara ki a si bẹrẹ antibiotics.
+> Patient: Mo ge ẹsẹ mi ni ọjọ mẹta sẹhin bayi o ti pọn, o wu, ọgbẹ si n jade.
+> Doctor: Ọgbẹ yii ti ni akoran. A nilo lati sọ di mimọ daradara ki a si bẹrẹ antibiotics.
 
 ---
 
 ### A.9: Symptom Severity Triage Guide
 
 What is the severity level for a patient with:
-- **High fever above 39°C with confusion:** HIGH SEVERITY — Urgent referral needed
-- **Mild headache with no fever:** LOW SEVERITY — Self-care with paracetamol
-- **Persistent cough for more than 2 weeks:** MEDIUM SEVERITY — Visit clinic for TB screening
-- **Severe abdominal pain with vomiting:** HIGH SEVERITY — Possible surgical emergency
-- **Rash with fever in a child:** MEDIUM to HIGH — Could be measles or meningitis
-- **Difficulty breathing at rest:** HIGH SEVERITY — Urgent referral
-- **Diarrhea with blood:** MEDIUM to HIGH — Possible dysentery, needs antibiotics
-- **Joint pain and swelling:** LOW to MEDIUM — Could be arthritis or infection
+- High fever above 39°C with confusion: HIGH SEVERITY — Urgent referral needed
+- Mild headache with no fever: LOW SEVERITY — Self-care with paracetamol
+- Persistent cough for more than 2 weeks: MEDIUM SEVERITY — Visit clinic for TB screening
+- Severe abdominal pain with vomiting: HIGH SEVERITY — Possible surgical emergency
+- Rash with fever in a child: MEDIUM to HIGH — Could be measles or meningitis
+- Difficulty breathing at rest: HIGH SEVERITY — Urgent referral
+- Diarrhea with blood: MEDIUM to HIGH — Possible dysentery, needs antibiotics
+- Joint pain and swelling: LOW to MEDIUM — Could be arthritis or infection
 
 ---
 
 ### A.10: Medication Guidance
 
 Common medications for triage settings:
-- **Paracetamol:** For fever and pain, safe for all ages with proper dosing
-- **Oral Rehydration Salts (ORS):** Essential for diarrhea and dehydration
-- **Artemether-Lumefantrine (AL):** First-line treatment for uncomplicated malaria
-- **Amoxicillin:** For bacterial infections including pneumonia
-- **Metronidazole:** For amoebic dysentery and some infections
-- **Zinc supplements:** Important addition to ORS for childhood diarrhea
+- Paracetamol: For fever and pain, safe for all ages with proper dosing
+- Oral Rehydration Salts (ORS): Essential for diarrhea and dehydration
+- Artemether-Lumefantrine (AL): First-line treatment for uncomplicated malaria
+- Amoxicillin: For bacterial infections including pneumonia
+- Metronidazole: For amoebic dysentery and some infections
+- Zinc supplements: Important addition to ORS for childhood diarrhea
 
 ---
 
@@ -244,112 +244,112 @@ Important preventive measures:
 
 ### A.12: French (Francophone Africa — Senegal, Côte d'Ivoire, DRC, etc.)
 
-> **Patient:** J'ai de la fièvre depuis trois jours avec des frissons et des maux de tête.
-> **Médecin:** Ces symptômes peuvent indiquer le paludisme. Avez-vous été piqué par des moustiques récemment?
+> Patient: J'ai de la fièvre depuis trois jours avec des frissons et des maux de tête.
+> Médecin: Ces symptômes peuvent indiquer le paludisme. Avez-vous été piqué par des moustiques récemment?
 
-> **Patient:** J'ai des douleurs abdominales et de la diarrhée avec du sang.
-> **Médecin:** Cela pourrait être une dysenterie. Nous devons vous traiter immédiatement.
+> Patient: J'ai des douleurs abdominales et de la diarrhée avec du sang.
+> Médecin: Cela pourrait être une dysenterie. Nous devons vous traiter immédiatement.
 
-> **Patient:** Je suis enceinte et j'ai des saignements.
-> **Médecin:** C'est une urgence. Nous devons vous examiner tout de suite.
+> Patient: Je suis enceinte et j'ai des saignements.
+> Médecin: C'est une urgence. Nous devons vous examiner tout de suite.
 
 ---
 
 ### A.13: Portuguese (Lusophone Africa — Angola, Mozambique, Guinea-Bissau)
 
-> **Paciente:** Tenho febre alta há três dias com dores de cabeça fortes.
-> **Médico:** Estes sintomas podem indicar malária. Vamos fazer um teste de sangue.
+> Paciente: Tenho febre alta há três dias com dores de cabeça fortes.
+> Médico: Estes sintomas podem indicar malária. Vamos fazer um teste de sangue.
 
-> **Paciente:** Estou grávida e tenho dores no estômago.
-> **Médico:** Precisamos examiná-la imediatamente para garantir a segurança do bebê.
+> Paciente: Estou grávida e tenho dores no estômago.
+> Médico: Precisamos examiná-la imediatamente para garantir a segurança do bebê.
 
 ---
 
 ### A.14: Ewe (Ghana, Togo, Benin)
 
-> **Patient:** Ðe nye ta me le ven nam eye ŋu me le vom nam.
-> **Dotoo:** Ale nye fia be atike le wò ŋu. Míahia be míabu te wò zeze.
+> Patient: Ðe nye ta me le ven nam eye ŋu me le vom nam.
+> Dotoo: Ale nye fia be atike le wò ŋu. Míahia be míabu te wò zeze.
 
-> **Patient:** Ðe xɔ le ðum eye mele nuɖuɖu ɖum o.
-> **Dotoo:** Ele be míana tsi kple sukli na wò.
+> Patient: Ðe xɔ le ðum eye mele nuɖuɖu ɖum o.
+> Dotoo: Ele be míana tsi kple sukli na wò.
 
 ---
 
 ### A.15: Swahili (East Africa — Kenya, Tanzania, Uganda, DRC)
 
-> **Mgonjwa:** Nina homa kali na maumivu ya kichwa kwa siku tatu.
-> **Daktari:** Hasa ni dalili za malaria. Unahitaji kupimwa damu.
+> Mgonjwa: Nina homa kali na maumivu ya kichwa kwa siku tatu.
+> Daktari: Hasa ni dalili za malaria. Unahitaji kupimwa damu.
 
-> **Mgonjwa:** Tumboni yananiuma sana na nina kuharisha.
-> **Daktari:** Hii inaweza kuwa kipindupindu. Tunahitaji kutoa maji mwilini haraka.
+> Mgonjwa: Tumboni yananiuma sana na nina kuharisha.
+> Daktari: Hii inaweza kuwa kipindupindu. Tunahitaji kutoa maji mwilini haraka.
 
-> **Mgonjwa:** Mimi ni mjamzito na ninapata kutoka damu.
-> **Daktari:** Hii ni dharura. Lazima tukuchunguze sasa hivi.
+> Mgonjwa: Mimi ni mjamzito na ninapata kutoka damu.
+> Daktari: Hii ni dharura. Lazima tukuchunguze sasa hivi.
 
 ---
 
 ### A.16: Amharic (Ethiopia)
 
-> **ታማሚ:** ለሦስት ቀናት ከፍተኛ ትኩሳት እና ራስ ምታት አለኝ።
-> **ዶክተር:** እነዚህ ምልክቶች ወባ ሊሆኑ ይችላሉ። የደም ምርመራ ማድረግ አለብኝ።
+> ታማሚ: ለሦስት ቀናት ከፍተኛ ትኩሳት እና ራስ ምታት አለኝ።
+> ዶክተር: እነዚህ ምልክቶች ወባ ሊሆኑ ይችላሉ። የደም ምርመራ ማድረግ አለብኝ።
 
-> **ታማሚ:** ሆዴ ይጎዳኛል እና ተቅማጥ አለኝ።
-> **ዶክተር:** ORS መውሰድ እና ብዙ ውሃ መጠጣት ያስፈልግዎታል።
+> ታማሚ: ሆዴ ይጎዳኛል እና ተቅማጥ አለኝ።
+> ዶክተር: ORS መውሰድ እና ብዙ ውሃ መጠጣት ያስፈልግዎታል።
 
 ---
 
 ### A.17: Igbo (Nigeria)
 
-> **Onye ọrịa:** Enwere m ahụ ọkụ na isi ọwụwa ụbọchị atọ.
-> **Dọkịta:** Nke a nwere ike ịbụ ịba. Anyị ga-eme ule ọbara.
+> Onye ọrịa: Enwere m ahụ ọkụ na isi ọwụwa ụbọchị atọ.
+> Dọkịta: Nke a nwere ike ịbụ ịba. Anyị ga-eme ule ọbara.
 
-> **Onye ọrịa:** Afọ na-eme m eme na m na-agbapụta.
-> **Dọkịta:** I nwere ike ịbụ nsogbu cholera. Anyị ga-enye gị mmiri n'ahụ ozugbo.
+> Onye ọrịa: Afọ na-eme m eme na m na-agbapụta.
+> Dọkịta: I nwere ike ịbụ nsogbu cholera. Anyị ga-enye gị mmiri n'ahụ ozugbo.
 
 ---
 
 ### A.18: Zulu (South Africa)
 
-> **Isiguli:** Nginomkhuhlane omkhulu nobuhlungu bekhanda izinsuku ezintathu.
-> **Udokotela:** Lezi zimpawu zingase zibonise ugcwalisa. Kufanele sihlole igazi.
+> Isiguli: Nginomkhuhlane omkhulu nobuhlungu bekhanda izinsuku ezintathu.
+> Udokotela: Lezi zimpawu zingase zibonise ugcwalisa. Kufanele sihlole igazi.
 
-> **Isiguli:** Isisu sami sibuhlungu kakhulu futhi nginesihudo.
-> **Udokotela:** Lokhu kungaba yi-cholera. Sidinga ukukunika amanzi ngokushesha.
+> Isiguli: Isisu sami sibuhlungu kakhulu futhi nginesihudo.
+> Udokotela: Lokhu kungaba yi-cholera. Sidinga ukukunika amanzi ngokushesha.
 
 ---
 
 ### A.19: Wolof (Senegal, Gambia)
 
-> **Féebar:** Am na febar bu tawal ak baat bu tar bépp fan wii.
-> **Dooter:** Loolu mën na am tat febar. War nañu di xool deretnaa.
+> Féebar: Am na febar bu tawal ak baat bu tar bépp fan wii.
+> Dooter: Loolu mën na am tat febar. War nañu di xool deretnaa.
 
 ---
 
 ### A.20: Shona (Zimbabwe)
 
-> **Murwere:** Ndine fiva yakanyanya nemusoro kurwadza kwemazuva matatu.
-> **Chiremba:** Izvi zvinogona kuratidza malaria. Tinofanira kuita bvunzo ropa.
+> Murwere: Ndine fiva yakanyanya nemusoro kurwadza kwemazuva matatu.
+> Chiremba: Izvi zvinogona kuratidza malaria. Tinofanira kuita bvunzo ropa.
 
 ---
 
 ### A.21: Lingala (DRC, Congo-Brazzaville)
 
-> **Malade:** Nazali na fièvre makasi mpe motó ezali kobwaka ngai mikolo misato.
-> **Monganga:** Bilembo oyo ekoki ko montrer malaria. Tosengeli kosala test ya makila.
+> Malade: Nazali na fièvre makasi mpe motó ezali kobwaka ngai mikolo misato.
+> Monganga: Bilembo oyo ekoki ko montrer malaria. Tosengeli kosala test ya makila.
 
 ---
 
 ### A.22: Kinyarwanda (Rwanda, Burundi)
 
-> **Umurwayi:** Mfite umuriro n'uburibwe bwo mu mutwe iminsi itatu.
-> **Umuganga:** Ibi bimenyetso bishobora kwerekana malariya. Tugomba gupima amaraso.
+> Umurwayi: Mfite umuriro n'uburibwe bwo mu mutwe iminsi itatu.
+> Umuganga: Ibi bimenyetso bishobora kwerekana malariya. Tugomba gupima amaraso.
 
 ---
 
 ### A.23: Somali (Somalia, Djibouti)
 
-> **Bukaanka:** Waxaan qabaa xummad iyo madax xanuun saddex maalmood.
-> **Dhakhtarka:** Calaamadahan waxay tilmaamayaan malaria. Waa in aan baadhno dhiigga.
+> Bukaanka: Waxaan qabaa xummad iyo madax xanuun saddex maalmood.
+> Dhakhtarka: Calaamadahan waxay tilmaamayaan malaria. Waa in aan baadhno dhiigga.
 
 ---
 
@@ -402,7 +402,7 @@ Important preventive measures:
 
 ### Input: Nku Sentinel Sensor Readings → Clinically Explicit Prompt
 
-The `ClinicalReasoner.generatePrompt()` function transforms raw sensor data into a self-documenting prompt. MedGemma receives the **measurement method**, **raw biomarker values**, **derived scores with clinical context**, and **literature references** — not opaque percentages.
+The `ClinicalReasoner.generatePrompt()` function transforms raw sensor data into a self-documenting prompt. MedGemma receives the measurement method, raw biomarker values, derived scores with clinical context, and literature references — not opaque percentages.
 
 ```
 You are a clinical triage assistant for community health workers in rural Africa.
@@ -505,23 +505,23 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 
 ## Appendix D: Quantization & Translation Model Selection
 
-Selecting the right quantization level required balancing two competing goals: **minimizing model size** (for budget devices) and **maintaining clinical accuracy** (for medical reasoning). We systematically benchmarked multiple quantization levels before selecting Q4_K_M.
+Selecting the right quantization level required balancing two competing goals: minimizing model size (for budget devices) and maintaining clinical accuracy (for medical reasoning). We systematically benchmarked multiple quantization levels before selecting Q4_K_M.
 
 ### MedGemma Quantization Comparison (MedQA)†
 
 | Quantization | Size | MedQA Accuracy | Primary Care | % of Baseline (69%) | Verdict |
 |:-------------|:----:|:--------------:|:--------------------:|:--------------------:|:--------|
 | F16 (baseline) | 8.0 GB | 69% | — | 100% | Too large for mobile |
-| **Q4_K_M** | **2.3 GB** | **56.0%** (713/1273) | **56.2%** (397/707) | **81%** | **✅ Selected — best accuracy/size ratio** |
+| Q4_K_M | 2.3 GB | 56.0% (713/1273) | 56.2% (397/707) | 81% | ✅ Selected — best accuracy/size ratio |
 | IQ2_XS + medical imatrix | 1.3 GB | 43.8% (558/1273) | 45.3% (320/707) | 63.5% | Viable alternative for ultra-constrained devices |
 | Q2_K | 1.6 GB | 34.7% (442/1273) | 33.9% (240/707) | 50.3% | ❌ Worse than IQ2_XS despite being larger |
 | IQ1_M | 1.1 GB | 32.3% (411/1273) | 32.4% (229/707) | 46.8% | ❌ Near random chance — rejected |
 
-> †Each model was evaluated **single-shot on the full MedQA test set (1,273 questions)** and the primary care subset (707 questions) — one attempt per question, no repeated runs, no best-of-N selection. This mirrors Nku's real-world use case: a CHW presents a patient once and receives a single triage response. Single-run evaluation is the most representative measure of the model's reliability in this clinical context.
+> †Each model was evaluated single-shot on the full MedQA test set (1,273 questions) and the primary care subset (707 questions) — one attempt per question, no repeated runs, no best-of-N selection. This mirrors Nku's real-world use case: a CHW presents a patient once and receives a single triage response. Single-run evaluation is the most representative measure of the model's reliability in this clinical context.
 
-**Key finding 1: IQ1_M is near-random.** IQ1_M (our original choice for maximum compression) scored **32.3% on the full MedQA test set (1,273 questions, single-shot)** — only 7.3 percentage points above the 25% random baseline. The model exhibited a severe **position bias**: 51.7% of all predictions were "B" regardless of the question, yielding 61.8% accuracy on B-correct questions but only 6.2% on A-correct questions. This pattern is consistent with extreme quantization destroying the model's ability to reason over content, leaving only residual positional patterns.
+Key finding 1: IQ1_M is near-random. IQ1_M (our original choice for maximum compression) scored 32.3% on the full MedQA test set (1,273 questions, single-shot) — only 7.3 percentage points above the 25% random baseline. The model exhibited a severe position bias: 51.7% of all predictions were "B" regardless of the question, yielding 61.8% accuracy on B-correct questions but only 6.2% on A-correct questions. This pattern is consistent with extreme quantization destroying the model's ability to reason over content, leaving only residual positional patterns.
 
-**Key finding 2: Medical imatrix calibration outperforms naive quantization.** IQ2_XS (1.3 GB), quantized with a domain-specific medical imatrix, scored **43.8%** — outperforming the larger Q2_K (1.6 GB) by **+9.1 percentage points** despite being 300 MB smaller. The imatrix preserves weights critical for medical reasoning while Q2_K compresses all weights uniformly. IQ2_XS also produced only 1 unparsed response versus 17 for Q2_K, indicating far more stable output generation.
+Key finding 2: Medical imatrix calibration outperforms naive quantization. IQ2_XS (1.3 GB), quantized with a domain-specific medical imatrix, scored 43.8% — outperforming the larger Q2_K (1.6 GB) by +9.1 percentage points despite being 300 MB smaller. The imatrix preserves weights critical for medical reasoning while Q2_K compresses all weights uniformly. IQ2_XS also produced only 1 unparsed response versus 17 for Q2_K, indicating far more stable output generation.
 
 #### Full Benchmark Comparison†
 
@@ -535,28 +535,28 @@ Selecting the right quantization level required balancing two competing goals: *
 
 > †Single-pass evaluation — see methodology note above.
 
-**Decision rationale**: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The Q4_K_M model is a standard quantization (from [mradermacher/medgemma-4b-it-GGUF](https://huggingface.co/mradermacher/medgemma-4b-it-GGUF)). The other three quantization levels (IQ1_M, Q2_K, IQ2_XS) were benchmarked to validate our model selection: they confirmed that aggressive quantization below Q4 degrades accuracy below clinically useful thresholds, and that domain-specific imatrix calibration (applied to IQ2_XS) is essential at lower bit rates. **Only Q4_K_M is deployed in the Nku application.** With `mmap` memory mapping, the 2.3 GB Q4_K_M model runs on 2–3 GB RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
+Decision rationale: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The Q4_K_M model is a standard quantization (from [mradermacher/medgemma-4b-it-GGUF](https://huggingface.co/mradermacher/medgemma-4b-it-GGUF)). The other three quantization levels (IQ1_M, Q2_K, IQ2_XS) were benchmarked to validate our model selection: they confirmed that aggressive quantization below Q4 degrades accuracy below clinically useful thresholds, and that domain-specific imatrix calibration (applied to IQ2_XS) is essential at lower bit rates. Only Q4_K_M is deployed in the Nku application. With `mmap` memory mapping, the 2.3 GB Q4_K_M model runs on 2–3 GB RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
 
-> **imatrix representativeness**: The 243 scenarios cover WHO/IMCI triage conditions accounting for >80% of CHW encounters in Sub-Saharan Africa. The imatrix was used for the IQ2_XS quantization experiment — its purpose is weight importance estimation, identifying which model weights are most critical for the deployment vocabulary (malaria, anemia, pneumonia, maternal health terms across 14+ languages). This is a quantization calibration technique, not clinical training data; 243 scenarios across 8 condition categories and 14 languages provides sufficient diversity for weight importance ranking. The deployed Q4_K_M does not use this imatrix.
+> imatrix representativeness: The 243 scenarios cover WHO/IMCI triage conditions accounting for >80% of CHW encounters in Sub-Saharan Africa. The imatrix was used for the IQ2_XS quantization experiment — its purpose is weight importance estimation, identifying which model weights are most critical for the deployment vocabulary (malaria, anemia, pneumonia, maternal health terms across 14+ languages). This is a quantization calibration technique, not clinical training data; 243 scenarios across 8 condition categories and 14 languages provides sufficient diversity for weight importance ranking. The deployed Q4_K_M does not use this imatrix.
 
 ### Why Not Unquantized MedGemma 4B or MedGemma 4B Multimodal?
 
 | Alternative | Size | Why Not Viable |
 |:------------|:----:|:---------------|
-| **MedGemma 4B F16** (unquantized) | 8.0 GB | On a $50–100 phone with 2–3 GB RAM, `mmap` must page an 8 GB model through ~2 GB of available memory. The resulting page thrashing increases per-query latency from sub-second to **minutes** — unusable during a clinical encounter. Q4_K_M (2.3 GB) fits comfortably within the mmap working set. |
-| **MedGemma 4B Multimodal** | ~3.1 GB (Q4_K_M) | See detailed analysis below. |
+| MedGemma 4B F16 (unquantized) | 8.0 GB | On a $50–100 phone with 2–3 GB RAM, `mmap` must page an 8 GB model through ~2 GB of available memory. The resulting page thrashing increases per-query latency from sub-second to minutes — unusable during a clinical encounter. Q4_K_M (2.3 GB) fits comfortably within the mmap working set. |
+| MedGemma 4B Multimodal | ~3.1 GB (Q4_K_M) | See detailed analysis below. |
 
-**Why not use the multimodal MedGemma 4B with raw camera images?** A natural question: MedGemma 4B multimodal includes a MedSigLIP vision encoder (400M parameters). Why not feed it raw camera images directly, skipping the sensor-to-text pipeline entirely? Four reasons:
+Why not use the multimodal MedGemma 4B with raw camera images? A natural question: MedGemma 4B multimodal includes a MedSigLIP vision encoder (400M parameters). Why not feed it raw camera images directly, skipping the sensor-to-text pipeline entirely? Four reasons:
 
-1. **rPPG requires temporal video analysis, not single images.** Heart rate detection via rPPG extracts pulse frequency from 10 seconds of facial video (300 frames) using DFT. A vision-language model processes single images — it cannot perform temporal frequency analysis across a video stream. No single frame contains heart rate information.
+1. rPPG requires temporal video analysis, not single images. Heart rate detection via rPPG extracts pulse frequency from 10 seconds of facial video (300 frames) using DFT. A vision-language model processes single images — it cannot perform temporal frequency analysis across a video stream. No single frame contains heart rate information.
 
-2. **MedSigLIP was trained on clinical imagery, not smartphone selfies.** The vision encoder was fine-tuned on chest X-rays, dermatoscopy, ophthalmology scans, and histopathology slides — none of which resemble a smartphone photo of a lower eyelid (pallor) or a facial selfie (edema). It would require fine-tuning on these specific modalities, for which no labeled training data currently exists.
+2. MedSigLIP was trained on clinical imagery, not smartphone selfies. The vision encoder was fine-tuned on chest X-rays, dermatoscopy, ophthalmology scans, and histopathology slides — none of which resemble a smartphone photo of a lower eyelid (pallor) or a facial selfie (edema). It would require fine-tuning on these specific modalities, for which no labeled training data currently exists.
 
-3. **The multimodal model is larger, not smaller.** The text decoder is identical to the text-only 4B. Adding MedSigLIP (400M params, ~800 MB) increases the quantized model from 2.3 GB to ~3.1 GB — a 35% size increase with no benefit for Nku's use case. On a 2 GB RAM device, this additional memory pressure degrades inference performance.
+3. The multimodal model is larger, not smaller. The text decoder is identical to the text-only 4B. Adding MedSigLIP (400M params, ~800 MB) increases the quantized model from 2.3 GB to ~3.1 GB — a 35% size increase with no benefit for Nku's use case. On a 2 GB RAM device, this additional memory pressure degrades inference performance.
 
-4. **Structured numerical input outperforms ambiguous visual input.** Nku's sensor pipeline outputs precise, quantified biomarkers (HR: 108 BPM, conjunctival saturation: 0.08, EAR: 2.15) with confidence scores and clinical context. Feeding the model a raw photo and asking "does this patient have anemia?" yields far less reliable results than providing "conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10), pallor index: 0.68, severity: MODERATE." The structured prompting approach achieves a median 53% improvement over zero-shot baselines [9].
+4. Structured numerical input outperforms ambiguous visual input. Nku's sensor pipeline outputs precise, quantified biomarkers (HR: 108 BPM, conjunctival saturation: 0.08, EAR: 2.15) with confidence scores and clinical context. Feeding the model a raw photo and asking "does this patient have anemia?" yields far less reliable results than providing "conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10), pallor index: 0.68, severity: MODERATE." The structured prompting approach achieves a median 53% improvement over zero-shot baselines [9].
 
-> **Transparency note:** These four arguments are architectural and design rationale — we did not empirically benchmark multimodal MedGemma on smartphone conjunctival or periorbital images. No labeled training data exists for these modalities in this clinical context, which itself is a reason the multimodal path is not viable without significant additional data collection and fine-tuning.
+> Transparency note: These four arguments are architectural and design rationale — we did not empirically benchmark multimodal MedGemma on smartphone conjunctival or periorbital images. No labeled training data exists for these modalities in this clinical context, which itself is a reason the multimodal path is not viable without significant additional data collection and fine-tuning.
 
 
 ### Translation Model Comparison
@@ -567,15 +567,15 @@ We also evaluated TranslateGemma 4B as an on-device translation model before sel
 |:---------|:----:|:------------------------:|:----------:|:-------:|
 | TranslateGemma 4B (Q4_K_M) | 2.3 GB | Twi/Akan: ❌ broken | +2.3 GB (sequential load) | ✅ |
 | TranslateGemma 4B (IQ1_M) | 0.78 GB | Twi/Akan: ❌ broken | +0.78 GB (sequential load) | ✅ |
-| **Android ML Kit** | **~30 MB/lang** | **59 languages on-device** | **Negligible (separate process)** | **✅ (official langs)** |
+| Android ML Kit | ~30 MB/lang | 59 languages on-device | Negligible (separate process) | ✅ (official langs) |
 | Google Cloud Translate | 0 MB | 100+ languages | None | ❌ (requires internet) |
 
-**Key finding**: TranslateGemma could not translate Twi/Akan (a major Ghanaian language) at any quantization level — this was a base model limitation, not a quantization artifact. We benchmarked all 31 African languages across Q4_K_M and Q3_K_M and found significant gaps.
+Key finding: TranslateGemma could not translate Twi/Akan (a major Ghanaian language) at any quantization level — this was a base model limitation, not a quantization artifact. We benchmarked all 31 African languages across Q4_K_M and Q3_K_M and found significant gaps.
 
-**Final architecture — hybrid translation**:
-- **ML Kit on-device** (59 languages, ~30MB each): Handles all official African languages (English, French, Portuguese) + Afrikaans, Swahili, Zulu — fully offline
-- **Cloud Translate fallback**: Handles indigenous languages (Twi, Hausa, Yoruba, Igbo, etc.) when online
-- **Critical insight**: CHWs are trained and fluent in their country's official language. Since ML Kit supports all official languages on-device, **every CHW always has a fully offline triage path**. Cloud translation only extends reach to indigenous languages.
+Final architecture — hybrid translation:
+- ML Kit on-device (59 languages, ~30MB each): Handles all official African languages (English, French, Portuguese) + Afrikaans, Swahili, Zulu — fully offline
+- Cloud Translate fallback: Handles indigenous languages (Twi, Hausa, Yoruba, Igbo, etc.) when online
+- Critical insight: CHWs are trained and fluent in their country's official language. Since ML Kit supports all official languages on-device, every CHW always has a fully offline triage path. Cloud translation only extends reach to indigenous languages.
 
 This hybrid approach eliminated ~2.3GB of GGUF model weight, removed the model-swapping pipeline overhead (3 load/unload cycles → 1), and expanded language coverage from ~15 to 59 on-device languages — while preserving the 100% offline guarantee for the primary use case.
 
@@ -593,22 +593,22 @@ MedQA tests USMLE-level diagnostic reasoning — selecting the correct diagnosis
 
 Recent research confirms this distinction:
 
-- **Frontier LLMs achieve ~92.4% triage accuracy** — comparable to primary care physicians and significantly higher than their MedQA scores — demonstrating that triage is an easier task for LLMs than broad medical knowledge exams [19].
-- **LLMs match the proficiency of untrained emergency department doctors** for triage decisions, with newer model versions showing continuous improvement [20].
+- Frontier LLMs achieve ~92.4% triage accuracy — comparable to primary care physicians and significantly higher than their MedQA scores — demonstrating that triage is an easier task for LLMs than broad medical knowledge exams [19].
+- LLMs match the proficiency of untrained emergency department doctors for triage decisions, with newer model versions showing continuous improvement [20].
 
 If frontier LLMs score ~85–90% on MedQA but ~92% on triage, the gap between MedQA and triage performance is ~+7 percentage points. Applying a similar offset to our Q4_K_M (56% MedQA) suggests ~63–70% on comparable triage tasks — before accounting for the significant advantage of structured input.
 
 ### Evidence 2: LLM Decision Support Reduces Errors in African Clinical Settings
 
-A real-world study at **Penda Health clinics in Nairobi, Kenya** (2024–2025) found that clinicians using an LLM-based "AI Consult" tool made **16% fewer diagnostic errors** and **13% fewer treatment errors** compared to unaided clinicians [21]. The study's authors note that "state-of-the-art LLMs now often outperform physicians on benchmarks" — and this was demonstrated in a real clinical setting, not just on paper. This directly parallels Nku's use case: providing decision support where specialist access is minimal.
+A real-world study at Penda Health clinics in Nairobi, Kenya (2024–2025) found that clinicians using an LLM-based "AI Consult" tool made 16% fewer diagnostic errors and 13% fewer treatment errors compared to unaided clinicians [21]. The study's authors note that "state-of-the-art LLMs now often outperform physicians on benchmarks" — and this was demonstrated in a real clinical setting, not just on paper. This directly parallels Nku's use case: providing decision support where specialist access is minimal.
 
 ### Evidence 3: Active Research Validates LLM-CHW Decision Support
 
-A prospective, observational study in **Nyabihu and Musanze districts, Rwanda** (Menon et al., 2025) is evaluating LLMs for CHW decision support, measuring referral appropriateness, diagnostic accuracy, and management plan quality [22]. The study — published in *BMJ Open* — was deemed ethically and scientifically justified specifically because CHWs in these settings lack alternative diagnostic tools. Audio recordings of CHW-patient consultations are transcribed and analyzed by an LLM, with outputs compared against clinical expert consensus — the same validation paradigm Nku would require.
+A prospective, observational study in Nyabihu and Musanze districts, Rwanda (Menon et al., 2025) is evaluating LLMs for CHW decision support, measuring referral appropriateness, diagnostic accuracy, and management plan quality [22]. The study — published in *BMJ Open* — was deemed ethically and scientifically justified specifically because CHWs in these settings lack alternative diagnostic tools. Audio recordings of CHW-patient consultations are transcribed and analyzed by an LLM, with outputs compared against clinical expert consensus — the same validation paradigm Nku would require.
 
 ### Evidence 4: Structured Prompting Substantially Improves Performance
 
-Research on automated prompt optimization for medical vision-language models found that structured prompting achieves a **median 53% improvement** over zero-shot baselines [9]. Nku's `ClinicalReasoner.kt` generates a highly structured, **clinically explicit** prompt that includes measurement methodology, raw biomarker values, literature references, and screening disclaimers:
+Research on automated prompt optimization for medical vision-language models found that structured prompting achieves a median 53% improvement over zero-shot baselines [9]. Nku's `ClinicalReasoner.kt` generates a highly structured, clinically explicit prompt that includes measurement methodology, raw biomarker values, literature references, and screening disclaimers:
 
 ```
 === HEART RATE (rPPG) ===
@@ -639,11 +639,11 @@ Gestational age: 32 weeks
 ...
 ```
 
-This is not a bare medical question — it's a **guided reasoning template** with raw biomarkers, measurement methodology, quantified inputs, clinical interpretations, confidence levels, and explicit output constraints. The model doesn't need to generate differential diagnoses from scratch; it needs to synthesize pre-labeled, pre-interpreted data into a severity classification.
+This is not a bare medical question — it's a guided reasoning template with raw biomarkers, measurement methodology, quantified inputs, clinical interpretations, confidence levels, and explicit output constraints. The model doesn't need to generate differential diagnoses from scratch; it needs to synthesize pre-labeled, pre-interpreted data into a severity classification.
 
 ### Evidence 5: On-Device Clinical Models Achieve High Accuracy
 
-The AMEGA benchmark study (2025) found that medically fine-tuned on-device models like **Med42 and Aloe achieve clinically useful reasoning accuracy** on mobile devices, with compact models like Phi-3 Mini offering favorable accuracy-to-speed ratios [23]. This validates the feasibility of on-device medical inference and demonstrates that quantized models can retain clinically useful performance.
+The AMEGA benchmark study (2025) found that medically fine-tuned on-device models like Med42 and Aloe achieve clinically useful reasoning accuracy on mobile devices, with compact models like Phi-3 Mini offering favorable accuracy-to-speed ratios [23]. This validates the feasibility of on-device medical inference and demonstrates that quantized models can retain clinically useful performance.
 
 ### Evidence 6: The Safety Architecture Compensates for Model Limitations
 
@@ -651,11 +651,11 @@ Nku doesn't rely on MedGemma alone. The safety architecture provides multiple co
 
 | Layer | Function | Mitigation |
 |:------|:---------|:-----------|
-| **Confidence gating** | Sensors below 75% excluded from prompt | Prevents low-quality data from misleading the model |
-| **Rule-based fallback** | WHO/IMCI decision trees if MedGemma unavailable | Ensures triage guidance regardless of model state |
-| **Over-referral bias** | Thresholds tuned to flag liberally | False positives (unnecessary referrals) over false negatives |
-| **Prompt sanitization** | 6-layer PromptSanitizer at every boundary | Prevents injection or adversarial manipulation |
-| **Always-on disclaimer** | "Consult a healthcare professional" | Positions output as decision support, not diagnosis |
+| Confidence gating | Sensors below 75% excluded from prompt | Prevents low-quality data from misleading the model |
+| Rule-based fallback | WHO/IMCI decision trees if MedGemma unavailable | Ensures triage guidance regardless of model state |
+| Over-referral bias | Thresholds tuned to flag liberally | False positives (unnecessary referrals) over false negatives |
+| Prompt sanitization | 6-layer PromptSanitizer at every boundary | Prevents injection or adversarial manipulation |
+| Always-on disclaimer | "Consult a healthcare professional" | Positions output as decision support, not diagnosis |
 
 ### Conclusion
 
@@ -665,7 +665,7 @@ The literature demonstrates that (a) triage is substantially easier for LLMs tha
 
 ## Appendix F: Sensor-to-Prompt Signal Processing Pipeline
 
-This appendix documents the **complete signal processing chain** for each of Nku's four camera-based screening modalities — from raw pixel input through biomarker extraction to the final text prompt consumed by MedGemma Q4_K_M.
+This appendix documents the complete signal processing chain for each of Nku's four camera-based screening modalities — from raw pixel input through biomarker extraction to the final text prompt consumed by MedGemma Q4_K_M.
 
 ### F.1: Architecture Overview
 
@@ -682,34 +682,34 @@ graph LR
     F --> G["MedGemma\nQ4_K_M"]
 ```
 
-All four detectors produce **structured result objects** with derived scores, confidence, and raw biomarker values. `SensorFusion` merges these into a single `VitalSigns` data class, and `ClinicalReasoner.generatePrompt()` serializes everything into a clinically explicit text prompt.
+All four detectors produce structured result objects with derived scores, confidence, and raw biomarker values. `SensorFusion` merges these into a single `VitalSigns` data class, and `ClinicalReasoner.generatePrompt()` serializes everything into a clinically explicit text prompt.
 
 ---
 
 ### F.2: Heart Rate — Remote Photoplethysmography (rPPG)
 
-**Source file:** `RPPGProcessor.kt`
+Source file: `RPPGProcessor.kt`
 
 | Stage | Technique | Detail |
 |:------|:----------|:-------|
-| **Input** | Camera video frames | 30 fps facial video |
-| **Channel extraction** | Green channel mean | Batch pixel copy (`getPixels()`), sample every 4th pixel for performance. Green channel shows strongest plethysmographic signal [Verkruysse 2008] |
-| **Signal buffer** | Sliding window | 10-second buffer (300 frames), `ArrayDeque` for O(1) push/pop |
-| **Detrending** | DC removal | Subtract mean from signal to eliminate baseline drift |
-| **Windowing** | Hamming window | `0.54 − 0.46·cos(2πn/(N−1))` reduces spectral leakage |
-| **Frequency analysis** | Discrete Fourier Transform | Scans 40–200 BPM (0.67–3.33 Hz) at 0.05 Hz resolution. Throttled to every 5th frame (P-1 optimization) |
-| **Peak detection** | Magnitude maximum | Frequency with highest DFT magnitude → BPM |
-| **Confidence** | Peak prominence ratio | `(peak_magnitude / avg_magnitude − 1) / 4`, clamped to [0, 1] |
-| **Quality label** | Confidence thresholds | ≥0.8 excellent, ≥0.6 good, ≥0.4 poor, else insufficient |
+| Input | Camera video frames | 30 fps facial video |
+| Channel extraction | Green channel mean | Batch pixel copy (`getPixels()`), sample every 4th pixel for performance. Green channel shows strongest plethysmographic signal [Verkruysse 2008] |
+| Signal buffer | Sliding window | 10-second buffer (300 frames), `ArrayDeque` for O(1) push/pop |
+| Detrending | DC removal | Subtract mean from signal to eliminate baseline drift |
+| Windowing | Hamming window | `0.54 − 0.46·cos(2πn/(N−1))` reduces spectral leakage |
+| Frequency analysis | Discrete Fourier Transform | Scans 40–200 BPM (0.67–3.33 Hz) at 0.05 Hz resolution. Throttled to every 5th frame (P-1 optimization) |
+| Peak detection | Magnitude maximum | Frequency with highest DFT magnitude → BPM |
+| Confidence | Peak prominence ratio | `(peak_magnitude / avg_magnitude − 1) / 4`, clamped to [0, 1] |
+| Quality label | Confidence thresholds | ≥0.8 excellent, ≥0.6 good, ≥0.4 poor, else insufficient |
 
-**Output → VitalSigns:**
+Output → VitalSigns:
 ```kotlin
 heartRateBpm: Float?        // e.g. 72.0
 heartRateConfidence: Float   // e.g. 0.87
 heartRateQuality: String     // "good"
 ```
 
-**Output → prompt:**
+Output → prompt:
 ```
 === HEART RATE (rPPG) ===
 Method: Remote photoplethysmography — green channel intensity extracted from
@@ -724,19 +724,19 @@ Confidence: 87%
 
 ### F.3: Anemia Screen — Conjunctival Pallor Detection
 
-**Source file:** `PallorDetector.kt`
+Source file: `PallorDetector.kt`
 
 | Stage | Technique | Detail |
 |:------|:----------|:-------|
-| **Input** | Single-frame photograph | Lower eyelid conjunctiva (palpebral surface) |
-| **Color space** | RGB → HSV conversion | Per-pixel conversion using Android `Color.RGBToHSV()` |
-| **Tissue classification** | Hue filtering | Pixels with hue ∈ [0°, 45°] ∪ [330°, 360°] classified as conjunctival tissue. Minimum 25% coverage required |
-| **Saturation measurement** | Mean S of tissue pixels | `avgSaturation`: lower values = paler conjunctiva = less hemoglobin |
-| **Pallor scoring** | Inverse saturation mapping | `pallorScore = 1 − (sat − threshold) / (healthy − threshold)`, clamped to [0, 1]. Where `threshold = 0.10`, `healthy = 0.20` |
-| **Severity** | Score thresholds | NORMAL (<0.3), MILD (0.3–0.5), MODERATE (0.5–0.7), SEVERE (>0.7) |
-| **Confidence** | Image quality + coverage | Based on ROI coverage ratio, brightness uniformity. Conjunctival sensitivity boost factor applied |
+| Input | Single-frame photograph | Lower eyelid conjunctiva (palpebral surface) |
+| Color space | RGB → HSV conversion | Per-pixel conversion using Android `Color.RGBToHSV()` |
+| Tissue classification | Hue filtering | Pixels with hue ∈ [0°, 45°] ∪ [330°, 360°] classified as conjunctival tissue. Minimum 25% coverage required |
+| Saturation measurement | Mean S of tissue pixels | `avgSaturation`: lower values = paler conjunctiva = less hemoglobin |
+| Pallor scoring | Inverse saturation mapping | `pallorScore = 1 − (sat − threshold) / (healthy − threshold)`, clamped to [0, 1]. Where `threshold = 0.10`, `healthy = 0.20` |
+| Severity | Score thresholds | NORMAL (<0.3), MILD (0.3–0.5), MODERATE (0.5–0.7), SEVERE (>0.7) |
+| Confidence | Image quality + coverage | Based on ROI coverage ratio, brightness uniformity. Conjunctival sensitivity boost factor applied |
 
-**Output → VitalSigns:**
+Output → VitalSigns:
 ```kotlin
 pallorScore: Float?                // e.g. 0.65
 pallorSeverity: PallorSeverity?    // MODERATE
@@ -745,7 +745,7 @@ conjunctivalSaturation: Float?     // e.g. 0.08  ← RAW BIOMARKER
 conjunctivalTissueCoverage: Float? // e.g. 0.38  ← RAW BIOMARKER
 ```
 
-**Output → prompt:**
+Output → prompt:
 ```
 === ANEMIA SCREENING (Conjunctival Pallor) ===
 Method: HSV color space analysis of the palpebral conjunctiva (lower eyelid
@@ -765,20 +765,20 @@ Note: This is a screening heuristic, not a hemoglobin measurement.
 
 ### F.4: Preeclampsia Screen — Periorbital Edema Detection
 
-**Source file:** `EdemaDetector.kt`
+Source file: `EdemaDetector.kt`
 
 | Stage | Technique | Detail |
 |:------|:----------|:-------|
-| **Input** | Single-frame facial photograph | Neutral expression, face centered |
-| **Face mesh** | MediaPipe 478-landmark | Provides precise periorbital landmark coordinates. Fallback to heuristic ROI if landmarks unavailable |
-| **Eye Aspect Ratio** | EAR from landmarks | `EAR = (‖P2−P6‖ + ‖P3−P5‖) / (2·‖P1−P4‖)` — periorbital edema narrows the palpebral fissure, reducing EAR |
-| **Periorbital analysis** | Brightness gradient | Analyzes the periorbital ROI for smooth gradients (puffy areas have less texture contrast) |
-| **Facial swelling** | Cheek region analysis | Middle third of face assessed for swelling patterns |
-| **Edema scoring** | Weighted composite | `edemaScore = 0.6 × periorbitalScore + 0.4 × facialScore` (periorbital weighted higher for preeclampsia relevance) |
-| **Severity** | Score thresholds | NORMAL (<0.3), MILD (0.3–0.5), MODERATE (0.5–0.7), SIGNIFICANT (>0.7) |
-| **Confidence** | Image quality × landmark availability | Higher confidence with MediaPipe landmarks (×1.0) than heuristic fallback (×0.8) |
+| Input | Single-frame facial photograph | Neutral expression, face centered |
+| Face mesh | MediaPipe 478-landmark | Provides precise periorbital landmark coordinates. Fallback to heuristic ROI if landmarks unavailable |
+| Eye Aspect Ratio | EAR from landmarks | `EAR = (‖P2−P6‖ + ‖P3−P5‖) / (2·‖P1−P4‖)` — periorbital edema narrows the palpebral fissure, reducing EAR |
+| Periorbital analysis | Brightness gradient | Analyzes the periorbital ROI for smooth gradients (puffy areas have less texture contrast) |
+| Facial swelling | Cheek region analysis | Middle third of face assessed for swelling patterns |
+| Edema scoring | Weighted composite | `edemaScore = 0.6 × periorbitalScore + 0.4 × facialScore` (periorbital weighted higher for preeclampsia relevance) |
+| Severity | Score thresholds | NORMAL (<0.3), MILD (0.3–0.5), MODERATE (0.5–0.7), SIGNIFICANT (>0.7) |
+| Confidence | Image quality × landmark availability | Higher confidence with MediaPipe landmarks (×1.0) than heuristic fallback (×0.8) |
 
-**Output → VitalSigns:**
+Output → VitalSigns:
 ```kotlin
 edemaScore: Float?            // e.g. 0.52
 edemaSeverity: EdemaSeverity?  // MODERATE
@@ -788,7 +788,7 @@ periorbitalScore: Float?      // e.g. 0.61
 facialSwellingScore: Float?   // e.g. 0.39
 ```
 
-**Output → prompt:**
+Output → prompt:
 ```
 === PREECLAMPSIA SCREENING (Periorbital Edema) ===
 Method: Eye Aspect Ratio (EAR) computed from MediaPipe 478-landmark facial
@@ -809,22 +809,22 @@ Note: This is a novel screening heuristic. Confirm with blood pressure
 
 ### F.5: TB/Respiratory Screen — HeAR Event Detector Pipeline
 
-**Source file:** `RespiratoryDetector.kt`
+Source file: `RespiratoryDetector.kt`
 
 | Stage | Technique | Detail |
 |:------|:----------|:-------|
-| **Input** | 2-second audio clip | Captured at 16kHz, mono. Resampled from device mic rate |
-| **Event Detector** | HeAR MobileNetV3-Small (TFLite INT8, 1.1MB) | Always loaded. Classifies 8 health sound events (cough, sneeze, snore, breathe, etc.) in ~50ms |
-| **Risk scoring** | Class probability analysis | `riskScore = max(highRiskClasses)` — cough, sneeze, snore scores weighted for respiratory risk |
-| **MedGemma integration** | Clinical reasoning | Risk score + event class distribution passed to MedGemma prompt for TB/COPD/pneumonia triage |
+| Input | 2-second audio clip | Captured at 16kHz, mono. Resampled from device mic rate |
+| Event Detector | HeAR MobileNetV3-Small (TFLite INT8, 1.1MB) | Always loaded. Classifies 8 health sound events (cough, sneeze, snore, breathe, etc.) in ~50ms |
+| Risk scoring | Class probability analysis | `riskScore = max(highRiskClasses)` — cough, sneeze, snore scores weighted for respiratory risk |
+| MedGemma integration | Clinical reasoning | Risk score + event class distribution passed to MedGemma prompt for TB/COPD/pneumonia triage |
 
-> **ViT-L Encoder — future upgrade path**: The codebase includes full architectural support for HeAR's ViT-L encoder (ONNX Runtime Mobile integration, on-demand loading, sequential RAM management for 512-dim health acoustic embeddings). However, the ViT-L model uses `XlaCallModule` nodes with serialized StableHLO bytecode — an XLA-specific format that no current conversion tool (tf2onnx, TFLite converter) can process into a mobile inference format. We attempted 7 conversion approaches across 3 toolchains before documenting this as a technical limitation. The ViT-L upgrade will activate once Google's AI Edge toolchain supports StableHLO-to-TFLite conversion.
+> ViT-L Encoder — future upgrade path: The codebase includes full architectural support for HeAR's ViT-L encoder (ONNX Runtime Mobile integration, on-demand loading, sequential RAM management for 512-dim health acoustic embeddings). However, the ViT-L model uses `XlaCallModule` nodes with serialized StableHLO bytecode — an XLA-specific format that no current conversion tool (tf2onnx, TFLite converter) can process into a mobile inference format. We attempted 7 conversion approaches across 3 toolchains before documenting this as a technical limitation. The ViT-L upgrade will activate once Google's AI Edge toolchain supports StableHLO-to-TFLite conversion.
 
-**Architectural Advantage of the Event Detector vs ViT-L**: While the ViT-L encoder provides a dense 512-dimensional acoustic embedding, MedGemma thrives on structured numerical data rather than opaque vectors. The 1.1MB TFLite Event Detector rapidly classifies 8 specific health sound events (cough, snore, baby cough, breathe, sneeze, etc.) and outputs explicit confidence probabilities for each. Rather than passing an opaque 512-dim vector, the Event Detector passes a structured summary (`Cough Probability: 0.82`, `Breathe Probability: 0.45`, `Risk Score: High`) directly into the `ClinicalReasoner` prompt. MedGemma is excellent at reasoning over these explicit probabilities alongside the patient's other symptoms. 
+Architectural Advantage of the Event Detector vs ViT-L: While the ViT-L encoder provides a dense 512-dimensional acoustic embedding, MedGemma thrives on structured numerical data rather than opaque vectors. The 1.1MB TFLite Event Detector rapidly classifies 8 specific health sound events (cough, snore, baby cough, breathe, sneeze, etc.) and outputs explicit confidence probabilities for each. Rather than passing an opaque 512-dim vector, the Event Detector passes a structured summary (`Cough Probability: 0.82`, `Breathe Probability: 0.45`, `Risk Score: High`) directly into the `ClinicalReasoner` prompt. MedGemma is excellent at reasoning over these explicit probabilities alongside the patient's other symptoms. 
 
-**Why the Event Detector + MedGemma still delivers clinical triage value**: In Sub-Saharan Africa, where 10.8M new TB cases occur annually (only 44% of MDR-TB diagnosed), COPD prevalence is projected to rise 59% by 2050 due to biomass fuel exposure, and pneumonia claims ~500,000 children under five each year [27], even a binary cough detection signal combined with clinical LLM reasoning provides a screening capability CHWs currently lack. The Event Detector's 8-class health sound classification exceeds what any standard clinical auscultation tool offers at the community health level — where the alternative is no respiratory screening at all.
+Why the Event Detector + MedGemma still delivers clinical triage value: In Sub-Saharan Africa, where 10.8M new TB cases occur annually (only 44% of MDR-TB diagnosed), COPD prevalence is projected to rise 59% by 2050 due to biomass fuel exposure, and pneumonia claims ~500,000 children under five each year [27], even a binary cough detection signal combined with clinical LLM reasoning provides a screening capability CHWs currently lack. The Event Detector's 8-class health sound classification exceeds what any standard clinical auscultation tool offers at the community health level — where the alternative is no respiratory screening at all.
 
-**Output → VitalSigns:**
+Output → VitalSigns:
 ```kotlin
 respiratoryRiskScore: Float?              // e.g. 0.72
 respiratoryRisk: RespiratoryRisk?          // HIGH_RISK
@@ -834,7 +834,7 @@ hearEmbedding: FloatArray?                 // null (ViT-L not available)
 respiratoryAnalysisSource: AnalysisSource  // EVENT_DETECTOR
 ```
 
-**Output → prompt (Event Detector path):**
+Output → prompt (Event Detector path):
 ```
 === RESPIRATORY SCREENING (HeAR Cough Analysis) ===
 Analysis tier: HeAR Event Detector
@@ -855,14 +855,14 @@ Note: This is a screening tool for TB/respiratory illness risk.
 
 ### F.6: Confidence Gating
 
-All four modalities pass through **confidence gating** in `ClinicalReasoner` before reaching MedGemma:
+All four modalities pass through confidence gating in `ClinicalReasoner` before reaching MedGemma:
 
 | Condition | Prompt behavior |
 |:----------|:----------------|
 | Confidence ≥ 75% | Full clinically explicit section with raw biomarkers, method, references |
 | Confidence < 75% | Value shown but marked `[LOW CONFIDENCE — XX%, excluded from assessment]` |
 | Sensor not captured | Section shows `Not measured` / `Not performed` |
-| **All** sensors < 75% and no symptoms | Triage abstains entirely — no MedGemma call |
+| All sensors < 75% and no symptoms | Triage abstains entirely — no MedGemma call |
 
 This ensures MedGemma never reasons on unreliable data. The same 75% threshold gates both the LLM prompt path and the rule-based fallback path (`createRuleBasedAssessment`).
 
@@ -874,9 +874,9 @@ Beyond sensor data, the prompt includes:
 
 | Section | Source | Purpose |
 |:--------|:-------|:--------|
-| **Pregnancy context** | User toggle + gestational weeks | Triggers preeclampsia risk assessment when ≥20 weeks |
-| **Reported symptoms** | Text/voice input | Sanitized via `PromptSanitizer` (6-layer injection defense), wrapped in `<<<>>>` delimiters |
-| **Output instructions** | Static template | Forces structured `SEVERITY/URGENCY/CONCERNS/RECOMMENDATIONS` format for reliable parsing |
+| Pregnancy context | User toggle + gestational weeks | Triggers preeclampsia risk assessment when ≥20 weeks |
+| Reported symptoms | Text/voice input | Sanitized via `PromptSanitizer` (6-layer injection defense), wrapped in `<<<>>>` delimiters |
+| Output instructions | Static template | Forces structured `SEVERITY/URGENCY/CONCERNS/RECOMMENDATIONS` format for reliable parsing |
 
 ---
 
@@ -885,10 +885,10 @@ Beyond sensor data, the prompt includes:
 Nku implements five independent safety layers to minimize risk from incorrect triage output:
 
 ### Layer 1: Confidence Gating
-Sensor readings below 75% confidence are excluded from MedGemma's prompt (marked `[LOW CONFIDENCE — excluded from assessment]`). If all sensors are below threshold and no symptoms are entered, triage abstains entirely — no MedGemma call is made. This prevents the LLM from reasoning on unreliable data. **The CHW sees a localized ⚠ warning on the capture screen** prompting re-capture in better conditions.
+Sensor readings below 75% confidence are excluded from MedGemma's prompt (marked `[LOW CONFIDENCE — excluded from assessment]`). If all sensors are below threshold and no symptoms are entered, triage abstains entirely — no MedGemma call is made. This prevents the LLM from reasoning on unreliable data. The CHW sees a localized ⚠ warning on the capture screen prompting re-capture in better conditions.
 
 ### Layer 2: WHO/IMCI Rule-Based Fallback
-If MedGemma is unavailable (device overheating at >42°C, model loading failure, thermal throttling), `ClinicalReasoner.createRuleBasedAssessment()` provides deterministic triage based on WHO Integrated Management of Childhood Illness (IMCI) flowcharts. This ensures triage continues even without the LLM. **A localized transparency banner** identifies the result as "Guideline-Based Triage" and provides recovery steps (e.g., close background apps, restart Nku) — all in the CHW's selected language.
+If MedGemma is unavailable (device overheating at >42°C, model loading failure, thermal throttling), `ClinicalReasoner.createRuleBasedAssessment()` provides deterministic triage based on WHO Integrated Management of Childhood Illness (IMCI) flowcharts. This ensures triage continues even without the LLM. A localized transparency banner identifies the result as "Guideline-Based Triage" and provides recovery steps (e.g., close background apps, restart Nku) — all in the CHW's selected language.
 
 ### Layer 3: Over-Referral Bias
 All sensor thresholds are set conservatively to favor false positives over false negatives:
@@ -917,7 +917,7 @@ Output validation additionally checks for leaked delimiters and suspicious patte
 
 ### MedQA Benchmark Methodology Note
 
-MedQA is used as a **relative** benchmark for quantization comparison — not as an absolute clinical accuracy claim. The key findings are: (1) the retention ratio (56%/69% = 81% retained), (2) the relative ordering of quantization methods, and (3) the primary care subset consistency (56.2% vs 56.0% overall). These relative comparisons remain valid regardless of potential benchmark contamination concerns. MedQA is the standard benchmark for medical LLMs; using an alternative would reduce comparability with published baselines.
+MedQA is used as a relative benchmark for quantization comparison — not as an absolute clinical accuracy claim. The key findings are: (1) the retention ratio (56%/69% = 81% retained), (2) the relative ordering of quantization methods, and (3) the primary care subset consistency (56.2% vs 56.0% overall). These relative comparisons remain valid regardless of potential benchmark contamination concerns. MedQA is the standard benchmark for medical LLMs; using an alternative would reduce comparability with published baselines.
 
 ---
 

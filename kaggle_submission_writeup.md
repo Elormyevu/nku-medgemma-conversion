@@ -90,4 +90,4 @@ All screening modalities are deliberately **skin-tone independent** — critical
 
 *See `kaggle_submission_appendices.md` for full references [1–29], language list (46), calibration scenarios, MedGemma reasoning examples, sensor pipeline details, and safety architecture.*
 
-*Development tooling: Google Antigravity (Gemini 3 Flash/Pro, Claude Opus 4.5/4.6); OpenAI Codex IDE (GPT 5.3 Codex).*
+*Development tooling: Google Antigravity (Gemini 3 Flash/Pro, Gemini 3.1 Pro, Claude Opus 4.5/4.6); OpenAI Codex IDE (GPT 5.3 Codex).*

@@ -106,7 +106,9 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 | **TB/Respiratory** | `RespiratoryDetector.kt` | HeAR Event Detector (TFLite INT8, 1.1MB) | Risk score (0-1) + health sound class distribution |
 | **Triage** | `ClinicalReasoner.kt` | MedGemma + WHO/IMCI fallback | Severity & recommendations |
 
-All screening uses **pure signal processing** (0 MB additional weights) except TB/respiratory which uses the HeAR Event Detector (MobileNetV3, 1.1MB INT8 TFLite, always loaded). The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but not shipped — its XlaCallModule/StableHLO format cannot be converted to ONNX or TFLite by any current tool (see `ARCHITECTURE.md`). Sensor outputs are aggregated by `SensorFusion.kt` and interpreted by MedGemma for clinical reasoning.
+All screening uses **pure signal processing** (0 MB additional weights) except TB/respiratory which uses the HeAR Event Detector (MobileNetV3, 1.1MB INT8 TFLite, always loaded). The HeAR Event Detector acts as the primary respiratory triage mechanism, classifying 8 distinct acoustic events to generate a synthetic respiratory risk score based on abnormal breathing patterns and cough prevalence.
+
+The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED** in the app — its XlaCallModule/StableHLO format cannot be converted to ONNX or TFLite by any current tool (see `ARCHITECTURE.md`). Sensor outputs are aggregated by `SensorFusion.kt` and interpreted by MedGemma for clinical reasoning.
 
 ### Fitzpatrick-Aware Design
 

@@ -120,14 +120,14 @@ fun runNkuCycleLocal(patientInput: String, language: String): NkuResult {
 - **Size**: 1.1 MB
 - **Input**: 1×32000 float32 (2s audio @16kHz)
 - **Output**: 1×8 float32 (health sound class probabilities)
-- **Purpose**: Rapid cough/breath classification (~50ms). Always loaded.
+- **Purpose**: Rapid cough/breath classification (~50ms). Always loaded. It acts as the primary respiratory triage mechanism, classifying 8 distinct acoustic events (Cough, Snore, Baby Cough, Breathe, etc.) to generate a synthetic respiratory risk score based on abnormal breathing patterns and cough prevalence.
 
 #### ViT-L Encoder (future upgrade — not shipped)
 - **Base**: HeAR ViT-L Masked AutoEncoder
-- **Status**: ❌ Cannot be converted to mobile format
-- **Blocker**: Uses `XlaCallModule` with serialized StableHLO bytecode — no current tool (tf2onnx, TFLite converter) supports conversion to ONNX or TFLite
-- **Codebase support**: Full architectural integration exists (ONNX Runtime Mobile, on-demand loading, sequential RAM management)
-- **Activation**: When Google's AI Edge toolchain supports StableHLO-to-TFLite conversion
+- **Status**: ❌ Cannot be converted to mobile format and **IS NOT** shipped in the app.
+- **Blocker**: Uses `XlaCallModule` with serialized StableHLO bytecode — no current tool (tf2onnx, TFLite converter) supports conversion to ONNX or TFLite.
+- **Codebase support**: Full architectural integration exists (ONNX Runtime Mobile, on-demand loading, sequential RAM management) but the model itself is absent.
+- **Activation**: When Google's AI Edge toolchain supports StableHLO-to-TFLite conversion.
 - **Reference**: Tobin et al., arXiv 2403.02522, 2024
 
 ## Quantization Pipeline

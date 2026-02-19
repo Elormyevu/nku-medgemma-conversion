@@ -42,6 +42,7 @@ import com.nku.app.ui.NkuColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -405,24 +406,26 @@ private suspend fun recordAndAnalyze(
             val chunkSize = sampleRate / 10  // Read in 100ms chunks
             var wasCancelled = false
 
-            while (samplesRead < totalSamples) {
+            while (samplesRead < totalSamples && !wasCancelled) {
                 // P1 fix: Check coroutine cancellation each iteration.
-                // When the user presses Stop, the Job is cancelled and
-                // ensureActive() throws CancellationException, breaking the read loop.
-                try {
-                    kotlin.coroutines.coroutineContext.ensureActive()
-                } catch (_: kotlinx.coroutines.CancellationException) {
+                if (!kotlin.coroutines.coroutineContext.isActive) {
                     wasCancelled = true
                     break
                 }
+                
                 val toRead = minOf(chunkSize, totalSamples - samplesRead)
                 val read = audioRecord.read(allSamples, samplesRead, toRead)
+                
                 if (read > 0) {
                     samplesRead += read
                     val progress = samplesRead.toFloat() / totalSamples
                     withContext(Dispatchers.Main) { onProgress(progress) }
+                } else if (read < 0) {
+                    Log.e("RespiratoryScreen", "AudioRecord read error: $read")
+                    break // Stop recording on error, but don't crash
                 } else {
-                    break
+                    // read == 0, just yield and try again
+                    kotlinx.coroutines.delay(10)
                 }
             }
 

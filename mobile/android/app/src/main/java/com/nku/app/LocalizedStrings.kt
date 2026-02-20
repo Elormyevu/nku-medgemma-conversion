@@ -777,7 +777,7 @@ object LocalizedStrings {
             "2. Nuna kyamara zuwa ciki ido\n" +
             "3. Tabbatar haske ya yi kyau\n" +
             "4. Matsa \"Bincika\" idan hoton ya bayyana",
-        screeningsProgress = "%d cikin 3 gwaje-gwaje an kammala",
+        screeningsProgress = "%d cikin 5 gwaje-gwaje an kammala",
         readyForTriage = "✓ A shirye don bincike — je zuwa shafin Bincike",
         followSteps = "Bi matakai don gwada majiyyaci",
         tapToMeasureHR = "Matsa nan don auna bugun zuciya",

@@ -21,9 +21,8 @@ import kotlin.coroutines.resume
  * gracefully — passing raw input directly to MedGemma, which may still
  * partially understand common medical terms in major African languages.
  *
- * Key advantage over TranslateGemma: ~30MB per language pack vs ~2.3GB
- * GGUF model, and ML Kit runs in a separate process — no RAM contention
- * with MedGemma during the Nku Cycle.
+ * Key advantages: ~30MB per language pack (lightweight), ML Kit runs in a
+ * separate process — zero RAM contention with MedGemma during the Nku Cycle.
  */
 class NkuTranslator(private val context: Context) {
 

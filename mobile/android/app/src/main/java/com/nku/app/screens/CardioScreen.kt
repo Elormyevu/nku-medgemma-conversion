@@ -76,8 +76,8 @@ fun CardioScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(strings.cardioTitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        Text(strings.cardioSubtitle, fontSize = 14.sp, color = Color.Gray)
+        Text(strings.cardioTitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = NkuColors.TextPrimary)
+        Text(strings.cardioSubtitle, fontSize = 14.sp, color = NkuColors.TextSecondary)
         
         Spacer(Modifier.height(16.dp))
         
@@ -113,7 +113,7 @@ fun CardioScreen(
                     Text(
                         strings.cameraPermissionCardio,
                         fontSize = 12.sp,
-                        color = Color.Gray,
+                        color = NkuColors.TextSecondary,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
                     Spacer(Modifier.height(8.dp))
@@ -169,7 +169,7 @@ fun CardioScreen(
                         Text(
                             "${strings.bufferLabel}: ${rppgResult.bufferFillPercent.toInt()}%",
                             fontSize = 10.sp,
-                            color = Color.White
+                            color = NkuColors.TextPrimary
                         )
                     }
                 }
@@ -217,15 +217,15 @@ fun CardioScreen(
                     fontWeight = FontWeight.Bold,
                     color = if (hasResult) NkuColors.Success else Color.White
                 )
-                Text(strings.bpm, fontSize = 16.sp, color = Color.Gray)
+                Text(strings.bpm, fontSize = 16.sp, color = NkuColors.TextSecondary)
             }
         }
         
         Spacer(Modifier.height(8.dp))
         
         if (isMeasuring) {
-            Text("${strings.signalLabel}: ${strings.localizedSignalQuality(rppgResult.signalQuality)}", color = Color.Gray, fontSize = 13.sp)
-            Text("${strings.confidenceLabel}: ${(rppgResult.confidence * 100).toInt()}%", color = Color.Gray, fontSize = 13.sp)
+            Text("${strings.signalLabel}: ${strings.localizedSignalQuality(rppgResult.signalQuality)}", color = NkuColors.TextSecondary, fontSize = 13.sp)
+            Text("${strings.confidenceLabel}: ${(rppgResult.confidence * 100).toInt()}%", color = NkuColors.TextSecondary, fontSize = 13.sp)
         }
         
         Spacer(Modifier.height(20.dp))
@@ -271,7 +271,7 @@ fun CardioScreen(
         Text(
             strings.rearCameraHintCardio,
             fontSize = 11.sp,
-            color = Color.Gray
+            color = NkuColors.TextSecondary
         )
         
         Spacer(Modifier.height(16.dp))
@@ -286,7 +286,7 @@ fun CardioScreen(
                 Spacer(Modifier.height(4.dp))
                 Text(
                     strings.cardioInstructions,
-                    color = Color.Gray,
+                    color = NkuColors.TextSecondary,
                     fontSize = 12.sp
                 )
             }

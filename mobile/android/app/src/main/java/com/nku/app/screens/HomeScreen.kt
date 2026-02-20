@@ -66,7 +66,7 @@ fun HomeScreen(
         Text(
             strings.appSubtitle,
             fontSize = 14.sp,
-            color = Color.Gray,
+            color = NkuColors.TextSecondary,
             modifier = Modifier.padding(bottom = 12.dp)
         )
         
@@ -117,7 +117,7 @@ fun HomeScreen(
                     Text(
                         strings.followSteps,
                         fontSize = 12.sp,
-                        color = Color.Gray
+                        color = NkuColors.TextSecondary
                     )
                 }
             }
@@ -267,7 +267,7 @@ fun HomeScreen(
             Text(
                 "⚕ ${strings.disclaimer}",
                 fontSize = 12.sp,
-                color = Color.Gray,
+                color = NkuColors.TextSecondary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().padding(12.dp)
             )
@@ -334,7 +334,7 @@ fun GuidedStepCard(
             Spacer(Modifier.width(14.dp))
             
             Column(modifier = Modifier.weight(1f)) {
-                Text(title, fontSize = 13.sp, color = Color.Gray)
+                Text(title, fontSize = 13.sp, color = NkuColors.TextSecondary)
                 Text(
                     value,
                     fontSize = 26.sp,

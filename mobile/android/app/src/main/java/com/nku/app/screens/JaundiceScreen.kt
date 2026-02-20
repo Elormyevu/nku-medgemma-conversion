@@ -72,8 +72,8 @@ fun JaundiceScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(strings.jaundiceTitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        Text(strings.jaundiceSubtitle, fontSize = 14.sp, color = Color.Gray)
+        Text(strings.jaundiceTitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = NkuColors.TextPrimary)
+        Text(strings.jaundiceSubtitle, fontSize = 14.sp, color = NkuColors.TextSecondary)
         
         Spacer(Modifier.height(12.dp))
 
@@ -98,7 +98,7 @@ fun JaundiceScreen(
                     Text(
                         strings.cameraPermissionJaundice,
                         fontSize = 12.sp,
-                        color = Color.Gray,
+                        color = NkuColors.TextSecondary,
                         textAlign = TextAlign.Center
                     )
                     Spacer(Modifier.height(8.dp))
@@ -132,20 +132,20 @@ fun JaundiceScreen(
                         Icons.Default.Visibility,
                         contentDescription = null,
                         modifier = Modifier.size(48.dp),
-                        tint = Color.Gray
+                        tint = NkuColors.TextSecondary
                     )
                     Spacer(Modifier.height(12.dp))
                     Text(
                         strings.notYetScreened,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = NkuColors.TextPrimary
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
                         strings.pointAtSclera,
                         fontSize = 13.sp,
-                        color = Color.Gray,
+                        color = NkuColors.TextSecondary,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -184,7 +184,7 @@ fun JaundiceScreen(
                         Text(
                             strings.pointAtSclera,
                             fontSize = 11.sp,
-                            color = Color.White,
+                            color = NkuColors.TextPrimary,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -232,7 +232,7 @@ fun JaundiceScreen(
                     if (isAnalyzing) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(18.dp),
-                            color = Color.White,
+                            color = NkuColors.TextPrimary,
                             strokeWidth = 2.dp
                         )
                         Spacer(Modifier.width(6.dp))
@@ -270,13 +270,13 @@ fun JaundiceScreen(
             Text(
                 "${strings.jaundiceScoreLabel}: ${(jaundiceResult.jaundiceScore * 100).toInt()}%",
                 fontSize = 16.sp,
-                color = Color.Gray
+                color = NkuColors.TextSecondary
             )
             
             Text(
                 "${strings.confidenceLabel}: ${(jaundiceResult.confidence * 100).toInt()}%",
                 fontSize = 13.sp,
-                color = Color.Gray
+                color = NkuColors.TextSecondary
             )
 
             // FT-2: Low-confidence recapture warning
@@ -299,9 +299,9 @@ fun JaundiceScreen(
                 }
             ) {
                 Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                    Text(strings.recommendationsTitle, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text(strings.recommendationsTitle, fontWeight = FontWeight.Bold, color = NkuColors.TextPrimary)
                     Spacer(Modifier.height(8.dp))
-                    Text(jaundiceResult.recommendation, color = Color.Gray, fontSize = 14.sp)
+                    Text(jaundiceResult.recommendation, color = NkuColors.TextSecondary, fontSize = 14.sp)
                 }
             }
             
@@ -351,7 +351,7 @@ fun JaundiceScreen(
             Text(
                 strings.rearCameraHintJaundice,
                 fontSize = 11.sp,
-                color = Color.Gray,
+                color = NkuColors.TextSecondary,
                 textAlign = TextAlign.Center
             )
             
@@ -368,7 +368,7 @@ fun JaundiceScreen(
                 Spacer(Modifier.height(8.dp))
                 Text(
                     strings.jaundiceInstructions,
-                    color = Color.Gray,
+                    color = NkuColors.TextSecondary,
                     fontSize = 12.sp
                 )
             }
@@ -379,7 +379,7 @@ fun JaundiceScreen(
         Text(
             strings.worksAllSkinTones,
             textAlign = TextAlign.Center,
-            color = Color.Gray,
+            color = NkuColors.TextSecondary,
             fontSize = 12.sp
         )
     }

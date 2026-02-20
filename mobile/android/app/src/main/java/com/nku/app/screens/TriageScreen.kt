@@ -109,8 +109,8 @@ fun TriageScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(strings.triageTitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        Text(strings.triageSubtitle, fontSize = 14.sp, color = Color.Gray)
+        Text(strings.triageTitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = NkuColors.TextPrimary)
+        Text(strings.triageSubtitle, fontSize = 14.sp, color = NkuColors.TextSecondary)
         
         Spacer(Modifier.height(20.dp))
 
@@ -147,7 +147,7 @@ fun TriageScreen(
         // Data completeness
         Card(colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground), modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                Text(strings.screeningData, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 14.sp)
+                Text(strings.screeningData, fontWeight = FontWeight.Bold, color = NkuColors.TextPrimary, fontSize = 14.sp)
                 Spacer(Modifier.height(8.dp))
                 DataCheckRow(strings.heartRate, rppgResult.bpm != null && rppgResult.confidence > 0.4f, rppgResult.bpm?.let { "${it.toInt()} ${strings.bpm}" }, strings.notDone)
                 DataCheckRow(strings.anemiaScreen, pallorResult.hasBeenAnalyzed, if (pallorResult.hasBeenAnalyzed) strings.localizedSeverity(pallorResult.severity) else null, strings.notDone)
@@ -162,8 +162,8 @@ fun TriageScreen(
         // Symptom Input
         Card(colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground), modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                Text(strings.patientSymptoms, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 14.sp)
-                Text(strings.micOrType, fontSize = 12.sp, color = Color.Gray)
+                Text(strings.patientSymptoms, fontWeight = FontWeight.Bold, color = NkuColors.TextPrimary, fontSize = 14.sp)
+                Text(strings.micOrType, fontSize = 12.sp, color = NkuColors.TextSecondary)
                 Spacer(Modifier.height(8.dp))
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     IconButton(
@@ -278,7 +278,7 @@ fun TriageScreen(
                             EngineState.ERROR -> strings.errorOccurred
                             else -> strings.processing
                         },
-                        fontWeight = FontWeight.Bold, color = Color.White, fontSize = 15.sp
+                        fontWeight = FontWeight.Bold, color = NkuColors.TextPrimary, fontSize = 15.sp
                     )
                     if (engineProgress.isNotEmpty()) {
                         Spacer(Modifier.height(4.dp))
@@ -303,9 +303,9 @@ fun TriageScreen(
                     contentDescription = "Triage category: ${strings.localizedTriageCategory(result.triageCategory)}, Severity: ${strings.localizedSeverity(result.overallSeverity)}, Urgency: ${strings.localizedUrgency(result.urgency)}"
                 }) {
                 Column(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(strings.localizedTriageCategory(result.triageCategory), fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                    Text("${strings.severityLabel}: ${strings.localizedSeverity(result.overallSeverity)}", color = Color.White.copy(alpha = 0.8f))
-                    Text("${strings.urgencyLabel}: ${strings.localizedUrgency(result.urgency)}", color = Color.White.copy(alpha = 0.8f))
+                    Text(strings.localizedTriageCategory(result.triageCategory), fontSize = 28.sp, fontWeight = FontWeight.Bold, color = NkuColors.TextPrimary)
+                    Text("${strings.severityLabel}: ${strings.localizedSeverity(result.overallSeverity)}", color = NkuColors.TextPrimary.copy(alpha = 0.8f))
+                    Text("${strings.urgencyLabel}: ${strings.localizedUrgency(result.urgency)}", color = NkuColors.TextPrimary.copy(alpha = 0.8f))
                 }
             }
             Spacer(Modifier.height(12.dp))
@@ -339,13 +339,13 @@ fun TriageScreen(
                             Spacer(Modifier.height(4.dp))
                             Text(
                                 strings.fallbackExplanation,
-                                color = Color.White.copy(alpha = 0.85f),
+                                color = NkuColors.TextPrimary.copy(alpha = 0.85f),
                                 fontSize = 12.sp
                             )
                             Spacer(Modifier.height(4.dp))
                             Text(
                                 strings.fallbackRecoveryTip,
-                                color = Color.White.copy(alpha = 0.6f),
+                                color = NkuColors.TextPrimary.copy(alpha = 0.6f),
                                 fontSize = 11.sp
                             )
                         }
@@ -378,9 +378,9 @@ fun TriageScreen(
                     contentDescription = "Primary concerns: ${result.primaryConcerns.joinToString(", ")}"
                 }) {
                 Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                    Text(strings.primaryConcerns, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text(strings.primaryConcerns, fontWeight = FontWeight.Bold, color = NkuColors.TextPrimary)
                     Spacer(Modifier.height(8.dp))
-                    result.primaryConcerns.forEach { concern -> Text("• $concern", color = Color.Gray, fontSize = 14.sp) }
+                    result.primaryConcerns.forEach { concern -> Text("• $concern", color = NkuColors.TextSecondary, fontSize = 14.sp) }
                 }
             }
             Spacer(Modifier.height(12.dp))
@@ -391,11 +391,11 @@ fun TriageScreen(
                 Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                     Text(strings.recommendationsTitle, fontWeight = FontWeight.Bold, color = NkuColors.Success)
                     Spacer(Modifier.height(8.dp))
-                    result.recommendations.forEach { rec -> Text("• $rec", color = Color.Gray, fontSize = 14.sp) }
+                    result.recommendations.forEach { rec -> Text("• $rec", color = NkuColors.TextSecondary, fontSize = 14.sp) }
                 }
             }
             Spacer(Modifier.height(16.dp))
-            Text(result.disclaimer, fontSize = 11.sp, color = Color.Gray, textAlign = TextAlign.Center)
+            Text(result.disclaimer, fontSize = 11.sp, color = NkuColors.TextSecondary, textAlign = TextAlign.Center)
         }
     }
 }
@@ -410,7 +410,7 @@ fun DataCheckRow(label: String, isComplete: Boolean, detail: String?, notDoneTex
             modifier = Modifier.size(18.dp)
         )
         Spacer(Modifier.width(8.dp))
-        Text(label, color = Color.White, fontSize = 13.sp, modifier = Modifier.weight(1f))
+        Text(label, color = NkuColors.TextPrimary, fontSize = 13.sp, modifier = Modifier.weight(1f))
         Text(detail ?: notDoneText, color = if (isComplete) NkuColors.Success else NkuColors.InactiveText, fontSize = 12.sp)
     }
 }

@@ -92,12 +92,12 @@ fun RespiratoryScreen(
             strings.respiratoryTitle,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            color = NkuColors.TextPrimary
         )
         Text(
             strings.respiratorySubtitle,
             fontSize = 14.sp,
-            color = Color.Gray
+            color = NkuColors.TextSecondary
         )
 
         Spacer(Modifier.height(16.dp))
@@ -123,7 +123,7 @@ fun RespiratoryScreen(
                     Text(
                         strings.micPermissionMessage,
                         fontSize = 12.sp,
-                        color = Color.Gray,
+                        color = NkuColors.TextSecondary,
                         textAlign = TextAlign.Center
                     )
                     Spacer(Modifier.height(8.dp))
@@ -230,10 +230,10 @@ fun RespiratoryScreen(
                     Icon(
                         Icons.Default.Mic,
                         contentDescription = null,
-                        tint = Color.Gray,
+                        tint = NkuColors.TextSecondary,
                         modifier = Modifier.size(48.dp)
                     )
-                    Text("—", fontSize = 24.sp, color = Color.Gray)
+                    Text("—", fontSize = 24.sp, color = NkuColors.TextSecondary)
                 }
             }
         }
@@ -244,19 +244,19 @@ fun RespiratoryScreen(
         if (respiratoryResult.confidence > 0.4f) {
             Text(
                 "${strings.confidenceLabel}: ${(respiratoryResult.confidence * 100).toInt()}%",
-                color = Color.Gray,
+                color = NkuColors.TextSecondary,
                 fontSize = 13.sp
             )
             if (respiratoryResult.coughDetected) {
                 Text(
                     "${strings.coughsDetected}: ${respiratoryResult.coughCount}",
-                    color = Color.Gray,
+                    color = NkuColors.TextSecondary,
                     fontSize = 13.sp
                 )
             }
             Text(
                 "${strings.audioQualityLabel}: ${respiratoryResult.audioQuality}",
-                color = Color.Gray,
+                color = NkuColors.TextSecondary,
                 fontSize = 13.sp
             )
         }
@@ -332,7 +332,7 @@ fun RespiratoryScreen(
                 Spacer(Modifier.height(4.dp))
                 Text(
                     strings.respiratoryInstructions,
-                    color = Color.Gray,
+                    color = NkuColors.TextSecondary,
                     fontSize = 12.sp
                 )
             }
@@ -355,7 +355,7 @@ fun RespiratoryScreen(
                 )
                 Text(
                     strings.hearDescription,
-                    color = Color.Gray,
+                    color = NkuColors.TextSecondary,
                     fontSize = 11.sp
                 )
             }

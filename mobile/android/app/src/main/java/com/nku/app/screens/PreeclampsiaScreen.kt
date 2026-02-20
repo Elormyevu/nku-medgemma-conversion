@@ -77,8 +77,8 @@ fun PreeclampsiaScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(strings.preETitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        Text(strings.preESubtitle, fontSize = 14.sp, color = Color.Gray)
+        Text(strings.preETitle, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = NkuColors.TextPrimary)
+        Text(strings.preESubtitle, fontSize = 14.sp, color = NkuColors.TextSecondary)
         
         Spacer(Modifier.height(16.dp))
         
@@ -89,7 +89,7 @@ fun PreeclampsiaScreen(
         ) {
             Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(strings.pregnant, color = Color.White)
+                    Text(strings.pregnant, color = NkuColors.TextPrimary)
                     Spacer(Modifier.weight(1f))
                     Switch(checked = isPregnant, onCheckedChange = { onPregnancyChange(it, gestationalWeeks) })
                 }
@@ -120,11 +120,11 @@ fun PreeclampsiaScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.fillMaxWidth().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(Icons.Default.Warning, contentDescription = null, modifier = Modifier.size(48.dp), tint = Color.Gray)
+                    Icon(Icons.Default.Warning, contentDescription = null, modifier = Modifier.size(48.dp), tint = NkuColors.TextSecondary)
                     Spacer(Modifier.height(12.dp))
-                    Text(strings.notYetScreened, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text(strings.notYetScreened, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = NkuColors.TextPrimary)
                     Spacer(Modifier.height(4.dp))
-                    Text(strings.captureForEdema, fontSize = 13.sp, color = Color.Gray, textAlign = TextAlign.Center)
+                    Text(strings.captureForEdema, fontSize = 13.sp, color = NkuColors.TextSecondary, textAlign = TextAlign.Center)
                 }
             }
             Spacer(Modifier.height(20.dp))
@@ -151,7 +151,7 @@ fun PreeclampsiaScreen(
                     Text(
                         strings.cameraPermissionPreE,
                         fontSize = 12.sp,
-                        color = Color.Gray,
+                        color = NkuColors.TextSecondary,
                         textAlign = TextAlign.Center
                     )
                     Spacer(Modifier.height(8.dp))
@@ -188,7 +188,7 @@ fun PreeclampsiaScreen(
                             .background(Color.Black.copy(alpha = 0.7f), RoundedCornerShape(8.dp))
                             .padding(horizontal = 12.dp, vertical = 6.dp)
                     ) {
-                        Text(strings.centerFaceKeepNeutral, fontSize = 11.sp, color = Color.White)
+                        Text(strings.centerFaceKeepNeutral, fontSize = 11.sp, color = NkuColors.TextPrimary)
                     }
                 }
             }
@@ -226,7 +226,7 @@ fun PreeclampsiaScreen(
                     if (isAnalyzing) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(18.dp),
-                            color = Color.White,
+                            color = NkuColors.TextPrimary,
                             strokeWidth = 2.dp
                         )
                         Spacer(Modifier.width(6.dp))
@@ -250,9 +250,9 @@ fun PreeclampsiaScreen(
             }
             Text(strings.localizedSeverity(edemaResult.severity), fontSize = 36.sp, fontWeight = FontWeight.Bold, color = scoreColor,
                 modifier = Modifier.semantics { contentDescription = "Edema severity: ${strings.localizedSeverity(edemaResult.severity)}" })
-            Text("${strings.edemaScoreLabel}: ${(edemaResult.edemaScore * 100).toInt()}%", color = Color.Gray)
-            Text("${strings.periorbitalLabel}: ${(edemaResult.periorbitalScore * 100).toInt()}%", color = Color.Gray, fontSize = 12.sp)
-            Text("${strings.confidenceLabel}: ${(edemaResult.confidence * 100).toInt()}%", color = Color.Gray, fontSize = 12.sp)
+            Text("${strings.edemaScoreLabel}: ${(edemaResult.edemaScore * 100).toInt()}%", color = NkuColors.TextSecondary)
+            Text("${strings.periorbitalLabel}: ${(edemaResult.periorbitalScore * 100).toInt()}%", color = NkuColors.TextSecondary, fontSize = 12.sp)
+            Text("${strings.confidenceLabel}: ${(edemaResult.confidence * 100).toInt()}%", color = NkuColors.TextSecondary, fontSize = 12.sp)
 
             // FT-2: Low-confidence recapture warning
             if (edemaResult.confidence < 0.75f) {
@@ -270,7 +270,7 @@ fun PreeclampsiaScreen(
                 Card(colors = CardDefaults.cardColors(containerColor = NkuColors.ListeningIndicator.copy(alpha = 0.1f)), modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                         Text(strings.riskFactors, fontWeight = FontWeight.Bold, color = NkuColors.ListeningIndicator)
-                        edemaResult.riskFactors.forEach { risk -> Text("• $risk", color = Color.White, fontSize = 14.sp) }
+                        edemaResult.riskFactors.forEach { risk -> Text("• $risk", color = NkuColors.TextPrimary, fontSize = 14.sp) }
                     }
                 }
             }
@@ -280,9 +280,9 @@ fun PreeclampsiaScreen(
                     contentDescription = "Recommendation: ${edemaResult.recommendation}"
                 }) {
                 Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                    Text(strings.recommendationsTitle, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text(strings.recommendationsTitle, fontWeight = FontWeight.Bold, color = NkuColors.TextPrimary)
                     Spacer(Modifier.height(8.dp))
-                    Text(edemaResult.recommendation, color = Color.Gray, fontSize = 14.sp)
+                    Text(edemaResult.recommendation, color = NkuColors.TextSecondary, fontSize = 14.sp)
                 }
             }
             Spacer(Modifier.height(16.dp))
@@ -326,7 +326,7 @@ fun PreeclampsiaScreen(
             Text(
                 strings.rearCameraHintFace,
                 fontSize = 11.sp,
-                color = Color.Gray,
+                color = NkuColors.TextSecondary,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(16.dp))
@@ -335,7 +335,7 @@ fun PreeclampsiaScreen(
         Card(colors = CardDefaults.cardColors(containerColor = NkuColors.InstructionCard), modifier = Modifier.fillMaxWidth()) {
             Text(
                 strings.geometryInstructions,
-                color = Color.Gray, fontSize = 12.sp, modifier = Modifier.padding(12.dp)
+                color = NkuColors.TextSecondary, fontSize = 12.sp, modifier = Modifier.padding(12.dp)
             )
         }
     }

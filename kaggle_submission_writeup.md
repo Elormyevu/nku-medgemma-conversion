@@ -62,7 +62,7 @@ Edge AI — Quantization & Memory: We achieve 71% model size reduction (8GB → 
 
 Key finding: IQ2_XS with medical imatrix calibration outperforms the larger Q2_K by +9.1pp — domain-specific calibration matters more than raw bit budget. We created a 243-scenario African clinical triage calibration dataset across 14+ languages for imatrix generation.
 
-Nku Sentinel — Camera-Based Screening (0 MB additional weights): CHWs often lack equipment [4]. Nku extracts vital signs using only the phone camera via pure signal processing, then feeds structured biomarkers to MedGemma for clinical interpretation:
+Nku Sentinel — Camera-Based Screening (0 MB additional weights): CHWs often lack equipment [4]. Nku extracts vital signs using only the phone camera via pure signal processing, then feeds structured biomarkers to MedGemma for clinical interpretation. Because optical sensors historically exhibit diagnostic bias against darker skin tones (classified as Types V and VI on the Fitzpatrick skin typing scale), every Nku screening modality is engineered to be "Fitzpatrick-aware" — intentionally bypassing melanin-heavy epidermal layers to ensure equitable accuracy:
 
 | Screening | Method | Output | Fitzpatrick-aware |
 |:----------|:-------|:-------|:-----------------:|

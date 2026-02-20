@@ -531,7 +531,7 @@ Selecting the right quantization level required balancing two competing goals: m
 | Quantization | Size | MedQA Accuracy | Primary Care | % of Baseline (69%) | Verdict |
 |:-------------|:----:|:--------------:|:--------------------:|:--------------------:|:--------|
 | Unquantized (Baseline) | 8.0 GB | 69.0% | — | 100% | Too large for mobile |
-| **Q4_K_M** | **2.3 GB** | **56.4%** | **58.0%** | **81.7%** | **Deployed — best accuracy/size ratio** |
+| **Q4_K_M** | **2.49 GB** | **56.4%** | **58.0%** | **81.7%** | **Deployed — best accuracy/size ratio** |
 | IQ2_XS + medical imatrix | 1.3 GB | 43.8% (558/1273) | 45.3% (320/707) | 63.5% | Viable alternative for ultra-constrained devices |
 | Q2_K | 1.6 GB | 34.7% (442/1273) | 33.9% (240/707) | 50.3% | Worse than IQ2_XS despite being larger |
 | IQ1_M | 1.1 GB | 32.3% (411/1273) | 32.4% (229/707) | 46.8% | Near random chance — rejected |
@@ -541,11 +541,11 @@ Selecting the right quantization level required balancing two competing goals: m
 **Key Findings:**
 1.  **Medical imatrix calibration outperforms naive quantization:** The IQ2_XS model (1.3 GB) calibrated with our custom 243-scenario African clinical dataset severely outperforms the larger Q2_K model (1.6 GB) by +9.1 percentage points on MedQA. This proves that domain-specific importance matrices are significantly more valuable than raw bit depth at extreme quantization levels.
 2.  **IQ1_M is near-random:** At 1.1 GB, the model fundamentally collapses. Its 32.3% MedQA score barely exceeds random guessing (25% on 4-option MCQs). The model loses its reasoning capabilities, often outputting repetitive or disjointed text when prompted.
-3.  **Q4_K_M is the true "Edge Foundation" cutoff:** At 2.3 GB (71% smaller than baseline), Q4_K_M is the smallest model that comprehensively retains complex multi-step clinical reasoning. It successfully identifies multi-morbidity conditions (e.g., recognizing both preeclampsia and anemia from concurrent symptoms) that the 1.3 GB IQ2_XS misses.
+3.  **Q4_K_M is the true "Edge Foundation" cutoff:** At 2.49 GB (69% smaller than baseline), Q4_K_M is the smallest model that comprehensively retains complex multi-step clinical reasoning. It successfully identifies multi-morbidity conditions (e.g., recognizing both preeclampsia and anemia from concurrent symptoms) that the 1.3 GB IQ2_XS misses.
 
 #### Full Benchmark Comparison†
 
-| Metric | IQ1_M (1.1 GB) | Q2_K (1.6 GB) | IQ2_XS (1.3 GB) | Q4_K_M (2.3 GB) |
+| Metric | IQ1_M (1.1 GB) | Q2_K (1.6 GB) | IQ2_XS (1.3 GB) | Q4_K_M (2.49 GB) |
 |:-------|:--------------:|:-------------:|:---------------:|:---------------:|
 | Overall MedQA (1,273 questions, single-shot) | 32.3% (411) | 34.7% (442) | 43.8% (558) | 56.0% (713) |
 | Primary Care subset (707 questions, single-shot) | 32.4% (229) | 33.9% (240) | 45.3% (320) | 56.2% (397) |
@@ -555,7 +555,7 @@ Selecting the right quantization level required balancing two competing goals: m
 
 > †Single-pass evaluation — see methodology note above.
 
-Decision rationale: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The Q4_K_M model is a standard quantization (from [mradermacher/medgemma-4b-it-GGUF](https://huggingface.co/mradermacher/medgemma-4b-it-GGUF)). The other three quantization levels (IQ1_M, Q2_K, IQ2_XS) were benchmarked to validate our model selection: they confirmed that aggressive quantization below Q4 degrades accuracy below clinically useful thresholds, and that domain-specific imatrix calibration (applied to IQ2_XS) is essential at lower bit rates. Only Q4_K_M is deployed in the Nku application. With `mmap` memory mapping, the 2.3 GB Q4_K_M model runs on 3GB+ RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
+Decision rationale: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The Q4_K_M model is a standard quantization (from [mradermacher/medgemma-4b-it-GGUF](https://huggingface.co/mradermacher/medgemma-4b-it-GGUF)). The other three quantization levels (IQ1_M, Q2_K, IQ2_XS) were benchmarked to validate our model selection: they confirmed that aggressive quantization below Q4 degrades accuracy below clinically useful thresholds, and that domain-specific imatrix calibration (applied to IQ2_XS) is essential at lower bit rates. Only Q4_K_M is deployed in the Nku application. With `mmap` memory mapping, the 2.49 GB Q4_K_M model runs on 3GB+ RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
 
 > imatrix representativeness: The 243 scenarios cover WHO/IMCI triage conditions accounting for >80% of CHW encounters in Sub-Saharan Africa. The imatrix was used for the IQ2_XS quantization experiment — its purpose is weight importance estimation, identifying which model weights are most critical for the deployment vocabulary (malaria, anemia, pneumonia, maternal health terms across 14+ languages). This is a quantization calibration technique, not clinical training data; 243 scenarios across 8 condition categories and 14 languages provides sufficient diversity for weight importance ranking. The deployed Q4_K_M does not use this imatrix.
 
@@ -563,7 +563,7 @@ Decision rationale: Q4_K_M at 56% accuracy represents 81% of the published basel
 
 | Alternative | Size | Why Not Viable |
 |:------------|:----:|:---------------|
-| MedGemma 4B F16 (unquantized) | 8.0 GB | On a $50–100 phone with 3GB+ RAM, `mmap` must page an 8 GB model through the available memory. The resulting page thrashing increases per-query latency from sub-second to minutes — unusable during a clinical encounter. Q4_K_M (2.3 GB) fits comfortably within the mmap working set. Given Nku's target demographic of rural CHWs who rely on budget Transsion smartphones (TECNO, Infinix, itel), this 2.3 GB `mmap` footprint is the only viable path to deliver cutting-edge clinical AI without demanding inaccessible flagship hardware. |
+| MedGemma 4B F16 (unquantized) | 8.0 GB | On a $50–100 phone with 3GB+ RAM, `mmap` must page an 8 GB model through the available memory. The resulting page thrashing increases per-query latency from sub-second to minutes — unusable during a clinical encounter. Q4_K_M (2.49 GB) fits comfortably within the mmap working set. Given Nku's target demographic of rural CHWs who rely on budget Transsion smartphones (TECNO, Infinix, itel), this 2.49 GB `mmap` footprint is the only viable path to deliver cutting-edge clinical AI without demanding inaccessible flagship hardware. |
 | MedGemma 4B Multimodal | 5.5 GB (LLM) + 0.5 GB (ViT) | Multimodal models require loading both a massive LLM and a separate Vision Transformer (ViT) component into RAM. Not only is the combined weight prohibitive for 3GB+ RAM devices, but transmitting clinical images of patients raises severe offline privacy and data-handling concerns in rural settings. Nku Sentinel avoids both the memory footprint and the privacy risks of image processing by extracting mathematical biomarkers via localized edge algorithms instead. |
 
 Why not use the multimodal MedGemma 4B with raw camera images? A natural question: MedGemma 4B multimodal includes a MedSigLIP vision encoder (400M parameters). Why not feed it raw camera images directly, skipping the sensor-to-text pipeline entirely? Four reasons:
@@ -572,7 +572,7 @@ Why not use the multimodal MedGemma 4B with raw camera images? A natural questio
 
 2. MedSigLIP was trained on clinical imagery, not smartphone images. The vision encoder was fine-tuned on chest X-rays, dermatoscopy, ophthalmology scans, and histopathology slides — none of which resemble a smartphone photo of a lower eyelid (pallor) or a face (edema). It would require fine-tuning on these specific modalities, for which no labeled training data currently exists to our knowledge.
 
-3. The multimodal model is larger, not smaller. The text decoder is identical to the text-only 4B. Adding MedSigLIP (400M params, ~800 MB) increases the quantized model from 2.3 GB to ~3.1 GB — a 35% size increase with no benefit for Nku's use case. On a 3GB RAM device, this additional memory pressure degrades inference performance.
+3. The multimodal model is larger, not smaller. The text decoder is identical to the text-only 4B. Adding MedSigLIP (400M params, ~800 MB) increases the quantized model from 2.49 GB to ~3.1 GB — a 35% size increase with no benefit for Nku's use case. On a 3GB RAM device, this additional memory pressure degrades inference performance.
 
 4. Structured numerical input outperforms ambiguous visual input. Nku's sensor pipeline outputs precise, quantified biomarkers (HR: 108 BPM, conjunctival saturation: 0.08, EAR: 2.15) with confidence scores and clinical context. Feeding the model a raw photo and asking "does this patient have anemia?" yields far less reliable results than providing "conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10), pallor index: 0.68, severity: MODERATE." The structured prompting approach achieves a median 53% improvement over zero-shot baselines [9].
 
@@ -585,7 +585,7 @@ We also evaluated TranslateGemma 4B as an on-device translation model before sel
 
 | Approach | Size | African Language Support | RAM Impact | Offline |
 |:---------|:----:|:------------------------:|:----------:|:-------:|
-| TranslateGemma 4B (Q4_K_M) | 2.3 GB | Twi/Akan: broken | +2.3 GB (sequential load) | Supported |
+| TranslateGemma 4B (Q4_K_M) | 2.49 GB | Twi/Akan: broken | +2.49 GB (sequential load) | Supported |
 | TranslateGemma 4B (IQ1_M) | 0.78 GB | Twi/Akan: broken | +0.78 GB (sequential load) | Supported |
 | Android ML Kit | ~30 MB/lang | 59 languages on-device | Negligible (separate process) | Supported (official langs) |
 | Google Cloud Translate | 0 MB | 100+ languages | None | Unsupported (requires internet) |
@@ -597,7 +597,7 @@ Final architecture — hybrid translation:
 - Cloud Translate fallback: Handles unsupported indigenous languages (Twi, Hausa, Yoruba, Igbo, etc.) when online. If a user selects one of these languages, the app displays a prominent UI alert that internet connectivity is required.
 - Critical insight: CHWs are trained and fluent in their country's official national language. Since ML Kit supports these all offline, every single CHW always has a fully offline triage path available to them. Cloud translation only extends reach to patients who strictly speak indigenous languages and relies on connectivity. All medical reasoning generated by MedGemma is 100% on-device and operates strictly in English — the Android ML layer translates any non-English clinical input into English before passing it to the MedGemma model, and simultaneously translates MedGemma's English output back into the CHW's selected language for display.
 
-This hybrid approach eliminated ~2.3GB of TranslateGemma model weight, removed the model-swapping pipeline overhead (3 load/unload cycles → 1), and expanded language coverage from ~15 to 100+ languages — while preserving the 100% offline guarantee for the primary official-language use case.
+This hybrid approach eliminated ~2.49GB of TranslateGemma model weight, removed the model-swapping pipeline overhead (3 load/unload cycles → 1), and expanded language coverage from ~15 to 100+ languages — while preserving the 100% offline guarantee for the primary official-language use case.
 
 ---
 

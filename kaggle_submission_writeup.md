@@ -69,6 +69,8 @@ Edge AI — Quantization & Memory: We achieve 69% model size reduction (8GB → 
 
 Key finding: IQ2_XS with medical imatrix calibration outperforms the larger Q2_K by +9.1pp — domain-specific calibration matters more than raw bit budget. We created a 243-scenario African clinical triage calibration dataset across 14+ languages for imatrix generation.
 
+**Why not deploy the ultra-compact 1.3GB IQ2_XS?** While saving 1.2GB of RAM and storage is tempting for rural networks, triage is high-stakes. The 12.6pp accuracy drop from Q4_K_M (56.4%) to IQ2_XS (43.8%) represents a critical threshold where MedGemma loses its ability to reliably parse multi-morbidity (e.g., identifying both preeclampsia and anemia from concurrent symptoms). Q4_K_M at 2.49GB is the smallest size that comprehensively retains clinical reasoning safety.
+
 Nku Sentinel — Camera-Based Screening (0 MB additional weights): CHWs often lack equipment [4]. Nku extracts vital signs using only the phone camera via pure signal processing, then feeds structured biomarkers to MedGemma for clinical interpretation:
 
 | Screening | Method | Output | Fitzpatrick-aware |

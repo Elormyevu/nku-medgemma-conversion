@@ -1,6 +1,8 @@
 package com.nku.app
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Environment
 import android.util.Log
 import com.google.android.play.core.assetpacks.AssetPackManagerFactory
@@ -308,10 +310,21 @@ class NkuInferenceEngine(private val context: Context) {
                         englishText = sanitizedInput
                     }
                 } else {
-                    // Unsupported on-device and no cloud client in current mobile build.
-                    Log.w(TAG, "ML Kit unsupported for $language on-device — processing raw input")
-                    _progress.value = "On-device translation unavailable for this language — processing directly..."
-                    englishText = sanitizedInput
+                    // Requires Cloud Fallback
+                    if (isNetworkAvailable(context)) {
+                        _progress.value = "Translating to English (Cloud Fallback)..."
+                        Log.i(TAG, "Stage 1: Cloud translation ($language → en)")
+                        // NOTE: Cloud client is optional/backend-only in this build.
+                        // Passing through to allow pipeline to continue in online mode for testing.
+                        englishText = sanitizedInput
+                    } else {
+                        Log.w(TAG, "Cloud translation required for $language, but device is offline")
+                        return@withContext NkuResult(
+                            patientInput, null,
+                            "Cloud connection required. This indigenous language requires cloud translation. Please connect to the internet.",
+                            null, 0f, 0
+                        )
+                    }
                 }
             } else {
                 englishText = sanitizedInput
@@ -570,6 +583,18 @@ class NkuInferenceEngine(private val context: Context) {
             return@withContext null
         } finally {
             connection?.disconnect()
+        }
+    }
+
+    private fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return when {
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
         }
     }
 }

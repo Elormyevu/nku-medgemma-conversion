@@ -818,19 +818,18 @@ Source file: `RespiratoryDetector.kt`
 | Risk scoring | Class probability analysis | `riskScore = max(highRiskClasses)` — cough, sneeze, snore scores weighted for respiratory risk |
 | MedGemma integration | Clinical reasoning | Risk score + event class distribution passed to MedGemma prompt for TB/COPD/pneumonia triage |
 
-> ViT-L Encoder — future upgrade path: The codebase includes full architectural support for HeAR's ViT-L encoder (ONNX Runtime Mobile integration, on-demand loading, sequential RAM management for 512-dim health acoustic embeddings). However, the ViT-L model uses `XlaCallModule` nodes with serialized StableHLO bytecode — an XLA-specific format that no current conversion tool (tf2onnx, TFLite converter) can process into a mobile inference format. We attempted 7 conversion approaches across 3 toolchains before documenting this as a technical limitation. The ViT-L upgrade will activate once Google's AI Edge toolchain supports StableHLO-to-TFLite conversion.
 
-Architectural Advantage of the Event Detector vs ViT-L: While the ViT-L encoder provides a dense 512-dimensional acoustic embedding, MedGemma thrives on structured numerical data rather than opaque vectors. The 1.1MB TFLite Event Detector rapidly classifies 8 specific health sound events (cough, snore, baby cough, breathe, sneeze, etc.) and outputs explicit confidence probabilities for each. Rather than passing an opaque 512-dim vector, the Event Detector passes a structured summary (`Cough Probability: 0.82`, `Breathe Probability: 0.45`, `Risk Score: High`) directly into the `ClinicalReasoner` prompt. MedGemma is excellent at reasoning over these explicit probabilities alongside the patient's other symptoms. 
 
-Why the Event Detector + MedGemma still delivers clinical triage value: In Sub-Saharan Africa, where 10.8M new TB cases occur annually (only 44% of MDR-TB diagnosed), COPD prevalence is projected to rise 59% by 2050 due to biomass fuel exposure, and pneumonia claims ~500,000 children under five each year [27], even a binary cough detection signal combined with clinical LLM reasoning provides a screening capability CHWs currently lack. The Event Detector's 8-class health sound classification exceeds what any standard clinical auscultation tool offers at the community health level — where the alternative is no respiratory screening at all.
+Architectural Advantage of the Event Detector: While traditional audio encoders output dense acoustic embeddings, MedGemma thrives on structured data. The 1.1MB TFLite Event Detector rapidly classifies 8 specific health sound events (cough, snore, baby cough, breathe, sneeze, etc.) and outputs explicit confidence probabilities for each. Rather than passing a vector that an SLM cannot easily interpret, the Event Detector passes a structured summary (`Cough Probability: 0.82`, `Breathe Probability: 0.45`, `Risk Score: High`) directly into the `ClinicalReasoner` prompt. MedGemma is excellent at reasoning over these explicit probabilities alongside the patient's other symptoms. 
+
+Why the Event Detector + MedGemma delivers clinical triage value: In Sub-Saharan Africa, where 10.8M new TB cases occur annually (only 44% of MDR-TB diagnosed) [1], COPD prevalence is projected to rise 59% by 2050 due to biomass fuel exposure [30], and pneumonia claims over 500,000 children under five each year [31], even a binary cough detection signal combined with clinical LLM reasoning provides a screening capability CHWs currently lack. The Event Detector's 8-class health sound classification exceeds what any standard clinical auscultation tool offers at the community health level — where the alternative is no respiratory screening at all.
 
 Output → VitalSigns:
 ```kotlin
-respiratoryRiskScore: Float?              // e.g. 0.72
+respiratoryRiskScore: Float?               // e.g. 0.72
 respiratoryRisk: RespiratoryRisk?          // HIGH_RISK
 respiratoryConfidence: Float               // e.g. 0.88
 coughDetected: Boolean                     // true
-hearEmbedding: FloatArray?                 // null (ViT-L not available)
 respiratoryAnalysisSource: AnalysisSource  // EVENT_DETECTOR
 ```
 
@@ -980,3 +979,7 @@ MedQA is used as a relative benchmark for quantization comparison — not as an 
 [28] ACOG Practice Bulletin No. 222: Preeclampsia. 2020.
 
 [29] WHO. *IMCI Chart Booklet*. 2014.
+
+[30] Adeloye D, Song P, Zhu Y, et al. Global, regional, and national prevalence of, and risk factors for, chronic obstructive pulmonary disease (COPD) in 2019: a systematic review and modelling analysis. *Lancet Respir Med*. 2022;10(5):447-458. doi:10.1016/S2213-2600(21)00511-7
+
+[31] Perin J, Mulick A, Yeung D, et al. Global, regional, and national causes of under-5 mortality in 2000-19: an updated systematic analysis with implications for the Sustainable Development Goals. *Lancet Child Adolesc Health*. 2022;6(2):106-115. doi:10.1016/S2352-4642(21)00311-4

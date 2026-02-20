@@ -14,7 +14,11 @@ Powerful clinical AI models exist, but require reliable cloud connectivity. In r
 
 Target user: A CHW in rural Ghana with a $60–100 TECNO or Infinix phone (3GB+ RAM) and no stable internet [7]. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral. Transsion brands (TECNO, Infinix, itel) hold >50% of the African smartphone market [8].
 
-Impact & Deployment logistics: Distributing a 2.3GB LLM to a rural clinic is a primary logistical hurdle. For scaled rollout, Nku utilizes Google Play Asset Delivery (the 50MB core app is installed, and Play downloads the 2.3GB model as an `install-time` asset when the CHW is in a town with 4G/LTE cellular connectivity). For the "last-mile" pilot where data costs are prohibitive, supervisors can provision phones centrally or side-load the model directory directly to the CHW's device via MicroSD card, requiring zero internet bandwidth.
+Impact & Deployment logistics: Distributing a 2.3GB LLM to a rural clinic is a primary logistical hurdle. We address this via a multi-tiered infrastructure strategy:
+1. **Pilot Sideloading:** Supervisors provision phones centrally via MDM or side-load the model directly via MicroSD card, requiring zero village internet bandwidth.
+2. **Play Asset Delivery (PAD):** The 50MB core app is installed via the Play Store. It automatically downloads the 2.3GB model as an `install-time` asset when the CHW intercepts 4G/LTE cellular connectivity in larger towns.
+3. **Peer-to-Peer Viral Sharing:** African smartphone culture relies on local peer-to-peer file transfer. Only one CHW per clinic needs to download the model via 4G; they can then use Android's native *Nearby Share* or *Xender* to beam the 2.3GB `.gguf` file to other CHWs' offline phones at 30MB/s over ad-hoc local Wi-Fi.
+4. **Zero-Rated Data:** For scaled Ministry of Health rollout, the Google Play download URL is "zero-rated" through partnerships with major MNOs (e.g., MTN, AirtelTigo), ensuring the massive download does not deduct from the CHW's personal cellular data balance.
 
 ### Overall solution
 

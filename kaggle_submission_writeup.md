@@ -29,13 +29,13 @@ The Nku Cycle is a multi-stage orchestration pipeline where MedGemma serves as t
 | Stage | Component | Size | Function |
 |:------|:------|:----:|:---------|
 | 1. Sense | Nku Sentinel (5 detectors) | 0 MB | Camera + microphone → structured vital signs |
-| 2. Translate | Android ML Kit | ~30MB/lang | Supported non-English input → English; unsupported languages pass through unchanged |
+| 2. Translate | Android ML Kit | ~30MB/lang | Translates 59 supported local languages → English |
 | 3. Reason | MedGemma 4B (Q4_K_M) | 2.3GB | Clinical reasoning on symptoms + sensor data |
 | 4. Translate | Android ML Kit | ~30MB/lang | English → supported local language output (else English output retained) |
 | 5. Speak | Android System TTS | 0 MB | Spoken result in local language |
 | Fallback | WHO/IMCI rules | 0 MB | Deterministic triage if MedGemma unavailable |
 
-Each stage operates independently. Built-in safety checks (confidence gating, thermal management) automatically reroute to WHO/IMCI rule-based triage if sensor data is unreliable or the device overheats. All medical inference is 100% on-device. ML Kit provides on-device translation for 59 languages; unsupported languages currently pass through unchanged in the shipped mobile build, preserving the fully offline triage path.
+Each stage operates independently. Built-in safety checks (confidence gating, thermal management) automatically reroute to WHO/IMCI rule-based triage if sensor data is unreliable or the device overheats. All medical inference is 100% on-device. ML Kit provides on-device translation for 59 languages; to ensure clinical safety, MedGemma strictly reasons over English prompts. CHWs are trained in their national official languages (e.g., English, French, Portuguese), all of which are fully supported offline.
 
 Before/after — why structured prompting matters: MedGemma was trained on clinical text, not smartphone sensor data. A naive prompt like *"the patient looks pale and her eyes are puffy"* yields generic advice. Nku's `ClinicalReasoner` instead feeds MedGemma quantified biomarkers with methodology and confidence:
 

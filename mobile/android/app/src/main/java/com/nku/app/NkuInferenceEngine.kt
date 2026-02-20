@@ -451,7 +451,7 @@ class NkuInferenceEngine(private val context: Context) {
 
     /**
      * Native HTTP downloader fallback for Kaggle reviewers installing via APK.
-     * Streams the 2.3GB GGUF model directly from HuggingFace to internal storage.
+     * Downloads the 2.3GB GGUF model directly from HuggingFace to internal storage.
      */
     private suspend fun downloadModelNative(urlStr: String, fileName: String): File? = withContext(Dispatchers.IO) {
         val outFile = File(modelDir, fileName)

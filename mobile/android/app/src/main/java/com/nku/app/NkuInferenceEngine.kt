@@ -57,6 +57,9 @@ class NkuInferenceEngine(private val context: Context) {
         // HeAR Event Detector: TFLite, ships in app assets (loaded by RespiratoryDetector)
         // HeAR ViT-L encoder: future upgrade — XLA/StableHLO ops block ONNX/TFLite conversion
 
+        // Direct Download URL fallback for Reviewers without PAD (APK install)
+        private const val MEDGEMMA_DOWNLOAD_URL = "https://huggingface.co/hungqbui/medgemma-4b-it-Q4_K_M-GGUF/resolve/main/medgemma-4b-it-q4_k_m.gguf?download=true"
+
         // Play Asset Delivery pack names → model file mapping
         private val MODEL_PACK_MAP = mapOf(
             MEDGEMMA_MODEL to "medgemma"
@@ -160,10 +163,17 @@ class NkuInferenceEngine(private val context: Context) {
         _state.value = EngineState.LOADING_MODEL
         _progress.value = "Loading ${modelFileName}..."
 
-        val resolvedFile = resolveModelFile(modelFileName)
+        var resolvedFile = resolveModelFile(modelFileName)
         if (resolvedFile == null) {
-            Log.w(TAG, "Model not found in any location: $modelFileName")
-            return@withContext null
+            Log.w(TAG, "Model not found locally. Initiating direct download for $modelFileName")
+            if (modelFileName == MEDGEMMA_MODEL) {
+                resolvedFile = downloadModelNative(MEDGEMMA_DOWNLOAD_URL, modelFileName)
+                if (resolvedFile == null) {
+                    return@withContext null
+                }
+            } else {
+                return@withContext null
+            }
         }
         val modelPath = resolvedFile.absolutePath
         Log.i(TAG, "Loading model from: $modelPath")
@@ -436,6 +446,84 @@ class NkuInferenceEngine(private val context: Context) {
             Log.w(TAG, "Asset not bundled: $modelName (expected for dev builds)")
             // Clean up partial file
             if (outFile.exists()) outFile.delete()
+        }
+    }
+
+    /**
+     * Native HTTP downloader fallback for Kaggle reviewers installing via APK.
+     * Streams the 2.3GB GGUF model directly from HuggingFace to internal storage.
+     */
+    private suspend fun downloadModelNative(urlStr: String, fileName: String): File? = withContext(Dispatchers.IO) {
+        val outFile = File(modelDir, fileName)
+        var connection: java.net.HttpURLConnection? = null
+        try {
+            _progress.value = "Connecting to HuggingFace to download MedGemma..."
+            var downloadUrl = java.net.URL(urlStr)
+            
+            // Handle redirects (HuggingFace CDN usually redirects)
+            var redirectCount = 0
+            while (redirectCount < 5) {
+                connection = downloadUrl.openConnection() as java.net.HttpURLConnection
+                connection.connectTimeout = 15000
+                connection.readTimeout = 15000
+                connection.instanceFollowRedirects = false
+                
+                val code = connection.responseCode
+                if (code == java.net.HttpURLConnection.HTTP_MOVED_TEMP || 
+                    code == java.net.HttpURLConnection.HTTP_MOVED_PERM || 
+                    code == java.net.HttpURLConnection.HTTP_SEE_OTHER) {
+                    val newUrl = connection.getHeaderField("Location")
+                    downloadUrl = java.net.URL(newUrl)
+                    connection.disconnect()
+                    redirectCount++
+                } else {
+                    break
+                }
+            }
+
+            if (connection?.responseCode != java.net.HttpURLConnection.HTTP_OK) {
+                Log.e(TAG, "HTTP error during model download: ${connection?.responseCode}")
+                return@withContext null
+            }
+
+            val totalBytes = connection?.contentLength ?: -1
+            Log.i(TAG, "Starting native download of $fileName ($totalBytes bytes)")
+
+            connection?.inputStream?.use { input ->
+                outFile.outputStream().use { output ->
+                    val buffer = ByteArray(8 * 1024)
+                    var bytesWritten = 0L
+                    var lastReportedPercent = -1
+
+                    while (isActive) {
+                        val read = input.read(buffer)
+                        if (read == -1) break
+                        output.write(buffer, 0, read)
+                        bytesWritten += read
+
+                        if (totalBytes > 0) {
+                            val percent = ((bytesWritten * 100) / totalBytes).toInt()
+                            if (percent != lastReportedPercent) {
+                                lastReportedPercent = percent
+                                _progress.value = "Downloading Model (Reviewer Fallback)... $percent%"
+                            }
+                        } else {
+                            // Indeterminate progress
+                            _progress.value = "Downloading Model (Reviewer Fallback)... ${bytesWritten / (1024 * 1024)}MB"
+                        }
+                    }
+                }
+            }
+            
+            Log.i(TAG, "Download complete: $fileName")
+            return@withContext if (outFile.exists() && outFile.length() > 0) outFile else null
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Native download failed for $fileName", e)
+            if (outFile.exists()) outFile.delete()
+            return@withContext null
+        } finally {
+            connection?.disconnect()
         }
     }
 }

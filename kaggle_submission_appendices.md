@@ -679,7 +679,7 @@ Nku doesn't rely on MedGemma alone. The safety architecture provides multiple co
 
 ### Conclusion
 
-The literature demonstrates that (a) triage is substantially easier for LLMs than MedQA, (b) LLM-based decision support reduces diagnostic errors in Sub-Saharan African clinical settings, (c) structured prompting substantially improves model performance, and (d) on-device quantized models retain clinically useful accuracy. Combined with Nku's multi-layer safety architecture and the reality that the alternative for these CHWs is *zero* diagnostic support, the pipeline provides a well-grounded, defensible starting point for field validation.
+The literature and architectural realities demonstrate that: (a) triage is substantially easier for LLMs than MedQA, (b) LLM-based decision support reduces diagnostic errors in Sub-Saharan African clinical settings, (c) while zero-shot LLM performance degrades on real medical data, (d) structured prompting substantially restores and improves this model capability, (e) on-device quantized models retain clinically useful accuracy, and (f) Nku's 5-layer safety architecture explicitly compensates for residual model limitations. Combined with the reality that the alternative for these CHWs is *zero* diagnostic support, the pipeline provides a well-grounded, defensible starting point for field validation.
 
 ---
 

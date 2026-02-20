@@ -324,5 +324,82 @@ class TestAdvancedInjectionPatterns(unittest.TestCase):
             self.assertTrue(result.is_valid, f"Should allow: {text}")
 
 
+import pytest
+import os
+import json
+
+@pytest.mark.integration
+class TestUnmockedSensorFusionIntegration(unittest.TestCase):
+    """
+    F3 Remediation: True E2E integration test mapping full SensorFusion
+    payloads to the MedGemma prompt template and asserting real model
+    structural compliance without mocking.
+    """
+    
+    @classmethod
+    def setUpClass(cls):
+        # Only run if the model is locally available or downloading is permitted
+        # Skip if running in CI without models
+        if os.environ.get('CI') == 'true' and not os.environ.get('RUN_LLM_TESTS'):
+            raise unittest.SkipTest("Skipping unmocked LLM tests in CI")
+            
+        from cloud.inference_api.main import load_models
+        # Load the real models (MedGemma)
+        success, error = load_models(require_medgemma=True, require_translategemma=False)
+        if not success:
+            raise unittest.SkipTest(f"Could not load real MedGemma model: {error}")
+
+    def setUp(self):
+        from cloud.inference_api.main import app, config
+        app.config['TESTING'] = True
+        config.debug = True
+        self.client = app.test_client()
+        self._api_key_patcher = patch('cloud.inference_api.main._api_key', None)
+        self._api_key_patcher.start()
+        
+    def tearDown(self):
+        self._api_key_patcher.stop()
+
+    def test_real_medgemma_sensor_fusion_triage(self):
+        """
+        Verify that the actual MedGemma model correctly parses the Android
+        ClinicalReasoner formatting style and outputs the strict YAML/Key-Value
+        structure required by the inference pipeline.
+        """
+        # This matches the exact multi-modal layout ClinicalReasoner.kt generates
+        android_sensor_fusion_prompt = (
+            "Patient symptoms: Severe headache, blurry vision.\n"
+            "VITAL SIGNS & SCREENING DATA:\n"
+            "- Heart Rate: 110 bpm (Tachycardia, 90% confidence, rPPG)\n"
+            "- Pallor Assessment: Normal (Score: 0.1, 95% confidence)\n"
+            "- Edema Assessment: SIGNIFICANT (Score: 0.85, EAR: 2.1, 88% confidence)\n"
+            "PREGNANCY CONTEXT:\n"
+            "- Patient is pregnant (32 weeks).\n"
+            "- WARNING: High risk of preeclampsia given edema and symptoms.\n"
+        )
+        
+        # We hit the endpoint WITHOUT mocking medgemma
+        response = self.client.post('/triage', json={
+            'symptoms': android_sensor_fusion_prompt
+        })
+        
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        
+        self.assertIn('assessment', data)
+        assessment = data['assessment']
+        
+        # Verify the model adhered to the output constraint framework
+        self.assertIn('SEVERITY:', assessment)
+        self.assertIn('URGENCY:', assessment)
+        self.assertIn('RECOMMENDATIONS:', assessment)
+        
+        # Since this is a real preeclampsia scenario, MedGemma should flag it high
+        self.assertTrue(
+            'HIGH' in assessment or 'CRITICAL' in assessment, 
+            f"Expected HIGH/CRITICAL severity, got: {assessment}"
+        )
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

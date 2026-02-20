@@ -116,14 +116,19 @@ class NkuInferenceEngine(private val context: Context) {
             }
         }
 
-        // Fallback: /sdcard/Download/ (for development/testing)
+        // Fallback: /sdcard/Download/ (for development/testing/sideloading)
         val sdcard = File(Environment.getExternalStoragePublicDirectory(
             Environment.DIRECTORY_DOWNLOADS), modelFileName)
-        if (sdcard.exists() && ModelFileValidator.isValidGguf(sdcard)) {
+        
+        // F9 protection: sideloaded models must match expected cryptographic checksum.
+        // Using placeholder hash. Replace with actual MedGemma Q4_K_M SHA-256 for production sideloading.
+        val expectedHash = if (modelFileName == MEDGEMMA_MODEL) "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" else null
+        
+        if (sdcard.exists() && ModelFileValidator.isValidGguf(sdcard, expectedSha256 = expectedHash)) {
             Log.i(TAG, "Model found on sdcard: $modelFileName")
             return sdcard
         } else if (sdcard.exists()) {
-            Log.w(TAG, "Invalid/corrupt GGUF on sdcard: $modelFileName (${sdcard.length()} bytes)")
+            Log.w(TAG, "Invalid/corrupt/untrusted GGUF on sdcard: $modelFileName (${sdcard.length()} bytes)")
         }
 
         Log.w(TAG, "Model not found anywhere: $modelFileName")

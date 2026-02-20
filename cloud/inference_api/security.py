@@ -40,7 +40,7 @@ class InputValidator:
     # Allowed language codes for translation
     # Twi/Akan: both 'ak' (ISO 639-1) and 'twi' (ISO 639-2) are accepted
     ALLOWED_LANGUAGES = {
-        'en', 'twi', 'ak', 'yo', 'ha', 'sw', 'ewe', 'ga', 'ig', 'zu', 'xh',
+        'en', 'twi', 'ak', 'yo', 'ha', 'sw', 'ewe', 'ee', 'ga', 'ig', 'zu', 'xh',
         'am', 'or', 'ti', 'so', 'fr', 'pt', 'ar'
     }
 
@@ -454,11 +454,14 @@ class RateLimiter:
         """Get unique client identifier from request (S-03: validated)."""
         forwarded = request.headers.get('X-Forwarded-For', '')
         if forwarded:
-            ip = forwarded.split(',')[0].strip()
-            # S-03: Validate that it looks like an IP address
-            if self._is_valid_ip(ip):
-                return ip
-            logger.warning(f"Invalid X-Forwarded-For value: {ip[:50]}")
+            ips = [ip.strip() for ip in forwarded.split(',')]
+            # S-03: Prevent left-side spoofing by taking the right-most valid IP
+            # In GCP Cloud Run, user-spoofed IPs appear on the left, while the
+            # actual client IP appended by GCP infrastructure appears on the right.
+            for ip in reversed(ips):
+                if self._is_valid_ip(ip):
+                    return ip
+            logger.warning(f"Invalid X-Forwarded-For value: {forwarded[:50]}")
         return request.remote_addr or 'unknown'
 
     @staticmethod
@@ -656,12 +659,20 @@ def configure_cors(app, allowed_origins: List[str] = None):
 # REQUEST VALIDATION MIDDLEWARE
 # =============================================================================
 
-def validate_json_request(required_fields: List[str] = None):
+def validate_json_request(required_fields: List[str] = None, max_size_bytes: int = 5 * 1024 * 1024):
     """Decorator to validate JSON request body."""
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             from flask import request, jsonify
+
+            # Check content length against max_size_bytes
+            content_length = request.headers.get('Content-Length')
+            if content_length and int(content_length) > max_size_bytes:
+                return jsonify({
+                    'error': 'payload_too_large',
+                    'message': f'Request body exceeds maximum size of {max_size_bytes} bytes'
+                }), 413
 
             # Check content type
             if not request.is_json:

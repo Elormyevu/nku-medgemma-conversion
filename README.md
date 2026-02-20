@@ -103,10 +103,10 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 | **Anemia Screen** | `PallorDetector.kt` | Conjunctival HSV analysis | Pallor severity (0-1) |
 | **Jaundice Screen** | `JaundiceDetector.kt` | Scleral HSV analysis | Jaundice severity (0-1) |
 | **Preeclampsia** | `EdemaDetector.kt` | Facial geometry (EAR + gradients) | Edema severity (0-1) |
-| **TB/Respiratory** | `RespiratoryDetector.kt` | HeAR Event Detector (TFLite INT8, 1.1MB) | Risk score (0-1) + health sound class distribution |
+| **TB/Respiratory** | `RespiratoryDetector.kt` | HeAR Event Detector (TFLite, 1.1MB, FP32 fallback) | Risk score (0-1) + health sound class distribution |
 | **Triage** | `ClinicalReasoner.kt` | MedGemma + WHO/IMCI fallback | Severity & recommendations |
 
-All screening uses **pure signal processing** (0 MB additional weights) except TB/respiratory which uses the HeAR Event Detector (MobileNetV3, 1.1MB INT8 TFLite, always loaded). The HeAR Event Detector acts as the primary respiratory triage mechanism, classifying 8 distinct acoustic events to generate a synthetic respiratory risk score based on abnormal breathing patterns and cough prevalence.
+All screening uses **pure signal processing** (0 MB additional weights) except TB/respiratory which uses the HeAR Event Detector (MobileNetV3, 1.1MB TFLite with robust FP32 fallback, always loaded). The HeAR Event Detector acts as the primary respiratory triage mechanism, classifying 8 distinct acoustic events to generate a synthetic respiratory risk score based on abnormal breathing patterns and cough prevalence.
 
 The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED** in the app — its XlaCallModule/StableHLO format cannot be converted to ONNX or TFLite by any current tool (see `ARCHITECTURE.md`). Sensor outputs are aggregated by `SensorFusion.kt` and interpreted by MedGemma for clinical reasoning.
 
@@ -133,6 +133,9 @@ The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED
 ---
 
 ## 🚀 Quick Start
+
+> [!WARNING]
+> **Reviewer/Auditor Notice**: Direct APK installations (`app-debug.apk` or `app-release-unsigned.apk`) **DO NOT** contain the 2.3GB MedGemma model due to Android's APK size limits. The model is distributed via Play Asset Delivery in the `.aab` release bundle. If you are reviewing the app via direct APK installation, you **MUST** follow the [Models sideloading instructions](#models) below to push the GGUF model to the device manually.
 
 ### Prerequisites
 

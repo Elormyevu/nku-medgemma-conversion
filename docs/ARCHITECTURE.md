@@ -200,4 +200,4 @@ mobile/android/app/src/main/
 1. **Abstention**: Sensors below 75% confidence excluded from triage (`ClinicalReasoner.CONFIDENCE_THRESHOLD`)
 2. **Severity Classification**: High/Medium/Low with escalation guidance
 3. **Disclaimer**: "Consult a healthcare professional" always shown
-4. **Privacy**: All processing on-device, no data transmission
+4. **Privacy**: All clinical processing is 100% on-device (no patient data transmission). Network permissions are retained solely for Google Play Asset Delivery (model downloading) and crash reporting.

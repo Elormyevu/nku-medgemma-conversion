@@ -282,6 +282,9 @@ def load_models(
     with _model_lock:
         # Double-check inside lock
         try:
+            if Llama is None and (require_medgemma or require_translategemma):
+                raise RuntimeError("llama_cpp native library is unavailable. Cloud fallback inference cannot proceed.")
+
             if require_medgemma and medgemma is None:
                 request_logger.info("Downloading MedGemma...")
                 # B-07: Explicitly pass token — deploy.sh may set HUGGINGFACE_TOKEN

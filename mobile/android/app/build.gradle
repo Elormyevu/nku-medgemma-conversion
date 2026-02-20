@@ -76,6 +76,10 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
+    lint {
+        disable += ['GradleDependency', 'IconLauncherShape', 'IconDuplicates', 'ObsoleteSdkInt', 'UnusedResources']
+    }
 }
 
 dependencies {

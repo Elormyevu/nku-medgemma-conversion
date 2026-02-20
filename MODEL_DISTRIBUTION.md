@@ -7,7 +7,7 @@ MedGemma 4B is quantized to Q4_K_M format (~2.49GB) and delivered via Play Asset
 
 **Why the Event Detector still ships**: The Event Detector paired with MedGemma delivers real clinical triage value. It classifies 8 health sound events and produces structured respiratory signals (cough probability, risk score, event distribution) that MedGemma interprets alongside other vitals for TB/COPD/pneumonia triage. In Sub-Saharan Africa — where 44% of MDR-TB goes undiagnosed, COPD prevalence is projected to rise 59% by 2050, and pneumonia kills ~500,000 children annually — even event-level cough detection with clinical LLM reasoning provides a screening signal CHWs currently lack entirely.
 
-For development/testing, models can also be sideloaded to `/sdcard/Download/` via ADB push. The mobile app enforces SHA-256 trust validation for sideloaded MedGemma files.
+For development/testing, models can also be sideloaded to `/sdcard/Android/data/com.nku.app/files/Download/` via ADB push. The mobile app enforces SHA-256 trust validation for sideloaded MedGemma files.
 
 ## Production Distribution: Play Asset Delivery (PAD)
 

@@ -106,7 +106,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 | **TB/Respiratory** | `RespiratoryDetector.kt` | HeAR Event Detector (TFLite, 1.1MB, FP32 fallback) | Risk score (0-1) + health sound class distribution |
 | **Triage** | `ClinicalReasoner.kt` | MedGemma + WHO/IMCI fallback | Severity & recommendations |
 
-All screening uses **pure signal processing** (0 MB additional weights) except TB/respiratory which uses the HeAR Event Detector (MobileNetV3, 1.1MB TFLite with robust FP32 fallback, always loaded). The HeAR Event Detector acts as the primary respiratory triage mechanism, classifying 8 distinct acoustic events to generate a synthetic respiratory risk score based on abnormal breathing patterns and cough prevalence.
+All screening uses **pure signal processing** (0 MB additional weights) except TB/respiratory which uses the HeAR Event Detector (MobileNetV3, 1.1MB TFLite with robust FP32 fallback, lazy-loaded on first inference). The HeAR Event Detector acts as the primary respiratory triage mechanism, classifying 8 distinct acoustic events to generate a synthetic respiratory risk score based on abnormal breathing patterns and cough prevalence.
 
 The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED** in the app — its XlaCallModule/StableHLO format cannot be converted to ONNX or TFLite by any current tool (see `ARCHITECTURE.md`). Sensor outputs are aggregated by `SensorFusion.kt` and interpreted by MedGemma for clinical reasoning.
 
@@ -171,7 +171,7 @@ shasum -a 256 medgemma-4b-it.Q4_K_M.gguf
 # Expected: 8bcb19d3e363f7d1ab27f364032436fd702e735a6f479d6bb7b1cf066e76b443
 
 # Push to device (rename to match Kotlin constant)
-adb push medgemma-4b-it.Q4_K_M.gguf /sdcard/Download/medgemma-4b-it-q4_k_m.gguf
+adb push medgemma-4b-it.Q4_K_M.gguf /sdcard/Android/data/com.nku.app/files/Download/medgemma-4b-it-q4_k_m.gguf
 
 # ML Kit translation packs are downloaded automatically by the app
 ```

@@ -33,9 +33,9 @@ The Nku Cycle is a multi-stage orchestration pipeline where MedGemma serves as t
 | Stage | Component | Size | Function |
 |:------|:------|:----:|:---------|
 | 1. Sense | Nku Sentinel (5 detectors) | 0 MB | Camera + microphone → structured vital signs |
-| 2. Translate | Android ML Kit (On-Device) / Google Cloud Translate (Fallback) | ~30MB/lang / 0 MB | Translates 59 supported local languages to English (offline). Unsupported indigenous languages fall back to Cloud Translate (requires connectivity). |
+| 2. Translate | Android ML Kit (On-Device) | ~30MB/lang | Translates 59 supported local languages to English (offline). Unsupported indigenous languages pass through unchanged. |
 | 3. Reason | MedGemma 4B (Q4_K_M) | 2.49GB | Clinical reasoning on symptoms + sensor data |
-| 4. Translate | Android ML Kit / Google Cloud Translate | ~30MB/lang / 0 MB | English → supported local language output (offline) or indigenous language (online) |
+| 4. Translate | Android ML Kit | ~30MB/lang | English → supported local language output (offline) or pass through unchanged for unsupported |
 | 5. Speak | Android System TTS | 0 MB | Spoken result in local language |
 | Fallback | World Health Organization / Integrated Management of Childhood Illness (WHO/IMCI) rules | 0 MB | Deterministic triage if MedGemma unavailable (e.g., insufficient available RAM) |
 
@@ -87,7 +87,7 @@ Architectural Advantage of the Event Detector: Although traditional audio encode
 
 All screening modalities are deliberately skin-tone independent — critical for Fitzpatrick V-VI populations. Sensor confidence must exceed 75% for inclusion in MedGemma's prompt; below-threshold readings trigger a localized ⚠ warning prompting the CHW to re-capture in better conditions. When MedGemma is unavailable, the app displays a transparency banner identifying the triage as guideline-based (WHO/IMCI) with actionable recovery steps — all in the CHW's selected language.
 
-Safety: 6-layer `PromptSanitizer` at every model boundary (zero-width stripping, homoglyph normalization, base64 detection, regex patterns, character allowlist, delimiter wrapping). Auto-pause at 42°C. Always-on "Consult a healthcare professional" disclaimer.
+Safety: 6-layer `PromptSanitizer` at every model boundary (zero-width stripping, homoglyph normalization, base64 detection, regex patterns, character allowlist, delimiter wrapping). Auto-pause at 42°C. Always-on "Consult a healthcare professional" disclaimer. *Note on CVE-2025-69872 (`diskcache`): Since the HuggingFace Hub client pins `diskcache`, our optional inference API implements strict local directory restrictions and cache partitioning to mitigate unauthorized cache injection.*
 
 46 Pan-African languages (14 clinically verified): ML Kit on-device for supported national languages (100% offline). Unsupported indigenous languages trigger a UI connectivity alert and use Cloud Translate fallback mechanics; all final reasoning occurs entirely on-device in English.
 

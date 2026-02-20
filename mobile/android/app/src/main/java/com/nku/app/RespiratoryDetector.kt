@@ -246,10 +246,10 @@ class RespiratoryDetector(private val context: Context? = null) {
      */
     private fun discoverViTLEncoder() {
         val ctx = context ?: return
-        val searchPaths = listOf(
+        val searchPaths = listOfNotNull(
             File(ctx.filesDir, VIT_L_MODEL_FILENAME),
-            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), VIT_L_MODEL_FILENAME),
-            File(ctx.getExternalFilesDir(null), VIT_L_MODEL_FILENAME)
+            ctx.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.let { File(it, VIT_L_MODEL_FILENAME) },
+            ctx.getExternalFilesDir(null)?.let { File(it, VIT_L_MODEL_FILENAME) }
         )
 
         for (path in searchPaths) {

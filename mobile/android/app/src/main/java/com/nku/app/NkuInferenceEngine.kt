@@ -151,10 +151,6 @@ class NkuInferenceEngine(private val context: Context) {
         // Include both shared Download and app-specific external dirs.
         val expectedHash = if (modelFileName == MEDGEMMA_MODEL) MEDGEMMA_SHA256 else null
         val externalCandidates = buildList<Pair<String, File>> {
-            add("sdcard/download" to File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                modelFileName
-            ))
             context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.let {
                 add("app-external/downloads" to File(it, modelFileName))
             }

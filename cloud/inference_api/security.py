@@ -41,7 +41,7 @@ class InputValidator:
     # Twi/Akan: both 'ak' (ISO 639-1) and 'twi' (ISO 639-2) are accepted
     ALLOWED_LANGUAGES = {
         'en', 'twi', 'ak', 'yo', 'ha', 'sw', 'ewe', 'ee', 'ga', 'ig', 'zu', 'xh',
-        'am', 'or', 'ti', 'so', 'fr', 'pt', 'ar'
+        'am', 'om', 'ti', 'so', 'fr', 'pt', 'ar'
     }
 
     # Language code aliases: Twi=Akan, normalize to canonical form

@@ -20,16 +20,16 @@ class ModelIntegrationInstrumentedTest {
 
     @Test
     fun medGemma_sideloadedModel_isDiscoverableAndTrusted() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         val modelFile = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+            context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
             "medgemma-4b-it-q4_k_m.gguf"
         )
         assumeTrue(
-            "Requires a sideloaded MedGemma GGUF in /sdcard/Download/",
+            "Requires a sideloaded MedGemma GGUF in app-specific external downloads directory",
             modelFile.exists() && modelFile.length() >= 1024L * 1024L * 1024L
         )
 
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
         val engine = NkuInferenceEngine(context)
         assertTrue("Sideloaded MedGemma model should be detected as ready", engine.areModelsReady())
     }

@@ -478,13 +478,19 @@ def translate():
 
     source_result = input_validator.validate_language(source_lang)
     if not source_result.is_valid:
-        source_lang = 'twi'  # Default to Twi if invalid
+        return jsonify({
+            'error': 'validation_error',
+            'message': source_result.errors[0]
+        }), 400
     else:
         source_lang = source_result.sanitized_value
 
     target_result = input_validator.validate_language(target_lang)
     if not target_result.is_valid:
-        target_lang = 'en'  # Default to English if invalid
+        return jsonify({
+            'error': 'validation_error',
+            'message': target_result.errors[0]
+        }), 400
     else:
         target_lang = target_result.sanitized_value
 

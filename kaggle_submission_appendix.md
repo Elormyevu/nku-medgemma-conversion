@@ -708,6 +708,8 @@ All four detectors produce structured result objects with derived scores, confid
 
 ### F.2: Heart Rate — Remote Photoplethysmography (rPPG)
 
+**Clinical Validation & Architectural Value:** The rPPG pipeline extracts a fundamental vital sign without requiring external pulse oximetry hardware. Empirical research confirms that smartphone-based rPPG, particularly when optimizing the green channel to measure hemoglobin absorption, offers robust accuracy for continuous heart rate monitoring [10, 11, 12]. In the context of Nku's triage engine, providing an accurate BPM reading helps MedGemma contextualize other symptoms (e.g., differentiating anemia with compensatory tachycardia from simple fatigue).
+
 Source file: `RPPGProcessor.kt`
 
 | Stage | Technique | Detail |
@@ -739,8 +741,6 @@ Heart rate: 72 bpm (normal range: 50-100 bpm)
 Signal quality: good
 Confidence: 87%
 ```
-
-**Clinical Validation & Architectural Value:** The rPPG pipeline extracts a fundamental vital sign without requiring external pulse oximetry hardware. Empirical research confirms that smartphone-based rPPG, particularly when optimizing the green channel to measure hemoglobin absorption, offers robust accuracy for continuous heart rate monitoring [10, 11, 12]. In the context of Nku's triage engine, providing an accurate BPM reading helps MedGemma contextualize other symptoms (e.g., differentiating anemia with compensatory tachycardia from simple fatigue).
 
 
 ---

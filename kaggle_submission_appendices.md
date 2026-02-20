@@ -355,6 +355,8 @@ Important preventive measures:
 
 ## Appendix B: Supported Languages (46 Total)
 
+*Note: While Google's ML Kit Translation API supports 59 global languages overall, Nku specifically curates a list of 46 African official, national, and indigenous languages relevant to its deployment context in Sub-Saharan Africa. The remaining 13 ML Kit languages are primarily European/Asian and are intentionally excluded from the CHW's language selector.*
+
 ### Tier 1: Clinically Verified (14 languages)
 
 | Language | ISO | Region | Speakers |

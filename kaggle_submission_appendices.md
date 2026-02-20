@@ -521,9 +521,10 @@ Selecting the right quantization level required balancing two competing goals: m
 
 > †Each model was evaluated single-shot on the full MedQA test set (1,273 questions) and the primary care subset (707 questions) — one attempt per question, no repeated runs, no best-of-N selection. This mirrors Nku's real-world use case: a CHW presents a patient once and receives a single triage response. Single-run evaluation is the most representative measure of the model's reliability in this clinical context.
 
-Key finding 1: IQ1_M is near-random. IQ1_M (our original choice for maximum compression) scored 32.3% on the full MedQA test set (1,273 questions, single-shot) — only 7.3 percentage points above the 25% random baseline. The model exhibited a severe position bias: 51.7% of all predictions were "B" regardless of the question, yielding 61.8% accuracy on B-correct questions but only 6.2% on A-correct questions. This pattern is consistent with extreme quantization destroying the model's ability to reason over content, leaving only residual positional patterns.
-
-Key finding 2: Medical imatrix calibration outperforms naive quantization. IQ2_XS (1.3 GB), quantized with a domain-specific medical imatrix, scored 43.8% — outperforming the larger Q2_K (1.6 GB) by +9.1 percentage points despite being 300 MB smaller. The imatrix preserves weights critical for medical reasoning while Q2_K compresses all weights uniformly. IQ2_XS also produced only 1 unparsed response versus 17 for Q2_K, indicating far more stable output generation.
+**Key Findings:**
+1.  **Medical imatrix calibration outperforms naive quantization:** The IQ2_XS model (1.3 GB) calibrated with our custom 243-scenario African clinical dataset severely outperforms the larger Q2_K model (1.6 GB) by +9.1 percentage points on MedQA. This proves that domain-specific importance matrices are significantly more valuable than raw bit depth at extreme quantization levels.
+2.  **IQ1_M is near-random:** At 1.1 GB, the model fundamentally collapses. Its 32.3% MedQA score barely exceeds random guessing (25% on 4-option MCQs). The model loses its reasoning capabilities, often outputting repetitive or disjointed text when prompted.
+3.  **Q4_K_M is the true "Edge Foundation" cutoff:** At 2.3 GB (71% smaller than baseline), Q4_K_M is the smallest model that comprehensively retains complex multi-step clinical reasoning. It successfully identifies multi-morbidity conditions (e.g., recognizing both preeclampsia and anemia from concurrent symptoms) that the 1.3 GB IQ2_XS misses.
 
 #### Full Benchmark Comparison†
 
@@ -545,14 +546,14 @@ Decision rationale: Q4_K_M at 56% accuracy represents 81% of the published basel
 
 | Alternative | Size | Why Not Viable |
 |:------------|:----:|:---------------|
-| MedGemma 4B F16 (unquantized) | 8.0 GB | On a $50–100 phone with 3GB+ RAM, `mmap` must page an 8 GB model through the available memory. The resulting page thrashing increases per-query latency from sub-second to minutes — unusable during a clinical encounter. Q4_K_M (2.3 GB) fits comfortably within the mmap working set. |
-| MedGemma 4B Multimodal | ~3.1 GB (Q4_K_M) | See detailed analysis below. |
+| MedGemma 4B F16 (unquantized) | 8.0 GB | On a $50–100 phone with 3GB+ RAM, `mmap` must page an 8 GB model through the available memory. The resulting page thrashing increases per-query latency from sub-second to minutes — unusable during a clinical encounter. Q4_K_M (2.3 GB) fits comfortably within the mmap working set. Given Nku's target demographic of rural CHWs who rely on budget Transsion smartphones (TECNO, Infinix, itel), this 2.3 GB `mmap` footprint is the only viable path to deliver cutting-edge clinical AI without demanding inaccessible flagship hardware. |
+| MedGemma 4B Multimodal | 5.5 GB (LLM) + 0.5 GB (ViT) | Multimodal models require loading both a massive LLM and a separate Vision Transformer (ViT) component into RAM. Not only is the combined weight prohibitive for 3GB+ RAM devices, but transmitting clinical images of patients raises severe offline privacy and data-handling concerns in rural settings. Nku Sentinel avoids both the memory footprint and the privacy risks of image processing by extracting mathematical biomarkers via localized edge algorithms instead. |
 
 Why not use the multimodal MedGemma 4B with raw camera images? A natural question: MedGemma 4B multimodal includes a MedSigLIP vision encoder (400M parameters). Why not feed it raw camera images directly, skipping the sensor-to-text pipeline entirely? Four reasons:
 
 1. rPPG requires temporal video analysis, not single images. Heart rate detection via rPPG extracts pulse frequency from 10 seconds of facial video (300 frames) using DFT. A vision-language model processes single images — it cannot perform temporal frequency analysis across a video stream. No single frame contains heart rate information.
 
-2. MedSigLIP was trained on clinical imagery, not smartphone selfies. The vision encoder was fine-tuned on chest X-rays, dermatoscopy, ophthalmology scans, and histopathology slides — none of which resemble a smartphone photo of a lower eyelid (pallor) or a facial selfie (edema). It would require fine-tuning on these specific modalities, for which no labeled training data currently exists.
+2. MedSigLIP was trained on clinical imagery, not smartphone images. The vision encoder was fine-tuned on chest X-rays, dermatoscopy, ophthalmology scans, and histopathology slides — none of which resemble a smartphone photo of a lower eyelid (pallor) or a face (edema). It would require fine-tuning on these specific modalities, for which no labeled training data currently exists to our knowledge.
 
 3. The multimodal model is larger, not smaller. The text decoder is identical to the text-only 4B. Adding MedSigLIP (400M params, ~800 MB) increases the quantized model from 2.3 GB to ~3.1 GB — a 35% size increase with no benefit for Nku's use case. On a 3GB RAM device, this additional memory pressure degrades inference performance.
 

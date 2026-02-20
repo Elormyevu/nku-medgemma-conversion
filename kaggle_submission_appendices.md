@@ -535,7 +535,7 @@ Key finding 2: Medical imatrix calibration outperforms naive quantization. IQ2_X
 
 > †Single-pass evaluation — see methodology note above.
 
-Decision rationale: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The Q4_K_M model is a standard quantization (from [mradermacher/medgemma-4b-it-GGUF](https://huggingface.co/mradermacher/medgemma-4b-it-GGUF)). The other three quantization levels (IQ1_M, Q2_K, IQ2_XS) were benchmarked to validate our model selection: they confirmed that aggressive quantization below Q4 degrades accuracy below clinically useful thresholds, and that domain-specific imatrix calibration (applied to IQ2_XS) is essential at lower bit rates. Only Q4_K_M is deployed in the Nku application. With `mmap` memory mapping, the 2.3 GB Q4_K_M model runs on 2–3 GB RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
+Decision rationale: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The Q4_K_M model is a standard quantization (from [mradermacher/medgemma-4b-it-GGUF](https://huggingface.co/mradermacher/medgemma-4b-it-GGUF)). The other three quantization levels (IQ1_M, Q2_K, IQ2_XS) were benchmarked to validate our model selection: they confirmed that aggressive quantization below Q4 degrades accuracy below clinically useful thresholds, and that domain-specific imatrix calibration (applied to IQ2_XS) is essential at lower bit rates. Only Q4_K_M is deployed in the Nku application. With `mmap` memory mapping, the 2.3 GB Q4_K_M model runs on 3GB+ RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
 
 > imatrix representativeness: The 243 scenarios cover WHO/IMCI triage conditions accounting for >80% of CHW encounters in Sub-Saharan Africa. The imatrix was used for the IQ2_XS quantization experiment — its purpose is weight importance estimation, identifying which model weights are most critical for the deployment vocabulary (malaria, anemia, pneumonia, maternal health terms across 14+ languages). This is a quantization calibration technique, not clinical training data; 243 scenarios across 8 condition categories and 14 languages provides sufficient diversity for weight importance ranking. The deployed Q4_K_M does not use this imatrix.
 
@@ -543,7 +543,7 @@ Decision rationale: Q4_K_M at 56% accuracy represents 81% of the published basel
 
 | Alternative | Size | Why Not Viable |
 |:------------|:----:|:---------------|
-| MedGemma 4B F16 (unquantized) | 8.0 GB | On a $50–100 phone with 2–3 GB RAM, `mmap` must page an 8 GB model through ~2 GB of available memory. The resulting page thrashing increases per-query latency from sub-second to minutes — unusable during a clinical encounter. Q4_K_M (2.3 GB) fits comfortably within the mmap working set. |
+| MedGemma 4B F16 (unquantized) | 8.0 GB | On a $50–100 phone with 3GB+ RAM, `mmap` must page an 8 GB model through the available memory. The resulting page thrashing increases per-query latency from sub-second to minutes — unusable during a clinical encounter. Q4_K_M (2.3 GB) fits comfortably within the mmap working set. |
 | MedGemma 4B Multimodal | ~3.1 GB (Q4_K_M) | See detailed analysis below. |
 
 Why not use the multimodal MedGemma 4B with raw camera images? A natural question: MedGemma 4B multimodal includes a MedSigLIP vision encoder (400M parameters). Why not feed it raw camera images directly, skipping the sensor-to-text pipeline entirely? Four reasons:
@@ -552,7 +552,7 @@ Why not use the multimodal MedGemma 4B with raw camera images? A natural questio
 
 2. MedSigLIP was trained on clinical imagery, not smartphone selfies. The vision encoder was fine-tuned on chest X-rays, dermatoscopy, ophthalmology scans, and histopathology slides — none of which resemble a smartphone photo of a lower eyelid (pallor) or a facial selfie (edema). It would require fine-tuning on these specific modalities, for which no labeled training data currently exists.
 
-3. The multimodal model is larger, not smaller. The text decoder is identical to the text-only 4B. Adding MedSigLIP (400M params, ~800 MB) increases the quantized model from 2.3 GB to ~3.1 GB — a 35% size increase with no benefit for Nku's use case. On a 2 GB RAM device, this additional memory pressure degrades inference performance.
+3. The multimodal model is larger, not smaller. The text decoder is identical to the text-only 4B. Adding MedSigLIP (400M params, ~800 MB) increases the quantized model from 2.3 GB to ~3.1 GB — a 35% size increase with no benefit for Nku's use case. On a 3GB RAM device, this additional memory pressure degrades inference performance.
 
 4. Structured numerical input outperforms ambiguous visual input. Nku's sensor pipeline outputs precise, quantified biomarkers (HR: 108 BPM, conjunctival saturation: 0.08, EAR: 2.15) with confidence scores and clinical context. Feeding the model a raw photo and asking "does this patient have anemia?" yields far less reliable results than providing "conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10), pallor index: 0.68, severity: MODERATE." The structured prompting approach achieves a median 53% improvement over zero-shot baselines [9].
 
@@ -935,7 +935,7 @@ MedQA is used as a relative benchmark for quantization comparison — not as an 
 
 [6] GSMA. *The Mobile Economy Sub-Saharan Africa 2023*. GSMA Intelligence, 2023.
 
-[7] TECNO Mobile. TECNO Pop 8 specifications. tecnoghana.com, 2024. 2GB/3GB/4GB RAM variants; ~$60 USD (2GB) to ~$90 USD (4GB) depending on market. See also: TECNO Spark Go 2024, 3-4GB RAM, ~$89-98 USD.
+[7] TECNO Mobile. TECNO Pop 8 specifications. tecnoghana.com, 2024. 3GB+ RAM variants; ~$60 USD (3GB) to ~$90 USD (4GB) depending on market. See also: TECNO Spark Go 2024, 3GB+ RAM, ~$89-98 USD.
 
 [8] Canalys. *Africa Smartphone Market 2024*. Canalys Research, 2025. Transsion Holdings (TECNO, Infinix, itel) held 51% smartphone market share in Africa, shipping ~37.9 million units.
 

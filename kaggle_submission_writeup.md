@@ -12,7 +12,7 @@ In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people — f
 
 Powerful clinical AI models exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, 25% of rural Africans lack mobile broadband entirely [6]. Cloud-based AI is impractical where it is needed most.
 
-Target user: A CHW in rural Ghana with a $60–100 TECNO or Infinix phone (3–4GB RAM) and no stable internet [7]. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral. Transsion brands (TECNO, Infinix, itel) hold >50% of the African smartphone market [8].
+Target user: A CHW in rural Ghana with a $60–100 TECNO or Infinix phone (3GB+ RAM) and no stable internet [7]. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral. Transsion brands (TECNO, Infinix, itel) hold >50% of the African smartphone market [8].
 
 Impact: Nku demonstrates that AI-powered clinical triage on budget smartphones is technically feasible. Deployment pathway: Pilot with 5–10 CHWs in rural Ghana → threshold calibration → Ghana Health Service partnerships → Play Asset Delivery distribution (where the 2.3GB MedGemma model, quantized to Q4_K_M, is automatically downloaded at install time alongside the Nku Android app).
 
@@ -49,7 +49,7 @@ This structured prompting achieves a median 53% improvement over zero-shot basel
 
 ### Technical details
 
-Edge AI — Quantization & Memory: We achieve 71% model size reduction (8GB → 2.3GB) via Q4_K_M quantization while retaining 81% of MedQA accuracy (56% quantized vs. 69% unquantized baseline). The model runs on 3–4GB RAM devices via `mmap` — the OS pages model data on demand, so peak resident memory adapts to available RAM. We systematically benchmarked four quantization levels:
+Edge AI — Quantization & Memory: We achieve 71% model size reduction (8GB → 2.3GB) via Q4_K_M quantization while retaining 81% of MedQA accuracy (56% quantized vs. 69% unquantized baseline). The model runs on 3GB+ RAM devices via `mmap` — the OS pages model data on demand, so peak resident memory adapts to available RAM. We systematically benchmarked four quantization levels:
 
 | Quant | Size | MedQA | Primary Care | Verdict |
 |:------|:----:|:---------------:|:--------------------:|:--------|
@@ -84,7 +84,7 @@ Safety: 6-layer `PromptSanitizer` at every model boundary (zero-width stripping,
 
 ---
 
-Prize Track: Main + Edge AI — Q4_K_M compression (8GB→2.3GB), mmap loading on $60–100 phones (3–4GB RAM), llama.cpp JNI (NDK 29, ARM64 NEON), systematic 4-level quantization benchmark (IQ2_XS with medical imatrix calibration), 100% on-device inference with MedGemma bundled via Play Asset Delivery (2.3GB, install-time). Novel Task — CHW-initiated respiratory screening via HeAR on-device: Event Detector (MobileNetV3-Small, 1.1MB INT8 TFLite) classifies 8 health sound events in ~50ms, with risk scores and event classes fed to MedGemma for TB/COPD/pneumonia triage. The codebase includes full architectural support for HeAR’s ViT-L encoder (512-dim embedding extraction via ONNX Runtime Mobile, on-demand loading, sequential RAM management) as a documented upgrade path — currently blocked by the ViT-L’s XlaCallModule/StableHLO format lacking mobile conversion tooling.
+Prize Track: Main + Edge AI — Q4_K_M compression (8GB→2.3GB), mmap loading on $60–100 phones (3GB+ RAM), llama.cpp JNI (NDK 29, ARM64 NEON), systematic 4-level quantization benchmark (IQ2_XS with medical imatrix calibration), 100% on-device inference with MedGemma bundled via Play Asset Delivery (2.3GB, install-time). Novel Task — CHW-initiated respiratory screening via HeAR on-device: Event Detector (MobileNetV3-Small, 1.1MB INT8 TFLite) classifies 8 health sound events in ~50ms, with risk scores and event classes fed to MedGemma for TB/COPD/pneumonia triage. The codebase includes full architectural support for HeAR’s ViT-L encoder (512-dim embedding extraction via ONNX Runtime Mobile, on-demand loading, sequential RAM management) as a documented upgrade path — currently blocked by the ViT-L’s XlaCallModule/StableHLO format lacking mobile conversion tooling.
 
 Open source: Nku is fully open source under the Apache License 2.0 (compatible with the competition's CC BY 4.0 requirement — Apache 2.0 is strictly more permissive). Source code, scripts, and calibration data on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion). Quantized model weights on [HuggingFace](https://huggingface.co/wredd/medgemma-4b-gguf) (subject to Google Gemma Terms of Use).
 

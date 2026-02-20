@@ -29,13 +29,13 @@ The Nku Cycle is a multi-stage orchestration pipeline where MedGemma serves as t
 | Stage | Component | Size | Function |
 |:------|:------|:----:|:---------|
 | 1. Sense | Nku Sentinel (5 detectors) | 0 MB | Camera + microphone → structured vital signs |
-| 2. Translate | Android ML Kit | ~30MB/lang | Translates 59 supported local languages → English |
+| 2. Translate | Android ML Kit (On-Device) / Google Cloud Translate (Fallback) | ~30MB/lang / 0 MB | Translates 59 supported local languages to English (offline). Unsupported indigenous languages fall back to Cloud Translate (requires connectivity). |
 | 3. Reason | MedGemma 4B (Q4_K_M) | 2.3GB | Clinical reasoning on symptoms + sensor data |
-| 4. Translate | Android ML Kit | ~30MB/lang | English → supported local language output (else English output retained) |
+| 4. Translate | Android ML Kit / Google Cloud Translate | ~30MB/lang / 0 MB | English → supported local language output (offline) or indigenous language (online) |
 | 5. Speak | Android System TTS | 0 MB | Spoken result in local language |
 | Fallback | WHO/IMCI rules | 0 MB | Deterministic triage if MedGemma unavailable |
 
-Each stage operates independently. Built-in safety checks (confidence gating, thermal management) automatically reroute to WHO/IMCI rule-based triage if sensor data is unreliable or the device overheats. All medical inference is 100% on-device. ML Kit provides on-device translation for 59 languages; to ensure clinical safety, MedGemma strictly reasons over English prompts. CHWs are trained in their national official languages (e.g., English, French, Portuguese), all of which are fully supported offline.
+Each stage operates independently. Built-in safety checks automatically reroute to WHO/IMCI rule-based triage if sensor data is unreliable or the device overheats. All medical inference by MedGemma is 100% on-device and strictly reasons over English prompts for clinical safety. ML Kit provides on-device translation for 59 languages, ensuring that since CHWs are trained in their national official languages (e.g., English, French, Portuguese), a comprehensive 100% offline triage path is guaranteed. If a CHW selects an unsupported indigenous language, the app displays a prominent UI alert that internet connectivity is required, and routes the translation through a Google Cloud Translate fallback.
 
 Before/after — why structured prompting matters: MedGemma was trained on clinical text, not smartphone sensor data. A naive prompt like *"the patient looks pale and her eyes are puffy"* yields generic advice. Nku's `ClinicalReasoner` instead feeds MedGemma quantified biomarkers with methodology and confidence:
 
@@ -80,7 +80,7 @@ All screening modalities are deliberately skin-tone independent — critical for
 
 Safety: 6-layer `PromptSanitizer` at every model boundary (zero-width stripping, homoglyph normalization, base64 detection, regex patterns, character allowlist, delimiter wrapping). Auto-pause at 42°C. Always-on "Consult a healthcare professional" disclaimer.
 
-46 Pan-African languages (14 clinically verified): ML Kit on-device for supported languages, with offline pass-through behavior for unsupported languages in the shipped mobile build.
+46 Pan-African languages (14 clinically verified): ML Kit on-device for supported national languages (100% offline). Unsupported indigenous languages trigger a UI connectivity alert and use Cloud Translate fallback mechanics; all final reasoning occurs entirely on-device in English.
 
 ---
 

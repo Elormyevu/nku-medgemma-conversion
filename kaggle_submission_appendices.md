@@ -568,10 +568,10 @@ We also evaluated TranslateGemma 4B as an on-device translation model before sel
 
 | Approach | Size | African Language Support | RAM Impact | Offline |
 |:---------|:----:|:------------------------:|:----------:|:-------:|
-| TranslateGemma 4B (Q4_K_M) | 2.3 GB | Twi/Akan: ❌ broken | +2.3 GB (sequential load) | ✅ |
-| TranslateGemma 4B (IQ1_M) | 0.78 GB | Twi/Akan: ❌ broken | +0.78 GB (sequential load) | ✅ |
-| Android ML Kit | ~30 MB/lang | 59 languages on-device | Negligible (separate process) | ✅ (official langs) |
-| Google Cloud Translate | 0 MB | 100+ languages | None | ❌ (requires internet) |
+| TranslateGemma 4B (Q4_K_M) | 2.3 GB | Twi/Akan: broken | +2.3 GB (sequential load) | Supported |
+| TranslateGemma 4B (IQ1_M) | 0.78 GB | Twi/Akan: broken | +0.78 GB (sequential load) | Supported |
+| Android ML Kit | ~30 MB/lang | 59 languages on-device | Negligible (separate process) | Supported (official langs) |
+| Google Cloud Translate | 0 MB | 100+ languages | None | Unsupported (requires internet) |
 
 Key finding: TranslateGemma could not translate Twi/Akan (a major Ghanaian language) at any quantization level — this was a base model limitation, not a quantization artifact. We benchmarked all 31 African languages across Q4_K_M and Q3_K_M and found significant gaps.
 
@@ -887,7 +887,7 @@ Beyond sensor data, the prompt includes:
 Nku implements five independent safety layers to minimize risk from incorrect triage output:
 
 ### Layer 1: Confidence Gating
-Sensor readings below 75% confidence are excluded from MedGemma's prompt (marked `[LOW CONFIDENCE — excluded from assessment]`). If all sensors are below threshold and no symptoms are entered, triage abstains entirely — no MedGemma call is made. This prevents the LLM from reasoning on unreliable data. The CHW sees a localized ⚠ warning on the capture screen prompting re-capture in better conditions.
+Sensor readings below 75% confidence are excluded from MedGemma's prompt (marked `[LOW CONFIDENCE — excluded from assessment]`). If all sensors are below threshold and no symptoms are entered, triage abstains entirely — no MedGemma call is made. This prevents the LLM from reasoning on unreliable data. The CHW sees a localized warning on the capture screen prompting re-capture in better conditions.
 
 ### Layer 2: WHO/IMCI Rule-Based Fallback
 If MedGemma is unavailable (device overheating at >42°C, model loading failure, thermal throttling), `ClinicalReasoner.createRuleBasedAssessment()` provides deterministic triage based on WHO Integrated Management of Childhood Illness (IMCI) flowcharts. This ensures triage continues even without the LLM. A localized transparency banner identifies the result as "Guideline-Based Triage" and provides recovery steps (e.g., close background apps, restart Nku) — all in the CHW's selected language.

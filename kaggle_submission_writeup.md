@@ -14,7 +14,7 @@ Powerful clinical AI models exist, but require reliable cloud connectivity. In r
 
 Target user: A CHW in rural Ghana with a $60–100 TECNO or Infinix phone (3–4GB RAM) and no stable internet [7]. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral. Transsion brands (TECNO, Infinix, itel) hold >50% of the African smartphone market [8].
 
-Impact: Nku demonstrates that AI-powered clinical triage on budget smartphones is technically feasible. Deployment pathway: Pilot with 5–10 CHWs in rural Ghana → threshold calibration → Ghana Health Service partnerships → Play Asset Delivery distribution.
+Impact: Nku demonstrates that AI-powered clinical triage on budget smartphones is technically feasible. Deployment pathway: Pilot with 5–10 CHWs in rural Ghana → threshold calibration → Ghana Health Service partnerships → Play Asset Delivery distribution (where the 2.3GB MedGemma model is automatically downloaded at install time alongside the Nku Android app).
 
 ### Overall solution
 

@@ -305,27 +305,19 @@ fun NkuSentinelApp(
                         onRunTriage = {
                             sensorFusion.updateVitalSigns()
                             val currentVitals = sensorFusion.vitalSigns.value
-                            if (nkuEngine.areModelsReady()) {
-                                // MedGemma available — run direct inference (skip translation)
-                                // P1 fix: the prompt is already structured English from generatePrompt(),
-                                // so we use runMedGemmaOnly() to avoid re-translating instruction tokens
-                                scope.launch {
-                                    val prompt = clinicalReasoner.generatePrompt(currentVitals)
-                                    val medGemmaResponse = nkuEngine.runMedGemmaOnly(prompt)
-                                    if (medGemmaResponse != null) {
-                                        clinicalReasoner.parseMedGemmaResponse(
-                                            medGemmaResponse, currentVitals
-                                        )
-                                    } else {
-                                        // MedGemma failed — fall back to rule-based triage
-                                        clinicalReasoner.createRuleBasedAssessment(currentVitals)
-                                    }
-
+                            // Always attempt MedGemma first.
+                            // If the model is missing, NkuInferenceEngine now tries reviewer fallback download.
+                            // Any failure still degrades safely to deterministic WHO/IMCI rule-based triage.
+                            scope.launch {
+                                val prompt = clinicalReasoner.generatePrompt(currentVitals)
+                                val medGemmaResponse = nkuEngine.runMedGemmaOnly(prompt)
+                                if (medGemmaResponse != null) {
+                                    clinicalReasoner.parseMedGemmaResponse(
+                                        medGemmaResponse, currentVitals
+                                    )
+                                } else {
+                                    clinicalReasoner.createRuleBasedAssessment(currentVitals)
                                 }
-                            } else {
-                                // Models not sideloaded — use rule-based triage
-                                clinicalReasoner.createRuleBasedAssessment(currentVitals)
-
                             }
                         }
                     )

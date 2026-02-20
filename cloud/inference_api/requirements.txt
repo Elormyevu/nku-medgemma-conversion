@@ -13,6 +13,9 @@ Werkzeug==3.1.5
 # LLM inference
 llama-cpp-python==0.3.4
 huggingface-hub==0.27.1
+# Transitive llama-cpp dependency. No patched upstream release currently exists for
+# CVE-2025-69872; runtime mitigation is enforced via process-private cache dir.
+diskcache==5.6.3
 
 # Observability (Redis optional — used for distributed rate limiting)
 # redis>=5.0.0  # Uncomment if deploying with Cloud Memorystore

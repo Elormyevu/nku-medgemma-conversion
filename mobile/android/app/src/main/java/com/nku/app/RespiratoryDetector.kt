@@ -173,12 +173,21 @@ class RespiratoryDetector(private val context: Context? = null) {
 
     // ViT-L ONNX encoder availability
     private var vitLModelPath: String? = null
+    private var modelsInitialized: Boolean = false
 
     init {
+        // Intentionally defer model discovery/loading until first respiratory run.
+        // This removes respiratory model cost from cold start when user never opens that screen.
+    }
+
+    @Synchronized
+    private fun ensureModelsInitialized() {
+        if (modelsInitialized) return
         if (context != null) {
             loadModel()
             discoverViTLEncoder()
         }
+        modelsInitialized = true
     }
 
     /**
@@ -285,6 +294,8 @@ class RespiratoryDetector(private val context: Context? = null) {
         }
 
         try {
+            ensureModelsInitialized()
+
             // Step 1: Convert to float and normalize
             val floatSamples = normalizeAudio(audioBuffer)
 
@@ -366,6 +377,8 @@ class RespiratoryDetector(private val context: Context? = null) {
 
         return withContext(Dispatchers.Default) {
             try {
+                ensureModelsInitialized()
+
                 // Step 1: Preprocess audio
                 val floatSamples = normalizeAudio(audioBuffer)
                 val resampled = if (sampleRate != TARGET_SAMPLE_RATE) {

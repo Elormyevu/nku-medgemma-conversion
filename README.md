@@ -39,7 +39,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 ## 💡 The Solution
 
-**Nku** ("eye" in Ewe) is designed to turn any $60-100 Android phone into an offline clinical triage engine. It is a **proof-of-concept edge system** — 100% on-device inference, zero cloud dependency for clinical reasoning.
+**Nku** ("eye" in Ewe) is designed to turn any $60+ Android phone into an offline clinical triage engine. It is a **proof-of-concept edge system** — 100% on-device inference, zero cloud dependency for clinical reasoning.
 
 | What | How |
 |:-----|:----|
@@ -47,7 +47,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 | **On-Device Translation** | ML Kit for 59 languages (incl. English, French, Portuguese); unsupported languages pass through unchanged in offline mode |
 | **Ultra-Compressed** | 8GB → ~2.3GB via Q4_K_M quantization (56% MedQA on quantized model, vs. 69% unquantized) |
 | **Pan-African Languages** | 46 languages including Ewe, Hausa, Yoruba, Swahili |
-| **Budget Hardware** | Runs on $60–100 Android phones (3–4GB RAM, TECNO/Infinix) via mmap |
+| **Budget Hardware** | Runs on $60+ Android phones (3–4GB RAM, TECNO/Infinix) via mmap |
 | **Camera + Mic Screening** | Heart rate, anemia, jaundice, preeclampsia via camera; TB/respiratory via HeAR Event Detector (1.1MB TFLite); ViT-L encoder upgrade path architecturally complete but blocked by XLA/StableHLO conversion |
 
 ---
@@ -135,7 +135,7 @@ The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED
 ## 🚀 Quick Start
 
 > [!WARNING]
-> **Reviewer/Auditor Notice**: Direct APK installations (`app-debug.apk` or `app-release-unsigned.apk`) **DO NOT** contain the 2.3GB MedGemma model due to Android's APK size limits. The model is distributed via Play Asset Delivery in the `.aab` release bundle. If you are reviewing the app via direct APK installation, you **MUST** follow the [Models sideloading instructions](#models) below to push the GGUF model to the device manually.
+> **Reviewer/Auditor Notice**: Direct APK installations (`app-debug.apk` or `app-release-unsigned.apk`) **DO NOT** contain the 2.3GB MedGemma model due to Android's APK size limits. The model is distributed via Play Asset Delivery in the `.aab` release bundle. For direct APK review, either sideload the GGUF model (recommended for offline testing) or allow first-run network fallback download during triage.
 
 ### Prerequisites
 
@@ -165,6 +165,10 @@ All inference models ship with the app via Play Asset Delivery (see `MODEL_DISTR
 ```bash
 # Download MedGemma Q4_K_M from HuggingFace
 huggingface-cli download mradermacher/medgemma-4b-it-GGUF medgemma-4b-it.Q4_K_M.gguf
+
+# Verify checksum (required by app-side trust validation)
+shasum -a 256 medgemma-4b-it.Q4_K_M.gguf
+# Expected: 8bcb19d3e363f7d1ab27f364032436fd702e735a6f479d6bb7b1cf066e76b443
 
 # Push to device (rename to match Kotlin constant)
 adb push medgemma-4b-it.Q4_K_M.gguf /sdcard/Download/medgemma-4b-it-q4_k_m.gguf

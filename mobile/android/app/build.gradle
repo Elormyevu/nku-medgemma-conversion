@@ -21,50 +21,50 @@ configurations.all {
 }
 
 android {
-    namespace 'com.nku.app'
-    compileSdk 35
+    namespace = 'com.nku.app'
+    compileSdk = 35
 
     defaultConfig {
         applicationId "com.nku.app"
-        minSdk 28                                  // F-PF-5: Lowered from 33 to reach ~40% more devices in target demographic
-        targetSdk 35
-        versionCode 1
-        versionName "1.0"
+        minSdk = 28                                  // F-PF-5: Lowered from 33 to reach ~40% more devices in target demographic
+        targetSdk = 35
+        versionCode = 1
+        versionName = "1.0"
         // Required for androidx.test + Compose AndroidJUnit4 instrumentation tests.
         // Without this, Gradle falls back to legacy android.test.InstrumentationTestRunner
         // and connected tests crash before execution.
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled true                  // F-3: Enable R8 code shrinking
-            shrinkResources true                // F-3: Remove unused resources
+            minifyEnabled = true                  // F-3: Enable R8 code shrinking
+            shrinkResources = true                // F-3: Remove unused resources
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            debuggable false
+            debuggable = false
             // F-SEC-3: No cloud URL in release builds (100% on-device inference)
             buildConfigField "String", "NKU_CLOUD_URL", '""'
         }
         debug {
             // Match release for 1:1 production parity
-            minifyEnabled false
-            shrinkResources false
-            debuggable true  // Only difference: debugging enabled
+            minifyEnabled = false
+            shrinkResources = false
+            debuggable = true  // Only difference: debugging enabled
             // F-SEC-3: Cloud URL empty — all inference is 100% on-device
             buildConfigField "String", "NKU_CLOUD_URL", '""'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = '17'
         freeCompilerArgs = ['-Xskip-metadata-version-check']
     }
     buildFeatures {
-        compose true
-        buildConfig true  // F-2: needed for BuildConfig access (debug/release gating)
+        compose = true
+        buildConfig = true  // F-2: needed for BuildConfig access (debug/release gating)
     }
     
     // Don't compress GGUF models - they're already compressed and huge

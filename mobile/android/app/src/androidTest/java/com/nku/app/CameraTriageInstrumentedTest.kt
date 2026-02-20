@@ -3,7 +3,6 @@ package com.nku.app
 import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -30,9 +29,7 @@ class CameraTriageInstrumentedTest {
      * and returns a bounded confidence and severity result.
      */
     @Test
-    fun anemiaScreen_syntheticFrame_producesConfidenceGatedResult() {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-
+    fun cameraPipeline_syntheticFrame_runsRealDetectors() {
         // Create a synthetic 640x480 bitmap simulating a flesh-tone
         // conjunctival image (average RGB for medium skin tone).
         val width = 640
@@ -45,37 +42,52 @@ class CameraTriageInstrumentedTest {
             }
         }
 
-        // Run through the color analysis pipeline that would normally
-        // receive a camera frame. This exercises the same image processing
-        // path as the real camera acquisition.
-        val redChannel = FloatArray(width * height)
-        val greenChannel = FloatArray(width * height)
-        var idx = 0
-        for (y in 0 until height) {
-            for (x in 0 until width) {
-                val pixel = bitmap.getPixel(x, y)
-                redChannel[idx] = Color.red(pixel).toFloat()
-                greenChannel[idx] = Color.green(pixel).toFloat()
-                idx++
+        val pallorDetector = PallorDetector()
+        val jaundiceDetector = JaundiceDetector()
+        val pallorResult = pallorDetector.analyzeConjunctiva(bitmap)
+        jaundiceDetector.analyzeSclera(bitmap)
+        val jaundiceResult = jaundiceDetector.result.value
+
+        assertTrue("Pallor confidence must be bounded", pallorResult.confidence in 0f..1f)
+        assertTrue("Pallor score must be bounded", pallorResult.pallorScore in 0f..1f)
+        assertTrue("Jaundice confidence must be bounded", jaundiceResult.confidence in 0f..1f)
+        assertTrue("Jaundice score must be bounded", jaundiceResult.jaundiceScore in 0f..1f)
+
+        bitmap.recycle()
+    }
+
+    @Test
+    fun sensorFusion_to_clinicalPrompt_handoff_usesProductionClasses() {
+        val pallorDetector = PallorDetector()
+        val jaundiceDetector = JaundiceDetector()
+        val edemaDetector = EdemaDetector()
+        val respiratoryDetector = RespiratoryDetector()
+        val fusion = SensorFusion(
+            rppgProcessor = RPPGProcessor(),
+            pallorDetector = pallorDetector,
+            jaundiceDetector = jaundiceDetector,
+            edemaDetector = edemaDetector,
+            respiratoryDetector = respiratoryDetector
+        )
+        val reasoner = ClinicalReasoner()
+
+        val bitmap = Bitmap.createBitmap(320, 240, Bitmap.Config.ARGB_8888)
+        for (y in 0 until bitmap.height) {
+            for (x in 0 until bitmap.width) {
+                bitmap.setPixel(x, y, Color.rgb(185, 120, 110))
             }
         }
 
-        // Compute average red-to-green ratio (proxy for hemoglobin estimation)
-        val avgRed = redChannel.average()
-        val avgGreen = greenChannel.average()
-        val rgRatio = avgRed / avgGreen
+        // Drive real detectors, then aggregate through production fusion + reasoner.
+        pallorDetector.analyzeConjunctiva(bitmap)
+        jaundiceDetector.analyzeSclera(bitmap)
+        fusion.addSymptom("Persistent headache for 2 days")
+        fusion.updateVitalSigns()
 
-        // Assert the ratio is in a physiologically meaningful range
-        // (healthy conjunctiva typically has R/G > 1.2; pallor < 1.0)
-        assertTrue("R/G ratio $rgRatio should be > 0", rgRatio > 0.0)
-        assertTrue("R/G ratio $rgRatio should be < 5.0", rgRatio < 5.0)
-
-        // Verify confidence gating: a synthetic uniform image should
-        // produce low confidence (no texture/vessel patterns)
-        val pixelVariance = redChannel.map { (it - avgRed) * (it - avgRed) }.average()
-        // Uniform synthetic image → near-zero variance → low confidence
-        assertTrue("Pixel variance $pixelVariance should be near zero for uniform image",
-            pixelVariance < 1.0)
+        val prompt = reasoner.generatePrompt(fusion.vitalSigns.value)
+        assertTrue(prompt.contains("=== REPORTED SYMPTOMS ==="))
+        assertTrue(prompt.contains("Persistent headache"))
+        assertTrue(prompt.contains("SEVERITY: [LOW/MEDIUM/HIGH/CRITICAL]"))
 
         bitmap.recycle()
     }

@@ -16,7 +16,7 @@ Target user: A CHW in rural Ghana with a $60–100 TECNO or Infinix phone (3GB+ 
 
 Impact & Deployment logistics: Distributing a 2.3GB LLM to a rural clinic is a primary logistical hurdle. We address this via a multi-tiered infrastructure strategy:
 1. **Pilot Sideloading:** Supervisors provision phones centrally via MDM or side-load the model directly via MicroSD card, requiring zero village internet bandwidth.
-2. **Play Asset Delivery (PAD):** The 50MB core app is installed via the Play Store. It automatically downloads the 2.3GB model as an `install-time` asset when the CHW intercepts 4G/LTE cellular connectivity in larger towns.
+2. **Play Asset Delivery (PAD):** The base app is installed via the Play Store (measured ~140MB delivered on arm64 in the current build; AAB base compressed ~340MB including ABI slices). It automatically downloads the 2.3GB model as an `install-time` asset when the CHW intercepts 4G/LTE cellular connectivity in larger towns.
 3. **Peer-to-Peer Viral Sharing:** African smartphone culture relies on local peer-to-peer file transfer. Only one CHW per clinic needs to download the model via 4G; they can then use Android's native *Nearby Share* or *Xender* to beam the 2.3GB `.gguf` file to other CHWs' offline phones at 30MB/s over ad-hoc local Wi-Fi.
 4. **Zero-Rated Data:** For scaled Ministry of Health rollout, the Google Play download URL is "zero-rated" through partnerships with major MNOs (e.g., MTN, AirtelTigo), ensuring the massive download does not deduct from the CHW's personal cellular data balance.
 
@@ -33,15 +33,15 @@ The Nku Cycle is a multi-stage orchestration pipeline where MedGemma serves as t
 | Stage | Component | Size | Function |
 |:------|:------|:----:|:---------|
 | 1. Sense | Nku Sentinel (5 detectors) | 0 MB | Camera + microphone → structured vital signs |
-| 2. Translate | Android ML Kit (On-Device) / Google Cloud Translate (Fallback) | ~30MB/lang / 0 MB | Translates 59 supported local languages to English (offline). Unsupported indigenous languages fall back to Cloud Translate (requires connectivity). |
+| 2. Translate | Android ML Kit (On-Device) | ~30MB/lang | Translates supported local languages to English offline. Unsupported languages currently pass through unchanged in offline mode. |
 | 3. Reason | MedGemma 4B (Q4_K_M) | 2.3GB | Clinical reasoning on symptoms + sensor data |
-| 4. Translate | Android ML Kit / Google Cloud Translate | ~30MB/lang / 0 MB | English → supported local language output (offline) or indigenous language (online) |
+| 4. Translate | Android ML Kit | ~30MB/lang | English → supported local language output offline; unsupported targets currently return English in offline mode |
 | 5. Speak | Android System TTS | 0 MB | Spoken result in local language |
 | Fallback | WHO/IMCI rules | 0 MB | Deterministic triage if MedGemma unavailable (e.g., <3GB RAM device) |
 
 *Crucially, because optical sensors historically exhibit diagnostic bias against darker skin tones (classified as Types V and VI on the Fitzpatrick skin typing scale), every Nku camera modality in the "Sense" stage is engineered to be "Fitzpatrick-aware" — intentionally bypassing melanin-heavy epidermal layers to ensure equitable accuracy.*
 
-Each stage operates independently. Built-in safety checks act as a failsafe for low-end hardware: if MedGemma cannot load due to RAM constraints (e.g., on a $50 Android device with <3GB RAM) or the device overheats, the system automatically reroutes to a deterministic WHO/IMCI rule-based triage. All medical inference by MedGemma is 100% on-device and strictly reasons over English prompts for clinical safety. ML Kit provides on-device translation for 59 languages, ensuring that since CHWs are trained in their national official languages (e.g., English, French, Portuguese), a comprehensive 100% offline triage path is guaranteed. If a CHW selects an unsupported indigenous language, the app displays a prominent UI alert that internet connectivity is required, and routes the translation through a Google Cloud Translate fallback.
+Each stage operates independently. Built-in safety checks act as a failsafe for low-end hardware: if MedGemma cannot load due to RAM constraints (e.g., on a $50 Android device with <3GB RAM) or the device overheats, the system automatically reroutes to a deterministic WHO/IMCI rule-based triage. All medical inference by MedGemma is 100% on-device and strictly reasons over English prompts for clinical safety. ML Kit provides on-device translation for supported languages in a fully offline path. Unsupported indigenous languages currently pass through untranslated in the shipped mobile build; cloud translation remains an optional backend extension path.
 
 Before/after — why structured prompting matters: MedGemma was trained on clinical text, not smartphone sensor data. A prompt like *"the patient looks pale and her eyes are puffy"* yields generic advice. Nku's `ClinicalReasoner` instead feeds MedGemma quantified biomarkers with methodology and confidence:
 
@@ -87,7 +87,7 @@ All screening modalities are deliberately skin-tone independent — critical for
 
 Safety: 6-layer `PromptSanitizer` at every model boundary (zero-width stripping, homoglyph normalization, base64 detection, regex patterns, character allowlist, delimiter wrapping). Auto-pause at 42°C. Always-on "Consult a healthcare professional" disclaimer.
 
-46 Pan-African languages (14 clinically verified): ML Kit on-device for supported national languages (100% offline). Unsupported indigenous languages trigger a UI connectivity alert and use Cloud Translate fallback mechanics; all final reasoning occurs entirely on-device in English.
+46 Pan-African languages (14 clinically verified): ML Kit on-device for supported national languages (offline). In the current shipped mobile build, unsupported indigenous languages pass through unchanged unless a separate cloud translation backend is integrated.
 
 ---
 

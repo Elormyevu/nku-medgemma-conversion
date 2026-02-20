@@ -27,6 +27,20 @@ import signal
 
 from huggingface_hub import hf_hub_download
 
+# Cache hardening (CVE-2025-69872 mitigation context):
+# Keep all model/cache artifacts in a process-private directory so untrusted
+# users/processes cannot write cache entries that might later be deserialized.
+_secure_cache_root = os.environ.get('NKU_SECURE_CACHE_DIR', '/tmp/nku-cache')
+try:
+    os.makedirs(_secure_cache_root, mode=0o700, exist_ok=True)
+    os.chmod(_secure_cache_root, 0o700)
+except Exception:
+    # Continue with defaults if filesystem policy forbids chmod/chown tweaks.
+    pass
+os.environ.setdefault('XDG_CACHE_HOME', _secure_cache_root)
+os.environ.setdefault('HF_HOME', os.path.join(_secure_cache_root, 'huggingface'))
+os.environ.setdefault('HUGGINGFACE_HUB_CACHE', os.path.join(_secure_cache_root, 'huggingface', 'hub'))
+
 try:
     from llama_cpp import Llama
 except ImportError:
@@ -76,7 +90,7 @@ input_validator = InputValidator()
 rate_limiter = RateLimiter(
     requests_per_minute=config.rate_limit.requests_per_minute,
     requests_per_hour=config.rate_limit.requests_per_hour
-)
+) if config.security.enable_rate_limiting else None
 
 # Optional API key validation (S-04)
 _api_key = os.environ.get('NKU_API_KEY')
@@ -272,6 +286,20 @@ def load_models(
     """
     global medgemma, translategemma
 
+    # If both logical roles point to the same exact model artifact,
+    # reuse a single Llama instance to avoid double memory residency.
+    shared_model_config = (
+        config.model.medgemma_repo == config.model.translategemma_repo and
+        config.model.medgemma_file == config.model.translategemma_file and
+        config.model.medgemma_revision == config.model.translategemma_revision
+    )
+
+    if shared_model_config:
+        if medgemma is not None and translategemma is None:
+            translategemma = medgemma
+        elif translategemma is not None and medgemma is None:
+            medgemma = translategemma
+
     # Fast path: requested models already loaded
     if (
         (not require_medgemma or medgemma is not None) and
@@ -284,6 +312,36 @@ def load_models(
         try:
             if Llama is None and (require_medgemma or require_translategemma):
                 raise RuntimeError("llama_cpp native library is unavailable. Cloud fallback inference cannot proceed.")
+
+            if shared_model_config and (
+                (require_medgemma and medgemma is None) or
+                (require_translategemma and translategemma is None)
+            ):
+                request_logger.info("Loading shared MedGemma/TranslateGemma model once...")
+                hf_token = os.environ.get('HF_TOKEN') or os.environ.get('HUGGINGFACE_TOKEN')
+                shared_path = hf_hub_download(
+                    config.model.medgemma_repo,
+                    config.model.medgemma_file,
+                    revision=config.model.medgemma_revision,
+                    token=hf_token
+                )
+                shared_model = Llama(
+                    model_path=shared_path,
+                    n_ctx=config.model.context_size,
+                    n_gpu_layers=config.model.n_gpu_layers,
+                    n_threads=config.model.n_threads,
+                    verbose=False
+                )
+                medgemma = shared_model
+                translategemma = shared_model
+                request_logger.info("Shared model loaded successfully")
+
+            # Re-apply aliasing after potential shared load.
+            if shared_model_config:
+                if medgemma is not None and translategemma is None:
+                    translategemma = medgemma
+                elif translategemma is not None and medgemma is None:
+                    medgemma = translategemma
 
             if require_medgemma and medgemma is None:
                 request_logger.info("Downloading MedGemma...")

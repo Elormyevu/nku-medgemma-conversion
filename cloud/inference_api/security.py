@@ -610,11 +610,13 @@ class RateLimiter:
         return True, None
 
 
-def rate_limit(limiter: RateLimiter):
+def rate_limit(limiter: Optional[RateLimiter]):
     """Decorator to apply rate limiting to Flask routes."""
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
+            if limiter is None:
+                return f(*args, **kwargs)
             from flask import request, jsonify
 
             is_allowed, error_info = limiter.check_rate_limit(request)

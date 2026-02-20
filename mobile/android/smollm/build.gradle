@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace 'io.shubham0204.smollm'
-    compileSdk 35
-    ndkVersion '29.0.13113456'
+    namespace = 'io.shubham0204.smollm'
+    compileSdk = 35
+    ndkVersion = '29.0.13113456'
 
     defaultConfig {
-        minSdk 26
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        minSdk = 26
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
         externalNativeBuild {
             cmake {
@@ -30,21 +30,21 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = '17'
     }
     externalNativeBuild {
         cmake {
-            path file("src/main/cpp/CMakeLists.txt")
-            version "3.22.1"
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
         }
     }
 }

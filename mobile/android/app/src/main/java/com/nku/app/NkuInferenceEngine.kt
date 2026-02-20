@@ -53,12 +53,16 @@ class NkuInferenceEngine(private val context: Context) {
         // MedGemma 4B Q4_K_M — the only model used for clinical reasoning.
         // Filename matches HuggingFace artifact (hungqbui/medgemma-4b-it-Q4_K_M-GGUF).
         private const val MEDGEMMA_MODEL = "medgemma-4b-it-q4_k_m.gguf"
+        // SHA-256 for the pinned MedGemma Q4_K_M artifact distributed in this repo/PAD pack.
+        // Keep in sync with medgemma/src/main/assets/medgemma-4b-it-q4_k_m.gguf.
+        private const val MEDGEMMA_SHA256 = "8bcb19d3e363f7d1ab27f364032436fd702e735a6f479d6bb7b1cf066e76b443"
         // Translation handled by Android ML Kit (not a GGUF model)
         // HeAR Event Detector: TFLite, ships in app assets (loaded by RespiratoryDetector)
         // HeAR ViT-L encoder: future upgrade — XLA/StableHLO ops block ONNX/TFLite conversion
 
-        // Direct Download URL fallback for Reviewers without PAD (APK install)
-        private const val MEDGEMMA_DOWNLOAD_URL = "https://huggingface.co/hungqbui/medgemma-4b-it-Q4_K_M-GGUF/resolve/main/medgemma-4b-it-q4_k_m.gguf?download=true"
+        // Direct Download URL fallback for Reviewers without PAD (APK install).
+        // Source must match MEDGEMMA_SHA256 to satisfy trust validation.
+        private const val MEDGEMMA_DOWNLOAD_URL = "https://huggingface.co/mradermacher/medgemma-4b-it-GGUF/resolve/main/medgemma-4b-it.Q4_K_M.gguf?download=true"
 
         // Play Asset Delivery pack names → model file mapping
         private val MODEL_PACK_MAP = mapOf(
@@ -83,12 +87,36 @@ class NkuInferenceEngine(private val context: Context) {
     private val assetPackManager by lazy {
         AssetPackManagerFactory.getInstance(context)
     }
+    private data class ValidationCacheEntry(
+        val fileSize: Long,
+        val modifiedTime: Long,
+        val isValid: Boolean
+    )
+    private val sideloadValidationCache = mutableMapOf<String, ValidationCacheEntry>()
+
+    private fun validateSideloadedModel(file: File, expectedSha256: String?): Boolean {
+        val cacheKey = file.absolutePath
+        val currentSize = file.length()
+        val currentMtime = file.lastModified()
+        val cached = sideloadValidationCache[cacheKey]
+        if (cached != null && cached.fileSize == currentSize && cached.modifiedTime == currentMtime) {
+            return cached.isValid
+        }
+
+        val isValid = ModelFileValidator.isValidGguf(file, expectedSha256 = expectedSha256)
+        sideloadValidationCache[cacheKey] = ValidationCacheEntry(
+            fileSize = currentSize,
+            modifiedTime = currentMtime,
+            isValid = isValid
+        )
+        return isValid
+    }
 
     /**
      * Search order for model files:
      * 1. Internal storage (filesDir/models/) — extracted from asset packs on first run
      * 2. Play Asset Delivery pack path — install-time asset packs
-     * 3. External storage (/sdcard/Download/) — dev/testing fallback
+     * 3. External storage candidates — dev/testing fallback
      */
     private fun resolveModelFile(modelFileName: String): File? {
         // Primary: extracted from asset packs (cached in internal storage)
@@ -119,19 +147,32 @@ class NkuInferenceEngine(private val context: Context) {
             }
         }
 
-        // Fallback: /sdcard/Download/ (for development/testing/sideloading)
-        val sdcard = File(Environment.getExternalStoragePublicDirectory(
-            Environment.DIRECTORY_DOWNLOADS), modelFileName)
-        
-        // F9 protection: sideloaded models must match expected cryptographic checksum.
-        // Using placeholder hash. Replace with actual MedGemma Q4_K_M SHA-256 for production sideloading.
-        val expectedHash = if (modelFileName == MEDGEMMA_MODEL) "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" else null
-        
-        if (sdcard.exists() && ModelFileValidator.isValidGguf(sdcard, expectedSha256 = expectedHash)) {
-            Log.i(TAG, "Model found on sdcard: $modelFileName")
-            return sdcard
-        } else if (sdcard.exists()) {
-            Log.w(TAG, "Invalid/corrupt/untrusted GGUF on sdcard: $modelFileName (${sdcard.length()} bytes)")
+        // Fallback: external storage for development/testing/reviewer sideloading.
+        // Include both shared Download and app-specific external dirs.
+        val expectedHash = if (modelFileName == MEDGEMMA_MODEL) MEDGEMMA_SHA256 else null
+        val externalCandidates = buildList<Pair<String, File>> {
+            add("sdcard/download" to File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                modelFileName
+            ))
+            context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.let {
+                add("app-external/downloads" to File(it, modelFileName))
+            }
+            context.getExternalFilesDir(null)?.let {
+                add("app-external/models" to File(File(it, "models"), modelFileName))
+            }
+        }
+
+        for ((source, candidate) in externalCandidates) {
+            if (!candidate.exists()) continue
+            if (validateSideloadedModel(candidate, expectedHash)) {
+                Log.i(TAG, "Model found in $source: $modelFileName")
+                return candidate
+            }
+            Log.w(
+                TAG,
+                "Invalid/corrupt/untrusted GGUF in $source: $modelFileName (${candidate.length()} bytes)"
+            )
         }
 
         Log.w(TAG, "Model not found anywhere: $modelFileName")
@@ -243,11 +284,9 @@ class NkuInferenceEngine(private val context: Context) {
         var clinicalResponse: String
         var localizedResponse: String? = null
 
-        // Finding 4 fix: Do NOT sanitize patientInput here — ClinicalReasoner.generatePrompt()
-        // already sanitizes individual user symptoms (line 115). Re-sanitizing the full prompt
-        // would strip legitimate instruction tokens (SEVERITY:, URGENCY:, etc.) that guide
-        // MedGemma's structured output format.
-        val sanitizedInput = patientInput
+        // Sanitize raw free-text input for translation/LLM flow.
+        // (runMedGemmaOnly() receives a pre-structured prompt built by ClinicalReasoner.)
+        val sanitizedInput = PromptSanitizer.sanitize(patientInput)
 
         try {
             // ── Stage 1: Translate to English via ML Kit (skip if already English) ──
@@ -516,7 +555,18 @@ class NkuInferenceEngine(private val context: Context) {
             }
             
             Log.i(TAG, "Download complete: $fileName")
-            return@withContext if (outFile.exists() && outFile.length() > 0) outFile else null
+            if (!outFile.exists() || outFile.length() <= 0) {
+                return@withContext null
+            }
+
+            val expectedHash = if (fileName == MEDGEMMA_MODEL) MEDGEMMA_SHA256 else null
+            if (!ModelFileValidator.isValidGguf(outFile, expectedSha256 = expectedHash)) {
+                Log.e(TAG, "Downloaded model failed validation/trust check: $fileName")
+                outFile.delete()
+                return@withContext null
+            }
+
+            return@withContext outFile
 
         } catch (e: Exception) {
             Log.e(TAG, "Native download failed for $fileName", e)

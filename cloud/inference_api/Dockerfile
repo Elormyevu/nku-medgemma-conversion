@@ -30,7 +30,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=builder /install /usr/local
 
 # Security: run as non-root user
-RUN useradd --create-home --shell /bin/bash nku
+RUN useradd --create-home --shell /bin/bash nku && \
+    mkdir -p /home/nku/.cache/huggingface/hub && \
+    chown -R nku:nku /home/nku/.cache && \
+    chmod 700 /home/nku/.cache
 USER nku
 
 WORKDIR /app
@@ -45,6 +48,9 @@ COPY --chown=nku:nku logging_config.py .
 ENV PORT=8080
 ENV PYTHONUNBUFFERED=1
 ENV LOG_JSON=true
+ENV NKU_SECURE_CACHE_DIR=/home/nku/.cache
+ENV HF_HOME=/home/nku/.cache/huggingface
+ENV HUGGINGFACE_HUB_CACHE=/home/nku/.cache/huggingface/hub
 
 EXPOSE 8080
 

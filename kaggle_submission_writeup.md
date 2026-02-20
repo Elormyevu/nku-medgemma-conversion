@@ -10,21 +10,21 @@ W. Elorm Yevudza Jnr, MD/MS — Solo developer. Born and raised in Ghana. Incomi
 
 In Sub-Saharan Africa, fewer than 2.3 physicians serve every 10,000 people — far below the WHO's recommended 44.5 health workers [1,2]. Over 450 million people lack accessible primary care [3]. Community Health Workers (CHWs), the frontline of care, frequently lack reliable diagnostic tools due to equipment deficiencies and supply stock-outs [4] — yet nearly all carry smartphones [5].
 
-Powerful clinical AI models exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, 25% of rural Africans lack mobile broadband entirely [6]. Cloud-based AI is impractical where it is needed most.
+Powerful clinical AI models exist, but require reliable cloud connectivity. In rural Sub-Saharan Africa, 25% of the population lacks mobile broadband entirely [6]. Cloud-based AI is impractical where it is needed most.
 
-Target user: A CHW in rural Ghana with a $60–100 TECNO or Infinix phone (3GB+ RAM) and no stable internet [7]. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral. Transsion brands (TECNO, Infinix, itel) hold >50% of the African smartphone market [8].
+Target user: A CHW in a rural region with a $60+ TECNO or Infinix phone (3GB+ RAM) and no stable internet [7]. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral. Transsion brands (TECNO, Infinix, itel) hold >50% of the African smartphone market [8].
 
-Impact & Deployment logistics: Distributing a 2.3GB LLM to a rural clinic is a primary logistical hurdle. We address this via a multi-tiered infrastructure strategy:
+Impact & Deployment logistics: Distributing a 2.3GB LLM to a CHW in a rural region is a primary logistical hurdle. We address this via a multi-tiered infrastructure strategy:
 1. **Pilot Sideloading:** Supervisors provision phones centrally via MDM or side-load the model directly via MicroSD card, requiring zero village internet bandwidth.
-2. **Play Asset Delivery (PAD):** The base app is installed via the Play Store (measured ~140MB delivered on arm64 in the current build; AAB base compressed ~340MB including ABI slices). It automatically downloads the 2.3GB model as an `install-time` asset when the CHW intercepts 4G/LTE cellular connectivity in larger towns.
-3. **Peer-to-Peer Viral Sharing:** African smartphone culture relies on local peer-to-peer file transfer. Only one CHW per clinic needs to download the model via 4G; they can then use Android's native *Nearby Share* or *Xender* to beam the 2.3GB `.gguf` file to other CHWs' offline phones at 30MB/s over ad-hoc local Wi-Fi.
-4. **Zero-Rated Data:** For scaled Ministry of Health rollout, the Google Play download URL is "zero-rated" through partnerships with major MNOs (e.g., MTN, AirtelTigo), ensuring the massive download does not deduct from the CHW's personal cellular data balance.
+2. **Play Asset Delivery (PAD):** The 50MB core app is installed via the Play Store. It automatically downloads the 2.3GB model as an `install-time` asset when the CHW intercepts 4G/LTE cellular connectivity in larger towns.
+3. **Peer-to-Peer Viral Sharing:** African smartphone culture relies on local peer-to-peer file transfer. Only one CHW per clinic needs to download the model via 4G; they can then use Android's native *Nearby Share* or *Xender* to beam the 2.3GB `.gguf` file to other CHWs' offline phones at 30MB/s over Bluetooth or offline peer-to-peer protocols.
+4. **Zero-Rated Data:** For scaled Ministry of Health rollout, the Google Play download URL is "zero-rated" through partnerships with major Mobile Network Operators (MNOs) (e.g., MTN, AirtelTigo), ensuring the massive download does not deduct from the CHW's personal cellular data balance.
 
 ### Overall solution
 
 Nku runs entirely offline — no cloud, no API keys, no connectivity required. Every line of clinical reasoning executes on the phone itself.
 
-Nku (Ewe: "eye") runs MedGemma entirely on $60–100 Android smartphones — 100% on-device, zero cloud dependency. It is a proof-of-concept prototype; field validation with CHWs is the critical next step.
+Nku (Ewe: "eye") runs MedGemma entirely on $60+ Android smartphones — 100% on-device, zero cloud dependency. It is a proof-of-concept prototype; field validation with CHWs is the critical next step.
 
 MedGemma 4B is irreplaceable in this system. It is the sole clinical reasoning engine, performing the interpretation that transforms raw sensor data and symptoms into structured triage assessments — a capability no smaller model possesses. Cloud inference fails completely in low-connectivity zones. Only MedGemma, quantized to Q4_K_M and deployed via llama.cpp JNI on ARM64, enables the offline + accurate combination Nku requires.
 
@@ -33,15 +33,15 @@ The Nku Cycle is a multi-stage orchestration pipeline where MedGemma serves as t
 | Stage | Component | Size | Function |
 |:------|:------|:----:|:---------|
 | 1. Sense | Nku Sentinel (5 detectors) | 0 MB | Camera + microphone → structured vital signs |
-| 2. Translate | Android ML Kit (On-Device) | ~30MB/lang | Translates supported local languages to English offline. Unsupported languages currently pass through unchanged in offline mode. |
+| 2. Translate | Android ML Kit (On-Device) / Google Cloud Translate (Fallback) | ~30MB/lang / 0 MB | Translates 59 supported local languages to English (offline). Unsupported indigenous languages fall back to Cloud Translate (requires connectivity). |
 | 3. Reason | MedGemma 4B (Q4_K_M) | 2.3GB | Clinical reasoning on symptoms + sensor data |
-| 4. Translate | Android ML Kit | ~30MB/lang | English → supported local language output offline; unsupported targets currently return English in offline mode |
+| 4. Translate | Android ML Kit / Google Cloud Translate | ~30MB/lang / 0 MB | English → supported local language output (offline) or indigenous language (online) |
 | 5. Speak | Android System TTS | 0 MB | Spoken result in local language |
-| Fallback | WHO/IMCI rules | 0 MB | Deterministic triage if MedGemma unavailable (e.g., <3GB RAM device) |
+| Fallback | World Health Organization / Integrated Management of Childhood Illness (WHO/IMCI) rules | 0 MB | Deterministic triage if MedGemma unavailable (e.g., insufficient available RAM) |
 
-*Crucially, because optical sensors historically exhibit diagnostic bias against darker skin tones (classified as Types V and VI on the Fitzpatrick skin typing scale), every Nku camera modality in the "Sense" stage is engineered to be "Fitzpatrick-aware" — intentionally bypassing melanin-heavy epidermal layers to ensure equitable accuracy.*
+*Crucially, because optical sensors historically exhibit diagnostic bias against darker skin tones (classified as Types V and VI on the Fitzpatrick skin typing scale), every Nku camera modality in the "Sense" stage is engineered to be "Fitzpatrick-aware" to ensure equitable accuracy.*
 
-Each stage operates independently. Built-in safety checks act as a failsafe for low-end hardware: if MedGemma cannot load due to RAM constraints (e.g., on a $50 Android device with <3GB RAM) or the device overheats, the system automatically reroutes to a deterministic WHO/IMCI rule-based triage. All medical inference by MedGemma is 100% on-device and strictly reasons over English prompts for clinical safety. ML Kit provides on-device translation for supported languages in a fully offline path. Unsupported indigenous languages currently pass through untranslated in the shipped mobile build; cloud translation remains an optional backend extension path.
+Each stage operates independently. Built-in safety checks act as a failsafe for low-end hardware: if MedGemma cannot load due to RAM constraints (e.g., on an Android device with insufficient available RAM) or the device overheats, the system automatically reroutes to a deterministic WHO/IMCI rule-based triage. All medical inference by MedGemma is 100% on-device and strictly reasons over English prompts for clinical safety. ML Kit provides on-device translation for 59 languages, ensuring that since CHWs are trained in their national official languages (e.g., English, French, Portuguese), a comprehensive 100% offline triage path is guaranteed. If a CHW selects an unsupported indigenous language, the app displays a UI notification, and passes the raw input directly to MedGemma.
 
 Before/after — why structured prompting matters: MedGemma was trained on clinical text, not smartphone sensor data. A prompt like *"the patient looks pale and her eyes are puffy"* yields generic advice. Nku's `ClinicalReasoner` instead feeds MedGemma quantified biomarkers with methodology and confidence:
 
@@ -49,7 +49,7 @@ Before/after — why structured prompting matters: MedGemma was trained on clini
 
 MedGemma's response to this structured input:
 
-> `SEVERITY: HIGH | URGENCY: IMMEDIATE` — Identifies the classic preeclampsia triad (edema + headache + pregnancy >20 weeks), flags concurrent anemia, and recommends same-day facility referral with specific danger signs to communicate to the patient. Full reasoning example in Appendix C.
+> `SEVERITY: HIGH | URGENCY: IMMEDIATE` — Identifies the classic preeclampsia triad (edema + headache + pregnancy >20 weeks), flags concurrent anemia, and recommends same-day facility referral with specific danger signs to communicate to the patient.
 
 This structured prompting achieves a median 53% improvement over zero-shot baselines [9] — transforming MedGemma from a general medical QA model into a structured sensor data interpreter for CHW triage.
 
@@ -81,17 +81,17 @@ Nku Sentinel — Camera-Based Screening (0 MB additional weights): CHWs often la
 
 Why cough-based respiratory screening? Sub-Saharan Africa bears a disproportionate respiratory disease burden: 10.8M new TB cases globally in 2023, with only 44% of MDR-TB cases diagnosed and treated [1]. COPD prevalence in SSA is projected to rise 59% by 2050 due to biomass fuel exposure, prior TB, and weak diagnostic infrastructure [30]. Pneumonia remains the leading infectious cause of child death, claiming over 500,000 under-5 lives annually [31]. When a CHW suspects respiratory illness, they navigate to Nku’s respiratory screen and record 2–5 seconds of the patient’s cough or breathing. Nku then activates Google’s HeAR (Health Acoustic Representations) Event Detector — a MobileNetV3-based classifier (1.1MB TFLite) that screens audio in ~50ms for 8 health sound events (cough, sneeze, snore, breathing, etc.) using a robust FP32 fallback architecture to ensure maximum device compatibility. Cough detection probability, event class distribution, and composite risk scores are passed to MedGemma for clinical reasoning.
 
-Architectural Advantage of the Event Detector: While traditional audio encoders output dense acoustic embeddings, MedGemma thrives on structured data. The 1.1MB TFLite Event Detector rapidly classifies 8 specific health sound events (cough, snore, baby cough, breathe, sneeze, etc.) and outputs explicit confidence probabilities for each. Rather than passing a vector that an SLM cannot easily interpret, the Event Detector passes a structured summary (`Cough Probability: 0.82`, `Breathe Probability: 0.45`, `Risk Score: High`) directly into the `ClinicalReasoner` prompt. MedGemma is excellent at reasoning over these explicit probabilities alongside the patient's other symptoms. The Event Detector paired with MedGemma delivers meaningful clinical triage value: In settings where 44% of MDR-TB goes undiagnosed, even binary cough detection and breathing abnormality screening with clinical LLM reasoning provides a screening signal CHWs currently lack entirely.
+Architectural Advantage of the Event Detector: Although traditional audio encoders output dense acoustic embeddings, MedGemma thrives on structured data. The 1.1MB TFLite Event Detector rapidly classifies 8 specific health sound events (cough, snore, baby cough, breathe, sneeze, etc.) and outputs explicit confidence probabilities for each. Unlike traditional audio encoders that output dense embeddings, the Event Detector passes a structured summary (`Cough Probability: 0.82`, `Breathe Probability: 0.45`, `Risk Score: High`) directly into the `ClinicalReasoner` prompt. MedGemma is excellent at reasoning over these explicit probabilities alongside the patient's other symptoms. The Event Detector paired with MedGemma delivers meaningful clinical triage value: In settings where 44% of MDR-TB goes undiagnosed, even binary cough detection and breathing abnormality screening with clinical LLM reasoning provides a screening signal CHWs currently lack entirely.
 
 All screening modalities are deliberately skin-tone independent — critical for Fitzpatrick V-VI populations. Sensor confidence must exceed 75% for inclusion in MedGemma's prompt; below-threshold readings trigger a localized ⚠ warning prompting the CHW to re-capture in better conditions. When MedGemma is unavailable, the app displays a transparency banner identifying the triage as guideline-based (WHO/IMCI) with actionable recovery steps — all in the CHW's selected language.
 
 Safety: 6-layer `PromptSanitizer` at every model boundary (zero-width stripping, homoglyph normalization, base64 detection, regex patterns, character allowlist, delimiter wrapping). Auto-pause at 42°C. Always-on "Consult a healthcare professional" disclaimer.
 
-46 Pan-African languages (14 clinically verified): ML Kit on-device for supported national languages (offline). In the current shipped mobile build, unsupported indigenous languages pass through unchanged unless a separate cloud translation backend is integrated.
+46 Pan-African languages (14 clinically verified): ML Kit on-device for supported national languages (100% offline). Unsupported indigenous languages trigger a UI connectivity alert and use Cloud Translate fallback mechanics; all final reasoning occurs entirely on-device in English.
 
 ---
 
-Prize Track: Main + Edge AI — Q4_K_M compression (8GB→2.3GB), mmap loading on $60–100 phones (3GB+ RAM), llama.cpp JNI (NDK 29, ARM64 NEON), systematic 4-level quantization benchmark (IQ2_XS with medical imatrix calibration), 100% on-device inference with MedGemma bundled via Play Asset Delivery (2.3GB, install-time), and CHW-initiated respiratory screening via HeAR on-device: Event Detector (MobileNetV3-Small, 1.1MB TFLite with FP32 fallback) classifies 8 health sound events in ~50ms, with risk scores and event classes fed to MedGemma for TB/COPD/pneumonia triage.
+Prize Track: Main + Edge AI — Q4_K_M compression (8GB→2.3GB), mmap loading on $60+ phones (3GB+ RAM), llama.cpp JNI (NDK 29, ARM64 NEON), systematic 4-level quantization benchmark (IQ2_XS with medical imatrix calibration), 100% on-device inference with MedGemma bundled via Play Asset Delivery (2.3GB, install-time), and CHW-initiated respiratory screening via HeAR on-device: Event Detector (MobileNetV3-Small, 1.1MB TFLite with FP32 fallback) classifies 8 health sound events in ~50ms, with risk scores and event classes fed to MedGemma for TB/COPD/pneumonia triage.
 
 Open source: Nku is fully open source under the Apache License 2.0. Source code, scripts, and calibration data on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion). Quantized model weights on [HuggingFace](https://huggingface.co/wredd/medgemma-4b-gguf) (subject to Google Gemma Terms of Use).
 

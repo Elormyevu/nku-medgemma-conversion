@@ -35,6 +35,8 @@ The Nku Cycle is a multi-stage orchestration pipeline where MedGemma serves as t
 | 5. Speak | Android System TTS | 0 MB | Spoken result in local language |
 | Fallback | WHO/IMCI rules | 0 MB | Deterministic triage if MedGemma unavailable |
 
+*Crucially, because optical sensors historically exhibit diagnostic bias against darker skin tones (classified as Types V and VI on the Fitzpatrick skin typing scale), every Nku camera modality in the "Sense" stage is engineered to be "Fitzpatrick-aware" — intentionally bypassing melanin-heavy epidermal layers to ensure equitable accuracy.*
+
 Each stage operates independently. Built-in safety checks automatically reroute to WHO/IMCI rule-based triage if sensor data is unreliable or the device overheats. All medical inference by MedGemma is 100% on-device and strictly reasons over English prompts for clinical safety. ML Kit provides on-device translation for 59 languages, ensuring that since CHWs are trained in their national official languages (e.g., English, French, Portuguese), a comprehensive 100% offline triage path is guaranteed. If a CHW selects an unsupported indigenous language, the app displays a prominent UI alert that internet connectivity is required, and routes the translation through a Google Cloud Translate fallback.
 
 Before/after — why structured prompting matters: MedGemma was trained on clinical text, not smartphone sensor data. A prompt like *"the patient looks pale and her eyes are puffy"* yields generic advice. Nku's `ClinicalReasoner` instead feeds MedGemma quantified biomarkers with methodology and confidence:
@@ -62,7 +64,7 @@ Edge AI — Quantization & Memory: We achieve 71% model size reduction (8GB → 
 
 Key finding: IQ2_XS with medical imatrix calibration outperforms the larger Q2_K by +9.1pp — domain-specific calibration matters more than raw bit budget. We created a 243-scenario African clinical triage calibration dataset across 14+ languages for imatrix generation.
 
-Nku Sentinel — Camera-Based Screening (0 MB additional weights): CHWs often lack equipment [4]. Nku extracts vital signs using only the phone camera via pure signal processing, then feeds structured biomarkers to MedGemma for clinical interpretation. Because optical sensors historically exhibit diagnostic bias against darker skin tones (classified as Types V and VI on the Fitzpatrick skin typing scale), every Nku screening modality is engineered to be "Fitzpatrick-aware" — intentionally bypassing melanin-heavy epidermal layers to ensure equitable accuracy:
+Nku Sentinel — Camera-Based Screening (0 MB additional weights): CHWs often lack equipment [4]. Nku extracts vital signs using only the phone camera via pure signal processing, then feeds structured biomarkers to MedGemma for clinical interpretation:
 
 | Screening | Method | Output | Fitzpatrick-aware |
 |:----------|:-------|:-------|:-----------------:|

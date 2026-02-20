@@ -14,7 +14,7 @@ Powerful clinical AI models exist, but require reliable cloud connectivity. In r
 
 Target user: A CHW in rural Ghana with a $60–100 TECNO or Infinix phone (3GB+ RAM) and no stable internet [7]. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral. Transsion brands (TECNO, Infinix, itel) hold >50% of the African smartphone market [8].
 
-Impact: Nku demonstrates that AI-powered clinical triage on budget smartphones is technically feasible. Deployment pathway: Pilot with 5–10 CHWs in rural Ghana → threshold calibration → Ghana Health Service partnerships → Play Asset Delivery distribution (where the 2.3GB MedGemma model, quantized to Q4_K_M, is automatically downloaded at install time alongside the Nku Android app).
+Impact & Deployment logistics: Distributing a 2.3GB LLM to a rural clinic is a primary logistical hurdle. For scaled rollout, Nku utilizes Google Play Asset Delivery (the 50MB core app is installed, and Play downloads the 2.3GB model as an `install-time` asset when the CHW is in a town with 4G/LTE cellular connectivity). For the "last-mile" pilot where data costs are prohibitive, supervisors can provision phones centrally or side-load the model directory directly to the CHW's device via MicroSD card, requiring zero internet bandwidth.
 
 ### Overall solution
 

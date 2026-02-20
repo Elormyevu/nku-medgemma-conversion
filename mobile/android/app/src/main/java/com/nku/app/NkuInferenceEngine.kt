@@ -445,30 +445,37 @@ class NkuInferenceEngine(private val context: Context) {
     }
 
     /**
-     * Extract model files from APK assets to internal storage (first run only).
-     * With Play Asset Delivery, install-time packs provide direct filesystem
-     * access — extraction is only needed for legacy APK-bundled assets. (F-4)
+     * Ensure MedGemma model is on-disk at app launch.
+     *
+     * Resolution order:
+     *   1. Already on internal storage / PAD pack / sideload → skip
+     *   2. Bundled in APK assets → extract to internal storage
+     *   3. Neither → download from HuggingFace (2.49 GB) and validate SHA-256
+     *
+     * This runs in onCreate so the model is ready *before* the first triage.
      */
     suspend fun extractModelsFromAssets() = withContext(Dispatchers.IO) {
-        // Only MedGemma needs extraction — translation is handled by ML Kit SDK
         val modelName = MEDGEMMA_MODEL
 
-        // Skip if model is already accessible (filesDir, PAD pack, or sdcard)
+        // 1. Already accessible — nothing to do
         if (resolveModelFile(modelName) != null) {
             Log.i(TAG, "Model already accessible, skipping extraction: $modelName")
             return@withContext
         }
 
         val outFile = File(modelDir, modelName)
-        _progress.value = "Extracting $modelName..."
+
+        // 2. Try APK-bundled assets (production .aab with PAD install-time pack)
         try {
+            _state.value = EngineState.LOADING_MODEL
+            _progress.value = "Extracting $modelName..."
             val afd = context.assets.openFd(modelName)
             val totalBytes = afd.length
             afd.close()
 
             context.assets.open(modelName).use { input ->
                 outFile.outputStream().use { output ->
-                    val buffer = ByteArray(1024 * 1024) // 1MB chunks
+                    val buffer = ByteArray(1024 * 1024)
                     var bytesWritten = 0L
                     var lastReportedPercent = -1
 
@@ -480,9 +487,7 @@ class NkuInferenceEngine(private val context: Context) {
 
                         val percent = if (totalBytes > 0) {
                             ((bytesWritten * 100) / totalBytes).toInt()
-                        } else {
-                            -1
-                        }
+                        } else -1
                         if (percent != lastReportedPercent && percent >= 0) {
                             lastReportedPercent = percent
                             _progress.value = "Extracting $modelName… $percent%"
@@ -491,11 +496,24 @@ class NkuInferenceEngine(private val context: Context) {
                 }
             }
             Log.i(TAG, "Extracted: $modelName (${outFile.length() / 1024 / 1024}MB)")
+            _state.value = EngineState.IDLE
+            return@withContext
         } catch (e: Exception) {
-            Log.w(TAG, "Asset not bundled: $modelName (expected for dev builds)")
-            // Clean up partial file
+            Log.i(TAG, "Asset not bundled in APK: $modelName — falling back to HuggingFace download")
             if (outFile.exists()) outFile.delete()
         }
+
+        // 3. Download from HuggingFace (reviewer/debug/emulator path)
+        Log.i(TAG, "Initiating MedGemma download from HuggingFace on app startup")
+        _state.value = EngineState.LOADING_MODEL
+        val downloaded = downloadModelNative(MEDGEMMA_DOWNLOAD_URL, modelName)
+        if (downloaded != null) {
+            Log.i(TAG, "MedGemma downloaded and validated: ${downloaded.absolutePath}")
+        } else {
+            Log.e(TAG, "MedGemma download failed — model will not be available for triage")
+            _progress.value = "Model download failed. Connect to Wi-Fi and restart the app."
+        }
+        _state.value = EngineState.IDLE
     }
 
     /**

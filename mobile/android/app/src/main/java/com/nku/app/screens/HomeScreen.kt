@@ -72,6 +72,7 @@ fun HomeScreen(
         
         // ── Language Selector ──
         var languageExpanded by remember { mutableStateOf(false) }
+        var showCloudWarningForLanguage by remember { mutableStateOf<String?>(null) }
         Card(
             colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground),
             modifier = Modifier.fillMaxWidth()
@@ -112,7 +113,11 @@ fun HomeScreen(
                             DropdownMenuItem(
                                 text = { Text(name) },
                                 onClick = {
-                                    onLanguageChange(code)
+                                    if (NkuTranslator.requiresCloud(code)) {
+                                        showCloudWarningForLanguage = code
+                                    } else {
+                                        onLanguageChange(code)
+                                    }
                                     languageExpanded = false
                                 },
                                 leadingIcon = {
@@ -132,6 +137,36 @@ fun HomeScreen(
             }
         }
         
+
+        showCloudWarningForLanguage?.let { code ->
+            AlertDialog(
+                onDismissRequest = { showCloudWarningForLanguage = null },
+                title = { Text(strings.internetRequiredTitle, fontWeight = FontWeight.Bold) },
+                text = { 
+                    Column {
+                        Text(strings.internetRequiredMessage)
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            onLanguageChange(code)
+                            showCloudWarningForLanguage = null
+                        }
+                    ) {
+                        Text(strings.continueLabel, color = NkuColors.Primary)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showCloudWarningForLanguage = null }) {
+                        Text(strings.cancel, color = Color.Gray)
+                    }
+                },
+                containerColor = NkuColors.CardBackground,
+                titleContentColor = MaterialTheme.colorScheme.onBackground,
+                textContentColor = MaterialTheme.colorScheme.onBackground
+            )
+        }
 
         Spacer(Modifier.height(12.dp))
         

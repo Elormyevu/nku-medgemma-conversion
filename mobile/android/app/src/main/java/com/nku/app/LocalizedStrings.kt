@@ -363,7 +363,12 @@ object LocalizedStrings {
         val triageSourceGuideline: String = "Guideline-Based Triage",
         val fallbackExplanation: String = "AI model not available. Results use WHO/IMCI clinical guidelines \u2014 safe and validated.",
         val fallbackRecoveryTip: String = "To restore AI: close background apps or restart Nku.",
-        val lowConfidenceWarning: String = "\u26A0 Low confidence \u2014 this reading may be excluded from triage. Re-capture in better lighting."
+        val lowConfidenceWarning: String = "\u26A0 Low confidence \u2014 this reading may be excluded from triage. Re-capture in better lighting.",
+        
+        // Cloud Translation Warning
+        val internetRequiredTitle: String = "Internet Required",
+        val internetRequiredMessage: String = "This language requires an internet connection for translation. Clinical reasoning will still run offline.",
+        val continueLabel: String = "Continue"
     ) {
         /** Map signal quality string to localized display name. */
         fun localizedSignalQuality(quality: String): String = when (quality) {

@@ -235,8 +235,8 @@ class NkuInferenceEngine(private val context: Context) {
                 )
                 Log.i(TAG, "Model loaded: $modelFileName (attempt ${attempt + 1})")
                 return@withContext smolLM
-            } catch (e: Exception) {
-                Log.e(TAG, "Model load attempt ${attempt + 1}/$MAX_LOAD_RETRIES failed: ${e.message}", e)
+            } catch (t: Throwable) {
+                Log.e(TAG, "Model load attempt ${attempt + 1}/$MAX_LOAD_RETRIES failed: ${t.message}", t)
                 if (attempt < MAX_LOAD_RETRIES - 1) {
                     // Free memory before retry — see F-9 note in unloadModel()
                     System.gc()
@@ -392,10 +392,11 @@ class NkuInferenceEngine(private val context: Context) {
                 clinicalResponse = "Models not available on this device. Please use camera-based Nku Sentinel screening for triage."
             }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Nku Cycle error: ${e.message}", e)
+        } catch (t: Throwable) {
+            Log.e(TAG, "Nku Cycle error: ${t.message}", t)
             _state.value = EngineState.ERROR
-            clinicalResponse = "Error during analysis: ${e.message}"
+            val reason = if (t is OutOfMemoryError) "Insufficient RAM" else t.message
+            clinicalResponse = "Error during analysis: $reason. Please use WHO/IMCI guidelines."
         } finally {
             unloadModel()  // Ensure cleanup
         }
@@ -435,8 +436,8 @@ class NkuInferenceEngine(private val context: Context) {
                 _state.value = EngineState.IDLE
                 null
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "MedGemma-only error", e)
+        } catch (t: Throwable) {
+            Log.e(TAG, "MedGemma-only error", t)
             unloadModel()
             _state.value = EngineState.ERROR
             null

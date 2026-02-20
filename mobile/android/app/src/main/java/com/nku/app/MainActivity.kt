@@ -39,6 +39,7 @@ import androidx.lifecycle.lifecycleScope
 import java.util.concurrent.Executors
 import com.nku.app.ui.NkuTheme
 import com.nku.app.ui.NkuColors
+import com.nku.app.utils.MemoryManager
 import com.nku.app.screens.*
 
 /**
@@ -179,15 +180,67 @@ fun NkuSentinelApp(
     var selectedTab by remember { mutableIntStateOf(0) }
     var isPregnant by remember { mutableStateOf(false) }
     var gestationalWeeks by remember { mutableStateOf("") }
-    var selectedLanguage by remember { mutableStateOf("en") }
+    
+    var showLowMemoryDialog by remember { mutableStateOf(false) }
+    var pendingTriagePrompt by remember { mutableStateOf<String?>(null) }
+    
+    val context = LocalContext.current
+    val appSettingsStore = remember { AppSettingsStore(context) }
+    val currentTheme by appSettingsStore.themePreference.collectAsState(initial = ThemePreference.SYSTEM)
+    val selectedLanguage by appSettingsStore.languagePreference.collectAsState(initial = "en")
+    
     val strings = LocalizedStrings.forLanguage(selectedLanguage)
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-    val isDarkTheme = true  // Nku defaults to dark theme
+    
+    val isSystemDark = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDarkTheme = when (currentTheme) {
+        ThemePreference.LIGHT -> false
+        ThemePreference.DARK -> true
+        ThemePreference.SYSTEM -> isSystemDark
+    }
 
-    val tabs = listOf(strings.tabHome, strings.tabCardio, strings.tabAnemia, strings.tabJaundice, strings.tabPreE, strings.tabRespiratory, strings.tabTriage)
+    val tabs = listOf(strings.tabHome, strings.tabCardio, strings.tabAnemia, strings.tabJaundice, strings.tabPreE, strings.tabRespiratory, strings.tabTriage, strings.tabSettings)
     
     NkuTheme(isDarkTheme = isDarkTheme) {
+        if (showLowMemoryDialog) {
+            AlertDialog(
+                onDismissRequest = { showLowMemoryDialog = false },
+                title = { Text("⚠ Low Memory Warning", fontWeight = FontWeight.Bold) },
+                text = { Text("Your phone's RAM is currently running low due to background apps. This may cause the Nku Reasoning AI to crash. \n\nPlease close other apps to run the AI, or continue using standard WHO guidelines.") },
+                confirmButton = {
+                    TextButton(onClick = {
+                        showLowMemoryDialog = false
+                        val vitals = sensorFusion.vitalSigns.value
+                        scope.launch { clinicalReasoner.createRuleBasedAssessment(vitals) }
+                    }) {
+                        Text("Use WHO Guidelines")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        showLowMemoryDialog = false
+                        val prompt = pendingTriagePrompt
+                        if (prompt != null) {
+                            val vitals = sensorFusion.vitalSigns.value
+                            scope.launch {
+                                val medGemmaResponse = nkuEngine.runMedGemmaOnly(prompt)
+                                if (medGemmaResponse != null) {
+                                    clinicalReasoner.parseMedGemmaResponse(medGemmaResponse, vitals)
+                                } else {
+                                    clinicalReasoner.createRuleBasedAssessment(vitals)
+                                }
+                            }
+                        }
+                    }) {
+                        Text("Force Load AI")
+                    }
+                },
+                containerColor = NkuColors.Surface,
+                titleContentColor = MaterialTheme.colorScheme.onBackground,
+                textContentColor = MaterialTheme.colorScheme.onBackground
+            )
+        }
+    
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -216,7 +269,8 @@ fun NkuSentinelApp(
                                         3 -> Icons.Default.Visibility
                                         4 -> Icons.Default.Warning
                                         5 -> Icons.Default.Mic
-                                        else -> Icons.Default.CheckCircle
+                                        6 -> Icons.Default.CheckCircle
+                                        else -> Icons.Default.Settings
                                     },
                                     contentDescription = title
                                 )
@@ -248,7 +302,9 @@ fun NkuSentinelApp(
                         respiratoryResult = respiratoryResult,
                         strings = strings,
                         selectedLanguage = selectedLanguage,
-                        onLanguageChange = { selectedLanguage = it },
+                        onLanguageChange = { newLang ->
+                            scope.launch { appSettingsStore.saveLanguagePreference(newLang) } 
+                        },
                         onNavigateToTab = { selectedTab = it },
 
                     )
@@ -305,20 +361,32 @@ fun NkuSentinelApp(
                         onRunTriage = {
                             sensorFusion.updateVitalSigns()
                             val currentVitals = sensorFusion.vitalSigns.value
-                            // Always attempt MedGemma first.
-                            // If the model is missing, NkuInferenceEngine now tries reviewer fallback download.
-                            // Any failure still degrades safely to deterministic WHO/IMCI rule-based triage.
-                            scope.launch {
-                                val prompt = clinicalReasoner.generatePrompt(currentVitals)
-                                val medGemmaResponse = nkuEngine.runMedGemmaOnly(prompt)
-                                if (medGemmaResponse != null) {
-                                    clinicalReasoner.parseMedGemmaResponse(
-                                        medGemmaResponse, currentVitals
-                                    )
-                                } else {
-                                    clinicalReasoner.createRuleBasedAssessment(currentVitals)
+                            val prompt = clinicalReasoner.generatePrompt(currentVitals)
+                            
+                            if (!MemoryManager.isRamAvailableForMedGemma(context)) {
+                                pendingTriagePrompt = prompt
+                                showLowMemoryDialog = true
+                            } else {
+                                scope.launch {
+                                    val medGemmaResponse = nkuEngine.runMedGemmaOnly(prompt)
+                                    if (medGemmaResponse != null) {
+                                        clinicalReasoner.parseMedGemmaResponse(medGemmaResponse, currentVitals)
+                                    } else {
+                                        clinicalReasoner.createRuleBasedAssessment(currentVitals)
+                                    }
                                 }
                             }
+                        }
+                    )
+                    7 -> SettingsScreen(
+                        strings = strings,
+                        selectedLanguage = selectedLanguage,
+                        onLanguageChange = { newLang ->
+                            scope.launch { appSettingsStore.saveLanguagePreference(newLang) }
+                        },
+                        currentTheme = currentTheme,
+                        onThemeChange = { newTheme ->
+                            scope.launch { appSettingsStore.saveThemePreference(newTheme) }
                         }
                     )
                 }

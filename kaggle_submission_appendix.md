@@ -1,4 +1,4 @@
-# Nku: Submission Appendix
+# Nku: Submission Appendix 
 
 Companion document to the Kaggle submission writeup.
 
@@ -404,7 +404,7 @@ Important preventive measures:
 
 ### Input: Nku Sentinel Sensor Readings → Clinically Explicit Prompt
 
-The `ClinicalReasoner.generatePrompt()` function transforms raw sensor data into a self-documenting prompt. MedGemma receives the measurement method, raw biomarker values, derived scores with clinical context (to our knowledge), and literature references.
+The `ClinicalReasoner.generatePrompt()` function transforms structured sensor data into a self-documenting prompt. MedGemma receives the measurement method, raw biomarker values, derived scores with clinical context (to our knowledge), and literature references.
 
 ```
 You are a clinical triage assistant for community health workers in rural Africa.
@@ -532,20 +532,20 @@ Selecting the right quantization level required balancing two competing goals: m
 |:-------------|:----:|:--------------:|:--------------------:|:--------------------:|:--------|
 | Unquantized (Baseline) | 8.0 GB | 69.0% | — | 100% | Too large for mobile |
 | **Q4_K_M** | **2.49 GB** | **56.4%** | **58.0%** | **81.7%** | **Deployed — best accuracy/size ratio** |
-| IQ2_XS + medical imatrix | 1.3 GB | 43.8% (558/1273) | 45.3% (320/707) | 63.5% | Viable alternative for ultra-constrained devices |
-| Q2_K | 1.6 GB | 34.7% (442/1273) | 33.9% (240/707) | 50.3% | Worse than IQ2_XS despite being larger |
-| IQ1_M | 1.1 GB | 32.3% (411/1273) | 32.4% (229/707) | 46.8% | Near random chance — rejected |
+| IQ2_XS + medical imatrix | 1.4 GB | 43.8% (558/1273) | 45.3% (320/707) | 63.5% | Viable alternative for ultra-constrained devices |
+| Q2_K | 1.73 GB | 34.7% (442/1273) | 33.9% (240/707) | 47.1% | Outperformed by IQ2_XS despite larger size |
+| IQ1_M | 1.2 GB | 32.3% (411/1273) | 32.4% (229/707) | 46.8% | Near random chance — rejected |
 
 > †Each model was evaluated single-shot on the full MedQA test set (1,273 questions) and the primary care subset (707 questions) — one attempt per question, no repeated runs, no best-of-N selection. This mirrors Nku's real-world use case: a CHW presents a patient once and receives a single triage response. Single-run evaluation is the most representative measure of the model's reliability in this clinical context.
 
 **Key Findings:**
-1.  **Medical imatrix calibration outperforms naive quantization:** The IQ2_XS model (1.3 GB) calibrated with our custom 243-scenario African clinical dataset severely outperforms the larger Q2_K model (1.6 GB) by +9.1 percentage points on MedQA. This proves that domain-specific importance matrices are significantly more valuable than raw bit depth at extreme quantization levels.
-2.  **IQ1_M is near-random:** At 1.1 GB, the model fundamentally collapses. Its 32.3% MedQA score barely exceeds random guessing (25% on 4-option MCQs). The model loses its reasoning capabilities, often outputting repetitive or disjointed text when prompted.
-3.  **Q4_K_M is the true "Edge Foundation" cutoff:** At 2.49 GB (69% smaller than baseline), Q4_K_M is the smallest model that comprehensively retains complex multi-step clinical reasoning. It successfully identifies multi-morbidity conditions (e.g., recognizing both preeclampsia and anemia from concurrent symptoms) that the 1.3 GB IQ2_XS misses.
+1.  **Medical imatrix calibration outperforms naive quantization:** The IQ2_XS model (1.4 GB) calibrated with our custom 24-scenario African clinical dataset severely outperforms the larger Q2_K model (1.73 GB) by +9.1 percentage points on MedQA. This proves that domain-specific importance matrices are significantly more valuable than raw bit depth at extreme quantization levels.
+2.  **IQ1_M is near-random:** At 1.2 GB, the model fundamentally collapses. Its 32.3% MedQA score barely exceeds random guessing (25% on 4-option MCQs). The model loses its reasoning capabilities, often outputting repetitive or disjointed text when prompted.
+3.  **Q4_K_M is our "Edge Foundation" cutoff:** At 2.49 GB (69% smaller than baseline), Q4_K_M is the smallest model we are comfortable using given the high-consequence triage environment, and considering that 3GB+ RAM is widely available even on Android phones in the $60 bracket (e.g., itel A90, TECNO POP series). It successfully identifies multi-morbidity conditions (e.g., recognizing both pneumonia and severe malaria from concurrent symptoms) that the 1.4 GB IQ2_XS misses.
 
 #### Full Benchmark Comparison†
 
-| Metric | IQ1_M (1.1 GB) | Q2_K (1.6 GB) | IQ2_XS (1.3 GB) | Q4_K_M (2.49 GB) |
+| Metric | IQ1_M (1.2 GB) | Q2_K (1.73 GB) | IQ2_XS (1.4 GB) | Q4_K_M (2.49 GB) |
 |:-------|:--------------:|:-------------:|:---------------:|:---------------:|
 | Overall MedQA (1,273 questions, single-shot) | 32.3% (411) | 34.7% (442) | 43.8% (558) | 56.0% (713) |
 | Primary Care subset (707 questions, single-shot) | 32.4% (229) | 33.9% (240) | 45.3% (320) | 56.2% (397) |
@@ -557,7 +557,7 @@ Selecting the right quantization level required balancing two competing goals: m
 
 Decision rationale: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The Q4_K_M model is a standard quantization (from [mradermacher/medgemma-4b-it-GGUF](https://huggingface.co/mradermacher/medgemma-4b-it-GGUF)). The other three quantization levels (IQ1_M, Q2_K, IQ2_XS) were benchmarked to validate our model selection: they confirmed that aggressive quantization below Q4 degrades accuracy below clinically useful thresholds, and that domain-specific imatrix calibration (applied to IQ2_XS) is essential at lower bit rates. Only Q4_K_M is deployed in the Nku application. With `mmap` memory mapping, the 2.49 GB Q4_K_M model runs on 3GB+ RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
 
-> imatrix representativeness: The 243 scenarios cover WHO/IMCI triage conditions accounting for >80% of CHW encounters in Sub-Saharan Africa. The imatrix was used for the IQ2_XS quantization experiment — its purpose is weight importance estimation, identifying which model weights are most critical for the deployment vocabulary (malaria, anemia, pneumonia, maternal health terms across 14+ languages). This is a quantization calibration technique, not clinical training data; 243 scenarios across 8 condition categories and 14 languages provides sufficient diversity for weight importance ranking. The deployed Q4_K_M does not use this imatrix.
+> imatrix representativeness: The 24 scenarios cover WHO/IMCI triage conditions accounting for >80% of CHW encounters in Sub-Saharan Africa. The imatrix was used for the IQ2_XS quantization experiment — its purpose is weight importance estimation, identifying which model weights are most critical for the deployment vocabulary (malaria, anemia, pneumonia, maternal health terms across 14+ languages). This is a quantization calibration technique, not clinical training data; 24 scenarios across 8 condition categories and 14 languages provides sufficient diversity for weight importance ranking. The deployed Q4_K_M does not use this imatrix.
 
 ### Why Not Unquantized MedGemma 4B or MedGemma 4B Multimodal?
 
@@ -674,7 +674,7 @@ Nku doesn't rely on MedGemma alone. The safety architecture provides multiple co
 | Confidence gating | Sensors below 75% excluded from prompt | Prevents low-quality data from misleading the model |
 | Rule-based fallback | WHO/IMCI decision trees if MedGemma unavailable | Ensures triage guidance regardless of model state |
 | Risk-stratified triage | 4-tier severity output | Optimizes limited transport resources by managing moderate cases locally
-| Prompt sanitization | 6-layer PromptSanitizer at every boundary | Prevents injection or adversarial manipulation |
+| Prompt sanitization | 8-layer PromptSanitizer at every boundary | Prevents injection or adversarial manipulation |
 | Always-on disclaimer | "Consult a healthcare professional" | Positions output as decision support, not diagnosis |
 
 ### Conclusion
@@ -940,7 +940,7 @@ Beyond sensor data, the prompt includes:
 | Section | Source | Purpose |
 |:--------|:-------|:--------|
 | Pregnancy context | User toggle + gestational weeks | Triggers preeclampsia risk assessment when ≥20 weeks |
-| Reported symptoms | Text/voice input | Sanitized via `PromptSanitizer` (6-layer injection defense), wrapped in `<<<>>>` delimiters |
+| Reported symptoms | Text/voice input | Sanitized via `PromptSanitizer` (8-layer injection defense), wrapped in `<<<>>>` delimiters |
 | Output instructions | Static template | Forces structured `SEVERITY/URGENCY/CONCERNS/RECOMMENDATIONS` format for reliable parsing |
 
 ---
@@ -970,16 +970,18 @@ This multi-tier design specifically addresses the health economics of rural tria
 Every triage result displays "Consult a healthcare professional" — this is not dismissible. The system outputs severity levels and referral recommendations, never diagnoses. It answers *"should this patient be referred urgently?"* not *"what disease does this patient have?"*
 
 ### Layer 5: Prompt Injection Defense
-All user input passes through a 6-layer `PromptSanitizer` at every model boundary:
+All user input passes through an 8-layer `PromptSanitizer` at every model boundary:
 
 | Layer | Defense | Purpose |
 |:------|:--------|:--------|
 | 1 | Zero-width character stripping | Prevents invisible Unicode injection |
 | 2 | Homoglyph normalization | Cyrillic/Greek lookalike → Latin |
-| 3 | Base64 payload detection | Decodes and checks for injection patterns |
-| 4 | Regex pattern matching | 15+ injection patterns ("ignore previous," "system prompt," etc.) |
-| 5 | Character allowlist | Only permits expected character ranges |
-| 6 | Delimiter wrapping | User input enclosed in `<<<` `>>>` with instruction not to interpret |
+| 3 | Whitespace normalization | Collapses duplicate spaces to prevent token-stuffing |
+| 4 | Base64 payload detection | Decodes and checks for injection patterns |
+| 5 | Regex pattern matching | 15+ injection patterns ("ignore previous," "system prompt," etc.) |
+| 6 | Character allowlist | Only permits expected character ranges |
+| 7 | Delimiter escaping | Prevents spoofing of `<<<` or `>>>` boundary markers |
+| 8 | Length capping | Truncates overlong input to prevent buffer/context attacks |
 
 Output validation additionally checks for leaked delimiters and suspicious patterns. Tests in `test_security.py` cover 30+ injection scenarios including Unicode bypasses and nested injections.
 

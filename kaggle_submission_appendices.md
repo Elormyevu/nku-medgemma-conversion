@@ -404,7 +404,7 @@ Important preventive measures:
 
 ### Input: Nku Sentinel Sensor Readings → Clinically Explicit Prompt
 
-The `ClinicalReasoner.generatePrompt()` function transforms raw sensor data into a self-documenting prompt. MedGemma receives the measurement method, raw biomarker values, derived scores with clinical context, and literature references — not opaque percentages.
+The `ClinicalReasoner.generatePrompt()` function transforms raw sensor data into a self-documenting prompt. MedGemma receives the measurement method, raw biomarker values, derived scores with clinical context, and literature references.
 
 ```
 You are a clinical triage assistant for community health workers in rural Africa.

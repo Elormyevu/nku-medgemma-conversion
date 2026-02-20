@@ -592,7 +592,7 @@ Does the combination of sensor data + fusion + translation + CHW text input prov
 
 ### Evidence 1: Triage Is a Simpler Task Than MedQA
 
-MedQA tests USMLE-level diagnostic reasoning — selecting the correct diagnosis from 4–5 options spanning all of medicine (cardiology, oncology, psychiatry, rare genetic disorders). CHW triage asks a fundamentally different, narrower question: *"Does this patient need urgent referral, referral within days, or routine follow-up?"* for ~5–8 common conditions.
+MedQA tests USMLE-level diagnostic reasoning — selecting the correct diagnosis from 4–5 options spanning all of medicine (cardiology, oncology, psychiatry, rare genetic disorders). CHW triage asks a fundamentally different, narrower question: *"Does this patient need urgent referral, referral within days, or routine follow-up?"*
 
 Recent research confirms this distinction:
 

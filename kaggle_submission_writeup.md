@@ -14,10 +14,10 @@ Powerful clinical AI models exist, but require reliable cloud connectivity. In r
 
 Target user: A CHW in a rural region with a $60+ TECNO or Infinix phone (3GB+ RAM) and no stable internet [7]. She needs immediate triage guidance — offline, on her existing device — to determine which patients require urgent referral. Transsion brands (TECNO, Infinix, itel) hold >50% of the African smartphone market [8].
 
-Impact & Deployment logistics: Distributing a 2.3GB LLM to a CHW in a rural region is a primary logistical hurdle. We address this via a multi-tiered infrastructure strategy:
+Impact & Deployment logistics: Distributing a 2.49GB LLM to a CHW in a rural region is a primary logistical hurdle. We address this via a multi-tiered infrastructure strategy:
 1. **Pilot Sideloading:** Supervisors provision phones centrally via MDM or side-load the model directly via MicroSD card, requiring zero village internet bandwidth.
-2. **Play Asset Delivery (PAD):** The 50MB core app is installed via the Play Store. It automatically downloads the 2.3GB model as an `install-time` asset when the CHW intercepts 4G/LTE cellular connectivity in larger towns.
-3. **Peer-to-Peer Viral Sharing:** African smartphone culture relies on local peer-to-peer file transfer. Only one CHW per clinic needs to download the model via 4G; they can then use Android's native *Nearby Share* or *Xender* to beam the 2.3GB `.gguf` file to other CHWs' offline phones at 30MB/s over Bluetooth or offline peer-to-peer protocols.
+2. **Play Asset Delivery (PAD):** The 50MB core app is installed via the Play Store. It automatically downloads the 2.49GB model as an `install-time` asset when the CHW intercepts 4G/LTE cellular connectivity in larger towns.
+3. **Peer-to-Peer Viral Sharing:** African smartphone culture relies on local peer-to-peer file transfer. Only one CHW per clinic needs to download the model via 4G; they can then use Android's native *Nearby Share* or *Xender* to beam the 2.49GB `.gguf` file to other CHWs' offline phones at 30MB/s over Bluetooth or offline peer-to-peer protocols.
 4. **Zero-Rated Data:** For scaled Ministry of Health rollout, the Google Play download URL is "zero-rated" through partnerships with major Mobile Network Operators (MNOs) (e.g., MTN, AirtelTigo), ensuring the massive download does not deduct from the CHW's personal cellular data balance.
 
 ### Overall solution
@@ -34,7 +34,7 @@ The Nku Cycle is a multi-stage orchestration pipeline where MedGemma serves as t
 |:------|:------|:----:|:---------|
 | 1. Sense | Nku Sentinel (5 detectors) | 0 MB | Camera + microphone → structured vital signs |
 | 2. Translate | Android ML Kit (On-Device) / Google Cloud Translate (Fallback) | ~30MB/lang / 0 MB | Translates 59 supported local languages to English (offline). Unsupported indigenous languages fall back to Cloud Translate (requires connectivity). |
-| 3. Reason | MedGemma 4B (Q4_K_M) | 2.3GB | Clinical reasoning on symptoms + sensor data |
+| 3. Reason | MedGemma 4B (Q4_K_M) | 2.49GB | Clinical reasoning on symptoms + sensor data |
 | 4. Translate | Android ML Kit / Google Cloud Translate | ~30MB/lang / 0 MB | English → supported local language output (offline) or indigenous language (online) |
 | 5. Speak | Android System TTS | 0 MB | Spoken result in local language |
 | Fallback | World Health Organization / Integrated Management of Childhood Illness (WHO/IMCI) rules | 0 MB | Deterministic triage if MedGemma unavailable (e.g., insufficient available RAM) |
@@ -55,12 +55,12 @@ This structured prompting achieves a median 53% improvement over zero-shot basel
 
 ### Technical details
 
-Edge AI — Quantization & Memory: We achieve 71% model size reduction (8GB → 2.3GB) via Q4_K_M quantization while retaining 81% of MedQA accuracy (56% quantized vs. 69% unquantized baseline). The model runs on 3GB+ RAM devices via `mmap` — the OS pages model data on demand, so peak resident memory adapts to available RAM. We systematically benchmarked four quantization levels:
+Edge AI — Quantization & Memory: We achieve 69% model size reduction (8GB → 2.49GB) via Q4_K_M quantization while retaining 81% of MedQA accuracy (56% quantized vs. 69% unquantized baseline). The model runs on 3GB+ RAM devices via `mmap` — the OS pages model data on demand, so peak resident memory adapts to available RAM. We systematically benchmarked four quantization levels:
 
 | Quant | Size | MedQA | Primary Care | Verdict |
 |:------|:----:|:---------------:|:--------------------:|:--------|
 | Unquantized (Baseline) | 8.0 GB | 69.0% | - | Too large for RAM |
-| **Q4_K_M** | **2.3 GB** | **56.4%** | **58.0%** | **Deployed** |
+| **Q4_K_M** | **2.49 GB** | **56.4%** | **58.0%** | **Deployed** |
 | IQ2_XS + imatrix | 1.3 GB | 43.8% | 45.3% | Viable ultra-compact |
 | Q2_K | 1.6 GB | 34.7% | 33.9% | Worse than IQ2_XS |
 | IQ1_M | 1.1 GB | 32.3% | 32.4% | Near random |
@@ -91,7 +91,7 @@ Safety: 6-layer `PromptSanitizer` at every model boundary (zero-width stripping,
 
 ---
 
-Prize Track: Main + Edge AI — Q4_K_M compression (8GB→2.3GB), mmap loading on $60+ phones (3GB+ RAM), llama.cpp JNI (NDK 29, ARM64 NEON), systematic 4-level quantization benchmark (IQ2_XS with medical imatrix calibration), 100% on-device inference with MedGemma bundled via Play Asset Delivery (2.3GB, install-time), and CHW-initiated respiratory screening via HeAR on-device: Event Detector (MobileNetV3-Small, 1.1MB TFLite with FP32 fallback) classifies 8 health sound events in ~50ms, with risk scores and event classes fed to MedGemma for TB/COPD/pneumonia triage.
+Prize Track: Main + Edge AI — Q4_K_M compression (8GB→2.49GB), mmap loading on $60+ phones (3GB+ RAM), llama.cpp JNI (NDK 29, ARM64 NEON), systematic 4-level quantization benchmark (IQ2_XS with medical imatrix calibration), 100% on-device inference with MedGemma bundled via Play Asset Delivery (2.49GB, install-time), and CHW-initiated respiratory screening via HeAR on-device: Event Detector (MobileNetV3-Small, 1.1MB TFLite with FP32 fallback) classifies 8 health sound events in ~50ms, with risk scores and event classes fed to MedGemma for TB/COPD/pneumonia triage.
 
 Open source: Nku is fully open source under the Apache License 2.0. Source code, scripts, and calibration data on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion). Quantized model weights on [HuggingFace](https://huggingface.co/wredd/medgemma-4b-gguf) (subject to Google Gemma Terms of Use).
 

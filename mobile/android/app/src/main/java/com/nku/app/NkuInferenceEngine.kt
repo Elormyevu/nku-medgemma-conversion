@@ -62,7 +62,7 @@ class NkuInferenceEngine(private val context: Context) {
 
         // Direct Download URL fallback for Reviewers without PAD (APK install).
         // Source must match MEDGEMMA_SHA256 to satisfy trust validation.
-        private const val MEDGEMMA_DOWNLOAD_URL = "https://huggingface.co/mradermacher/medgemma-4b-it-GGUF/resolve/main/medgemma-4b-it.Q4_K_M.gguf?download=true"
+        private const val MEDGEMMA_DOWNLOAD_URL = "https://huggingface.co/wredd/medgemma-4b-gguf/resolve/main/medgemma-4b-q4_k_m.gguf?download=true"
 
         // Play Asset Delivery pack names → model file mapping
         private val MODEL_PACK_MAP = mapOf(

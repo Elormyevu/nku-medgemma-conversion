@@ -45,7 +45,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 |:-----|:----|
 | **100% On-Device Medical Inference** | All clinical reasoning runs on-device — zero cloud dependency for MedGemma |
 | **On-Device Translation** | ML Kit for 59 languages (incl. English, French, Portuguese); unsupported languages pass through unchanged in offline mode |
-| **Ultra-Compressed** | 8GB → ~2.3GB via Q4_K_M quantization (56% MedQA on quantized model, vs. 69% unquantized) |
+| **Ultra-Compressed** | 8GB → ~2.49GB via Q4_K_M quantization (56% MedQA on quantized model, vs. 69% unquantized) |
 | **Pan-African Languages** | 46 languages including Ewe, Hausa, Yoruba, Swahili |
 | **Budget Hardware** | Runs on $60+ Android phones (3–4GB RAM, TECNO/Infinix) via mmap |
 | **Camera + Mic Screening** | Heart rate, anemia, jaundice, preeclampsia via camera; TB/respiratory via HeAR Event Detector (1.1MB TFLite); ViT-L encoder upgrade path architecturally complete but blocked by XLA/StableHLO conversion |
@@ -54,7 +54,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 ## ✨ Features
 
-- 🧠 **MedGemma 4B** — Google's clinical reasoning model, quantized to ~2.3GB Q4_K_M (56% MedQA, quantized; 69% unquantized)
+- 🧠 **MedGemma 4B** — Google's clinical reasoning model, quantized to ~2.49GB Q4_K_M (56% MedQA, quantized; 69% unquantized)
 - 🌐 **Android ML Kit** — On-device translation for 59 languages; unsupported languages pass through unchanged in offline mode
 - 🔊 **Android System TTS** — Device-native voice synthesis for spoken clinical results
 - 💎 **Premium UI** — Glassmorphism design with localized strings
@@ -78,7 +78,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 │   └────────┬──────────┘                                    │
 │            ↓                                                │
 │   ┌───────────────────┐                                    │
-│   │    MedGemma 4B    │  ← Q4_K_M (2.3GB) • 100% on-device │
+│   │    MedGemma 4B    │  ← Q4_K_M (2.49GB) • 100% on-device │
 │   │  Clinical Triage  │                                    │
 │   └────────┬──────────┘                                    │
 │            ↓                                                │
@@ -135,7 +135,7 @@ The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED
 ## 🚀 Quick Start
 
 > [!WARNING]
-> **Reviewer/Auditor Notice**: Direct APK installations (`app-debug.apk` or `app-release-unsigned.apk`) **DO NOT** contain the 2.3GB MedGemma model due to Android's APK size limits. The model is distributed via Play Asset Delivery in the `.aab` release bundle. For direct APK review, either sideload the GGUF model (recommended for offline testing) or allow first-run network fallback download during triage.
+> **Reviewer/Auditor Notice**: Direct APK installations (`app-debug.apk` or `app-release-unsigned.apk`) **DO NOT** contain the 2.49GB MedGemma model due to Android's APK size limits. The model is distributed via Play Asset Delivery in the `.aab` release bundle. For direct APK review, either sideload the GGUF model (recommended for offline testing) or allow first-run network fallback download during triage.
 
 ### Prerequisites
 
@@ -182,13 +182,13 @@ adb push medgemma-4b-it.Q4_K_M.gguf /sdcard/Download/medgemma-4b-it-q4_k_m.gguf
 
 ### Compression Pipeline
 
-We achieve **~71% model size reduction** (8GB → 2.3GB) while retaining clinically useful accuracy (56% MedQA on the quantized model, vs. 69% unquantized):
+We achieve **~69% model size reduction** (8GB → 2.49GB) while retaining clinically useful accuracy (56% MedQA on the quantized model, vs. 69% unquantized):
 
 | Stage | Format | MedGemma | Total |
 |:------|:------:|:--------:|:-----:|
 | Original | F16 | ~8.0 GB | ~8 GB |
-| Standard | Q4_K_M | 2.3 GB | 2.3 GB |
-| **Production** | **Q4_K_M** | **~2.3 GB** | **~2.3 GB** |
+| Standard | Q4_K_M | 2.49 GB | 2.49 GB |
+| **Production** | **Q4_K_M** | **~2.49 GB** | **~2.49 GB** |
 
 *Translation handled by Android ML Kit (~30MB/language pack) — not a GGUF model.*
 
@@ -320,7 +320,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 ---
 
 <p align="center">
-  <strong>🌍 450M+ lives • 💰 $60–100 phones • 🧠 100% on-device medical inference • 🗣️ 46 languages</strong>
+  <strong>🌍 450M+ lives • 💰 $60+ phones • 🧠 100% on-device medical inference • 🗣️ 46 languages</strong>
 </p>
 
 <p align="center">

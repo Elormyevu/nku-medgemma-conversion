@@ -95,6 +95,6 @@ Prize Track: Main + Edge AI — Q4_K_M compression (8GB→2.3GB), mmap loading o
 
 Open source: Nku is fully open source under the Apache License 2.0. Source code, scripts, and calibration data on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion). Quantized model weights on [HuggingFace](https://huggingface.co/wredd/medgemma-4b-gguf) (subject to Google Gemma Terms of Use).
 
-*See `kaggle_submission_appendix.md` for full references [1–31], language list (46), calibration scenarios, MedGemma reasoning examples, sensor pipeline details, and safety architecture.*
+*See `kaggle_submission_appendices.md` for full references [1–32], language list (46), calibration scenarios, MedGemma reasoning examples, sensor pipeline details, and safety architecture.*
 
 *Development tooling: Google Antigravity (Gemini 3 Flash/Pro, Gemini 3.1 Pro, Claude Opus 4.5/4.6); OpenAI Codex IDE (GPT 5.3 Codex).*

@@ -1052,3 +1052,5 @@ MedQA is used as a relative benchmark for quantization comparison — not as an 
 [30] Adeloye D, Song P, Zhu Y, et al. Global, regional, and national prevalence of, and risk factors for, chronic obstructive pulmonary disease (COPD) in 2019: a systematic review and modelling analysis. *Lancet Respir Med*. 2022;10(5):447-458. doi:10.1016/S2213-2600(21)00511-7
 
 [31] Perin J, Mulick A, Yeung D, et al. Global, regional, and national causes of under-5 mortality in 2000-19: an updated systematic analysis with implications for the Sustainable Development Goals. *Lancet Child Adolesc Health*. 2022;6(2):106-115. doi:10.1016/S2352-4642(21)00311-4
+
+[32] Mahvar F., Liu Y., Golden D., et al. "The MedGemma Impact Challenge". *Kaggle*, 2026. https://kaggle.com/competitions/med-gemma-impact-challenge

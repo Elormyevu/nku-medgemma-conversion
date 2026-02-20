@@ -253,7 +253,7 @@ fun TriageScreen(
         Button(
             onClick = onRunTriage,
             enabled = hasAnyData && engineState == EngineState.IDLE,
-            colors = ButtonDefaults.buttonColors(containerColor = NkuColors.Primary, disabledContainerColor = Color(0xFF333344)),
+            colors = ButtonDefaults.buttonColors(containerColor = NkuColors.Primary, disabledContainerColor = NkuColors.InactiveElement),
             modifier = Modifier.fillMaxWidth(0.8f).height(56.dp),
             shape = RoundedCornerShape(28.dp)
         ) {

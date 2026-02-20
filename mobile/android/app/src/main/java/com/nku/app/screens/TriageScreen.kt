@@ -57,15 +57,16 @@ fun TriageScreen(
     onRunTriage: () -> Unit
 ) {
     val context = LocalContext.current
+    val symptoms by sensorFusion.symptoms.collectAsState()
     val hasAnyData = (rppgResult.bpm != null && rppgResult.confidence > 0.4f) ||
                      pallorResult.hasBeenAnalyzed ||
                      jaundiceResult.hasBeenAnalyzed ||
                      edemaResult.hasBeenAnalyzed ||
-                     respiratoryResult.confidence > 0.4f
+                     respiratoryResult.confidence > 0.4f ||
+                     symptoms.isNotEmpty()  // F-10: Allow symptoms-only triage
     var symptomText by remember { mutableStateOf("") }
     var isListening by remember { mutableStateOf(false) }
     var micPermissionDenied by remember { mutableStateOf(false) }
-    val symptoms by sensorFusion.symptoms.collectAsState()
     
     // S-3 Fix: Speech recognition launcher
     val speechLauncher = rememberLauncherForActivityResult(

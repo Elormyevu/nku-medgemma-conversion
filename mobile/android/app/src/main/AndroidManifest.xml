@@ -8,9 +8,10 @@
     <!-- Microphone permission for voice input (speech-to-text) -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     
-    <!-- Finding 2 fix: Removed explicit INTERNET permission from source manifest.
-         Transitive deps (Play Asset Delivery) pull it via manifest merge if needed.
-         All clinical inference is 100% on-device; no app code uses network. -->
+    <!-- INTERNET permission is pulled transitively via Play Asset Delivery manifest merge.
+         Network is used for: (1) cloud translation fallback for unsupported languages,
+         (2) reviewer-path MedGemma model download from HuggingFace.
+         All clinical inference (MedGemma reasoning) is 100% on-device. -->
     
     <!-- Model loading fallback: read GGUF models from /sdcard/Download/ (dev/testing) -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"

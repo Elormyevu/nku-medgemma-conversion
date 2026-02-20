@@ -362,8 +362,11 @@ fun NkuSentinelApp(
                             sensorFusion.updateVitalSigns()
                             val currentVitals = sensorFusion.vitalSigns.value
                             val prompt = clinicalReasoner.generatePrompt(currentVitals)
-                            
-                            if (!MemoryManager.isRamAvailableForMedGemma(context)) {
+
+                            // F-03: Thermal gate — route to WHO/IMCI if device is overheating
+                            if (thermalStatus.temperatureCelsius > 42f) {
+                                scope.launch { clinicalReasoner.createRuleBasedAssessment(currentVitals) }
+                            } else if (!MemoryManager.isRamAvailableForMedGemma(context)) {
                                 pendingTriagePrompt = prompt
                                 showLowMemoryDialog = true
                             } else {

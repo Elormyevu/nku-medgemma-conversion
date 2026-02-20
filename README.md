@@ -142,7 +142,8 @@ The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED
 - Android SDK 35+
 - NDK 29.0.13113456
 - Kotlin 2.1.0
-- ~4GB free storage for models
+- **~6GB free device/emulator storage** (APK ~1.2GB + MedGemma 2.49GB + runtime headroom)
+- ~4GB free storage for models on development machine
 
 ### Build the App
 

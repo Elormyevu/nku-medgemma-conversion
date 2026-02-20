@@ -156,12 +156,17 @@ class InputValidator:
         injection_detected = self._check_injection_patterns(sanitized)
         if injection_detected:
             errors.append("Input contains potentially malicious patterns")
-            logger.warning(f"Injection attempt detected: {sanitized[:100]}...")
+            # F-09: Log hash only — never log patient symptom text (PHI risk)
+            import hashlib
+            input_hash = hashlib.sha256(sanitized.encode()).hexdigest()[:16]
+            logger.warning(f"Injection attempt detected [input_hash={input_hash}, len={len(sanitized)}]")
             return ValidationResult(False, "", errors)
 
         if self._check_instruction_override_intent(sanitized):
             errors.append("Input contains potentially malicious patterns")
-            logger.warning(f"Override-intent prompt injection detected: {sanitized[:100]}...")
+            import hashlib
+            input_hash = hashlib.sha256(sanitized.encode()).hexdigest()[:16]
+            logger.warning(f"Override-intent prompt injection detected [input_hash={input_hash}, len={len(sanitized)}]")
             return ValidationResult(False, "", errors)
 
         # L-3 fix: Check for base64-encoded injection payloads
@@ -668,9 +673,10 @@ def validate_json_request(required_fields: List[str] = None, max_size_bytes: int
         def decorated_function(*args, **kwargs):
             from flask import request, jsonify
 
-            # Check content length against max_size_bytes
-            content_length = request.headers.get('Content-Length')
-            if content_length and int(content_length) > max_size_bytes:
+            # F-08: Check content length against max_size_bytes.
+            # Also verify actual body size after parse (Content-Length may be absent).
+            content_length = request.content_length
+            if content_length and content_length > max_size_bytes:
                 return jsonify({
                     'error': 'payload_too_large',
                     'message': f'Request body exceeds maximum size of {max_size_bytes} bytes'

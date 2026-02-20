@@ -673,7 +673,7 @@ Nku doesn't rely on MedGemma alone. The safety architecture provides multiple co
 |:------|:---------|:-----------|
 | Confidence gating | Sensors below 75% excluded from prompt | Prevents low-quality data from misleading the model |
 | Rule-based fallback | WHO/IMCI decision trees if MedGemma unavailable | Ensures triage guidance regardless of model state |
-| Over-referral bias | Thresholds tuned to flag liberally | False positives (unnecessary referrals) over false negatives |
+| Risk-stratified triage | 4-tier severity output | Optimizes limited transport resources by managing moderate cases locally
 | Prompt sanitization | 6-layer PromptSanitizer at every boundary | Prevents injection or adversarial manipulation |
 | Always-on disclaimer | "Consult a healthcare professional" | Positions output as decision support, not diagnosis |
 
@@ -909,13 +909,16 @@ Sensor readings below 75% confidence are excluded from MedGemma's prompt (marked
 ### Layer 2: WHO/IMCI Rule-Based Fallback
 If MedGemma is unavailable (device overheating at >42°C, model loading failure, thermal throttling), `ClinicalReasoner.createRuleBasedAssessment()` provides deterministic triage based on WHO Integrated Management of Childhood Illness (IMCI) flowcharts. This ensures triage continues even without the LLM. A localized transparency banner identifies the result as "Guideline-Based Triage" and provides recovery steps (e.g., close background apps, restart Nku) — all in the CHW's selected language.
 
-### Layer 3: Over-Referral Bias
-All sensor thresholds are set conservatively to favor false positives over false negatives:
-- rPPG: flags tachycardia at >100 BPM (standard clinical threshold)
-- Pallor: flags at conjunctival saturation ≤0.10 (liberal threshold; healthy ≥0.20)
-- Edema: flags at EAR ≤2.2 (normal ≈2.8)
+### Layer 3: Risk-Stratified Triage
+A binary "refer everybody" strategy is catastrophic in rural sub-Saharan Africa. Given the extreme economic and physical cost of a 10km+ journey to an understaffed district hospital, false positives actively harm patients and degrade system trust.
 
-The system intentionally over-refers — it is safer for a CHW to send a healthy patient to a clinic than to miss a critical case.
+Instead of liberal over-referral, Nku's `ClinicalReasoner` utilizes a strict 4-tier risk-stratification system:
+- **Routine Care (Green):** Managed locally by CHW protocol.
+- **Monitor (Yellow):** Advised for local follow-up, avoiding unnecessary transport.
+- **Refer Within Days (Orange):** Moderate/emerging severity warranting clinic evaluation.
+- **Refer Immediately (Red):** High-acuity critical danger (e.g., severe preeclampsia) justifying immediate emergency transport.
+
+This multi-tier design specifically addresses the health economics of rural triage — empowering CHWs to confidently manage lower-acuity patients locally while reserving costly facility referrals strictly for severe cases whose risk profile justifies the journey.
 
 ### Layer 4: Always-On Disclaimers
 Every triage result displays "Consult a healthcare professional" — this is not dismissible. The system outputs severity levels and referral recommendations, never diagnoses. It answers *"should this patient be referred urgently?"* not *"what disease does this patient have?"*

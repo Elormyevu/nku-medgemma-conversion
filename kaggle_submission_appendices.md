@@ -432,6 +432,23 @@ Confidence: 82%
 Note: This is a screening heuristic, not a hemoglobin measurement.
   Refer for laboratory hemoglobin test to confirm.
 
+=== JAUNDICE SCREENING (Scleral Icterus) ===
+Method: HSV color space analysis of the sclera (white of the eye). Measures
+  yellow saturation against a mapped scleral region of interest.
+  [15, 16]
+Jaundice index: 0.72 (0.0=normal sclera, 1.0=severe icterus)
+Severity: SEVERE — likely severe hyperbilirubinemia (>10 mg/dL)
+Confidence: 89%
+
+=== RESPIRATORY SCREENING (HeAR Cough Analysis) ===
+Method: MobileNetV3 INT8 TFLite Event Detector running Google Health Acoustic
+  Representations (HeAR) over 5 seconds of audio.
+  [27, 28]
+Respiratory risk score: 0.82 (0.0=healthy, 1.0=high risk)
+Classification: HIGH_RISK
+Confidence: 91%
+Note: This is a screening tool for TB/respiratory illness risk.
+
 === PREECLAMPSIA SCREENING (Periorbital Edema) ===
 Method: Eye Aspect Ratio (EAR) computed from MediaPipe 478-landmark facial
   mesh — periorbital edema narrows the palpebral fissure, reducing EAR.

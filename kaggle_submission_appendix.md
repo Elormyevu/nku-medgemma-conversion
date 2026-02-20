@@ -747,6 +747,8 @@ Confidence: 87%
 
 ### F.3: Anemia Screen — Conjunctival Pallor Detection
 
+**Clinical Validation & Architectural Value:** Anemia is a leading cause of maternal and childhood morbidity in Sub-Saharan Africa. The `PallorDetector` algorithm operationalizes recent clinical studies [13, 14] demonstrating that conjunctival tissue saturation, measured via smartphone sensors, correlates strongly with hemoglobin levels. By passing explicit saturation values and tissue coverage to MedGemma, Nku provides the model with mathematically constrained data, enabling it to accurately flag anemia risk even without a physical blood test.
+
 Source file: `PallorDetector.kt`
 
 | Stage | Technique | Detail |
@@ -784,12 +786,12 @@ Note: This is a screening heuristic, not a hemoglobin measurement.
   Refer for laboratory hemoglobin test to confirm.
 ```
 
-**Clinical Validation & Architectural Value:** Anemia is a leading cause of maternal and childhood morbidity in Sub-Saharan Africa. The `PallorDetector` algorithm operationalizes recent clinical studies [13, 14] demonstrating that conjunctival tissue saturation, measured via smartphone sensors, correlates strongly with hemoglobin levels. By passing explicit saturation values and tissue coverage to MedGemma, Nku provides the model with mathematically constrained data, enabling it to accurately flag anemia risk even without a physical blood test.
-
 
 ---
 
 ### F.4: Preeclampsia Screen — Periorbital Edema Detection
+
+**Clinical Validation & Architectural Value:** Preeclampsia is a major cause of maternal mortality, often presenting with sudden fluid retention and edema before progressing to dangerous hypertension [28]. The `EdemaDetector` applies an innovative use of the Eye Aspect Ratio (EAR) metric [17, 18], traditionally used for fatigue monitoring, to quantify periorbital swelling. When mapped alongside symptom tracking (e.g., "headache") and the patient's gestational age, this quantified heuristic gives MedGemma the critical structured data needed to flag high-risk preeclampsia cases for immediate emergency referral.
 
 Source file: `EdemaDetector.kt`
 
@@ -831,12 +833,12 @@ Note: This is a novel screening heuristic. Confirm with blood pressure
   measurement and urine protein test.
 ```
 
-**Clinical Validation & Architectural Value:** Preeclampsia is a major cause of maternal mortality, often presenting with sudden fluid retention and edema before progressing to dangerous hypertension [28]. The `EdemaDetector` applies an innovative use of the Eye Aspect Ratio (EAR) metric [17, 18], traditionally used for fatigue monitoring, to quantify periorbital swelling. When mapped alongside symptom tracking (e.g., "headache") and the patient's gestational age, this quantified heuristic gives MedGemma the critical structured data needed to flag high-risk preeclampsia cases for immediate emergency referral.
-
 
 ---
 
 ### F.5: Jaundice Screen — Scleral Icterus Detection
+
+**Clinical Validation & Architectural Value:** Neonatal and adult jaundice requires early detection to prevent neurological damage or identify liver/pancreatic dysfunction. The `JaundiceDetector` mirrors validated smartphone-based scleral monitoring techniques like BiliScreen [15] and neoSCB [16], which rely on color space transformation to isolate the yellow bilirubin pigment in unpigmented scleral tissue. By structuring this visual analysis into a precise numerical "scleral yellow ratio," Nku allows the Q4_K_M MedGemma model to reliably assess hyperbilirubinemia risk without the massive computational overhead of processing raw clinical images.
 
 Source file: `JaundiceDetector.kt`
 
@@ -872,12 +874,12 @@ Note: This is a screening heuristic, not a bilirubin measurement.
   Refer for serum bilirubin and liver function tests to confirm.
 ```
 
-**Clinical Validation & Architectural Value:** Neonatal and adult jaundice requires early detection to prevent neurological damage or identify liver/pancreatic dysfunction. The `JaundiceDetector` mirrors validated smartphone-based scleral monitoring techniques like BiliScreen [15] and neoSCB [16], which rely on color space transformation to isolate the yellow bilirubin pigment in unpigmented scleral tissue. By structuring this visual analysis into a precise numerical "scleral yellow ratio," Nku allows the Q4_K_M MedGemma model to reliably assess hyperbilirubinemia risk without the massive computational overhead of processing raw clinical images.
-
 
 ---
 
 ### F.6: TB/Respiratory Screen — HeAR Event Detector Pipeline
+
+**Clinical Validation & Architectural Value:** While traditional audio encoders output dense acoustic embeddings, MedGemma thrives on structured data. The 1.1MB TFLite HeAR Event Detector rapidly classifies 8 specific health sound events (cough, snore, breathe, sneeze, etc.) and outputs explicit confidence probabilities for each. Rather than passing a vector that an SLM cannot easily interpret, the Event Detector passes a structured summary (`Cough: 0.82`) directly into the prompt. In Sub-Saharan Africa, where 10.8M new TB cases occur annually (only 44% of MDR-TB diagnosed) [1], COPD prevalence is projected to rise 59% by 2050 [30], and pneumonia claims over 500,000 children under five each year [31], even a binary cough detection signal combined with clinical LLM reasoning provides a screening capability CHWs currently lack. This audio analysis exceeds what any standard clinical auscultation tool offers at the community health level.
 
 Source file: `RespiratoryDetector.kt`
 
@@ -887,10 +889,6 @@ Source file: `RespiratoryDetector.kt`
 | Event Detector | HeAR MobileNetV3-Small (TFLite INT8, 1.1MB) | Always loaded. Classifies 8 health sound events (cough, sneeze, snore, breathe, etc.) in ~50ms |
 | Risk scoring | Class probability analysis | `riskScore = max(highRiskClasses)` — cough, sneeze, snore scores weighted for respiratory risk |
 | MedGemma integration | Clinical reasoning | Risk score + event class distribution passed to MedGemma prompt for TB/COPD/pneumonia triage |
-
-
-
-**Clinical Validation & Architectural Value:** While traditional audio encoders output dense acoustic embeddings, MedGemma thrives on structured data. The 1.1MB TFLite HeAR Event Detector rapidly classifies 8 specific health sound events (cough, snore, breathe, sneeze, etc.) and outputs explicit confidence probabilities for each. Rather than passing a vector that an SLM cannot easily interpret, the Event Detector passes a structured summary (`Cough: 0.82`) directly into the prompt. In Sub-Saharan Africa, where 10.8M new TB cases occur annually (only 44% of MDR-TB diagnosed) [1], COPD prevalence is projected to rise 59% by 2050 [30], and pneumonia claims over 500,000 children under five each year [31], even a binary cough detection signal combined with clinical LLM reasoning provides a screening capability CHWs currently lack. This audio analysis exceeds what any standard clinical auscultation tool offers at the community health level.
 
 Output → VitalSigns:
 ```kotlin

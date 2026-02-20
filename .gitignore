@@ -129,3 +129,4 @@ task.md
 # Local Python dev modules (Kotlin equivalents exist on Android)
 src/
 .coverage
+video_assets/

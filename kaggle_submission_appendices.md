@@ -511,11 +511,11 @@ Selecting the right quantization level required balancing two competing goals: m
 
 | Quantization | Size | MedQA Accuracy | Primary Care | % of Baseline (69%) | Verdict |
 |:-------------|:----:|:--------------:|:--------------------:|:--------------------:|:--------|
-| F16 (baseline) | 8.0 GB | 69% | — | 100% | Too large for mobile |
-| Q4_K_M | 2.3 GB | 56.0% (713/1273) | 56.2% (397/707) | 81% | ✅ Selected — best accuracy/size ratio |
+| Unquantized (Baseline) | 8.0 GB | 69.0% | — | 100% | Too large for mobile |
+| **Q4_K_M** | **2.3 GB** | **56.4%** | **58.0%** | **81.7%** | **Deployed — best accuracy/size ratio** |
 | IQ2_XS + medical imatrix | 1.3 GB | 43.8% (558/1273) | 45.3% (320/707) | 63.5% | Viable alternative for ultra-constrained devices |
-| Q2_K | 1.6 GB | 34.7% (442/1273) | 33.9% (240/707) | 50.3% | ❌ Worse than IQ2_XS despite being larger |
-| IQ1_M | 1.1 GB | 32.3% (411/1273) | 32.4% (229/707) | 46.8% | ❌ Near random chance — rejected |
+| Q2_K | 1.6 GB | 34.7% (442/1273) | 33.9% (240/707) | 50.3% | Worse than IQ2_XS despite being larger |
+| IQ1_M | 1.1 GB | 32.3% (411/1273) | 32.4% (229/707) | 46.8% | Near random chance — rejected |
 
 > †Each model was evaluated single-shot on the full MedQA test set (1,273 questions) and the primary care subset (707 questions) — one attempt per question, no repeated runs, no best-of-N selection. This mirrors Nku's real-world use case: a CHW presents a patient once and receives a single triage response. Single-run evaluation is the most representative measure of the model's reliability in this clinical context.
 

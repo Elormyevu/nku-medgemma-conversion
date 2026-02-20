@@ -55,7 +55,8 @@ Edge AI — Quantization & Memory: We achieve 71% model size reduction (8GB → 
 
 | Quant | Size | MedQA | Primary Care | Verdict |
 |:------|:----:|:---------------:|:--------------------:|:--------|
-| Q4_K_M | 2.3 GB | 56.4% | 58.0% | Deployed |
+| Unquantized (Baseline) | 8.0 GB | 69.0% | - | Too large for RAM |
+| **Q4_K_M** | **2.3 GB** | **56.4%** | **58.0%** | **Deployed** |
 | IQ2_XS + imatrix | 1.3 GB | 43.8% | 45.3% | Viable ultra-compact |
 | Q2_K | 1.6 GB | 34.7% | 33.9% | Worse than IQ2_XS |
 | IQ1_M | 1.1 GB | 32.3% | 32.4% | Near random |

@@ -47,13 +47,15 @@ The Nku Cycle is a multi-stage orchestration pipeline where MedGemma serves as t
 
 Each stage operates independently. These built-in safety checks ensure the system never hard-crashes. All medical inference by MedGemma is 100% on-device and strictly reasons over English prompts for clinical safety. ML Kit provides on-device translation for 59 languages, ensuring that since CHWs are trained in their national official languages (e.g., English, French, Portuguese), a comprehensive 100% offline triage path is guaranteed. If a CHW selects an unsupported indigenous language, the app displays a UI connectivity alert: cloud translation is used as a fallback, and if there is no internet, the language is not allowed.
 
-**Before/after — why structured prompting matters:** MedGemma was trained on clinical text, not smartphone sensor data. A prompt like *"the patient looks pale and her eyes are puffy"* yields generic advice. To address this, Nku's `ClinicalReasoner` fuses the CHW's input text with interpreted sensor data, feeding MedGemma a structured prompt containing quantified biomarkers and confidence metrics:
+**Before/after — why structured prompting and compression matters:** MedGemma was trained on clinical text, not smartphone sensor data. A prompt like *"the patient looks pale and her eyes are puffy"* yields generic advice. To address this, Nku's `ClinicalReasoner` fuses the CHW's input text with interpreted sensor data, feeding MedGemma a structured prompt containing quantified biomarkers and confidence metrics:
 
 > `Conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10), pallor index: 0.68, severity: MODERATE. EAR: 2.15 (normal ≈2.8, edema threshold ≤2.2), edema index: 0.52. Patient pregnant, 32 weeks.`
 
 MedGemma's response to this structured input:
 
 > `SEVERITY: HIGH | URGENCY: IMMEDIATE` — Identifies the classic preeclampsia triad (edema + headache + pregnancy >20 weeks), flags concurrent anemia, and recommends same-day facility referral with specific danger signs to communicate to the patient.
+
+**Prompt Compression & CoT Constraint:** Crucially, budget Android 3GB RAM devices constrain the model's KV-Cache to exactly 2048 tokens. If Nku passed raw multimodal arrays natively, they would consume ~1600 tokens, leaving no space for MedGemma to reason. Nku circumvents this via **Sensor Prompt Compression**: the Android edge converts verbose sensor matrices into the concise biomarkers shown above, halving prompt token consumption. This unlocks over 1200 free KV-Cache tokens, empowering MedGemma to utilize full **Chain-of-Thought (CoT)** reasoning before outputting its triage JSON response. This architectural tradeoff unlocks a +20pp triage accuracy gain (detailed in Appendix G).
 
 Previous studies have demonstrated that this structured prompting achieves a median 53% improvement over zero-shot baselines [9] — transforming MedGemma from a general medical QA model into a structured sensor data interpreter for CHW triage.
 

@@ -575,7 +575,7 @@ class NkuInferenceEngine(private val context: Context) {
             // HuggingFace LFS uses chunked transfer so Content-Length is often -1.
             // Fall back to the known model size for accurate progress reporting.
             val totalBytes = if (serverBytes > 0) serverBytes else MEDGEMMA_EXPECTED_BYTES
-            val totalMB = totalBytes / 1_000_000L  // Decimal MB to match 2.49GB marketing figure
+            val totalMB = totalBytes / (1024L * 1024L)  // Standard computing MB (1024-based)
             Log.i(TAG, "Starting native download of $fileName ($totalBytes bytes)")
 
             // Download to temp file — never to the final name
@@ -591,7 +591,7 @@ class NkuInferenceEngine(private val context: Context) {
                         output.write(buffer, 0, read)
                         bytesWritten += read
 
-                        val mb = bytesWritten / 1_000_000L
+                        val mb = bytesWritten / (1024L * 1024L)
                         val percent = ((bytesWritten * 100) / totalBytes).toInt()
                         if (percent != lastReportedPercent) {
                             lastReportedPercent = percent

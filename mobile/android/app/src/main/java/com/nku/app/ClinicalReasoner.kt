@@ -302,6 +302,10 @@ class ClinicalReasoner {
         sb.appendLine("Consider preeclampsia if edema + pregnancy.")
         sb.appendLine("Consider TB or respiratory illness if cough analysis shows elevated risk.")
         sb.appendLine("Be concise. Recommendations should be actionable for a community health worker.")
+        sb.appendLine()
+        sb.appendLine("IMPORTANT: You MUST start your response with the SEVERITY and URGENCY lines exactly as shown above. Do not skip them.")
+        sb.appendLine("Begin your response now:")
+        sb.appendLine("SEVERITY:")
         
         return sb.toString()
     }

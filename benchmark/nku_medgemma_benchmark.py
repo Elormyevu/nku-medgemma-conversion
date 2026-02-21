@@ -264,7 +264,7 @@ def _parse_triage_response(response: str) -> dict:
 # Inference
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def query_llama(prompt: str, port: int = 8787, max_tokens: int = 300) -> Optional[str]:
+def query_llama(prompt: str, port: int = 8787, max_tokens: int = 800) -> Optional[str]:
     """Query llama-server for inference."""
     url = f"http://localhost:{port}/completion"
     payload = json.dumps({

@@ -55,9 +55,9 @@ MedGemma's response to this structured input:
 
 > `SEVERITY: HIGH | URGENCY: IMMEDIATE` — Identifies the classic preeclampsia triad (edema + headache + pregnancy >20 weeks), flags concurrent anemia, and recommends same-day facility referral with specific danger signs to communicate to the patient.
 
-**Prompt Compression & CoT Constraint:** Crucially, budget Android 3GB RAM devices constrain the model's KV-Cache to exactly 2048 tokens. If Nku passed raw multimodal arrays natively, they would consume ~1600 tokens, leaving no space for MedGemma to reason. Nku circumvents this via **Sensor Prompt Compression**: the Android edge converts verbose sensor matrices into the concise biomarkers shown above, halving prompt token consumption. This unlocks over 1200 free KV-Cache tokens, empowering MedGemma to utilize full **Chain-of-Thought (CoT)** reasoning before outputting its triage JSON response. This architectural tradeoff unlocks a +20pp triage accuracy gain (detailed in Appendix G).
+Previous studies have demonstrated that this structured prompting achieves a median 53% improvement over zero-shot baselines [9].
 
-Previous studies have demonstrated that this structured prompting achieves a median 53% improvement over zero-shot baselines [9] — transforming MedGemma from a general medical QA model into a structured sensor data interpreter for CHW triage.
+**Prompt Compression & CoT Constraint:** Crucially, budget Android 3GB RAM devices constrain the model's KV-Cache to exactly 2048 tokens. If Nku passed raw multimodal arrays natively, they would consume ~1600 tokens, leaving no space for MedGemma to reason. Nku circumvents this via **Sensor Prompt Compression**: the Android edge converts verbose sensor matrices into the concise biomarkers shown above, halving prompt token consumption. This unlocks over 1200 free KV-Cache tokens, empowering MedGemma to utilize full **Chain-of-Thought (CoT)** reasoning before outputting its triage JSON response. This architectural tradeoff unlocks a +20pp triage accuracy gain (detailed in Appendix G).
 
 ### Technical details
 

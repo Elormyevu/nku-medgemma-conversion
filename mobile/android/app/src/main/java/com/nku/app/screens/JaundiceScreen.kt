@@ -289,6 +289,35 @@ fun JaundiceScreen(
                 )
             }
             
+            // ── Completion confirmation banner ──
+            Spacer(Modifier.height(8.dp))
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = NkuColors.Success.copy(alpha = 0.15f)
+                ),
+                border = androidx.compose.foundation.BorderStroke(1.dp, NkuColors.Success.copy(alpha = 0.4f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        tint = NkuColors.Success,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        strings.dataSavedForTriage,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = NkuColors.Success
+                    )
+                }
+            }
+
             Spacer(Modifier.height(20.dp))
             
             // Recommendation

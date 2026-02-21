@@ -53,9 +53,21 @@ fun CardioScreen(
     strings: LocalizedStrings.UiStrings
 ) {
     var isMeasuring by remember { mutableStateOf(false) }
+    var measurementComplete by remember { mutableStateOf(false) }
     var cameraPermissionDenied by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+
+    // Auto-stop when buffer is full and we have a valid reading
+    LaunchedEffect(rppgResult.bufferFillPercent, rppgResult.bpm, rppgResult.confidence) {
+        if (isMeasuring &&
+            rppgResult.bufferFillPercent >= 100f &&
+            rppgResult.bpm != null &&
+            rppgResult.confidence > 0.4f) {
+            isMeasuring = false
+            measurementComplete = true
+        }
+    }
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -228,6 +240,37 @@ fun CardioScreen(
             Text("${strings.confidenceLabel}: ${(rppgResult.confidence * 100).toInt()}%", color = NkuColors.TextSecondary, fontSize = 13.sp)
         }
         
+        // ── Completion confirmation banner ──
+        if (measurementComplete && rppgResult.bpm != null && rppgResult.confidence > 0.4f) {
+            Spacer(Modifier.height(8.dp))
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = NkuColors.Success.copy(alpha = 0.15f)
+                ),
+                border = androidx.compose.foundation.BorderStroke(1.dp, NkuColors.Success.copy(alpha = 0.4f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        tint = NkuColors.Success,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        strings.dataSavedForTriage,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = NkuColors.Success
+                    )
+                }
+            }
+        }
+
         Spacer(Modifier.height(20.dp))
         
         // Start / Stop button
@@ -243,6 +286,7 @@ fun CardioScreen(
                     if (hasPermission) {
                         rppgProcessor.reset()
                         isMeasuring = true
+                        measurementComplete = false
                         cameraPermissionDenied = false
                     } else {
                         cameraPermissionLauncher.launch(Manifest.permission.CAMERA)

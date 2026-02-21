@@ -408,7 +408,11 @@ object LocalizedStrings {
         val downloadSlowWarning: String = "The app may be slower while the AI model downloads. You can still use the screening tools.",
         val downloadFailedWarning: String = "The AI model could not be downloaded. Triage will use rule-based assessment until resolved.",
         val notEnoughStorage: String = "Not enough storage",
-        val validatingModel: String = "Validating model integrity…"
+        val validatingModel: String = "Validating model integrity…",
+
+        // Auto-stop completion feedback (UX-1)
+        val dataSavedForTriage: String = "✓ Data saved for triage",
+        val measurementComplete: String = "Measurement complete"
     ) {
         /** Map signal quality string to localized display name. */
         fun localizedSignalQuality(quality: String): String = when (quality) {
@@ -588,7 +592,10 @@ object LocalizedStrings {
         noSwelling = "✓ Kumburi aɖeke meli o",
         downloadingModel = "MedGemma dzadzram…",
         downloadSlowWarning = "App ateŋu anɔ blewu ke AI ƒe dɔwɔnu le dzadzram. Àteŋu azã kpɔkpɔ dɔwɔnuwo.",
-        downloadFailedWarning = "Wometeŋu wɔ AI ƒe dɔwɔnu dzadzram o. Kpɔkpɔ azã alɔdzawo."
+        downloadFailedWarning = "Wometeŋu wɔ AI ƒe dɔwɔnu dzadzram o. Kpɔkpɔ azã alɔdzawo.",
+        dataSavedForTriage = "✓ Wotsɔ data da na kpɔkpɔ",
+        measurementComplete = "Kpɔkpɔ vɔ"
+
     )
 
     val frenchStrings = UiStrings(
@@ -773,7 +780,9 @@ object LocalizedStrings {
         downloadSlowWarning = "L'application peut être plus lente pendant le téléchargement du modèle IA. Vous pouvez utiliser les outils de dépistage.",
         downloadFailedWarning = "Le modèle IA n'a pas pu être téléchargé. Le triage utilisera l'évaluation par règles.",
         notEnoughStorage = "Stockage insuffisant",
-        validatingModel = "Vérification de l'intégrité du modèle…"
+        validatingModel = "Vérification de l'intégrité du modèle…",
+        dataSavedForTriage = "✓ Données enregistrées pour le triage",
+        measurementComplete = "Mesure terminée"
     )
 
     val swahiliStrings = UiStrings(
@@ -882,7 +891,10 @@ object LocalizedStrings {
         noSwelling = "✓ Hakuna uvimbe wa uso",
         downloadingModel = "Kupakua MedGemma…",
         downloadSlowWarning = "Programu inaweza kuwa polepole wakati muundo wa AI unapakua. Unaweza kutumia zana za uchunguzi.",
-        downloadFailedWarning = "Muundo wa AI haukuweza kupakuliwa. Hatua zitatumia tathmini ya miongozo."
+        downloadFailedWarning = "Muundo wa AI haukuweza kupakuliwa. Hatua zitatumia tathmini ya miongozo.",
+        dataSavedForTriage = "✓ Data imehifadhiwa kwa hatua",
+        measurementComplete = "Kipimo kimekamilika"
+
     )
 
     val hausaStrings = UiStrings(
@@ -1034,7 +1046,10 @@ object LocalizedStrings {
         triageSourceGuideline = "Bincike bisa ka'idoji",
         fallbackExplanation = "Ba a samu tsarin AI ba. Sakamakon yana bin ka'idojin asibiti na WHO/IMCI — mai aminci kuma tabbatacce.",
         fallbackRecoveryTip = "Don dawo da AI: rufe manhajar baya ko sake kunna Nku.",
-        lowConfidenceWarning = "\u26A0 Tabbaci ya yi ƙasa \u2014 wannan sakamakon bazai shiga bincike ba. Sake ɗauka a haske mai kyau."
+        lowConfidenceWarning = "\u26A0 Tabbaci ya yi ƙasa \u2014 wannan sakamakon bazai shiga bincike ba. Sake ɗauka a haske mai kyau.",
+        dataSavedForTriage = "✓ An ajiye bayanan don bincike",
+        measurementComplete = "An gama auna"
+
     )
 
     val yorubaStrings = UiStrings(
@@ -1185,7 +1200,10 @@ object LocalizedStrings {
         triageSourceGuideline = "Àyẹ̀wò bí ìlànà ṣe sọ",
         fallbackExplanation = "Àwòṣe AI kò sí. Àbájáde tẹ̀lé àwọn ìlànà ìṣègùn WHO/IMCI — ó wà láàbò, ó sì jẹ́ ẹ̀rí.",
         fallbackRecoveryTip = "Láti mú AI padà: pa àwọn ohun èlò ẹ̀yìn tàbí tún Nku bẹ̀rẹ̀.",
-        lowConfidenceWarning = "\u26A0 Ìgbàgbọ́ kéré jù \u2014 àbájáde yìí lè máa kòpà nínú àyẹ̀wò. Tún ya nínú ìmọ́lẹ̀ tó dára."
+        lowConfidenceWarning = "\u26A0 Ìgbàgbọ́ kéré jù \u2014 àbájáde yìí lè máa kòpà nínú àyẹ̀wò. Tún ya nínú ìmọ́lẹ̀ tó dára.",
+        dataSavedForTriage = "✓ Dátà ti fipamọ́ fún àyẹ̀wò",
+        measurementComplete = "Wíwọ̀n ti parí"
+
     )
 
     val igboStrings = UiStrings(
@@ -1244,7 +1262,10 @@ object LocalizedStrings {
         noSwelling = "✓ Enweghị etu ihu",
         downloadingModel = "Na-ebudata MedGemma…",
         downloadSlowWarning = "Ngwa nwere ike ịnọ nwayọọ ka a na-ebudata AI. Ị nwere ike iji ngwa nlele.",
-        downloadFailedWarning = "Enweghị ike ibudata ihe AI. Nlele ga-eji iwu."
+        downloadFailedWarning = "Enweghị ike ibudata ihe AI. Nlele ga-eji iwu.",
+        dataSavedForTriage = "✓ Echekwara data maka nlele",
+        measurementComplete = "Ntụle emechara"
+
     )
 
     val amharicStrings = UiStrings(
@@ -1298,7 +1319,10 @@ object LocalizedStrings {
         noSwelling = "✓ የፊት እብጠት የለም",
         downloadingModel = "MedGemma በማውረድ ላይ…",
         downloadSlowWarning = "የAI ሞዴሉ በሚወርድበት ጊዜ መተግበሪያው ሊዘገይ ይችላል። የምርመራ መሳሪያዎቹን መጠቀም ይችላሉ።",
-        downloadFailedWarning = "የAI ሞዴሉ ሊወርድ አልቻለም። ምርመራ መመሪያ-ተኮር ግምገማ ይጠቀማል።"
+        downloadFailedWarning = "የAI ሞዴሉ ሊወርድ አልቻለም። ምርመራ መመሪያ-ተኮር ግምገማ ይጠቀማል።",
+        dataSavedForTriage = "✓ ውሂብ ለምርመራ ተቀምጧል",
+        measurementComplete = "መለኪያ ተጠናቅቋል"
+
     )
 
     val twiStrings = UiStrings(
@@ -1352,7 +1376,10 @@ object LocalizedStrings {
         noSwelling = "✓ Anim mu ahoninono biara nni hɔ",
         downloadingModel = "Ɛretwi MedGemma…",
         downloadSlowWarning = "App no bɛyɛ nwanwa bere a AI model retwi no. Wubetumi de hwehwɛ nnwinnade no adi dwuma.",
-        downloadFailedWarning = "Wɔantumi antwi AI model no. Hwehwɛ bɛfa mmara so."
+        downloadFailedWarning = "Wɔantumi antwi AI model no. Hwehwɛ bɛfa mmara so.",
+        dataSavedForTriage = "✓ Data no akyerɛ hwehwɛ",
+        measurementComplete = "Susu no awie"
+
     )
 
     val wolofStrings = UiStrings(
@@ -1382,7 +1409,10 @@ object LocalizedStrings {
         triageSourceGuideline = "Saytul bu yoon yi",
         fallbackExplanation = "Model AI bi amul. Natalu yi di jëm ci yoonu WHO/IMCI — bu aar te.",
         fallbackRecoveryTip = "Ngir délusi AI: tëj appli yi ci ginnaaw wala dooraat Nku.",
-        lowConfidenceWarning = "\u26A0 Gis-gis bu néew \u2014 natalu bii bées na ko ci saytul bi. Def ko kenn ci leer bu baax."
+        lowConfidenceWarning = "\u26A0 Gis-gis bu néew \u2014 natalu bii bées na ko ci saytul bi. Def ko kenn ci leer bu baax.",
+        dataSavedForTriage = "✓ Njàng yi dañu ko denc ngir saafara",
+        measurementComplete = "Nataal bi jeexna"
+
     )
 
     val zuluStrings = UiStrings(
@@ -1432,7 +1462,10 @@ object LocalizedStrings {
         noSwelling = "✓ Akukho ukuvuvukala kobuso",
         downloadingModel = "Ilanda i-MedGemma…",
         downloadSlowWarning = "Uhlelo lungahamba kancane ngenkathi kulandwa imodeli ye-AI. Ungasebenzisa amathuluzi okuhlola.",
-        downloadFailedWarning = "Imodeli ye-AI ayikwazanga ukulandwa. Ukuhlolwa kuzosebenzisa imithetho."
+        downloadFailedWarning = "Imodeli ye-AI ayikwazanga ukulandwa. Ukuhlolwa kuzosebenzisa imithetho.",
+        dataSavedForTriage = "✓ Idatha igcinwe ngokuhlolwa",
+        measurementComplete = "Ukukalwa kuqediwe"
+
     )
 
     val xhosaStrings = UiStrings(
@@ -1482,7 +1515,10 @@ object LocalizedStrings {
         noSwelling = "✓ Akukho ukudumba kobuso",
         downloadingModel = "Ikhuphela i-MedGemma…",
         downloadSlowWarning = "I-app inokucotha ngexesha lokukhuphela imodeli ye-AI. Ungasebenzisa izixhobo zokuhlola.",
-        downloadFailedWarning = "Imodeli ye-AI ayikwazanga ukukhutshwa. Ukuhlolwa kuza kusebenzisa imithetho."
+        downloadFailedWarning = "Imodeli ye-AI ayikwazanga ukukhutshwa. Ukuhlolwa kuza kusebenzisa imithetho.",
+        dataSavedForTriage = "✓ Idatha igcinwe ngokuhlolwa",
+        measurementComplete = "Ukulinganiswa kugqityiwe"
+
     )
 
     val oromoStrings = UiStrings(
@@ -1532,7 +1568,10 @@ object LocalizedStrings {
         noSwelling = "✓ Dhiitoon fuulaa hin jiru",
         downloadingModel = "MedGemma buufachaa jira…",
         downloadSlowWarning = "Appiin suuta ta'uu dandeeysii yeroo moodeelli AI buufatamu. Meeshaalee qorannoo fayyadamuu dandeeysa.",
-        downloadFailedWarning = "Moodeelli AI buufachuun hin danda'amne. Qorannoon seerawwan fayyadama."
+        downloadFailedWarning = "Moodeelli AI buufachuun hin danda'amne. Qorannoon seerawwan fayyadama.",
+        dataSavedForTriage = "✓ Daataan qorannootiif qabame",
+        measurementComplete = "Safartuun xumurameera"
+
     )
 
     val tigrinyaStrings = UiStrings(
@@ -1582,7 +1621,10 @@ object LocalizedStrings {
         noSwelling = "✓ ምሕባጥ ገጽ የለን",
         downloadingModel = "MedGemma ይወርድ ኣሎ…",
         downloadSlowWarning = "ናይ AI ሞዴል ክወርድ ከሎ ኣፕ ክደንጊ ይኽእል። ናይ ምርመራ መሳርሒታት ክትጥቀሙ ትኽእሉ።",
-        downloadFailedWarning = "ናይ AI ሞዴል ክወርድ ኣይከኣለን። ምርመራ ናይ መምርሒ ግምገማ ክጥቀም እዩ።"
+        downloadFailedWarning = "ናይ AI ሞዴል ክወርድ ኣይከኣለን። ምርመራ ናይ መምርሒ ግምገማ ክጥቀም እዩ።",
+        dataSavedForTriage = "✓ ዳታ ንምርመራ ተዓቂቡ",
+        measurementComplete = "ዕቃን ተዛዚሙ"
+
     )
 
     // ─── Tier 2 Languages ───────────────────────────────────────
@@ -1622,7 +1664,10 @@ object LocalizedStrings {
         disclaimer = "KI-ondersteunde siftingsinstrument. Raadpleeg altyd 'n gesondheidswerker.",
         downloadingModel = "Laai MedGemma af…",
         downloadSlowWarning = "Die toep kan stadiger wees terwyl die KI-model aflaai. U kan steeds die siftingsinstrumente gebruik.",
-        downloadFailedWarning = "Die KI-model kon nie afgelaai word nie. Triage sal reëlgebaseerde assessering gebruik."
+        downloadFailedWarning = "Die KI-model kon nie afgelaai word nie. Triage sal reëlgebaseerde assessering gebruik.",
+        dataSavedForTriage = "✓ Data gestoor vir triage",
+        measurementComplete = "Meting voltooi"
+
     )
 
     val bambaraStrings = UiStrings(
@@ -1644,7 +1689,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma bɛ jiginni na…",
         downloadSlowWarning = "Porogaramu bɛ se ka dɔgɔya AI modɛli jiginni waati la.",
         downloadFailedWarning = "AI modɛli ma se ka jigi. Sɛgɛsɛgɛli bɛna sariya baara.",
-        disclaimer = "AI sɛgɛsɛgɛli baarakɛminɛn ye. Dɔgɔtɔrɔ ɲininka tuma bɛɛ."
+        disclaimer = "AI sɛgɛsɛgɛli baarakɛminɛn ye. Dɔgɔtɔrɔ ɲininka tuma bɛɛ.",
+        dataSavedForTriage = "✓ Bayanw mara sɛgɛsɛgɛli kama",
+        measurementComplete = "Jateminɛ banna"
+
     )
 
     val chichewaStrings = UiStrings(
@@ -1666,7 +1714,10 @@ object LocalizedStrings {
         downloadingModel = "Kukopa MedGemma…",
         downloadSlowWarning = "Pulogalamu ikhoza kuchedwa pomwe modeli ya AI ikukopedwa.",
         downloadFailedWarning = "Modeli ya AI siinakopedwe. Kuyeza kudzagwiritsa ntchito malamulo.",
-        disclaimer = "Chida choyeza cha AI. Funsani dotolo nthawi zonse."
+        disclaimer = "Chida choyeza cha AI. Funsani dotolo nthawi zonse.",
+        dataSavedForTriage = "✓ Data yasungidwa kuti iyezedwe",
+        measurementComplete = "Kuyeza kwatheka"
+
     )
 
     val dinkaStrings = UiStrings(
@@ -1684,7 +1735,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma ëë gäm…",
         downloadSlowWarning = "App abë dɔm alɔŋ AI model ëë gäm.",
         downloadFailedWarning = "AI model akëc gäm. Ŋic abë luɔi kë thɛɛr.",
-        disclaimer = "Kä ŋic de AI yen. Thiëëc ë dɛktɔr aköl ëbɛ̈n."
+        disclaimer = "Kä ŋic de AI yen. Thiëëc ë dɛktɔr aköl ëbɛ̈n.",
+        dataSavedForTriage = "✓ Data akëc muk ë ŋic",
+        measurementComplete = "Ŋic acï thöl"
+
     )
 
     val fulaStrings = UiStrings(
@@ -1702,7 +1756,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma ina aartee…",
         downloadSlowWarning = "Jaaɓnirgo ngo waawi leelde tuma modeel AI nde ina aartee.",
         downloadFailedWarning = "Modeel AI nde waawaa aartaade. Ƴeewndoo huutoroyta jamirooje.",
-        disclaimer = "Kuutorgal ƴeewndoo AI. Haalan cafroowo sahaa kala."
+        disclaimer = "Kuutorgal ƴeewndoo AI. Haalan cafroowo sahaa kala.",
+        dataSavedForTriage = "✓ Keɓe ɗe ndaaratee ngam ƴeewndoo",
+        measurementComplete = "Ƴeewndoo gasii"
+
     )
 
     val gaStrings = UiStrings(
@@ -1720,7 +1777,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma eshi ba lɛ…",
         downloadSlowWarning = "App lɛ abaakɛ dɔŋ AI model eshi ba lɛ wɔ.",
         downloadFailedWarning = "AI model mli eba. Kɛha amli shikpɔŋ hewɔ.",
-        disclaimer = "AI kɛha jiemɔ ni lɛ. Bii dɔktɔ he sahaa kɛjogbaŋ."
+        disclaimer = "AI kɛha jiemɔ ni lɛ. Bii dɔktɔ he sahaa kɛjogbaŋ.",
+        dataSavedForTriage = "✓ Data yɛ tsɔɔ kpɔkpɔ",
+        measurementComplete = "Kɛha yɛ wie"
+
     )
 
     val kikuyuStrings = UiStrings(
@@ -1738,7 +1798,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma nĩ ĩrahũthĩrwo…",
         downloadSlowWarning = "App ĩngĩhota gũteithia rĩrĩa modeli ya AI ĩrĩ gũhũthĩrwo.",
         downloadFailedWarning = "Modeli ya AI ndĩrahota gũhũthĩrwo. Thibitho nĩĩgagĩrĩria mawatho.",
-        disclaimer = "Kĩrĩa gĩa thibitho gĩa AI. Ũria daktarĩ hĩndĩ ciothe."
+        disclaimer = "Kĩrĩa gĩa thibitho gĩa AI. Ũria daktarĩ hĩndĩ ciothe.",
+        dataSavedForTriage = "✓ Data ĩhiũrĩtwo nĩ thibitho",
+        measurementComplete = "Gũthima gwathira"
+
     )
 
     val kinyarwandaStrings = UiStrings(
@@ -1765,7 +1828,10 @@ object LocalizedStrings {
         downloadingModel = "Gukuramo MedGemma…",
         downloadSlowWarning = "Porogaramu ishobora gutinda mugihe moderi ya AI ikururwa.",
         downloadFailedWarning = "Moderi ya AI ntiyashoboye gukururwa. Isuzuma rizakoresha amategeko.",
-        disclaimer = "Igikoresho cyo gusuzuma gishyigikiwe na AI. Buri gihe mubaze umuganga."
+        disclaimer = "Igikoresho cyo gusuzuma gishyigikiwe na AI. Buri gihe mubaze umuganga.",
+        dataSavedForTriage = "✓ Amakuru yabitswe ku isuzuma",
+        measurementComplete = "Igipimo cyarangiye"
+
     )
 
     val kongoStrings = UiStrings(
@@ -1783,7 +1849,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma ezali ko kita…",
         downloadSlowWarning = "Application ekoki kozala malembe tango modèle ya AI ezali ko kita.",
         downloadFailedWarning = "Modèle ya AI ekokaki ko kita te. Talela ekosalela mibeko.",
-        disclaimer = "Esaleli ya AI mpo na kotala. Tuna monganga ntango nyonso."
+        disclaimer = "Esaleli ya AI mpo na kotala. Tuna monganga ntango nyonso.",
+        dataSavedForTriage = "✓ Data ebombami mpo na talela",
+        measurementComplete = "Kotala esili"
+
     )
 
     val lingalaStrings = UiStrings(
@@ -1802,7 +1871,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma ezali ko kita…",
         downloadSlowWarning = "Appli ekoki kozala malembe tango modèle ya AI ezali ko kita.",
         downloadFailedWarning = "Modèle ya AI ekokaki ko kita te. Kotala ekosalela mibeko.",
-        disclaimer = "Esaleli ya AI mpo na kotala. Tuna monganga ntango nyonso."
+        disclaimer = "Esaleli ya AI mpo na kotala. Tuna monganga ntango nyonso.",
+        dataSavedForTriage = "✓ Data ebombami mpo na kotala",
+        measurementComplete = "Kotala esili"
+
     )
 
     val luoStrings = UiStrings(
@@ -1820,7 +1892,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma dhi piny…",
         downloadSlowWarning = "App nyalo dhi mos ka model mar AI dhi piny.",
         downloadFailedWarning = "Model mar AI ok onyalo lor. Nono biro tiyo gi chike.",
-        disclaimer = "Gir nono mar AI. Penj laktar kinde duto."
+        disclaimer = "Gir nono mar AI. Penj laktar kinde duto.",
+        dataSavedForTriage = "✓ Data okan ni nono",
+        measurementComplete = "Pimo orumo"
+
     )
 
     val lugandaStrings = UiStrings(
@@ -1847,7 +1922,10 @@ object LocalizedStrings {
         downloadingModel = "Ekitabo kya MedGemma kikkutuka…",
         downloadSlowWarning = "App eyinza okutegeera ng'emodeli ya AI ekuttuka.",
         downloadFailedWarning = "Emodeli ya AI teyasobola kkuttuka. Okukeberera kujja kukozesa ebiragiro.",
-        disclaimer = "Ekikozesebwa ky'okukebera ekya AI. Buuza omusawo buli kiseera."
+        disclaimer = "Ekikozesebwa ky'okukebera ekya AI. Buuza omusawo buli kiseera.",
+        dataSavedForTriage = "✓ Data ekuumiddwa kukebera",
+        measurementComplete = "Okupima kuwedde"
+
     )
 
     val malagasyStrings = UiStrings(
@@ -1865,7 +1943,10 @@ object LocalizedStrings {
         downloadingModel = "Misintona MedGemma…",
         downloadSlowWarning = "Mety ho miadana ny rindranasa raha misintona ny modely AI.",
         downloadFailedWarning = "Tsy afaka nisintona ny modely AI. Hampiasa fitsipika ny fizahana.",
-        disclaimer = "Fitaovana fizahana AI. Manontania dokotera foana."
+        disclaimer = "Fitaovana fizahana AI. Manontania dokotera foana.",
+        dataSavedForTriage = "✓ Data voatahiry ho an ny fizahana",
+        measurementComplete = "Ny fandrefesana vita"
+
     )
 
     val ndebeleStrings = UiStrings(
@@ -1883,7 +1964,10 @@ object LocalizedStrings {
         downloadingModel = "Ilanda i-MedGemma…",
         downloadSlowWarning = "Uhlelo lungahamba kancane ngenkathi kulandwa imodeli ye-AI.",
         downloadFailedWarning = "Imodeli ye-AI ayikwazanga ukulandwa. Ukuhlolwa kuzosebenzisa imithetho.",
-        disclaimer = "Isixhobo sokuhlola se-AI. Buza udokotela ngaso sonke isikhathi."
+        disclaimer = "Isixhobo sokuhlola se-AI. Buza udokotela ngaso sonke isikhathi.",
+        dataSavedForTriage = "✓ Idatha igcinwe ngokuhlola",
+        measurementComplete = "Ukukala kuqediwe"
+
     )
 
     val nuerStrings = UiStrings(
@@ -1901,7 +1985,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma ëë gäm…",
         downloadSlowWarning = "App abë dɔm alɔŋ AI model ëë gäm.",
         downloadFailedWarning = "AI model akëc gäm. Ŋic abë luɔi kë thɛɛr.",
-        disclaimer = "Kä ŋic AI yen. Thiëëc dɛktɔr aköl ëbɛ̈n."
+        disclaimer = "Kä ŋic AI yen. Thiëëc dɛktɔr aköl ëbɛ̈n.",
+        dataSavedForTriage = "✓ Data acï muk ë ŋic",
+        measurementComplete = "Ŋic acï thöl"
+
     )
 
     val pidginNgStrings = UiStrings(
@@ -1923,7 +2010,10 @@ object LocalizedStrings {
         downloadingModel = "E dey download MedGemma…",
         downloadSlowWarning = "App fit slow small as AI dey download. You fit still use di check tools.",
         downloadFailedWarning = "AI no fit download. Check go use normal rules.",
-        disclaimer = "Na AI screening tool be this. Always ask doctor."
+        disclaimer = "Na AI screening tool be this. Always ask doctor.",
+        dataSavedForTriage = "✓ Data don save for check",
+        measurementComplete = "Check don finish"
+
     )
 
     val pidginCmStrings = UiStrings(
@@ -1941,7 +2031,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma di come down…",
         downloadSlowWarning = "App fit go slow as AI di come down.",
         downloadFailedWarning = "AI no fit come down. Check go use normal way.",
-        disclaimer = "Na AI check tool dis. Ask doctor every time."
+        disclaimer = "Na AI check tool dis. Ask doctor every time.",
+        dataSavedForTriage = "✓ Data don save for check",
+        measurementComplete = "Check don finish"
+
     )
 
     val rundiStrings = UiStrings(
@@ -1959,7 +2052,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma irakururwa…",
         downloadSlowWarning = "Porogaramu ishobora guteba mugihe modeli ya AI ikururwa.",
         downloadFailedWarning = "Modeli ya AI ntiyashobotse gukururwa. Isuzuma rizakoresha amategeko.",
-        disclaimer = "Igikoresho co gusuzuma ca AI. Baza muganga igihe cose."
+        disclaimer = "Igikoresho co gusuzuma ca AI. Baza muganga igihe cose.",
+        dataSavedForTriage = "✓ Amakuru yarabitswe ku isuzuma",
+        measurementComplete = "Igipimo carangiye"
+
     )
 
     val sesothoStrings = UiStrings(
@@ -1977,7 +2073,10 @@ object LocalizedStrings {
         downloadingModel = "Ho jarolla MedGemma…",
         downloadSlowWarning = "App e ka ba butle ha modele ea AI e ntse e jarollwa.",
         downloadFailedWarning = "Modele ea AI ha ea ka ea jarollwa. Tlhahlobo e tla sebelisa melao.",
-        disclaimer = "Sesebelisoa sa tlhahlobo sa AI. Botsa ngaka kamehla."
+        disclaimer = "Sesebelisoa sa tlhahlobo sa AI. Botsa ngaka kamehla.",
+        dataSavedForTriage = "✓ Data e bolokiloe ho tlhahlobo",
+        measurementComplete = "Ho lekanya ho phethiloe"
+
     )
 
     val shonaStrings = UiStrings(
@@ -1995,7 +2094,10 @@ object LocalizedStrings {
         downloadingModel = "Kudhawunirodha MedGemma…",
         downloadSlowWarning = "App inogona kunonoka AI modeli iri kudhawunirodha.",
         downloadFailedWarning = "AI modeli haina kukwanisa kudhawunirodha. Kuongorora kuchashandisa mitemo.",
-        disclaimer = "Chishandiswa chekuongorora cheAI. Bvunza chiremba nguva dzose."
+        disclaimer = "Chishandiswa chekuongorora cheAI. Bvunza chiremba nguva dzose.",
+        dataSavedForTriage = "✓ Data yakachengetwa kuongorora",
+        measurementComplete = "Kuyera kwapera"
+
     )
 
     val somaliStrings = UiStrings(
@@ -2014,7 +2116,10 @@ object LocalizedStrings {
         downloadingModel = "Waa la soo dejinayaa MedGemma…",
         downloadSlowWarning = "App-ka wuxuu noqon karaa gaabis inta AI-da la soo dejinayo.",
         downloadFailedWarning = "AI modeli lama soo dejin karin. Baaritaanku wuxuu isticmaali doonaa xeerarka.",
-        disclaimer = "Qalabka baaritaanka AI. Mar walba la tasho dhakhtarka."
+        disclaimer = "Qalabka baaritaanka AI. Mar walba la tasho dhakhtarka.",
+        dataSavedForTriage = "✓ Xogta waa la keydiyay baaritaanka",
+        measurementComplete = "Cabbirka waa dhammaaday"
+
     )
 
     val tswanaStrings = UiStrings(
@@ -2032,7 +2137,10 @@ object LocalizedStrings {
         downloadingModel = "Go tsenya MedGemma…",
         downloadSlowWarning = "App e ka nna bonya fa modele ya AI e ntse e tsenywa.",
         downloadFailedWarning = "Modele ya AI ga e a kgona go tsenywa. Tlhatlhobo e tla dirisa melao.",
-        disclaimer = "Sedirisiwa sa tlhatlhobo sa AI. Botsa ngaka ka metlha."
+        disclaimer = "Sedirisiwa sa tlhatlhobo sa AI. Botsa ngaka ka metlha.",
+        dataSavedForTriage = "✓ Data e bolokilwe go tlhatlhobo",
+        measurementComplete = "Go lekanya go fedile"
+
     )
 
     val portugueseStrings = UiStrings(
@@ -2070,7 +2178,10 @@ object LocalizedStrings {
         downloadingModel = "A transferir MedGemma…",
         downloadSlowWarning = "A aplicação pode ficar mais lenta durante a transferência do modelo de IA.",
         downloadFailedWarning = "Não foi possível transferir o modelo de IA. A triagem usará avaliação baseada em regras.",
-        disclaimer = "Ferramenta de rastreio assistida por IA. Consulte sempre um profissional de saúde."
+        disclaimer = "Ferramenta de rastreio assistida por IA. Consulte sempre um profissional de saúde.",
+        dataSavedForTriage = "✓ Dados guardados para triagem",
+        measurementComplete = "Medição concluída"
+
     )
 
     val arabicStrings = UiStrings(
@@ -2108,7 +2219,10 @@ object LocalizedStrings {
         downloadingModel = "جاري تنزيل MedGemma…",
         downloadSlowWarning = "قد يكون التطبيق أبطأ أثناء تنزيل نموذج الذكاء الاصطناعي.",
         downloadFailedWarning = "تعذر تنزيل نموذج الذكاء الاصطناعي. سيستخدم الفرز التقييم القائم على القواعد.",
-        disclaimer = "أداة فحص بمساعدة الذكاء الاصطناعي. استشر دائماً أخصائي الرعاية الصحية."
+        disclaimer = "أداة فحص بمساعدة الذكاء الاصطناعي. استشر دائماً أخصائي الرعاية الصحية.",
+        dataSavedForTriage = "✓ تم حفظ البيانات للفرز",
+        measurementComplete = "اكتمل القياس"
+
     )
 
     val tsongaStrings = UiStrings(
@@ -2126,7 +2240,10 @@ object LocalizedStrings {
         downloadingModel = "Ku downloda MedGemma…",
         downloadSlowWarning = "App yi nga ha yima loko modele ya AI yi downlodiwa.",
         downloadFailedWarning = "Modele ya AI a yi downlodiwanga. Ku kambela ku ta tirhisa milawu.",
-        disclaimer = "Xitirhisiwa xa ku kambela xa AI. Vutisa n'anga nkarhana wun'wana."
+        disclaimer = "Xitirhisiwa xa ku kambela xa AI. Vutisa n'anga nkarhana wun'wana.",
+        dataSavedForTriage = "✓ Data yi hlayisiwile ku kambela",
+        measurementComplete = "Ku pima ku herile"
+
     )
 
     val vendaStrings = UiStrings(
@@ -2144,7 +2261,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma i khou ḓiselwa…",
         downloadSlowWarning = "App i nga vha yo ṱavha musi modele ya AI i tshi khou ḓiselwa.",
         downloadFailedWarning = "Modele ya AI a yo ngo kona u ḓiselwa. U sedzulusa hu ḓo shumisa milayo.",
-        disclaimer = "Tshishumiswa tsha u sedzulusa tsha AI. Vhudzisani ṅanga tshifhinga tshoṱhe."
+        disclaimer = "Tshishumiswa tsha u sedzulusa tsha AI. Vhudzisani ṅanga tshifhinga tshoṱhe.",
+        dataSavedForTriage = "✓ Data yo vhulungwa u sedzulusa",
+        measurementComplete = "U ela ho fhela"
+
     )
 
     val swatiStrings = UiStrings(
@@ -2162,7 +2282,10 @@ object LocalizedStrings {
         downloadingModel = "Kulanda i-MedGemma…",
         downloadSlowWarning = "Luhlelo lungahamba kancane ngesikhatsi kulandwa imodeli ye-AI.",
         downloadFailedWarning = "Imodeli ye-AI ayikwazanga kulandwa. Kuhlolwa kutawusebentisa imitsetfo.",
-        disclaimer = "Sifaneli sekuhlola se-AI. Buta dokotela ngaso sonkhe sikhatsi."
+        disclaimer = "Sifaneli sekuhlola se-AI. Buta dokotela ngaso sonkhe sikhatsi.",
+        dataSavedForTriage = "✓ Idatha igcinwe kuhlolwa",
+        measurementComplete = "Kulinganisa kuphelile"
+
     )
 
     val northernSothoStrings = UiStrings(
@@ -2180,7 +2303,10 @@ object LocalizedStrings {
         downloadingModel = "Go tsenya MedGemma…",
         downloadSlowWarning = "App e ka ba bonya ge modele ya AI e ntše e tsenywa.",
         downloadFailedWarning = "Modele ya AI ga e a kgona go tsenywa. Tlhahlobo e tla šomiša melao.",
-        disclaimer = "Sedirišwa sa tlhahlobo sa AI. Botšiša ngaka ka mehla."
+        disclaimer = "Sedirišwa sa tlhahlobo sa AI. Botšiša ngaka ka mehla.",
+        dataSavedForTriage = "✓ Data e bolokilwe go tlhahlobo",
+        measurementComplete = "Go lekanya go fedile"
+
     )
 
     val bembaStrings = UiStrings(
@@ -2198,7 +2324,10 @@ object LocalizedStrings {
         downloadingModel = "Ukukopela MedGemma…",
         downloadSlowWarning = "App ikakwata panono ilyo modeli ya AI ilikukopelwa.",
         downloadFailedWarning = "Modeli ya AI tailikukopelwa. Ukupima kukalabomfya amafunde.",
-        disclaimer = "Icisebensho ca ukupima ca AI. Ipusha ŋanga inshita yonse."
+        disclaimer = "Icisebensho ca ukupima ca AI. Ipusha ŋanga inshita yonse.",
+        dataSavedForTriage = "✓ Data yalembwa ukupima",
+        measurementComplete = "Ukupima kwafika"
+
     )
 
     val tumbukaStrings = UiStrings(
@@ -2216,7 +2345,10 @@ object LocalizedStrings {
         downloadingModel = "Kukopa MedGemma…",
         downloadSlowWarning = "Pulogalamu yikukhalira mutu modeli ya AI yikukopedwa.",
         downloadFailedWarning = "Modeli ya AI yilephera kukopedwa. Kuyeza kukagwiritsa ntchito malango.",
-        disclaimer = "Chikwezeso cha AI. Finsani dotolo nyengo yose."
+        disclaimer = "Chikwezeso cha AI. Finsani dotolo nyengo yose.",
+        dataSavedForTriage = "✓ Data yasungidwa kuyeza",
+        measurementComplete = "Kuyeza kwatheka"
+
     )
 
     val lubaKasaiStrings = UiStrings(
@@ -2234,7 +2366,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma udi ukuselua…",
         downloadSlowWarning = "App udi ukuya bulelela mu tshikondo tshia modeli AI ukuselua.",
         downloadFailedWarning = "Modeli AI kayivua mukuya kuselua. Kutala kudi ne kusadikila mashinyi.",
-        disclaimer = "Tshikwezeu tsha kutala tsha AI. Ebeja muganga ntshikondo yosele."
+        disclaimer = "Tshikwezeu tsha kutala tsha AI. Ebeja muganga ntshikondo yosele.",
+        dataSavedForTriage = "✓ Data udi ulembedibue kutala",
+        measurementComplete = "Kutala kudi ne kufika"
+
     )
 
     val kuanyamaStrings = UiStrings(
@@ -2252,7 +2387,10 @@ object LocalizedStrings {
         downloadingModel = "MedGemma tai shitwa…",
         downloadSlowWarning = "App otai dulu okuya kanini AI modeli tai shitwa.",
         downloadFailedWarning = "AI modeli kai dulile okushitwa. Okukondjitha otaku longitha oompango.",
-        disclaimer = "Oshihalifa shokukondjitha sha AI. Pula ndokotola alushe."
+        disclaimer = "Oshihalifa shokukondjitha sha AI. Pula ndokotola alushe.",
+        dataSavedForTriage = "✓ Data oyi shitwa okukondjitha",
+        measurementComplete = "Okupima okwa pita"
+
     )
 
 }

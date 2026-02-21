@@ -78,7 +78,8 @@ fun HomeScreen(
 
         // ── Model Download / Error Banner ──
         val isDownloading = engineState == EngineState.LOADING_MODEL && engineProgress.isNotEmpty()
-        val isError = engineProgress.contains("Not enough storage") ||
+        val isError = engineProgress.contains(strings.notEnoughStorage) ||
+                      engineProgress.contains("Not enough storage") ||
                       engineProgress.contains("failed") ||
                       engineProgress.contains("Connect to Wi-Fi")
 
@@ -121,9 +122,9 @@ fun HomeScreen(
                     Spacer(Modifier.height(6.dp))
                     Text(
                         if (isError)
-                            "The AI model could not be downloaded. Triage will use rule-based assessment until resolved."
+                            strings.downloadFailedWarning
                         else
-                            "The app may be slower while the AI model downloads. You can still use the screening tools.",
+                            strings.downloadSlowWarning,
                         fontSize = 11.sp,
                         color = NkuColors.TextSecondary,
                         textAlign = TextAlign.Center

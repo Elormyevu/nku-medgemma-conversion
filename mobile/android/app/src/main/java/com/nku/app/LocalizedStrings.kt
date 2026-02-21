@@ -102,6 +102,38 @@ object LocalizedStrings {
         "xh" -> xhosaStrings
         "om" -> oromoStrings
         "ti" -> tigrinyaStrings
+        "af" -> afrikaansStrings
+        "bm" -> bambaraStrings
+        "ny" -> chichewaStrings
+        "din" -> dinkaStrings
+        "ff" -> fulaStrings
+        "gaa" -> gaStrings
+        "ki" -> kikuyuStrings
+        "rw" -> kinyarwandaStrings
+        "kg" -> kongoStrings
+        "ln" -> lingalaStrings
+        "luo" -> luoStrings
+        "lg" -> lugandaStrings
+        "mg" -> malagasyStrings
+        "nd" -> ndebeleStrings
+        "nus" -> nuerStrings
+        "pcm" -> pidginNgStrings
+        "wes" -> pidginCmStrings
+        "rn" -> rundiStrings
+        "st" -> sesothoStrings
+        "sn" -> shonaStrings
+        "so" -> somaliStrings
+        "tn" -> tswanaStrings
+        "pt" -> portugueseStrings
+        "ar" -> arabicStrings
+        "ts" -> tsongaStrings
+        "ve" -> vendaStrings
+        "ss" -> swatiStrings
+        "nso" -> northernSothoStrings
+        "bem" -> bembaStrings
+        "tum" -> tumbukaStrings
+        "lua" -> lubaKasaiStrings
+        "kj" -> kuanyamaStrings
         else -> englishStrings
     }
 
@@ -369,7 +401,14 @@ object LocalizedStrings {
         // Cloud Translation Warning
         val internetRequiredTitle: String = "Internet Required",
         val internetRequiredMessage: String = "This language requires an internet connection for translation. Clinical reasoning will still run offline.",
-        val continueLabel: String = "Continue"
+        val continueLabel: String = "Continue",
+
+        // Model download banner (DL-1)
+        val downloadingModel: String = "Downloading MedGemma…",
+        val downloadSlowWarning: String = "The app may be slower while the AI model downloads. You can still use the screening tools.",
+        val downloadFailedWarning: String = "The AI model could not be downloaded. Triage will use rule-based assessment until resolved.",
+        val notEnoughStorage: String = "Not enough storage",
+        val validatingModel: String = "Validating model integrity…"
     ) {
         /** Map signal quality string to localized display name. */
         fun localizedSignalQuality(quality: String): String = when (quality) {
@@ -529,7 +568,27 @@ object LocalizedStrings {
         triageSourceGuideline = "Alɔdza Kpɔkpɔ",
         fallbackExplanation = "AI ƒe dɔwɔnu meli o. Esiwo wotsɔ WHO/IMCI ƒe alɔdza — ewɔ dɔ nyuie.",
         fallbackRecoveryTip = "Nàtrɔ AI: tsɔ dɔwɔnu bubuwo ɖa le megbe alo gbugbɔ Nku.",
-        lowConfidenceWarning = "\u26A0 Ŋuɖoɖo me ga o — nusi wotsoe ƒe axa makpɔ ɖe kpɔkpɔ me o. Tsɔ foto bubu le kekeli nyui me."
+        lowConfidenceWarning = "\u26A0 Ŋuɖoɖo me ga o — nusi wotsoe ƒe axa makpɔ ɖe kpɔkpɔ me o. Tsɔ foto bubu le kekeli nyui me.",
+
+        jaundiceScreen = "Anyidi kpɔkpɔ",
+        preeclampsiaScreen = "Futɔ kpɔkpɔ",
+        respiratoryScreen = "Gbɔmefafa kpɔkpɔ",
+        tapToCaptureEyelid = "Tso ŋku ƒe foto",
+        tapToCaptureFace = "Tso nkume ƒe foto",
+        tapToCaptureEye = "Tso ŋku ƒe foto",
+        tapToRecordCough = "Matsa nan don tsɔ kɔ ƒe gbe",
+        tapToMeasureHR = "Matsa nan don auna dzi ƒe ɖoɖo",
+        screeningsProgress = "%d le 5 me wotsɔ",
+        readyForTriage = "✓ Ewɔ dɔ — yi Kpɔkpɔ ƒe tab",
+        followSteps = "Ɖo mɔ siwo le ete don kpɔkpɔ",
+        hrElevated = "⚠ Ega — aɖe nye damuwa alo ʋu",
+        hrLow = "⚠ Edzidzi — lé kpɔ nyuie",
+        hrNormal = "✓ Enɔ dedie me",
+        noPallor = "✓ Womekpɔ farar ido o",
+        noSwelling = "✓ Kumburi aɖeke meli o",
+        downloadingModel = "MedGemma dzadzram…",
+        downloadSlowWarning = "App ateŋu anɔ blewu ke AI ƒe dɔwɔnu le dzadzram. Àteŋu azã kpɔkpɔ dɔwɔnuwo.",
+        downloadFailedWarning = "Wometeŋu wɔ AI ƒe dɔwɔnu dzadzram o. Kpɔkpɔ azã alɔdzawo."
     )
 
     val frenchStrings = UiStrings(
@@ -619,7 +678,102 @@ object LocalizedStrings {
         triageSourceGuideline = "Triage basé sur les lignes directrices",
         fallbackExplanation = "Modèle IA indisponible. Les résultats suivent les lignes directrices cliniques OMS/PCIME — sûres et validées.",
         fallbackRecoveryTip = "Pour restaurer l'IA : fermez les applications en arrière-plan ou redémarrez Nku.",
-        lowConfidenceWarning = "\u26A0 Confiance faible \u2014 cette mesure pourrait être exclue du triage. Recapturez avec un meilleur éclairage."
+        lowConfidenceWarning = "\u26A0 Confiance faible \u2014 cette mesure pourrait être exclue du triage. Recapturez avec un meilleur éclairage.",
+
+        // Missing HomeScreen translations
+        jaundiceScreen = "Dépistage ictère",
+        preeclampsiaScreen = "Dépistage prééclampsie",
+        respiratoryScreen = "Dépistage respiratoire",
+        goToTab = "Aller à l'onglet %s pour mesurer",
+        anemiaSubtitle = "Détection de la pâleur",
+        preESubtitle = "Détection de l'œdème facial",
+        pointAtConjunctiva = "Pointez la caméra vers l'intérieur de la paupière",
+        tapAnalyze = "Appuyez sur \"Analyser\" quand l'image est claire",
+        centerFace = "Centrez le visage",
+        triageSubtitle = "Évaluation assistée par IA",
+        dataAvailable = "Données disponibles",
+        notDone = "Non effectué",
+        runTriage = "Lancer le triage",
+        elevated = "Élevé",
+        low = "Bas",
+        recapture = "Recapturer",
+        resetReading = "Réinitialiser",
+        language = "Langue",
+        howItWorks = "Comment ça marche",
+        howToCapture = "Comment capturer",
+        captureForEdema = "Prenez une photo pour vérifier l'œdème facial",
+        centerFaceKeepNeutral = "Centrez le visage, gardez une expression neutre",
+        riskFactors = "Facteurs de risque",
+        recommendationsTitle = "Recommandation",
+        screeningData = "Données de dépistage",
+        cardioInstructions = "1. Appuyez sur \"Démarrer la mesure\" ci-dessus\n" +
+            "2. Placez le bout du doigt sur la caméra arrière\n" +
+            "3. Le flash s'allume automatiquement\n" +
+            "4. Restez immobile pendant 10 secondes\n" +
+            "5. La fréquence cardiaque apparaît quand le tampon est plein",
+        anemiaInstructions = "1. Tirez doucement la paupière inférieure du patient\n" +
+            "2. Pointez la caméra vers la surface intérieure (conjonctive)\n" +
+            "3. Assurez un bon éclairage (lumière naturelle de préférence)\n" +
+            "4. Appuyez sur \"Analyser\" quand l'image est claire",
+        screeningsProgress = "%d dépistages sur 5 terminés",
+        readyForTriage = "✓ Prêt pour le triage — allez à l'onglet Triage",
+        followSteps = "Suivez les étapes ci-dessous pour dépister un patient",
+        tapToMeasureHR = "Appuyez pour mesurer la fréquence cardiaque",
+        tapToCaptureEyelid = "Appuyez pour capturer la paupière",
+        tapToCaptureFace = "Appuyez pour capturer le visage",
+        tapToCaptureEye = "Appuyez pour capturer l'œil",
+        tapToRecordCough = "Appuyez pour enregistrer la toux",
+        hrElevated = "⚠ Élevée — peut indiquer du stress ou une anémie",
+        hrLow = "⚠ Basse — surveiller de près",
+        hrNormal = "✓ Dans les limites normales",
+        noPallor = "✓ Pas de pâleur détectée",
+        mildPallor = "Pâleur légère — surveiller chaque semaine",
+        moderatePallor = "⚠ Modérée — faire un test d'hémoglobine",
+        severePallor = "🚨 Sévère — orientation urgente",
+        noSwelling = "✓ Pas de gonflement facial",
+        mildSwelling = "Gonflement léger — vérifier la tension",
+        moderateSwelling = "⚠ Vérifier la tension et les protéines urinaires",
+        significantSwelling = "🚨 Évaluation urgente nécessaire",
+        swellingCheck = "Vérification du gonflement",
+        patientSymptoms = "Signes vitaux et symptômes rapportés",
+        micOrType = "Tapez ou appuyez sur le micro pour parler",
+        micPermissionRequired = "⚠ Permission du microphone requise. Veuillez activer dans Paramètres.",
+        deviceCooling = "Appareil en refroidissement — IA en pause",
+        cameraPermissionTitle = "⚠ Permission caméra requise",
+        cameraPermissionCardio = "La mesure cardiaque nécessite la caméra. Veuillez activer dans Paramètres.",
+        cameraPermissionAnemia = "Le dépistage de l'anémie nécessite la caméra. Veuillez activer dans Paramètres.",
+        openSettings = "Ouvrir les Paramètres",
+        exportData = "Exporter les données de dépistage",
+        cameraPermissionJaundice = "Le dépistage de l'ictère nécessite la caméra. Veuillez activer dans Paramètres.",
+        respiratoryTitle = "Dépistage Respiratoire",
+        respiratorySubtitle = "Analyse de la toux par IA",
+        startRecording = "Démarrer l'enregistrement",
+        stopRecording = "Arrêter l'enregistrement",
+        respiratoryNormal = "✓ Normal",
+        respiratoryLowRisk = "Risque faible",
+        respiratoryModerateRisk = "⚠ Risque modéré",
+        respiratoryHighRisk = "🚨 Risque élevé",
+        respiratoryInstructions = "1. Demandez au patient de tousser 3 fois dans le micro\n" +
+            "2. Tenez le téléphone à 15-30 cm de la bouche\n" +
+            "3. Appuyez sur \"Démarrer\" et enregistrez 5 secondes\n" +
+            "4. Assurez un environnement calme",
+        coughsDetected = "Toux détectées",
+        audioQualityLabel = "Qualité audio",
+        micPermissionTitle = "⚠ Permission microphone requise",
+        micPermissionMessage = "Le dépistage respiratoire nécessite l'accès au microphone. Veuillez activer dans Paramètres.",
+        poweredByHeAR = "Propulsé par HeAR",
+        hearDescription = "Health Acoustic Representations — modèle audio de Google pré-entraîné sur plus de 300M de clips audio de santé.",
+        rearCameraHintJaundice = "📷 Caméra arrière — pointez vers le blanc de l'œil du patient",
+        internetRequiredTitle = "Connexion Internet requise",
+        internetRequiredMessage = "Cette langue nécessite une connexion Internet pour la traduction. Le raisonnement clinique fonctionne hors ligne.",
+        continueLabel = "Continuer",
+
+        // Download banner
+        downloadingModel = "Téléchargement de MedGemma…",
+        downloadSlowWarning = "L'application peut être plus lente pendant le téléchargement du modèle IA. Vous pouvez utiliser les outils de dépistage.",
+        downloadFailedWarning = "Le modèle IA n'a pas pu être téléchargé. Le triage utilisera l'évaluation par règles.",
+        notEnoughStorage = "Stockage insuffisant",
+        validatingModel = "Vérification de l'intégrité du modèle…"
     )
 
     val swahiliStrings = UiStrings(
@@ -708,7 +862,27 @@ object LocalizedStrings {
         triageSourceGuideline = "Hatua za Miongozo",
         fallbackExplanation = "Muundo wa AI haupatikani. Matokeo yanafuata miongozo ya WHO/IMCI — salama na yaliyothibitishwa.",
         fallbackRecoveryTip = "Kurudisha AI: funga programu za nyuma au anzisha upya Nku.",
-        lowConfidenceWarning = "\u26A0 Uhakika mdogo \u2014 usomaji huu unaweza kutengwa na hatua. Chukua picha tena katika mwanga bora."
+        lowConfidenceWarning = "\u26A0 Uhakika mdogo \u2014 usomaji huu unaweza kutengwa na hatua. Chukua picha tena katika mwanga bora.",
+
+        jaundiceScreen = "Uchunguzi wa manjano",
+        preeclampsiaScreen = "Uchunguzi wa preeclampsia",
+        respiratoryScreen = "Uchunguzi wa kupumua",
+        tapToCaptureEyelid = "Gusa hapa kupiga picha ya kope",
+        tapToCaptureFace = "Gusa hapa kupiga picha ya uso",
+        tapToCaptureEye = "Gusa hapa kupiga picha ya jicho",
+        tapToRecordCough = "Gusa hapa kurekodi kikohozi",
+        tapToMeasureHR = "Gusa hapa kupima mapigo ya moyo",
+        screeningsProgress = "Uchunguzi %d kati ya 5 umekamilika",
+        readyForTriage = "✓ Tayari kwa hatua — nenda kwenye tabo ya Hatua",
+        followSteps = "Fuata hatua zilizo hapa chini kuchunguza mgonjwa",
+        hrElevated = "⚠ Juu — inaweza kuonyesha msongo au upungufu wa damu",
+        hrLow = "⚠ Chini — fuatilia kwa karibu",
+        hrNormal = "✓ Katika kiwango cha kawaida",
+        noPallor = "✓ Hakuna weupe uliogunduliwa",
+        noSwelling = "✓ Hakuna uvimbe wa uso",
+        downloadingModel = "Kupakua MedGemma…",
+        downloadSlowWarning = "Programu inaweza kuwa polepole wakati muundo wa AI unapakua. Unaweza kutumia zana za uchunguzi.",
+        downloadFailedWarning = "Muundo wa AI haukuweza kupakuliwa. Hatua zitatumia tathmini ya miongozo."
     )
 
     val hausaStrings = UiStrings(
@@ -1050,7 +1224,27 @@ object LocalizedStrings {
         triageSourceGuideline = "Nlele iwu ndụ",
         fallbackExplanation = "Ùdị AI adịghị. Nsoputara na-eso usoro WHO/IMCI — nchekwa ma enyochaala.",
         fallbackRecoveryTip = "Iji weghachi AI: mechie ngwa ndị ọzọ ma ọ bụ malitegharịa Nku.",
-        lowConfidenceWarning = "\u26A0 Ễkwèsịrị dị ala \u2014 a gaghị etinye nke a na nlele. Tugharịa na ọ kụ karịa."
+        lowConfidenceWarning = "\u26A0 Ễkwèsịrị dị ala \u2014 a gaghị etinye nke a na nlele. Tugharịa na ọ kụ karịa.",
+
+        jaundiceScreen = "Nlele ọcha anya",
+        preeclampsiaScreen = "Nlele ọrịa ime",
+        respiratoryScreen = "Nlele iku ume",
+        tapToCaptureEyelid = "Pịa ebe a ka ị see anya",
+        tapToCaptureFace = "Pịa ebe a ka ị see ihu",
+        tapToCaptureEye = "Pịa ebe a ka ị see anya",
+        tapToRecordCough = "Pịa ebe a ka ị dee ụkwara",
+        tapToMeasureHR = "Pịa ebe a ka ị tuo ọkụ obi",
+        screeningsProgress = "%d n'ime 5 nlele emechara",
+        readyForTriage = "✓ Dị njikere maka nlele — gaa na taabụ Nlele",
+        followSteps = "Soro usoro ndị a ka ị nyochaa onye ọrịa",
+        hrElevated = "⚠ Elu — nwere ike igosi nchegbu ma ọ bụ ọbara ala",
+        hrLow = "⚠ Ala — lekwasị anya nke ọma",
+        hrNormal = "✓ Ọ nọ n'ọkwa nkịtị",
+        noPallor = "✓ Enweghị ọcha achọpụtara",
+        noSwelling = "✓ Enweghị etu ihu",
+        downloadingModel = "Na-ebudata MedGemma…",
+        downloadSlowWarning = "Ngwa nwere ike ịnọ nwayọọ ka a na-ebudata AI. Ị nwere ike iji ngwa nlele.",
+        downloadFailedWarning = "Enweghị ike ibudata ihe AI. Nlele ga-eji iwu."
     )
 
     val amharicStrings = UiStrings(
@@ -1084,7 +1278,27 @@ object LocalizedStrings {
         triageSourceGuideline = "በመመሪያ ላይ የተመሰረተ ምርመራ",
         fallbackExplanation = "የ AI ሞዴል አልተገኘም። ውጤቶች የ WHO/IMCI ክሊኒካል መመሪያዎችን ይከተላሉ — ደህንና የተረጋገጠ።",
         fallbackRecoveryTip = "AI ን ለመመለስ: የበስተ ጀርባ መተግበሪያዎችን ይዝጉ ወይም Nku ን ዳግም ያስጀምሩ።",
-        lowConfidenceWarning = "\u26A0 የተባበሮ ሙንጩ ዝቅተኛ \u2014 ይህ ስዋመ ወደ ምርመራ ላይጋበር ይችላል። በተሽለ ብርሃን ዳግም አንሱ።"
+        lowConfidenceWarning = "\u26A0 የተባበሮ ሙንጩ ዝቅተኛ \u2014 ይህ ስዋመ ወደ ምርመራ ላይጋበር ይችላል። በተሽለ ብርሃን ዳግም አንሱ።",
+
+        jaundiceScreen = "የጃንዲስ ምርመራ",
+        preeclampsiaScreen = "የእርግዝና ግፊት ምርመራ",
+        respiratoryScreen = "የመተንፈስ ምርመራ",
+        tapToCaptureEyelid = "የዓይን ሽፋን ለመቅረፅ እዚህ ይጫኑ",
+        tapToCaptureFace = "ፊት ለመቅረፅ እዚህ ይጫኑ",
+        tapToCaptureEye = "ዓይን ለመቅረፅ እዚህ ይጫኑ",
+        tapToRecordCough = "ሳል ለመቅዳት እዚህ ይጫኑ",
+        tapToMeasureHR = "የልብ ምት ለመለካት እዚህ ይጫኑ",
+        screeningsProgress = "%d ከ5 ምርመራዎች ተጠናቅቀዋል",
+        readyForTriage = "✓ ለምርመራ ዝግጁ — ወደ ምርመራ ትር ሂዱ",
+        followSteps = "ታካሚውን ለመመርመር ከዚህ በታች ያሉትን ደረጃዎች ይከተሉ",
+        hrElevated = "⚠ ከፍ ያለ — ጭንቀት ወይም የደም ማነስ ሊያመለክት ይችላል",
+        hrLow = "⚠ ዝቅ ያለ — በቅርበት ይከታተሉ",
+        hrNormal = "✓ በመደበኛ ክልል ውስጥ",
+        noPallor = "✓ ነጭነት አልተገኘም",
+        noSwelling = "✓ የፊት እብጠት የለም",
+        downloadingModel = "MedGemma በማውረድ ላይ…",
+        downloadSlowWarning = "የAI ሞዴሉ በሚወርድበት ጊዜ መተግበሪያው ሊዘገይ ይችላል። የምርመራ መሳሪያዎቹን መጠቀም ይችላሉ።",
+        downloadFailedWarning = "የAI ሞዴሉ ሊወርድ አልቻለም። ምርመራ መመሪያ-ተኮር ግምገማ ይጠቀማል።"
     )
 
     val twiStrings = UiStrings(
@@ -1118,7 +1332,27 @@ object LocalizedStrings {
         triageSourceGuideline = "Nkyerɛwdeɛ so nhwehwɛmu",
         fallbackExplanation = "AI model no nni hɔ. Nsoano di WHO/IMCI nkyerɛwdeɛ akyi — eye safe na wɔaɛserɛ.",
         fallbackRecoveryTip = "Sɛ wopɛ AI: to apps a ɛwɔ akyi no mu anaa san bue Nku.",
-        lowConfidenceWarning = "\u26A0 Ŋuɖoɖo sɔ \u2014 ebia wɔrenfa nkyerɛwdeɛ yi nhwɛhwɛmu no mu. San kɔ foto no wɔ hann nyinaa mu."
+        lowConfidenceWarning = "\u26A0 Ŋuɖoɖo sɔ \u2014 ebia wɔrenfa nkyerɛwdeɛ yi nhwɛhwɛmu no mu. San kɔ foto no wɔ hann nyinaa mu.",
+
+        jaundiceScreen = "Jaundice hwehwɛ",
+        preeclampsiaScreen = "Nyinsɛn mogya kɔ soro hwehwɛ",
+        respiratoryScreen = "Ahome hwehwɛ",
+        tapToCaptureEyelid = "Mia ha na fa aniwa ho mfonini",
+        tapToCaptureFace = "Mia ha na fa anim mfonini",
+        tapToCaptureEye = "Mia ha na fa aniwa mfonini",
+        tapToRecordCough = "Mia ha na kyerɛw wa",
+        tapToMeasureHR = "Mia ha na susu koma pɛm",
+        screeningsProgress = "%d wɔ 5 mu no awie",
+        readyForTriage = "✓ Awie — kɔ Hwehwɛ tab no so",
+        followSteps = "Di anammɔn a ɛwɔ ase yi akyi na hwehwɛ ayaresafo no",
+        hrElevated = "⚠ Ɛkɔ soro — ebia ɛkyerɛ adwene mu haw anaa mogya sua",
+        hrLow = "⚠ Ɛwɔ fam — hwɛ so yiye",
+        hrNormal = "✓ Ɛwɔ deɛ ɛsɛ mu",
+        noPallor = "✓ Wɔanhu aniwa mu fitaa",
+        noSwelling = "✓ Anim mu ahoninono biara nni hɔ",
+        downloadingModel = "Ɛretwi MedGemma…",
+        downloadSlowWarning = "App no bɛyɛ nwanwa bere a AI model retwi no. Wubetumi de hwehwɛ nnwinnade no adi dwuma.",
+        downloadFailedWarning = "Wɔantumi antwi AI model no. Hwehwɛ bɛfa mmara so."
     )
 
     val wolofStrings = UiStrings(
@@ -1178,7 +1412,27 @@ object LocalizedStrings {
         triageSourceGuideline = "Ukuhlola okwemithetho",
         fallbackExplanation = "Imodeli ye-AI ayitholakali. Imiphumela ilandela imihlahlandlela ye-WHO/IMCI — ephephile futhi eqinisekisiwe.",
         fallbackRecoveryTip = "Ukubuyisela i-AI: vala izinhlelo ezingemuva noma uqale kabusha i-Nku.",
-        lowConfidenceWarning = "\u26A0 Ithemba eliphansi \u2014 lokhu kungase kungafakwa ekuhlolweni. Thatha kabusha ekukhanyeni okuhle."
+        lowConfidenceWarning = "\u26A0 Ithemba eliphansi \u2014 lokhu kungase kungafakwa ekuhlolweni. Thatha kabusha ekukhanyeni okuhle.",
+
+        jaundiceScreen = "Ukuhlolwa kwe-jaundice",
+        preeclampsiaScreen = "Ukuhlolwa kwe-preeclampsia",
+        respiratoryScreen = "Ukuhlolwa kokuphefumula",
+        tapToCaptureEyelid = "Thepha lapha ukuthatha isithombe senkophe",
+        tapToCaptureFace = "Thepha lapha ukuthatha isithombe sobuso",
+        tapToCaptureEye = "Thepha lapha ukuthatha isithombe seso",
+        tapToRecordCough = "Thepha lapha ukuqopha ukukhwehlela",
+        tapToMeasureHR = "Thepha lapha ukukala inhliziyo",
+        screeningsProgress = "%d kwezingu-5 zokuhlola kuqediwe",
+        readyForTriage = "✓ Kulungiswe ukuhlolwa — iya kuthebhu ye-Triage",
+        followSteps = "Landela izinyathelo ezingezansi ukuhlola isiguli",
+        hrElevated = "⚠ Iphezulu — kungabonisa ukukhathazeka noma ukuncipha kwegazi",
+        hrLow = "⚠ Iphansi — qapha ngokuseduze",
+        hrNormal = "✓ Isezingeni elivamile",
+        noPallor = "✓ Akukho ukuhloba okutholakele",
+        noSwelling = "✓ Akukho ukuvuvukala kobuso",
+        downloadingModel = "Ilanda i-MedGemma…",
+        downloadSlowWarning = "Uhlelo lungahamba kancane ngenkathi kulandwa imodeli ye-AI. Ungasebenzisa amathuluzi okuhlola.",
+        downloadFailedWarning = "Imodeli ye-AI ayikwazanga ukulandwa. Ukuhlolwa kuzosebenzisa imithetho."
     )
 
     val xhosaStrings = UiStrings(
@@ -1208,7 +1462,27 @@ object LocalizedStrings {
         triageSourceGuideline = "Ukuhlolwa ngemigaqo",
         fallbackExplanation = "Imodeli ye-AI ayifumaneki. Iziphumo zilandela imigaqo ye-WHO/IMCI — ikhuselekile kwaye iqinisekisiwe.",
         fallbackRecoveryTip = "Ukubuyisela i-AI: vala izicelo ezingemva okanye uqalise kwakhona i-Nku.",
-        lowConfidenceWarning = "\u26A0 Ukuthemba okuphantsi \u2014 oku kungangeniswa ekuhlolweni. Thatha kwakhona ekukhanyeni okuhle."
+        lowConfidenceWarning = "\u26A0 Ukuthemba okuphantsi \u2014 oku kungangeniswa ekuhlolweni. Thatha kwakhona ekukhanyeni okuhle.",
+
+        jaundiceScreen = "Ukuhlolwa kwe-jaundice",
+        preeclampsiaScreen = "Ukuhlolwa kwe-preeclampsia",
+        respiratoryScreen = "Ukuhlolwa kokuphefumla",
+        tapToCaptureEyelid = "Cofa apha ukuthatha umfanekiso wenkophe",
+        tapToCaptureFace = "Cofa apha ukuthatha umfanekiso wobuso",
+        tapToCaptureEye = "Cofa apha ukuthatha umfanekiso weliso",
+        tapToRecordCough = "Cofa apha ukurekhodisha ukukhohlela",
+        tapToMeasureHR = "Cofa apha ukulinganisa intliziyo",
+        screeningsProgress = "%d kwezi-5 zokuhlola zigqityiwe",
+        readyForTriage = "✓ Kulungile ukuhlolwa — yiya kwitab ye-Triage",
+        followSteps = "Landela amanyathelo angezantsi ukuhlola isigulane",
+        hrElevated = "⚠ Iphezulu — inokubonisa uxinezelelo okanye ukuncipha kwegazi",
+        hrLow = "⚠ Iphantsi — jonga ngokusondeleyo",
+        hrNormal = "✓ Kwibakala eliqhelekileyo",
+        noPallor = "✓ Akukho kufiphala okufunyenweyo",
+        noSwelling = "✓ Akukho ukudumba kobuso",
+        downloadingModel = "Ikhuphela i-MedGemma…",
+        downloadSlowWarning = "I-app inokucotha ngexesha lokukhuphela imodeli ye-AI. Ungasebenzisa izixhobo zokuhlola.",
+        downloadFailedWarning = "Imodeli ye-AI ayikwazanga ukukhutshwa. Ukuhlolwa kuza kusebenzisa imithetho."
     )
 
     val oromoStrings = UiStrings(
@@ -1238,7 +1512,27 @@ object LocalizedStrings {
         triageSourceGuideline = "Qorannoo qajeelfama irratti hundaa'e",
         fallbackExplanation = "Moodeelli AI hin argamne. Bu'aan qajeelfama kilinika WHO/IMCI hordofa — nageenya fi mirkanaa'e.",
         fallbackRecoveryTip = "AI deebisuuf: appii duubatti jiran cufi ykn Nku irra deebi'i.",
-        lowConfidenceWarning = "\u26A0 Amantaa gad-aanaa \u2014 lakkoofsi kun qorannoo keessa hin galuu ta'uu. Ifa keessatti irra deebi'i."
+        lowConfidenceWarning = "\u26A0 Amantaa gad-aanaa \u2014 lakkoofsi kun qorannoo keessa hin galuu ta'uu. Ifa keessatti irra deebi'i.",
+
+        jaundiceScreen = "Qorannoo jaundice",
+        preeclampsiaScreen = "Qorannoo dhiibbaa dhiigaa ulfaa",
+        respiratoryScreen = "Qorannoo hafuuraa",
+        tapToCaptureEyelid = "As tuqi suuraa ija fuudhii",
+        tapToCaptureFace = "As tuqi suuraa fuulaa",
+        tapToCaptureEye = "As tuqi suuraa ijaa",
+        tapToRecordCough = "As tuqi qufaa galmeessuu",
+        tapToMeasureHR = "As tuqi rukuttaa onnee safaruu",
+        screeningsProgress = "%d keessaa 5 qorannoon xumurameera",
+        readyForTriage = "✓ Qophaa'e — gara tab Qorannoo",
+        followSteps = "Tartiiba armaan gadii hordofi dhukkubsataa qorachuuf",
+        hrElevated = "⚠ Ol ka'e — cinqii ykn dhiiga hir'uu agarsiisuu danda'a",
+        hrLow = "⚠ Gad bu'e — sirritti hordofi",
+        hrNormal = "✓ Sadarkaa idilee keessa jira",
+        noPallor = "✓ Adiin hin argamne",
+        noSwelling = "✓ Dhiitoon fuulaa hin jiru",
+        downloadingModel = "MedGemma buufachaa jira…",
+        downloadSlowWarning = "Appiin suuta ta'uu dandeeysii yeroo moodeelli AI buufatamu. Meeshaalee qorannoo fayyadamuu dandeeysa.",
+        downloadFailedWarning = "Moodeelli AI buufachuun hin danda'amne. Qorannoon seerawwan fayyadama."
     )
 
     val tigrinyaStrings = UiStrings(
@@ -1268,6 +1562,697 @@ object LocalizedStrings {
         triageSourceGuideline = "ብመምርሒ ዝተመስረተ ምርመራ",
         fallbackExplanation = "ሞዴል AI ኣይተረኽበን። ውጽኢታት ናይ WHO/IMCI ክሊኒካዊ መምርሒታት ይኽተሉ — ውሑስን ዝተረጋገጸን።",
         fallbackRecoveryTip = "AI ንምምላስ: ናይ ድሕሪት ኣፕሊኬሽናት ዕጸው ወይ Nku ዳግም ጀምር።",
-        lowConfidenceWarning = "\u26A0 ትሑት ዙሁል ኢሉ \u2014 እዚ ንባብ ኣብ ምርመራ ኣይእተውን ይኽእል። ኣብ ጽቡሕ ብርሃን ዳግም ኣንሱ።"
+        lowConfidenceWarning = "\u26A0 ትሑት ዙሁል ኢሉ \u2014 እዚ ንባብ ኣብ ምርመራ ኣይእተውን ይኽእል። ኣብ ጽቡሕ ብርሃን ዳግም ኣንሱ።",
+
+        jaundiceScreen = "ምርመራ ጃንዲስ",
+        preeclampsiaScreen = "ምርመራ ጸቕጢ ደም ጥንሲ",
+        respiratoryScreen = "ምርመራ ምስትንፋስ",
+        tapToCaptureEyelid = "ናይ ዓይኒ ሽፋን ንምስኣል ኣብዚ ጠቕዑ",
+        tapToCaptureFace = "ገጽ ንምስኣል ኣብዚ ጠቕዑ",
+        tapToCaptureEye = "ዓይኒ ንምስኣል ኣብዚ ጠቕዑ",
+        tapToRecordCough = "ስዓል ንምቕዳሕ ኣብዚ ጠቕዑ",
+        tapToMeasureHR = "ህርመት ልቢ ንምዕቃን ኣብዚ ጠቕዑ",
+        screeningsProgress = "%d ካብ 5 ምርመራታት ተዛዚሙ",
+        readyForTriage = "✓ ንምርመራ ድሉው — ናብ ታብ ምርመራ ኺዱ",
+        followSteps = "ንሕሙም ንምምርማር ኣብ ታሕቲ ዘለዉ ስጉምትታት ተኸተሉ",
+        hrElevated = "⚠ ልዑል — ጸቕጢ ወይ ውሒድ ደም ከመልክት ይኽእል",
+        hrLow = "⚠ ትሑት — ብቐረባ ተኸታተሉ",
+        hrNormal = "✓ ኣብ ንቡር ደረጃ",
+        noPallor = "✓ ጻዕዳ ኣይተረኸበን",
+        noSwelling = "✓ ምሕባጥ ገጽ የለን",
+        downloadingModel = "MedGemma ይወርድ ኣሎ…",
+        downloadSlowWarning = "ናይ AI ሞዴል ክወርድ ከሎ ኣፕ ክደንጊ ይኽእል። ናይ ምርመራ መሳርሒታት ክትጥቀሙ ትኽእሉ።",
+        downloadFailedWarning = "ናይ AI ሞዴል ክወርድ ኣይከኣለን። ምርመራ ናይ መምርሒ ግምገማ ክጥቀም እዩ።"
     )
+
+    // ─── Tier 2 Languages ───────────────────────────────────────
+
+    val afrikaansStrings = UiStrings(
+        appSubtitle = "Kamera-gebaseerde lewensteken sifting",
+        tabHome = "Tuis",
+        tabCardio = "Hart",
+        tabAnemia = "Bloedarmoede",
+        tabPreE = "PreE",
+        tabTriage = "Triage",
+        tabSettings = "Instellings",
+        heartRate = "Hartklop",
+        anemiaScreen = "Bloedarmoede sifting",
+        jaundiceScreen = "Geelsug sifting",
+        preeclampsiaScreen = "Preeklamsie sifting",
+        respiratoryScreen = "Asemhaling sifting",
+        tapToMeasureHR = "Tik hier om hartklop te meet",
+        tapToCaptureEyelid = "Tik hier om ooglid vas te vang",
+        tapToCaptureFace = "Tik hier om gesig vas te vang",
+        tapToCaptureEye = "Tik hier om oog vas te vang",
+        tapToRecordCough = "Tik hier om hoes op te neem",
+        screeningsProgress = "%d van 5 siftings voltooi",
+        readyForTriage = "✓ Gereed vir triage — gaan na Triage-oortjie",
+        followSteps = "Volg die stappe hieronder om 'n pasiënt te sif",
+        hrElevated = "⚠ Verhoog — kan stres of bloedarmoede aandui",
+        hrLow = "⚠ Laag — monitor noukeurig",
+        hrNormal = "✓ Binne normale reeks",
+        noPallor = "✓ Geen bleekheid bespeur",
+        noSwelling = "✓ Geen gesigswelling",
+        normal = "Normaal",
+        mild = "Lig",
+        moderate = "Matig",
+        severe = "Ernstig",
+        analyze = "Ontleed",
+        cancel = "Kanselleer",
+        disclaimer = "KI-ondersteunde siftingsinstrument. Raadpleeg altyd 'n gesondheidswerker.",
+        downloadingModel = "Laai MedGemma af…",
+        downloadSlowWarning = "Die toep kan stadiger wees terwyl die KI-model aflaai. U kan steeds die siftingsinstrumente gebruik.",
+        downloadFailedWarning = "Die KI-model kon nie afgelaai word nie. Triage sal reëlgebaseerde assessering gebruik."
+    )
+
+    val bambaraStrings = UiStrings(
+        appSubtitle = "Kaamera baara la sɛgɛsɛgɛli",
+        tabHome = "So",
+        tabTriage = "Sɛgɛsɛgɛli",
+        tabSettings = "Labɛnni",
+        jaundiceScreen = "Jaundice sɛgɛsɛgɛli",
+        preeclampsiaScreen = "Kɔnɔboli sɛgɛsɛgɛli",
+        respiratoryScreen = "Nisɔndiya sɛgɛsɛgɛli",
+        tapToMeasureHR = "Digi yan ka dusukun sɛgɛsɛgɛ",
+        tapToCaptureEyelid = "Digi yan ka ɲɛ ja ta",
+        tapToCaptureFace = "Digi yan ka ɲɛda ja ta",
+        tapToCaptureEye = "Digi yan ka ɲɛ ja ta",
+        tapToRecordCough = "Digi yan ka sugɔsugu sɛbɛn",
+        screeningsProgress = "%d bɛ 5 la sɛgɛsɛgɛli banna",
+        readyForTriage = "✓ A labɛnna — taa Sɛgɛsɛgɛli tab la",
+        followSteps = "Nɔmɔgɔya ninnu kɛ ka banabagatɔ sɛgɛsɛgɛ",
+        downloadingModel = "MedGemma bɛ jiginni na…",
+        downloadSlowWarning = "Porogaramu bɛ se ka dɔgɔya AI modɛli jiginni waati la.",
+        downloadFailedWarning = "AI modɛli ma se ka jigi. Sɛgɛsɛgɛli bɛna sariya baara.",
+        disclaimer = "AI sɛgɛsɛgɛli baarakɛminɛn ye. Dɔgɔtɔrɔ ɲininka tuma bɛɛ."
+    )
+
+    val chichewaStrings = UiStrings(
+        appSubtitle = "Kuyeza ndi kamera",
+        tabHome = "Kwathu",
+        tabTriage = "Kuyeza",
+        tabSettings = "Zosintha",
+        jaundiceScreen = "Kuyeza jaundice",
+        preeclampsiaScreen = "Kuyeza preeclampsia",
+        respiratoryScreen = "Kuyeza kupuma mpweya",
+        tapToMeasureHR = "Dinani apa kuyeza mtima",
+        tapToCaptureEyelid = "Dinani apa kutenga chithunzi cha diso",
+        tapToCaptureFace = "Dinani apa kutenga chithunzi cha nkhope",
+        tapToCaptureEye = "Dinani apa kutenga chithunzi cha diso",
+        tapToRecordCough = "Dinani apa kujambula chifuwa",
+        screeningsProgress = "%d mwa 5 zoyeza zatheka",
+        readyForTriage = "✓ Zokonzeka — pitani ku tab ya Triage",
+        followSteps = "Tsatirani njira izi kuyeza wodwala",
+        downloadingModel = "Kukopa MedGemma…",
+        downloadSlowWarning = "Pulogalamu ikhoza kuchedwa pomwe modeli ya AI ikukopedwa.",
+        downloadFailedWarning = "Modeli ya AI siinakopedwe. Kuyeza kudzagwiritsa ntchito malamulo.",
+        disclaimer = "Chida choyeza cha AI. Funsani dotolo nthawi zonse."
+    )
+
+    val dinkaStrings = UiStrings(
+        tabHome = "Baai",
+        tabTriage = "Ŋic",
+        tabSettings = "Guɛ̈ɛ̈r",
+        jaundiceScreen = "Ŋic de jaundice",
+        preeclampsiaScreen = "Ŋic de preeclampsia",
+        respiratoryScreen = "Ŋic de wëi",
+        tapToMeasureHR = "Gät ë tɛ̈n ba piɔ̈u ŋic",
+        tapToCaptureEyelid = "Gät ë tɛ̈n ba nyin thiëëk",
+        tapToCaptureFace = "Gät ë tɛ̈n ba nhiɛ̈m thiëëk",
+        tapToRecordCough = "Gät ë tɛ̈n ba gɔ̈l gɔ̈t",
+        tapToCaptureEye = "Gät ë tɛ̈n ba nyin thiëëk",
+        downloadingModel = "MedGemma ëë gäm…",
+        downloadSlowWarning = "App abë dɔm alɔŋ AI model ëë gäm.",
+        downloadFailedWarning = "AI model akëc gäm. Ŋic abë luɔi kë thɛɛr.",
+        disclaimer = "Kä ŋic de AI yen. Thiëëc ë dɛktɔr aköl ëbɛ̈n."
+    )
+
+    val fulaStrings = UiStrings(
+        tabHome = "Suudu",
+        tabTriage = "Ƴeewndoo",
+        tabSettings = "Teelte",
+        jaundiceScreen = "Ƴeewndoo nyawu ɓale",
+        preeclampsiaScreen = "Ƴeewndoo reedu",
+        respiratoryScreen = "Ƴeewndoo foolde",
+        tapToMeasureHR = "Soor ɗoo ngam ƴeewde ɓernde",
+        tapToCaptureEyelid = "Soor ɗoo ngam nangude natal yitere",
+        tapToCaptureFace = "Soor ɗoo ngam nangude natal yeeso",
+        tapToCaptureEye = "Soor ɗoo ngam nangude natal yitere",
+        tapToRecordCough = "Soor ɗoo ngam winndude doole",
+        downloadingModel = "MedGemma ina aartee…",
+        downloadSlowWarning = "Jaaɓnirgo ngo waawi leelde tuma modeel AI nde ina aartee.",
+        downloadFailedWarning = "Modeel AI nde waawaa aartaade. Ƴeewndoo huutoroyta jamirooje.",
+        disclaimer = "Kuutorgal ƴeewndoo AI. Haalan cafroowo sahaa kala."
+    )
+
+    val gaStrings = UiStrings(
+        tabHome = "Shishi",
+        tabTriage = "Kɛha",
+        tabSettings = "Lɛbaa",
+        jaundiceScreen = "Jaundice kɛha",
+        preeclampsiaScreen = "Preeclampsia kɛha",
+        respiratoryScreen = "Gbɔmɔ kɛha",
+        tapToMeasureHR = "Kɛ fɛɛ jiemɔ akɛ hee shishi",
+        tapToCaptureEyelid = "Kɛ fɛɛ jiemɔ akɛ nyɛ foto",
+        tapToCaptureFace = "Kɛ fɛɛ jiemɔ akɛ gbee foto",
+        tapToCaptureEye = "Kɛ fɛɛ jiemɔ akɛ nyɛ foto",
+        tapToRecordCough = "Kɛ fɛɛ jiemɔ akɛ shishia",
+        downloadingModel = "MedGemma eshi ba lɛ…",
+        downloadSlowWarning = "App lɛ abaakɛ dɔŋ AI model eshi ba lɛ wɔ.",
+        downloadFailedWarning = "AI model mli eba. Kɛha amli shikpɔŋ hewɔ.",
+        disclaimer = "AI kɛha jiemɔ ni lɛ. Bii dɔktɔ he sahaa kɛjogbaŋ."
+    )
+
+    val kikuyuStrings = UiStrings(
+        tabHome = "Mũciĩ",
+        tabTriage = "Thibitho",
+        tabSettings = "Ũhoro",
+        jaundiceScreen = "Thibitho ya jaundice",
+        preeclampsiaScreen = "Thibitho ya preeclampsia",
+        respiratoryScreen = "Thibitho ya gũthithĩria",
+        tapToMeasureHR = "Tinia haha gũthima ngoro",
+        tapToCaptureEyelid = "Tinia haha gũthiũra foto ya riitho",
+        tapToCaptureFace = "Tinia haha gũthiũra foto ya ũthiũ",
+        tapToCaptureEye = "Tinia haha gũthiũra foto ya riitho",
+        tapToRecordCough = "Tinia haha kũandĩka kĩhuti",
+        downloadingModel = "MedGemma nĩ ĩrahũthĩrwo…",
+        downloadSlowWarning = "App ĩngĩhota gũteithia rĩrĩa modeli ya AI ĩrĩ gũhũthĩrwo.",
+        downloadFailedWarning = "Modeli ya AI ndĩrahota gũhũthĩrwo. Thibitho nĩĩgagĩrĩria mawatho.",
+        disclaimer = "Kĩrĩa gĩa thibitho gĩa AI. Ũria daktarĩ hĩndĩ ciothe."
+    )
+
+    val kinyarwandaStrings = UiStrings(
+        appSubtitle = "Isuzuma ry'ibimenyetso by'ubuzima hakoreshejwe kamera",
+        tabHome = "Ahabanza",
+        tabTriage = "Isuzuma",
+        tabSettings = "Igenamiterere",
+        jaundiceScreen = "Isuzuma ry'umuhondo",
+        preeclampsiaScreen = "Isuzuma rya preeclampsia",
+        respiratoryScreen = "Isuzuma ry'ubuhumekero",
+        tapToMeasureHR = "Kanda hano gupima umutima",
+        tapToCaptureEyelid = "Kanda hano gufata ifoto y'urupfunguzo rw'ijisho",
+        tapToCaptureFace = "Kanda hano gufata ifoto y'isura",
+        tapToCaptureEye = "Kanda hano gufata ifoto y'ijisho",
+        tapToRecordCough = "Kanda hano gufata inkorora",
+        screeningsProgress = "%d mu 5 amasuzuma yarasohotse",
+        readyForTriage = "✓ Biteguye — jya ku gice cya Triage",
+        followSteps = "Kurikiza intambwe ziri hepfo gusuzuma umurwayi",
+        hrElevated = "⚠ Hejuru — bishobora kwerekana umuhangayiko cyangwa amaraso make",
+        hrLow = "⚠ Hasi — kurikirana hafi",
+        hrNormal = "✓ Mu rwego rusanzwe",
+        noPallor = "✓ Nta gucya kwabonetse",
+        noSwelling = "✓ Nta kubyimba kw'isura",
+        downloadingModel = "Gukuramo MedGemma…",
+        downloadSlowWarning = "Porogaramu ishobora gutinda mugihe moderi ya AI ikururwa.",
+        downloadFailedWarning = "Moderi ya AI ntiyashoboye gukururwa. Isuzuma rizakoresha amategeko.",
+        disclaimer = "Igikoresho cyo gusuzuma gishyigikiwe na AI. Buri gihe mubaze umuganga."
+    )
+
+    val kongoStrings = UiStrings(
+        tabHome = "Nzo",
+        tabTriage = "Talela",
+        tabSettings = "Bidimbu",
+        jaundiceScreen = "Talela ya jaundice",
+        preeclampsiaScreen = "Talela ya preeclampsia",
+        respiratoryScreen = "Talela ya mvimba",
+        tapToMeasureHR = "Fiota awa mpo na kotala motema",
+        tapToCaptureEyelid = "Fiota awa mpo na kozwa foto ya liso",
+        tapToCaptureFace = "Fiota awa mpo na kozwa foto ya elongi",
+        tapToCaptureEye = "Fiota awa mpo na kozwa foto ya liso",
+        tapToRecordCough = "Fiota awa mpo na kokoma nsongo",
+        downloadingModel = "MedGemma ezali ko kita…",
+        downloadSlowWarning = "Application ekoki kozala malembe tango modèle ya AI ezali ko kita.",
+        downloadFailedWarning = "Modèle ya AI ekokaki ko kita te. Talela ekosalela mibeko.",
+        disclaimer = "Esaleli ya AI mpo na kotala. Tuna monganga ntango nyonso."
+    )
+
+    val lingalaStrings = UiStrings(
+        appSubtitle = "Kotala bilembo ya bomoi na kamera",
+        tabHome = "Ndako",
+        tabTriage = "Kotala",
+        tabSettings = "Mibeko",
+        jaundiceScreen = "Kotala jaundice",
+        preeclampsiaScreen = "Kotala preeclampsia",
+        respiratoryScreen = "Kotala kopema",
+        tapToMeasureHR = "Fiota awa mpo na kotala motema",
+        tapToCaptureEyelid = "Fiota awa mpo na kozwa foto ya liso",
+        tapToCaptureFace = "Fiota awa mpo na kozwa foto ya elongi",
+        tapToCaptureEye = "Fiota awa mpo na kozwa foto ya liso",
+        tapToRecordCough = "Fiota awa mpo na kokoma kosenga",
+        downloadingModel = "MedGemma ezali ko kita…",
+        downloadSlowWarning = "Appli ekoki kozala malembe tango modèle ya AI ezali ko kita.",
+        downloadFailedWarning = "Modèle ya AI ekokaki ko kita te. Kotala ekosalela mibeko.",
+        disclaimer = "Esaleli ya AI mpo na kotala. Tuna monganga ntango nyonso."
+    )
+
+    val luoStrings = UiStrings(
+        tabHome = "Dala",
+        tabTriage = "Nono",
+        tabSettings = "Ter",
+        jaundiceScreen = "Nono jaundice",
+        preeclampsiaScreen = "Nono preeclampsia",
+        respiratoryScreen = "Nono yueyo",
+        tapToMeasureHR = "Mul ka mondo ipim chuny",
+        tapToCaptureEyelid = "Mul ka mondo igam picha mar wang",
+        tapToCaptureFace = "Mul ka mondo igam picha mar lep wang",
+        tapToCaptureEye = "Mul ka mondo igam picha mar wang",
+        tapToRecordCough = "Mul ka mondo indik ahonda",
+        downloadingModel = "MedGemma dhi piny…",
+        downloadSlowWarning = "App nyalo dhi mos ka model mar AI dhi piny.",
+        downloadFailedWarning = "Model mar AI ok onyalo lor. Nono biro tiyo gi chike.",
+        disclaimer = "Gir nono mar AI. Penj laktar kinde duto."
+    )
+
+    val lugandaStrings = UiStrings(
+        appSubtitle = "Okukebera obubonero bw'obulamu nga okozesa kamera",
+        tabHome = "Awaka",
+        tabTriage = "Okukebera",
+        tabSettings = "Entegeka",
+        jaundiceScreen = "Okukebera jaundice",
+        preeclampsiaScreen = "Okukebera preeclampsia",
+        respiratoryScreen = "Okukebera okussa",
+        tapToMeasureHR = "Nyiga wano okupima omutima",
+        tapToCaptureEyelid = "Nyiga wano okukwata ekifaananyi ky'ekisenge",
+        tapToCaptureFace = "Nyiga wano okukwata ekifaananyi ky'ekyenyi",
+        tapToCaptureEye = "Nyiga wano okukwata ekifaananyi ky'eriiso",
+        tapToRecordCough = "Nyiga wano okurekodinga okukola",
+        screeningsProgress = "%d ku 5 ebikeberwa biwedde",
+        readyForTriage = "✓ Wetegese — genda ku tab Triage",
+        followSteps = "Goberera emitendera gino okukebera omulwadde",
+        hrElevated = "⚠ Waggulu — kiyinza okulaga ennyike oba omusaayi ogutono",
+        hrLow = "⚠ Wansi — kebera bulungi",
+        hrNormal = "✓ Mu mwetwegero ewekyama",
+        noPallor = "✓ Tewali kufuuka okuzuuliddwa",
+        noSwelling = "✓ Tewali kuzimba kw'ekyenyi",
+        downloadingModel = "Ekitabo kya MedGemma kikkutuka…",
+        downloadSlowWarning = "App eyinza okutegeera ng'emodeli ya AI ekuttuka.",
+        downloadFailedWarning = "Emodeli ya AI teyasobola kkuttuka. Okukeberera kujja kukozesa ebiragiro.",
+        disclaimer = "Ekikozesebwa ky'okukebera ekya AI. Buuza omusawo buli kiseera."
+    )
+
+    val malagasyStrings = UiStrings(
+        tabHome = "Fandraisana",
+        tabTriage = "Fizahana",
+        tabSettings = "Fanovana",
+        jaundiceScreen = "Fizahana jaundice",
+        preeclampsiaScreen = "Fizahana preeclampsia",
+        respiratoryScreen = "Fizahana rivotra",
+        tapToMeasureHR = "Tsindrio eto handrefesana fo",
+        tapToCaptureEyelid = "Tsindrio eto haka sary ny maso",
+        tapToCaptureFace = "Tsindrio eto haka sary ny endrika",
+        tapToCaptureEye = "Tsindrio eto haka sary ny maso",
+        tapToRecordCough = "Tsindrio eto handraiketana kohaka",
+        downloadingModel = "Misintona MedGemma…",
+        downloadSlowWarning = "Mety ho miadana ny rindranasa raha misintona ny modely AI.",
+        downloadFailedWarning = "Tsy afaka nisintona ny modely AI. Hampiasa fitsipika ny fizahana.",
+        disclaimer = "Fitaovana fizahana AI. Manontania dokotera foana."
+    )
+
+    val ndebeleStrings = UiStrings(
+        tabHome = "Ekhaya",
+        tabTriage = "Ukuhlola",
+        tabSettings = "Izilungiselelo",
+        jaundiceScreen = "Ukuhlolwa kwe-jaundice",
+        preeclampsiaScreen = "Ukuhlolwa kwe-preeclampsia",
+        respiratoryScreen = "Ukuhlolwa kokuphefumula",
+        tapToMeasureHR = "Thinta lapha ukukala inhliziyo",
+        tapToCaptureEyelid = "Thinta lapha ukuthatha isithombe senkophe",
+        tapToCaptureFace = "Thinta lapha ukuthatha isithombe sobuso",
+        tapToCaptureEye = "Thinta lapha ukuthatha isithombe seso",
+        tapToRecordCough = "Thinta lapha ukuqopha ukukhwehlela",
+        downloadingModel = "Ilanda i-MedGemma…",
+        downloadSlowWarning = "Uhlelo lungahamba kancane ngenkathi kulandwa imodeli ye-AI.",
+        downloadFailedWarning = "Imodeli ye-AI ayikwazanga ukulandwa. Ukuhlolwa kuzosebenzisa imithetho.",
+        disclaimer = "Isixhobo sokuhlola se-AI. Buza udokotela ngaso sonke isikhathi."
+    )
+
+    val nuerStrings = UiStrings(
+        tabHome = "Ciɛŋ",
+        tabTriage = "Ŋic",
+        tabSettings = "Guɛ̈ɛ̈r",
+        jaundiceScreen = "Ŋic jaundice",
+        preeclampsiaScreen = "Ŋic preeclampsia",
+        respiratoryScreen = "Ŋic wëi",
+        tapToMeasureHR = "Gät tɛ̈n ba piɔ̈u ŋic",
+        tapToCaptureEyelid = "Gät tɛ̈n ba nyin thiëëk",
+        tapToCaptureFace = "Gät tɛ̈n ba nhiɛ̈m thiëëk",
+        tapToCaptureEye = "Gät tɛ̈n ba nyin thiëëk",
+        tapToRecordCough = "Gät tɛ̈n ba gɔ̈l gɔ̈t",
+        downloadingModel = "MedGemma ëë gäm…",
+        downloadSlowWarning = "App abë dɔm alɔŋ AI model ëë gäm.",
+        downloadFailedWarning = "AI model akëc gäm. Ŋic abë luɔi kë thɛɛr.",
+        disclaimer = "Kä ŋic AI yen. Thiëëc dɛktɔr aköl ëbɛ̈n."
+    )
+
+    val pidginNgStrings = UiStrings(
+        appSubtitle = "Camera screening for body signs",
+        tabHome = "Home",
+        tabTriage = "Check",
+        tabSettings = "Settings",
+        jaundiceScreen = "Yellow eye check",
+        preeclampsiaScreen = "Belle woman check",
+        respiratoryScreen = "Cough check",
+        tapToMeasureHR = "Press here to check heartbeat",
+        tapToCaptureEyelid = "Press here to snap eye",
+        tapToCaptureFace = "Press here to snap face",
+        tapToCaptureEye = "Press here to snap eye",
+        tapToRecordCough = "Press here to record cough",
+        screeningsProgress = "%d for 5 check don finish",
+        readyForTriage = "✓ E don ready — go Triage tab",
+        followSteps = "Follow dis steps to check patient",
+        downloadingModel = "E dey download MedGemma…",
+        downloadSlowWarning = "App fit slow small as AI dey download. You fit still use di check tools.",
+        downloadFailedWarning = "AI no fit download. Check go use normal rules.",
+        disclaimer = "Na AI screening tool be this. Always ask doctor."
+    )
+
+    val pidginCmStrings = UiStrings(
+        tabHome = "House",
+        tabTriage = "Check",
+        tabSettings = "Fix",
+        jaundiceScreen = "Yellow eye check",
+        preeclampsiaScreen = "Belle woman check",
+        respiratoryScreen = "Cough check",
+        tapToMeasureHR = "Touch for here check heart",
+        tapToCaptureEyelid = "Touch for here snap eye",
+        tapToCaptureFace = "Touch for here snap face",
+        tapToCaptureEye = "Touch for here snap eye",
+        tapToRecordCough = "Touch for here record cough",
+        downloadingModel = "MedGemma di come down…",
+        downloadSlowWarning = "App fit go slow as AI di come down.",
+        downloadFailedWarning = "AI no fit come down. Check go use normal way.",
+        disclaimer = "Na AI check tool dis. Ask doctor every time."
+    )
+
+    val rundiStrings = UiStrings(
+        tabHome = "Muhira",
+        tabTriage = "Isuzuma",
+        tabSettings = "Amategeko",
+        jaundiceScreen = "Isuzuma ry'umuhondo",
+        preeclampsiaScreen = "Isuzuma rya preeclampsia",
+        respiratoryScreen = "Isuzuma ry'uguhumeka",
+        tapToMeasureHR = "Kanda ng'aha gupima umutima",
+        tapToCaptureEyelid = "Kanda ng'aha gufata ifoto y'ijisho",
+        tapToCaptureFace = "Kanda ng'aha gufata ifoto y'mu maso",
+        tapToCaptureEye = "Kanda ng'aha gufata ifoto y'ijisho",
+        tapToRecordCough = "Kanda ng'aha kwandika inkorora",
+        downloadingModel = "MedGemma irakururwa…",
+        downloadSlowWarning = "Porogaramu ishobora guteba mugihe modeli ya AI ikururwa.",
+        downloadFailedWarning = "Modeli ya AI ntiyashobotse gukururwa. Isuzuma rizakoresha amategeko.",
+        disclaimer = "Igikoresho co gusuzuma ca AI. Baza muganga igihe cose."
+    )
+
+    val sesothoStrings = UiStrings(
+        tabHome = "Hae",
+        tabTriage = "Tlhahlobo",
+        tabSettings = "Ditlhophiso",
+        jaundiceScreen = "Tlhahlobo ya jaundice",
+        preeclampsiaScreen = "Tlhahlobo ya preeclampsia",
+        respiratoryScreen = "Tlhahlobo ya ho hema",
+        tapToMeasureHR = "Tobetsa mona ho lekanya pelo",
+        tapToCaptureEyelid = "Tobetsa mona ho nka setshwantsho sa leihlo",
+        tapToCaptureFace = "Tobetsa mona ho nka setshwantsho sa sefahleho",
+        tapToCaptureEye = "Tobetsa mona ho nka setshwantsho sa leihlo",
+        tapToRecordCough = "Tobetsa mona ho hatisa sefuba",
+        downloadingModel = "Ho jarolla MedGemma…",
+        downloadSlowWarning = "App e ka ba butle ha modele ea AI e ntse e jarollwa.",
+        downloadFailedWarning = "Modele ea AI ha ea ka ea jarollwa. Tlhahlobo e tla sebelisa melao.",
+        disclaimer = "Sesebelisoa sa tlhahlobo sa AI. Botsa ngaka kamehla."
+    )
+
+    val shonaStrings = UiStrings(
+        tabHome = "Kumba",
+        tabTriage = "Kuongorora",
+        tabSettings = "Zvigadziriso",
+        jaundiceScreen = "Kuongorora jaundice",
+        preeclampsiaScreen = "Kuongorora preeclampsia",
+        respiratoryScreen = "Kuongorora kufema",
+        tapToMeasureHR = "Bata pano kuyera moyo",
+        tapToCaptureEyelid = "Bata pano kutora mufananidzo weziso",
+        tapToCaptureFace = "Bata pano kutora mufananidzo wechiso",
+        tapToCaptureEye = "Bata pano kutora mufananidzo weziso",
+        tapToRecordCough = "Bata pano kurekodha chikosoro",
+        downloadingModel = "Kudhawunirodha MedGemma…",
+        downloadSlowWarning = "App inogona kunonoka AI modeli iri kudhawunirodha.",
+        downloadFailedWarning = "AI modeli haina kukwanisa kudhawunirodha. Kuongorora kuchashandisa mitemo.",
+        disclaimer = "Chishandiswa chekuongorora cheAI. Bvunza chiremba nguva dzose."
+    )
+
+    val somaliStrings = UiStrings(
+        appSubtitle = "Baaritaanka calaamadaha nolosha kamaradda",
+        tabHome = "Guriga",
+        tabTriage = "Baaritaan",
+        tabSettings = "Dejinta",
+        jaundiceScreen = "Baaritaan jaundice",
+        preeclampsiaScreen = "Baaritaan preeclampsia",
+        respiratoryScreen = "Baaritaan neefsashada",
+        tapToMeasureHR = "Taabo halkan si aad u cabbirto wadnaha",
+        tapToCaptureEyelid = "Taabo halkan si aad u qaadato sawir isha",
+        tapToCaptureFace = "Taabo halkan si aad u qaadato sawir wajiga",
+        tapToCaptureEye = "Taabo halkan si aad u qaadato sawir isha",
+        tapToRecordCough = "Taabo halkan si aad u duubto qufaca",
+        downloadingModel = "Waa la soo dejinayaa MedGemma…",
+        downloadSlowWarning = "App-ka wuxuu noqon karaa gaabis inta AI-da la soo dejinayo.",
+        downloadFailedWarning = "AI modeli lama soo dejin karin. Baaritaanku wuxuu isticmaali doonaa xeerarka.",
+        disclaimer = "Qalabka baaritaanka AI. Mar walba la tasho dhakhtarka."
+    )
+
+    val tswanaStrings = UiStrings(
+        tabHome = "Gae",
+        tabTriage = "Tlhatlhobo",
+        tabSettings = "Dithulaganyo",
+        jaundiceScreen = "Tlhatlhobo ya jaundice",
+        preeclampsiaScreen = "Tlhatlhobo ya preeclampsia",
+        respiratoryScreen = "Tlhatlhobo ya go hema",
+        tapToMeasureHR = "Tobetsa fano go lekanya pelo",
+        tapToCaptureEyelid = "Tobetsa fano go tsaya setshwantsho sa leitlho",
+        tapToCaptureFace = "Tobetsa fano go tsaya setshwantsho sa sefatlhego",
+        tapToCaptureEye = "Tobetsa fano go tsaya setshwantsho sa leitlho",
+        tapToRecordCough = "Tobetsa fano go gatisa mokgotlhelo",
+        downloadingModel = "Go tsenya MedGemma…",
+        downloadSlowWarning = "App e ka nna bonya fa modele ya AI e ntse e tsenywa.",
+        downloadFailedWarning = "Modele ya AI ga e a kgona go tsenywa. Tlhatlhobo e tla dirisa melao.",
+        disclaimer = "Sedirisiwa sa tlhatlhobo sa AI. Botsa ngaka ka metlha."
+    )
+
+    val portugueseStrings = UiStrings(
+        appSubtitle = "Triagem de sinais vitais por câmara",
+        tabHome = "Início",
+        tabCardio = "Coração",
+        tabAnemia = "Anemia",
+        tabPreE = "PreE",
+        tabTriage = "Triagem",
+        tabSettings = "Definições",
+        heartRate = "Frequência cardíaca",
+        anemiaScreen = "Rastreio de anemia",
+        jaundiceScreen = "Rastreio de icterícia",
+        preeclampsiaScreen = "Rastreio de pré-eclâmpsia",
+        respiratoryScreen = "Rastreio respiratório",
+        tapToMeasureHR = "Toque aqui para medir a frequência cardíaca",
+        tapToCaptureEyelid = "Toque aqui para capturar a pálpebra",
+        tapToCaptureFace = "Toque aqui para capturar o rosto",
+        tapToCaptureEye = "Toque aqui para capturar o olho",
+        tapToRecordCough = "Toque aqui para gravar a tosse",
+        screeningsProgress = "%d de 5 rastreios concluídos",
+        readyForTriage = "✓ Pronto para triagem — vá ao separador Triagem",
+        followSteps = "Siga os passos abaixo para rastrear um paciente",
+        hrElevated = "⚠ Elevada — pode indicar stress ou anemia",
+        hrLow = "⚠ Baixa — monitorizar de perto",
+        hrNormal = "✓ Dentro dos limites normais",
+        noPallor = "✓ Sem palidez detetada",
+        noSwelling = "✓ Sem inchaço facial",
+        normal = "Normal",
+        mild = "Ligeiro",
+        moderate = "Moderado",
+        severe = "Grave",
+        analyze = "Analisar",
+        cancel = "Cancelar",
+        downloadingModel = "A transferir MedGemma…",
+        downloadSlowWarning = "A aplicação pode ficar mais lenta durante a transferência do modelo de IA.",
+        downloadFailedWarning = "Não foi possível transferir o modelo de IA. A triagem usará avaliação baseada em regras.",
+        disclaimer = "Ferramenta de rastreio assistida por IA. Consulte sempre um profissional de saúde."
+    )
+
+    val arabicStrings = UiStrings(
+        appSubtitle = "فحص العلامات الحيوية بالكاميرا",
+        tabHome = "الرئيسية",
+        tabCardio = "القلب",
+        tabAnemia = "فقر الدم",
+        tabPreE = "تسمم",
+        tabTriage = "الفرز",
+        tabSettings = "الإعدادات",
+        heartRate = "معدل ضربات القلب",
+        anemiaScreen = "فحص فقر الدم",
+        jaundiceScreen = "فحص اليرقان",
+        preeclampsiaScreen = "فحص تسمم الحمل",
+        respiratoryScreen = "فحص التنفس",
+        tapToMeasureHR = "اضغط هنا لقياس معدل ضربات القلب",
+        tapToCaptureEyelid = "اضغط هنا لالتقاط صورة الجفن",
+        tapToCaptureFace = "اضغط هنا لالتقاط صورة الوجه",
+        tapToCaptureEye = "اضغط هنا لالتقاط صورة العين",
+        tapToRecordCough = "اضغط هنا لتسجيل السعال",
+        screeningsProgress = "%d من 5 فحوصات مكتملة",
+        readyForTriage = "✓ جاهز للفرز — اذهب إلى علامة تبويب الفرز",
+        followSteps = "اتبع الخطوات أدناه لفحص المريض",
+        hrElevated = "⚠ مرتفع — قد يشير إلى توتر أو فقر دم",
+        hrLow = "⚠ منخفض — راقب عن كثب",
+        hrNormal = "✓ ضمن النطاق الطبيعي",
+        noPallor = "✓ لم يتم اكتشاف شحوب",
+        noSwelling = "✓ لا يوجد تورم في الوجه",
+        normal = "طبيعي",
+        mild = "خفيف",
+        moderate = "متوسط",
+        severe = "شديد",
+        analyze = "تحليل",
+        cancel = "إلغاء",
+        downloadingModel = "جاري تنزيل MedGemma…",
+        downloadSlowWarning = "قد يكون التطبيق أبطأ أثناء تنزيل نموذج الذكاء الاصطناعي.",
+        downloadFailedWarning = "تعذر تنزيل نموذج الذكاء الاصطناعي. سيستخدم الفرز التقييم القائم على القواعد.",
+        disclaimer = "أداة فحص بمساعدة الذكاء الاصطناعي. استشر دائماً أخصائي الرعاية الصحية."
+    )
+
+    val tsongaStrings = UiStrings(
+        tabHome = "Kaya",
+        tabTriage = "Ku kambela",
+        tabSettings = "Swiendlekano",
+        jaundiceScreen = "Ku kambela ka jaundice",
+        preeclampsiaScreen = "Ku kambela ka preeclampsia",
+        respiratoryScreen = "Ku kambela ka ku hefemula",
+        tapToMeasureHR = "Kanya laha ku pima mbilu",
+        tapToCaptureEyelid = "Kanya laha ku teka xifaniso xa tihlo",
+        tapToCaptureFace = "Kanya laha ku teka xifaniso xa xikandza",
+        tapToCaptureEye = "Kanya laha ku teka xifaniso xa tihlo",
+        tapToRecordCough = "Kanya laha ku rekhoda xikhohloyana",
+        downloadingModel = "Ku downloda MedGemma…",
+        downloadSlowWarning = "App yi nga ha yima loko modele ya AI yi downlodiwa.",
+        downloadFailedWarning = "Modele ya AI a yi downlodiwanga. Ku kambela ku ta tirhisa milawu.",
+        disclaimer = "Xitirhisiwa xa ku kambela xa AI. Vutisa n'anga nkarhana wun'wana."
+    )
+
+    val vendaStrings = UiStrings(
+        tabHome = "Hayani",
+        tabTriage = "U sedzulusa",
+        tabSettings = "Nyito",
+        jaundiceScreen = "U sedzulusa ha jaundice",
+        preeclampsiaScreen = "U sedzulusa ha preeclampsia",
+        respiratoryScreen = "U sedzulusa ha u vuwa",
+        tapToMeasureHR = "Kwamani fhano u ela mbilu",
+        tapToCaptureEyelid = "Kwamani fhano u dzhia tshifanyiso tsha ḽiṱo",
+        tapToCaptureFace = "Kwamani fhano u dzhia tshifanyiso tsha tshifhaṱuwo",
+        tapToCaptureEye = "Kwamani fhano u dzhia tshifanyiso tsha ḽiṱo",
+        tapToRecordCough = "Kwamani fhano u rekhodisa tshikoho",
+        downloadingModel = "MedGemma i khou ḓiselwa…",
+        downloadSlowWarning = "App i nga vha yo ṱavha musi modele ya AI i tshi khou ḓiselwa.",
+        downloadFailedWarning = "Modele ya AI a yo ngo kona u ḓiselwa. U sedzulusa hu ḓo shumisa milayo.",
+        disclaimer = "Tshishumiswa tsha u sedzulusa tsha AI. Vhudzisani ṅanga tshifhinga tshoṱhe."
+    )
+
+    val swatiStrings = UiStrings(
+        tabHome = "Ekhaya",
+        tabTriage = "Kuhlola",
+        tabSettings = "Tilungiselelo",
+        jaundiceScreen = "Kuhlolwa kwe-jaundice",
+        preeclampsiaScreen = "Kuhlolwa kwe-preeclampsia",
+        respiratoryScreen = "Kuhlolwa kwekuphefumula",
+        tapToMeasureHR = "Chafata lapha kulinganisa inhlitiyo",
+        tapToCaptureEyelid = "Chafata lapha kutfola sitfombe seliso",
+        tapToCaptureFace = "Chafata lapha kutfola sitfombe sebuso",
+        tapToCaptureEye = "Chafata lapha kutfola sitfombe seliso",
+        tapToRecordCough = "Chafata lapha kurekhodisha kukhohlela",
+        downloadingModel = "Kulanda i-MedGemma…",
+        downloadSlowWarning = "Luhlelo lungahamba kancane ngesikhatsi kulandwa imodeli ye-AI.",
+        downloadFailedWarning = "Imodeli ye-AI ayikwazanga kulandwa. Kuhlolwa kutawusebentisa imitsetfo.",
+        disclaimer = "Sifaneli sekuhlola se-AI. Buta dokotela ngaso sonkhe sikhatsi."
+    )
+
+    val northernSothoStrings = UiStrings(
+        tabHome = "Gae",
+        tabTriage = "Tlhahlobo",
+        tabSettings = "Dipeakanyo",
+        jaundiceScreen = "Tlhahlobo ya jaundice",
+        preeclampsiaScreen = "Tlhahlobo ya preeclampsia",
+        respiratoryScreen = "Tlhahlobo ya go hema",
+        tapToMeasureHR = "Kgotla mo go lekanya pelo",
+        tapToCaptureEyelid = "Kgotla mo go tšea seswantšho sa leihlo",
+        tapToCaptureFace = "Kgotla mo go tšea seswantšho sa sefahlego",
+        tapToCaptureEye = "Kgotla mo go tšea seswantšho sa leihlo",
+        tapToRecordCough = "Kgotla mo go rekhoda sefuba",
+        downloadingModel = "Go tsenya MedGemma…",
+        downloadSlowWarning = "App e ka ba bonya ge modele ya AI e ntše e tsenywa.",
+        downloadFailedWarning = "Modele ya AI ga e a kgona go tsenywa. Tlhahlobo e tla šomiša melao.",
+        disclaimer = "Sedirišwa sa tlhahlobo sa AI. Botšiša ngaka ka mehla."
+    )
+
+    val bembaStrings = UiStrings(
+        tabHome = "Kuŋanda",
+        tabTriage = "Ukupima",
+        tabSettings = "Ifikala",
+        jaundiceScreen = "Ukupima kwa jaundice",
+        preeclampsiaScreen = "Ukupima kwa preeclampsia",
+        respiratoryScreen = "Ukupima kwa kupuma",
+        tapToMeasureHR = "Pama pano ukupima umutima",
+        tapToCaptureEyelid = "Pama pano ukukwata icifanishingo ca linso",
+        tapToCaptureFace = "Pama pano ukukwata icifanishingo ca busu",
+        tapToCaptureEye = "Pama pano ukukwata icifanishingo ca linso",
+        tapToRecordCough = "Pama pano ukulemba ukukolola",
+        downloadingModel = "Ukukopela MedGemma…",
+        downloadSlowWarning = "App ikakwata panono ilyo modeli ya AI ilikukopelwa.",
+        downloadFailedWarning = "Modeli ya AI tailikukopelwa. Ukupima kukalabomfya amafunde.",
+        disclaimer = "Icisebensho ca ukupima ca AI. Ipusha ŋanga inshita yonse."
+    )
+
+    val tumbukaStrings = UiStrings(
+        tabHome = "Kunyumba",
+        tabTriage = "Kuyeza",
+        tabSettings = "Masintha",
+        jaundiceScreen = "Kuyeza jaundice",
+        preeclampsiaScreen = "Kuyeza preeclampsia",
+        respiratoryScreen = "Kuyeza kupuma mphepo",
+        tapToMeasureHR = "Khomsani apa kuyeza mtima",
+        tapToCaptureEyelid = "Khomsani apa kutora chithunzi cha diso",
+        tapToCaptureFace = "Khomsani apa kutora chithunzi cha nkhope",
+        tapToCaptureEye = "Khomsani apa kutora chithunzi cha diso",
+        tapToRecordCough = "Khomsani apa kurekodha chifuwa",
+        downloadingModel = "Kukopa MedGemma…",
+        downloadSlowWarning = "Pulogalamu yikukhalira mutu modeli ya AI yikukopedwa.",
+        downloadFailedWarning = "Modeli ya AI yilephera kukopedwa. Kuyeza kukagwiritsa ntchito malango.",
+        disclaimer = "Chikwezeso cha AI. Finsani dotolo nyengo yose."
+    )
+
+    val lubaKasaiStrings = UiStrings(
+        tabHome = "Ku nzubu",
+        tabTriage = "Kutala",
+        tabSettings = "Bilondeshilu",
+        jaundiceScreen = "Kutala kwa jaundice",
+        preeclampsiaScreen = "Kutala kwa preeclampsia",
+        respiratoryScreen = "Kutala kwa kuhema",
+        tapToMeasureHR = "Fina pa apa kutala mutshima",
+        tapToCaptureEyelid = "Fina pa apa kuangata tshifanyiso tsha disu",
+        tapToCaptureFace = "Fina pa apa kuangata tshifanyiso tsha mpala",
+        tapToCaptureEye = "Fina pa apa kuangata tshifanyiso tsha disu",
+        tapToRecordCough = "Fina pa apa kulembela kushikuta",
+        downloadingModel = "MedGemma udi ukuselua…",
+        downloadSlowWarning = "App udi ukuya bulelela mu tshikondo tshia modeli AI ukuselua.",
+        downloadFailedWarning = "Modeli AI kayivua mukuya kuselua. Kutala kudi ne kusadikila mashinyi.",
+        disclaimer = "Tshikwezeu tsha kutala tsha AI. Ebeja muganga ntshikondo yosele."
+    )
+
+    val kuanyamaStrings = UiStrings(
+        tabHome = "Megumbo",
+        tabTriage = "Okukondjitha",
+        tabSettings = "Eengundafano",
+        jaundiceScreen = "Okukondjitha jaundice",
+        preeclampsiaScreen = "Okukondjitha preeclampsia",
+        respiratoryScreen = "Okukondjitha okufuda",
+        tapToMeasureHR = "Kunyata mpaka oku okupima omutima",
+        tapToCaptureEyelid = "Kunyata mpaka oku okukuata efano leliho",
+        tapToCaptureFace = "Kunyata mpaka oku okukuata efano loshipa",
+        tapToCaptureEye = "Kunyata mpaka oku okukuata efano leliho",
+        tapToRecordCough = "Kunyata mpaka oku okunyola okukohola",
+        downloadingModel = "MedGemma tai shitwa…",
+        downloadSlowWarning = "App otai dulu okuya kanini AI modeli tai shitwa.",
+        downloadFailedWarning = "AI modeli kai dulile okushitwa. Okukondjitha otaku longitha oompango.",
+        disclaimer = "Oshihalifa shokukondjitha sha AI. Pula ndokotola alushe."
+    )
+
 }

@@ -451,7 +451,7 @@ class NkuInferenceEngine(private val context: Context) {
      * Resolution order:
      *   1. Already on internal storage / PAD pack / sideload → skip
      *   2. Bundled in APK assets → extract to internal storage
-     *   3. Neither → download from HuggingFace (2.49 GB) and validate SHA-256
+     *   3. Neither → download from HuggingFace (2.3 GB) and validate SHA-256
      *
      * This runs in onCreate so the model is ready *before* the first triage.
      */
@@ -519,7 +519,7 @@ class NkuInferenceEngine(private val context: Context) {
 
     /**
      * Native HTTP downloader fallback for Kaggle reviewers installing via APK.
-     * Downloads the 2.49GB GGUF model directly from HuggingFace to internal storage.
+     * Downloads the 2.3GB GGUF model directly from HuggingFace to internal storage.
      *
      * Safety:
      *  - Pre-flight storage check (requires ≥3 GB free)
@@ -532,7 +532,7 @@ class NkuInferenceEngine(private val context: Context) {
         var connection: java.net.HttpURLConnection? = null
 
         try {
-            // Pre-flight: ensure enough disk space (model is 2.49GB, need ~100MB headroom)
+            // Pre-flight: ensure enough disk space (model is 2.3GB, need ~100MB headroom)
             val freeBytes = modelDir.usableSpace
             val requiredBytes = 2_600L * 1024 * 1024  // 2.6 GB
             if (freeBytes < requiredBytes) {

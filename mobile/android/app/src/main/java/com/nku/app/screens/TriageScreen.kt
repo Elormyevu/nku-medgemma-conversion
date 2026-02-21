@@ -135,7 +135,7 @@ fun TriageScreen(
                     )
                     Spacer(Modifier.width(10.dp))
                     Text(
-                        "Translation not available for this language — triage will use English.",
+                        strings.translationUnavailableWarning,
                         color = NkuColors.Warning,
                         fontSize = 12.sp
                     )
@@ -248,6 +248,21 @@ fun TriageScreen(
                 }
             }
             Spacer(Modifier.height(16.dp))
+        }
+
+        // P3-3: Warn when sensor data has low confidence (between UI gate 0.4 and reasoner threshold 0.75)
+        val hasLowConfidenceData = (rppgResult.bpm != null && rppgResult.confidence in 0.4f..0.75f) ||
+            (respiratoryResult.confidence in 0.4f..0.75f)
+        if (hasAnyData && hasLowConfidenceData) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Default.Info, contentDescription = null, tint = NkuColors.MutedBlue, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(6.dp))
+                Text(strings.lowConfidenceNote, color = NkuColors.MutedBlue, fontSize = 11.sp)
+            }
+            Spacer(Modifier.height(8.dp))
         }
         
         Button(

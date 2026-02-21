@@ -236,6 +236,8 @@ object LocalizedStrings {
         val notDone: String = "Not done",
         val runTriage: String = "Run Triage Assessment",
         val noDataWarning: String = "No screening data collected yet. Go to other tabs first to capture vital signs.",
+        val translationUnavailableWarning: String = "Translation not available for this language — triage will use English.",
+        val lowConfidenceNote: String = "Some measurements have low confidence and may be excluded from AI analysis.",
 
         // Clinical terms
         val normal: String = "Normal",

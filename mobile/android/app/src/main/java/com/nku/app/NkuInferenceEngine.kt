@@ -583,8 +583,8 @@ class NkuInferenceEngine(private val context: Context) {
             var redirectCount = 0
             while (redirectCount < 5) {
                 connection = downloadUrl.openConnection() as java.net.HttpURLConnection
-                connection.connectTimeout = 15000
-                connection.readTimeout = 15000
+                connection.connectTimeout = 30000   // 30s connect — CDN redirects can be slow
+                connection.readTimeout = 120000     // 120s read — 2.3GB over slow rural networks
                 connection.instanceFollowRedirects = false
                 
                 val code = connection.responseCode

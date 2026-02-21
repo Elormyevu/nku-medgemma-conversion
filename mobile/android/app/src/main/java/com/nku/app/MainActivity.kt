@@ -223,9 +223,11 @@ fun NkuSentinelApp(
                         if (prompt != null) {
                             val vitals = sensorFusion.vitalSigns.value
                             scope.launch {
-                                val medGemmaResponse = nkuEngine.runMedGemmaOnly(prompt)
-                                if (medGemmaResponse != null) {
-                                    clinicalReasoner.parseMedGemmaResponse(medGemmaResponse, vitals)
+                                val result = nkuEngine.runNkuCycle(prompt, selectedLanguage)
+                                if (result.clinicalResponse.isNotBlank() &&
+                                    !result.clinicalResponse.startsWith("Error") &&
+                                    !result.clinicalResponse.startsWith("Models not")) {
+                                    clinicalReasoner.parseMedGemmaResponse(result.clinicalResponse, vitals)
                                 } else {
                                     clinicalReasoner.createRuleBasedAssessment(vitals)
                                 }
@@ -372,9 +374,11 @@ fun NkuSentinelApp(
                                 showLowMemoryDialog = true
                             } else {
                                 scope.launch {
-                                    val medGemmaResponse = nkuEngine.runMedGemmaOnly(prompt)
-                                    if (medGemmaResponse != null) {
-                                        clinicalReasoner.parseMedGemmaResponse(medGemmaResponse, currentVitals)
+                                    val result = nkuEngine.runNkuCycle(prompt, selectedLanguage)
+                                    if (result.clinicalResponse.isNotBlank() &&
+                                        !result.clinicalResponse.startsWith("Error") &&
+                                        !result.clinicalResponse.startsWith("Models not")) {
+                                        clinicalReasoner.parseMedGemmaResponse(result.clinicalResponse, currentVitals)
                                     } else {
                                         clinicalReasoner.createRuleBasedAssessment(currentVitals)
                                     }

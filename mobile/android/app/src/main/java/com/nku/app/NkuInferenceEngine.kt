@@ -57,7 +57,7 @@ class NkuInferenceEngine(private val context: Context) {
         private const val MEDGEMMA_MODEL = "medgemma-4b-it-q4_k_m.gguf"
         // SHA-256 for the pinned MedGemma Q4_K_M artifact distributed in this repo/PAD pack.
         // Keep in sync with medgemma/src/main/assets/medgemma-4b-it-q4_k_m.gguf.
-        private const val MEDGEMMA_SHA256 = "8bcb19d3e363f7d1ab27f364032436fd702e735a6f479d6bb7b1cf066e76b443"
+        private const val MEDGEMMA_SHA256 = "bff1ff2ed6aebe1b5ecb96b5dc2ee64cd6dfdec3ea4fc2e318d74087119a0ff9"
         // Translation handled by Android ML Kit (not a GGUF model)
         // HeAR Event Detector: TFLite, ships in app assets (loaded by RespiratoryDetector)
         // HeAR ViT-L encoder: future upgrade — XLA/StableHLO ops block ONNX/TFLite conversion

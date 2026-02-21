@@ -1,0 +1,25 @@
+<start_of_turn>user
+You are a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.
+Analyze the patient data below and provide a structured assessment.
+
+=== SENSOR BIOMARKERS ===
+Heart Rate: 120 BPM (confidence: 0.90)
+Pallor Score: 0.85 (severity: SEVERE)
+Jaundice Score: 0.05 (severity: NORMAL)
+Edema Score: 0.10 (severity: NORMAL)
+Respiratory Risk: LOW_RISK (confidence: 0.85)
+
+=== REPORTED SYMPTOMS ===
+- <<<Fever for 3 days, very weak, vomiting>>>
+
+Provide your assessment in this EXACT format:
+SEVERITY: [LOW/MEDIUM/HIGH/CRITICAL]
+URGENCY: [ROUTINE/SOON/URGENT/IMMEDIATE]
+TRIAGE_CATEGORY: [GREEN/YELLOW/ORANGE/RED]
+PRIMARY_CONCERN: [one-line diagnosis or concern]
+RECOMMENDATIONS:
+- [action 1]
+- [action 2]
+IMPORTANT: You MUST start your response with the SEVERITY and URGENCY lines. Do NOT write any explanations, preambles, or chain-of-thought reasoning.
+<end_of_turn>
+<start_of_turn>model

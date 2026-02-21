@@ -1,0 +1,970 @@
+{
+  "model": "medgemma-4b-iq2_xs",
+  "port": 8787,
+  "timestamp": "2026-02-20T22:54:08",
+  "n_vignettes": 20,
+  "sensor_augmented": [
+    {
+      "id": "V01",
+      "name": "Severe malaria with anemia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "malaria"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** Severe anemia and tachycardia, likely due to an infectious illness (e.g., malaria).",
+        "raw": "thought\nHere's my thought process for generating the assessment:\n\n1.  **Understand the Goal:** The request is to analyze patient data (provided in a specific format) and produce a structured assessment based on that data. The assessment should cover severity, urgency, triage category, primary concer"
+      },
+      "time_s": 12.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V02",
+      "name": "Uncomplicated URTI",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "upper respiratory"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nHere's my thought process for generating the assessment:\n\n1.  **Understand the Goal:** The user wants me to act as a clinical triage assistant for Community Health Workers (CHWs) in Sub-Saharan Africa. I need to analyze patient data and provide a structured assessment based on the provided f"
+      },
+      "time_s": 12.7,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V03",
+      "name": "Preeclampsia warning",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "preeclampsia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[Preeclampsia]",
+        "raw": "thought\nThe user wants me to analyze patient data for a clinical triage assistant role in Sub-Saharan Africa. I need to assess the patient based on the provided data and provide an assessment in a specific format.\n\nHere's the breakdown of the task:\n\n1.  **Analyze the data:** The data includes heart "
+      },
+      "time_s": 10.2,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V04",
+      "name": "Childhood pneumonia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "pneumonia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** Respiratory illness (likely pneumonia or severe asthma exacerbation).",
+        "raw": "thought\nHere's a thinking process to arrive at the structured assessment:\n\n1.  **Understand the Goal:** The task is to analyze patient data (provided in a specific format) and produce a structured assessment based on that data. The assessment should cover severity, urgency, triage category, primary "
+      },
+      "time_s": 12.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V05",
+      "name": "Moderate anemia",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nHere's my thought process for generating the assessment:\n\n1.  **Deconstruct the Request:**\n    *   **Role:** Clinical Triage Assistant for Community Health Workers (CHWs) in Sub-Saharan Africa. This means I need to assess patients who might be experiencing symptoms, potentially related to ma"
+      },
+      "time_s": 12.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V06",
+      "name": "Neonatal jaundice",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "jaundice"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa. I need to analyze the provided patient data and provide a structured assessment in a specific format.\n\nHere's the breakdown of the task:\n\n1.  **Role:** Clinical Triage Assistant for Co"
+      },
+      "time_s": 12.7,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V07",
+      "name": "Dehydration from diarrhea",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "dehydration"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** Severe dehydration due to watery diarrhea and vomiting.",
+        "raw": "thought\nHere's my thought process for generating the assessment:\n\n1.  **Deconstruct the Request:**\n    *   **Role:** Clinical Triage Assistant for Community Health Workers (CHWs) in Sub-Saharan Africa.\n    *   **Task:** Analyze patient data.\n    *   **Input:** Specific sensor biomarkers (HR) and rep"
+      },
+      "time_s": 12.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V08",
+      "name": "Normal prenatal check",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "normal"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "** Slight ankle swelling in a pregnant patient.",
+        "raw": "thought\nHere's my thought process for generating the triage assessment:\n\n1.  **Understand the Goal:** The request asks for a clinical triage assessment based on provided sensor data and reported symptoms. The output needs to be in a specific format.\n\n2.  **Analyze the Input:**\n    *   **Sensor Data:"
+      },
+      "time_s": 12.9,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V09",
+      "name": "Tuberculosis suspect",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "tuberculosis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** A serious infectious illness, likely Tuberculosis (TB).",
+        "raw": "thought\nHere's the thinking process for analyzing the patient data and generating the triage assessment:\n\n1.  **Understand the Goal:** The objective is to analyze patient data (heart rate, respiratory risk, symptoms) and provide a structured assessment based on the provided format.\n\n2.  **Analyze th"
+      },
+      "time_s": 13.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V10",
+      "name": "Sickle cell crisis",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "sickle cell"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\n1.  **Analyze the input:** The user wants me to act as a clinical triage assistant for CHWs in Sub-Saharan Africa. I need to analyze patient data provided in a specific format.\n2.  **Identify the task:** The task is to analyze the provided sensor biomarkers and reported symptoms to create a "
+      },
+      "time_s": 13.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V11",
+      "name": "Mild gastroenteritis",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "gastroenteritis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa. I need to analyze the provided sensor data and patient reported symptoms, and then provide a structured assessment in a specific format.\n\nHere's the breakdown of the task:\n\n1.  **Role:"
+      },
+      "time_s": 12.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V12",
+      "name": "Postpartum hemorrhage",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "hemorrhage"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nHere's my thought process for generating the assessment:\n\n1.  **Deconstruct the Request:**\n    *   **Role:** Clinical Triage Assistant for Community Health Workers (CHWs) in Sub-Saharan Africa.\n    *   **Task:** Analyze patient data provided.\n    *   **Input:** A specific data set with senso"
+      },
+      "time_s": 12.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V13",
+      "name": "Mild asthma exacerbation",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "asthma"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[Asthma exacerbation or severe asthma attack]",
+        "raw": "thought\nThe user wants me to analyze patient data for a clinical triage assistant role in Sub-Saharan Africa. I need to assess the patient based on the provided sensor data and reported symptoms. The output format is specified.\n\n1.  **SEVERITY**: Assess the overall severity based on the data.\n2.  **"
+      },
+      "time_s": 8.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V14",
+      "name": "Hepatitis A",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "hepatitis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": "ORANGE",
+        "concern": "** Jaundice (or Liver Disease).",
+        "raw": "thought\nHere's a thinking process to arrive at the structured assessment:\n\n1.  **Understand the Goal:** The objective is to analyze patient data (provided in a specific format) and produce a structured assessment based on that data. The assessment should cover severity, urgency, triage category, and"
+      },
+      "time_s": 12.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V15",
+      "name": "Febrile seizure in child",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "seizure"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "** The illness causing the high fever, shaking, and drowsiness.",
+        "raw": "thought\nThe user wants me to analyze patient data and provide a structured assessment based on the provided format.\n\n1.  **Analyze the data:**\n    *   **Patient:** A 2-year-old child.\n    *   **Symptoms:** Fever (40\u00b0C), shaking episode (lasting 2 minutes), now drowsy.\n    *   **Vital Signs:** Heart "
+      },
+      "time_s": 12.7,
+      "correct": {
+        "severity": false,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V16",
+      "name": "Skin infection",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "infection"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nHere's a thinking process to arrive at the structured assessment:\n\n1.  **Understand the Goal:** The task is to analyze patient data (provided in a specific format) and produce a structured assessment based on that data. The assessment should cover severity, urgency, triage category, primary "
+      },
+      "time_s": 12.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V17",
+      "name": "Eclampsia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "eclampsia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "** Severe preeclampsia/eclampsia (or pregnancy-related complication).",
+        "raw": "thought\nThe user wants me to analyze patient data and provide a structured assessment based on the provided format. I need to understand the data, identify the primary concern, assess the severity and urgency, and provide recommendations.\n\n1.  **Analyze the data:**\n    *   **Heart Rate:** 130 BPM. T"
+      },
+      "time_s": 9.8,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V18",
+      "name": "Chronic cough, low risk",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "cough"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "** Dry cough",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa. I need to analyze the provided sensor data and patient symptoms, and then provide a structured assessment in a specific format.\n\nHere's the breakdown of the process:\n\n1.  **Understand "
+      },
+      "time_s": 11.2,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V19",
+      "name": "Snake bite",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "snake"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "[one-line diagnosis or concern] -> The concern is a localized infection causing severe pain and swelling.",
+        "raw": "thought\n1.  **Analyze the Request:** The user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa. I need to analyze patient data (provided) and provide a structured assessment in a specific format.\n\n2.  **Understand the Role:**\n    *   **Clinical Triage"
+      },
+      "time_s": 11.8,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V20",
+      "name": "Iron deficiency pregnancy",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa. I need to analyze the provided patient data and provide a structured assessment in a specific format.\n\nHere's the breakdown of the task:\n\n1.  **Role:** Clinical triage assistant for CH"
+      },
+      "time_s": 12.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    }
+  ],
+  "text_only": [
+    {
+      "id": "V01",
+      "name": "Severe malaria with anemia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "malaria"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nHere's my thought process for generating the triage assessment:\n\n1.  **Understand the Goal:** The user wants me to act as a clinical triage assistant for Community Health Workers (CHWs) in Sub-Saharan Africa. I need to analyze patient data provided and produce a structured assessment.\n\n2.  *"
+      },
+      "time_s": 12.6,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V02",
+      "name": "Uncomplicated URTI",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "upper respiratory"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** [Upper Respiratory Infection]",
+        "raw": "thought\nHere's my thought process for generating the triage assessment:\n\n1.  **Understand the Goal:** The request asks for a structured assessment of a patient presenting with symptoms, using a specific format. The role is a clinical triage assistant for Community Health Workers in Sub-Saharan Afric"
+      },
+      "time_s": 12.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V03",
+      "name": "Preeclampsia warning",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "preeclampsia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nHere's my thought process for analyzing the patient data and generating the triage assessment:\n\n1.  **Deconstruct the Request:**\n    *   **Role:** Clinical Triage Assistant for Community Health Workers (CHWs) in Sub-Saharan Africa. This means I need to assess the patient's symptoms and deter"
+      },
+      "time_s": 12.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V04",
+      "name": "Childhood pneumonia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "pneumonia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Pneumonia (or Pneumonia)",
+        "raw": "thought\nHere's my thought process for generating the assessment:\n\n1.  **Deconstruct the Request:**\n    *   **Role:** Clinical triage assistant for Community Health Workers (CHWs) in Sub-Saharan Africa.\n    *   **Task:** Analyze patient data provided.\n    *   **Input:** A specific report format is re"
+      },
+      "time_s": 13.2,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V05",
+      "name": "Moderate anemia",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** [Anemia, specifically pallor] - The symptoms point towards anemia, likely due to pallor.",
+        "raw": "thought\nHere's my thought process for analyzing the patient data and generating the triage assessment:\n\n1.  **Deconstruct the Request:**\n    *   **Role:** Clinical Triage Assistant for Community Health Workers (CHWs) in Sub-Saharan Africa. This means I need to assess the patient's symptoms and deter"
+      },
+      "time_s": 12.8,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V06",
+      "name": "Neonatal jaundice",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "jaundice"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "thought\nHere's my thought process for generating the triage assessment:\n\n1.  **Deconstruct the Request:**\n    *   **Role:** Clinical Triage Assistant for Community Health Workers (CHWs) in Sub-Saharan Africa. This means I need to assess the patient based on common conditions in this context, conside"
+      },
+      "time_s": 13.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V07",
+      "name": "Dehydration from diarrhea",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "dehydration"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** Severe dehydration / Severe dehydration.",
+        "raw": "thought\nHere's a thinking process to arrive at the structured triage assessment:\n\n1.  **Understand the Goal:** The task is to triage a patient based on a short report, using a specific format. The role is a Clinical Triage Assistant for Community Health Workers in Sub-Saharan Africa.\n\n2.  **Identify"
+      },
+      "time_s": 11.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V08",
+      "name": "Normal prenatal check",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "normal"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Pregnancy",
+        "raw": "thought\nHere's my thought process for analyzing the patient data and generating the triage assessment:\n\n1.  **Identify the core task:** The goal is to analyze patient data presented in a specific format and produce a structured assessment based on that format.\n\n2.  **Understand the format:** The for"
+      },
+      "time_s": 12.9,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V09",
+      "name": "Tuberculosis suspect",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "tuberculosis"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "** Tuberculosis (or severe pneumonia)",
+        "raw": "thought\nHere's a thinking process to arrive at the structured assessment:\n\n1.  **Understand the Goal:** The objective is to assess a patient presenting with cough, night sweats, weight loss, and hemoptysis (coughing blood) based on limited information. The output needs to be in a specific format.\n\n2"
+      },
+      "time_s": 12.0,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V10",
+      "name": "Sickle cell crisis",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "sickle cell"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nHere's my thought process for generating the triage assessment:\n\n1.  **Deconstruct the Request:**\n    *   **Role:** Clinical Triage Assistant for Community Health Workers (CHWs) in Sub-Saharan Africa.\n    *   **Input:** A patient report with specific symptoms (sickle cell disease, severe bon"
+      },
+      "time_s": 13.4,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V11",
+      "name": "Mild gastroenteritis",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "gastroenteritis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nHere's my thought process for analyzing the patient data and generating the triage assessment:\n\n1.  **Deconstruct the Request:**\n    *   **Role:** Clinical Triage Assistant for Community Health Workers (CHWs) in Sub-Saharan Africa. This means I need to assess the patient's symptoms based on "
+      },
+      "time_s": 13.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V12",
+      "name": "Postpartum hemorrhage",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "hemorrhage"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa. I need to analyze the provided patient data and provide a structured assessment in a specific format.\n\nHere's the breakdown of the task:\n\n1.  **Role:** Clinical Triage Assistant for Co"
+      },
+      "time_s": 14.2,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V13",
+      "name": "Mild asthma exacerbation",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "asthma"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nHere's my thought process for analyzing the patient data and generating the triage assessment:\n\n1.  **Deconstruct the Request:**\n    *   **Role:** Clinical Triage Assistant for Community Health Workers (CHWs) in Sub-Saharan Africa. This means I need to assess the patient's symptoms and deter"
+      },
+      "time_s": 15.5,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V14",
+      "name": "Hepatitis A",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "hepatitis"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "** State the main concern based on the symptoms. Assign \"Liver disease (e.g., Hepatitis A/E) or complication of malaria\".",
+        "raw": "thought\nHere's a thinking process to arrive at the structured assessment:\n\n1.  **Understand the Goal:** The task is to analyze patient symptoms reported by a Community Health Worker (CHW) in Sub-Saharan Africa and provide a structured assessment based on the provided data. The output format is stric"
+      },
+      "time_s": 15.2,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V15",
+      "name": "Febrile seizure in child",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "seizure"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "thought\nHere's my thought process for generating the triage assessment:\n\n1.  **Deconstruct the Request:**\n    *   **Role:** Clinical Triage Assistant for Community Health Workers (CHWs) in Sub-Saharan Africa.\n    *   **Task:** Analyze patient data provided.\n    *   **Input:** A specific report of a "
+      },
+      "time_s": 14.8,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V16",
+      "name": "Skin infection",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "infection"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "One-line diagnosis or concern",
+        "raw": "thought\nHere's my thought process for analyzing the patient data and generating the triage assessment:\n\n1.  **Deconstruct the Request:**\n    *   **Role:** Clinical Triage Assistant for Community Health Workers (CHWs) in Sub-Saharan Africa. This means I need to assess the patient based on standard cr"
+      },
+      "time_s": 14.7,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V17",
+      "name": "Eclampsia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "eclampsia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "** Severe preeclampsia/eclampsia secondary to pregnancy complications.",
+        "raw": "thought\nHere's my thought process for generating the triage assessment:\n\n1.  **Deconstruct the Request:**\n    *   **Role:** Clinical Triage Assistant for Community Health Workers (CHWs) in Sub-Saharan Africa.\n    *   **Task:** Analyze patient data provided.\n    *   **Input:** A specific report forma"
+      },
+      "time_s": 15.0,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V18",
+      "name": "Chronic cough, low risk",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "cough"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** [One-line diagnosis or concern] - The primary concern is a dry cough for a week.",
+        "raw": "thought\nHere's my thought process for analyzing the patient data and generating the triage assessment:\n\n1.  **Understand the Goal:** The objective is to triage a patient presenting with a dry cough for a week without fever or night sweats, using the provided format. The assessment should be based on"
+      },
+      "time_s": 16.8,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V19",
+      "name": "Snake bite",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "snake"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\n1.  **Analyze the Request:** The user wants me to act as a clinical triage assistant for CHWs in Sub-Saharan Africa. I need to analyze patient data provided and output the assessment in a specific format.\n\n2.  **Understand the Role:**\n    *   **Clinical Triage Assistant:** This means I need "
+      },
+      "time_s": 16.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V20",
+      "name": "Iron deficiency pregnancy",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[Pregnancy]",
+        "raw": "thought\nHere's the thinking process for analyzing the patient data and generating the triage assessment:\n\n1.  **Understand the Goal:** The task is to analyze patient data for a clinical triage assistant role in Sub-Saharan Africa, focusing on pregnant women presenting with specific symptoms. The out"
+      },
+      "time_s": 14.4,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    }
+  ]
+}

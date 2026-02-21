@@ -289,7 +289,8 @@ class ClinicalReasoner {
         
         sb.appendLine()
         sb.appendLine("=== INSTRUCTIONS ===")
-        sb.appendLine("Provide your assessment in this exact format:")
+        sb.appendLine("IMPORTANT: First, think step-by-step about the patient's condition based on the data provided.")
+        sb.appendLine("Then, provide your final assessment matching this exact format:")
         sb.appendLine()
         sb.appendLine("SEVERITY: [LOW/MEDIUM/HIGH/CRITICAL]")
         sb.appendLine("URGENCY: [ROUTINE/WITHIN_WEEK/WITHIN_48_HOURS/IMMEDIATE]")
@@ -303,9 +304,7 @@ class ClinicalReasoner {
         sb.appendLine("Consider TB or respiratory illness if cough analysis shows elevated risk.")
         sb.appendLine("Be concise. Recommendations should be actionable for a community health worker.")
         sb.appendLine()
-        sb.appendLine("IMPORTANT: You MUST start your response with the SEVERITY and URGENCY lines exactly as shown above. Do not skip them.")
-        sb.appendLine("Begin your response now:")
-        sb.appendLine("SEVERITY:")
+        sb.appendLine("Begin your response now by reasoning about the data:")
         
         return sb.toString()
     }

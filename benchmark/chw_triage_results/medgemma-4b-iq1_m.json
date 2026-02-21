@@ -1,0 +1,970 @@
+{
+  "model": "medgemma-4b-iq1_m",
+  "port": 8787,
+  "timestamp": "2026-02-20T23:17:08",
+  "n_vignettes": 20,
+  "sensor_augmented": [
+    {
+      "id": "V01",
+      "name": "Severe malaria with anemia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "malaria"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, I will analyze the data and provide a structured assessment. Here's my assessment:\n\n**Assessment:**\n\n*   **Severity:**\n    *   **High:** Patient is experiencing high fever for 3 days, chills, body aches, very weak, not eating. This indicates a serious situation.\n    *   **Urgency:**\n    *   **"
+      },
+      "time_s": 26.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V02",
+      "name": "Uncomplicated URTI",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "upper respiratory"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, based on the data provided, here's a structured assessment:\n\n**Assessment:**\n\n*   **Severity:**  This is a **MEDIUM** severity.  The patient is experiencing a cough and running nose. While not a high priority, it's important to assess the patient's condition.\n\n*   **Urgency:**  This is a **SOO"
+      },
+      "time_s": 26.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V03",
+      "name": "Preeclampsia warning",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "preeclampsia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, here's a structured assessment based on the data provided:\n\n**Assessment:**\n\n*   **Severity:** High. The patient is pregnant (confirmed pregnancy status) and experiencing symptoms that could indicate a significant health issue.\n*   **Urgency:** Urgent. Given the pregnancy status and symptoms, "
+      },
+      "time_s": 6.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V04",
+      "name": "Childhood pneumonia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "pneumonia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, I will analyze the data provided. Based on the information provided, I am able to assess the patient's condition.\n\nHere's my assessment:\n\n**Assessment:**\n\n*   **Severity:** High (based on the reported symptoms, especially the \"fast breathing\" and \"chest indrawing\" which could indicate a respir"
+      },
+      "time_s": 9.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V05",
+      "name": "Moderate anemia",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, here's a structured assessment based on the provided data.\n\n**Assessment:**\n\n**Severity:**\n*   **High** (Based on the patient's reported symptoms - feeling tired all the time, dizzy when standing, pale inside eyelids). This indicates that the patient's condition is serious enough that it needs"
+      },
+      "time_s": 27.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V06",
+      "name": "Neonatal jaundice",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "jaundice"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, based on the information provided, here's a structured assessment:\n\n**Assessment:**\n\n*   **Severity:** SEVERE\n*   **Urgency:** URGENT\n*   **Triage Category:** GREEN (likely, given the baby's yellow skin and eyes, and the fact that it's 3-day old. This is likely a yellow, orange, or red situati"
+      },
+      "time_s": 9.4,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V07",
+      "name": "Dehydration from diarrhea",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "dehydration"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, I'm ready to analyze the data. Here's my assessment:\n\n**Assessment:**\n\n*   **Severity:** HIGH (due to the reported symptoms of diarrhea, vomiting, sunken eyes, and extreme thirst).\n*   **Urgency:** URGENT (due to the severity of the symptoms)\n*   **Triage Category:** YELLOW (due to the need fo"
+      },
+      "time_s": 11.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V08",
+      "name": "Normal prenatal check",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "normal"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, I will analyze the patient data and provide a structured assessment.\n\nHere's my assessment:\n\n**Assessment:**\n\n**Heart Rate:** 82 BPM (confidence: 0.88)\n**Edema Score:** 0.20 (severity: NORMAL)\n**Pregnancy Status:** CONFIRMED\n\n**Assessment:**\n\n*   **Heart Rate:** Normal heart rate, no significa"
+      },
+      "time_s": 27.4,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V09",
+      "name": "Tuberculosis suspect",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "tuberculosis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, here's a structured assessment based on the reported symptoms and sensor biomarkers.\n\n**Assessment:**\n\n*   **Severity:** HIGH\n*   **Urgency:** URGENT\n*   **Triage Category:** RED\n\n**Assessment:**\n\n*   **Heart Rate:** 92 BPM (confidence: 0.81)\n*   **Respiratory Risk:** MODERATE (confidence: 0.6"
+      },
+      "time_s": 28.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V10",
+      "name": "Sickle cell crisis",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "sickle cell"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, here's a structured assessment based on the provided data.\n\n**Assessment:**\n\n**Severity:**\n*   **High** (based on the reported symptoms, especially the bone pain, fever, and pale appearance. This is a significant indicator of a serious condition, especially if the patient is suffering from sic"
+      },
+      "time_s": 31.2,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V11",
+      "name": "Mild gastroenteritis",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "gastroenteritis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, here's a structured assessment based on the data provided.\n\n**Assessment:**\n\n**Severity:**\n*   **LOW:**  The patient's reported symptoms (stomach cramps, loose stools 3 times, no blood, drinking fluids) appear to be a low-severity, and are likely not a life-threatening situation. This is likel"
+      },
+      "time_s": 12.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V12",
+      "name": "Postpartum hemorrhage",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "hemorrhage"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, here's a structured assessment for the patient data:\n\n**Assessment:**\n\n*   **Heart Rate:** 145 BPM (confidence: 0.72)\n    *   Method: Remote photoplethysmography \u2013 green channel from facial video\n*   **Pallor Score:** 0.90 (severity: SEVERE)\n    *   Method: HSV saturation of conjunctival tissu"
+      },
+      "time_s": 8.3,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V13",
+      "name": "Mild asthma exacerbation",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "asthma"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, here's a structured assessment based on the reported symptoms and sensor biomarkers:\n\n**Assessment:**\n\n*   **Severity:**\n    *   **Urgency:**  **URGENT** (due to the wheezing, chest tightness, and the patient's ability to speak full sentences. This suggests a potential emergency situation.)\n  "
+      },
+      "time_s": 9.8,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V14",
+      "name": "Hepatitis A",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "hepatitis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** Yellow eyes, dark urine, stomach pain right side, tired, no appetite.",
+        "raw": "Okay, based on the reported symptoms and the jaundice score, I'm going to assess this as a high urgency.\n\nHere's my assessment:\n\n**SEVERITY:** HIGH\n**URGENCY:** URGENT\n**TRIAGE_CATEGORY:** YELLOW\n**PRIMARY_CONCERN:** Yellow eyes, dark urine, stomach pain right side, tired, no appetite.\n\n**RECOMMENDA"
+      },
+      "time_s": 33.1,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V15",
+      "name": "Febrile seizure in child",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "seizure"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "**",
+        "raw": "Okay, here's a structured assessment based on the information provided.\n\n**Assessment:**\n\n**SEVERITY:**\n*   **HIGH** (Due to the child's fever (40\u00b0C) and the fact that the child is drowsy, this is a serious situation that requires immediate attention.)\n\n**URGENCY:**\n*   **URGENT** (Given the child's"
+      },
+      "time_s": 34.2,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V16",
+      "name": "Skin infection",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "infection"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, I will analyze the patient data and provide a structured assessment. Here's my assessment:\n\n**Assessment:**\n\n*   **Severity:** Medium.  The swollen area on the leg, warm to touch, and small amount of pus indicates a possible infection, which could be a medium severity.\n\n*   **Urgency:**  Routi"
+      },
+      "time_s": 38.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V17",
+      "name": "Eclampsia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "eclampsia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, I will analyze the data and provide a structured assessment. Here's my assessment:\n\n**Assessment:**\n\n**Severity:**\n\n*   **High** (due to the pregnancy status, seizure, and unconsciousness). This is a serious situation.\n\n**Urgency:**\n\n*   **Urgent** (due to the pregnancy status, seizure, and un"
+      },
+      "time_s": 38.2,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V18",
+      "name": "Chronic cough, low risk",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "cough"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, I will analyze the data and provide a structured assessment.\n\nHere's my assessment:\n\n**Assessment:**\n\n*   **Severity:**\n    *   **LOW:**  This is a low severity, meaning the patient is not immediately life-threatening.\n    *   **Urgency:**\n    *   **ROUTINE:**  This is a routine, meaning the p"
+      },
+      "time_s": 34.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V19",
+      "name": "Snake bite",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "snake"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, based on the information provided, here's a structured assessment:\n\n**Assessment:**\n\n*   **Severity:** HIGH\n*   **Urgency:** URGENT\n*   **Triage Category:** GREEN\n*   **Primary Concern:** The patient is experiencing pain and swelling, which is a clear indication of a serious condition.\n\n**Reco"
+      },
+      "time_s": 32.2,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V20",
+      "name": "Iron deficiency pregnancy",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, based on the data provided, here's a structured assessment:\n\n**Assessment:**\n\n*   **Heart Rate:** 88 BPM (confidence: 0.82)\n*   **Pallor Score:** 0.40 (severity: MILD)\n*   **Pregnancy Status:** CONFIRMED (pregnancy status confirmed)\n\n**Assessment:**\n\n*   **Severity:**\n    *   **LOW:**\n    *   "
+      },
+      "time_s": 32.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    }
+  ],
+  "text_only": [
+    {
+      "id": "V01",
+      "name": "Severe malaria with anemia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "malaria"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** One-line diagnosis or concern",
+        "raw": "Okay, I will analyze the reported symptoms and provide a structured assessment.\n\nHere's my assessment:\n\n**SEVERITY:** HIGH\n**URGENCY:** URGENT\n**TRIAGE_CATEGORY:** RED\n**PRIMARY_CONCERN:** One-line diagnosis or concern\n\n**Assessment:**\n\nBased on the reported symptoms, the patient is experiencing hig"
+      },
+      "time_s": 7.1,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V02",
+      "name": "Uncomplicated URTI",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "upper respiratory"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** Runny nose, mild cough for 2 days, no fever.",
+        "raw": "Okay, based on the reported symptoms, I am going to assess this as a medium severity.\n\nHere's a structured assessment:\n\n**Assessment:**\n\n*   **SEVERITY:** MEDIUM\n*   **URGENCY:** ROUTINE\n*   **TRIAGE_CATEGORY:** GREEN\n*   **PRIMARY_CONCERN:** Runny nose, mild cough for 2 days, no fever.\n\n**RECOMMEND"
+      },
+      "time_s": 12.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V03",
+      "name": "Preeclampsia warning",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "preeclampsia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, I will analyze the reported symptoms and provide a structured assessment.\n\nHere's a structured assessment of the reported symptoms:\n\n**Assessment:**\n\n*   **Severity:**  High (due to pregnancy, which can cause significant complications)\n*   **Urgency:**  Urgent (due to pregnancy, which can caus"
+      },
+      "time_s": 6.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V04",
+      "name": "Childhood pneumonia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "pneumonia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** **One-line diagnosis or concern** - This is a yellow assessment. The child is sick.",
+        "raw": "Okay, based on the reported symptoms, I will assess the patient.\n\nHere's a structured assessment of the patient data:\n\n**Assessment:**\n\n*   **SEVERITY:**  **MEDIUM** - This is a medium severity. The child is fast breathing, chest indrawing, and fever is 39\u00b0C for 2 days. This indicates that the child"
+      },
+      "time_s": 9.3,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V05",
+      "name": "Moderate anemia",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "**  The patient is experiencing fatigue, dizziness, and pale inside eyelids. This suggests a possible issue that could be addressed with a routine intervention.",
+        "raw": "Okay, based on the reported symptoms, I would assess this as:\n\n**SEVERITY:** MEDIUM\n**URGENCY:** ROUTINE (likely, given the tiredness and dizziness.  This is a medium urgency, as it's not an emergency, but it's not a low urgency either.\n**TRIAGE_CATEGORY:** GREEN (likely, as the symptoms are not imm"
+      },
+      "time_s": 7.5,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V06",
+      "name": "Neonatal jaundice",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "jaundice"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "**",
+        "raw": "Okay, based on the reported symptoms, I am going to assess the situation as follows:\n\n**SEVERITY:** HIGH\n**URGENCY:** URGENT\n**TRIAGE_CATEGORY:** YELLOW\n**PRIMARY_CONCERN:**\n- [Action 1] - Immediate action is needed.\n- [Action 2] - Immediate action is needed.\n\nBased on the reported symptoms, I am go"
+      },
+      "time_s": 31.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V07",
+      "name": "Dehydration from diarrhea",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "dehydration"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, I will analyze the reported symptoms and provide a structured assessment.\n\nHere's my assessment:\n\n**SEVERITY:** HIGH\n**URGENCY:** URGENT\n**TRIAGE_CATEGORY:** GREEN\n\n**Assessment:**\n\nBased on the reported symptoms, the patient is likely experiencing a medical emergency. The symptoms of watery d"
+      },
+      "time_s": 6.3,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V08",
+      "name": "Normal prenatal check",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "normal"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "**  **One-line diagnosis or concern** -  The assessment is a routine assessment.",
+        "raw": "Okay, based on the reported symptoms and the pregnancy status, here's a structured assessment:\n\n**Assessment:**\n\n*   **SEVERITY:**  **MEDIUM** -  The pregnancy itself is a medium severity.  The slight ankle swelling suggests a possible issue that could be addressed.\n*   **URGENCY:** **ROUTINE** -  G"
+      },
+      "time_s": 30.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V09",
+      "name": "Tuberculosis suspect",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "tuberculosis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay. Based on the reported symptoms, I am going to assess this as a **URGENT** triage.\n\nHere's a structured assessment:\n\n**Assessment:**\n\n**Severity:** HIGH (due to the presence of coughing blood, which indicates a potential issue with the respiratory system)\n\n**Urgency:** IMMEDIATE (due to the pre"
+      },
+      "time_s": 32.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V10",
+      "name": "Sickle cell crisis",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "sickle cell"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, based on the reported symptoms and the known sickle cell status, I am going to assess this as a medium severity.\n\nHere's a structured assessment:\n\n**Assessment:**\n\n*   **Severity:** MEDIUM\n*   **Urgency:** ROUTINE (likely, given the reported symptoms, but not an emergency)\n*   **Triage Categor"
+      },
+      "time_s": 6.4,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V11",
+      "name": "Mild gastroenteritis",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "gastroenteritis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, based on the reported symptoms, I am going to assess this as a MEDIUM severity.\n\nHere's a structured assessment:\n\n**Assessment:**\n\n*   **Severity:** MEDIUM (Stomach cramps, loose stools 3 times, no blood, drinking fluids)\n*   **Urgency:** SOON (This is a slight urgency, as it's not an emergenc"
+      },
+      "time_s": 9.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V12",
+      "name": "Postpartum hemorrhage",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "hemorrhage"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, I will analyze the reported symptoms and provide a structured assessment.\n\nHere's my assessment:\n\n**Assessment:**\n\n*   **Severity:** HIGH (Due to the heavy bleeding not stopping, dizziness, cold sweat, and the fact that it's been delivered 2 hours ago. This indicates a potential emergency.)\n* "
+      },
+      "time_s": 33.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V13",
+      "name": "Mild asthma exacerbation",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "asthma"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "Okay, based on the reported symptoms, I'm going to assess this as a **YELLOW** triage category.\n\nHere's a structured assessment:\n\n**Assessment:**\n\n*   **Severity:**\n    *   **MEDIUM** (Wheezing, tight chest, using inhaler - this indicates a possible respiratory distress. It's important to note that "
+      },
+      "time_s": 32.3,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V14",
+      "name": "Hepatitis A",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "hepatitis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "**",
+        "raw": "Okay, based on the reported symptoms, I would assess this as:\n\n**SEVERITY:** HIGH\n**URGENCY:** URGENT\n**TRIAGE_CATEGORY:** GREEN\n\n**PRIMARY_CONCERN:**\n- One-line diagnosis or concern: The patient's symptoms suggest a serious condition, possibly requiring urgent intervention.\n\n**RECOMMENDATIONS:**\n- "
+      },
+      "time_s": 5.3,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V15",
+      "name": "Febrile seizure in child",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "seizure"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "**  One-line diagnosis or concern (Due to the patient's drowsiness, which can indicate a serious condition.)",
+        "raw": "Okay, I will analyze the reported symptoms.\n\nHere's a structured assessment of the reported symptoms:\n\n**Assessment:**\n\n*   **SEVERITY:**  HIGH (Due to the patient's drowsiness, which can indicate a serious condition.)\n*   **URGENCY:**  IMMEDIATE (Due to the patient's drowsiness, which can indicate "
+      },
+      "time_s": 8.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V16",
+      "name": "Skin infection",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "infection"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "**  **One-line diagnosis or concern** (Swollen area on leg, warm to touch, small amount of pus. This is a good indication that the patient is experiencing a problem that is not immediately life threatening, but still requires immediate attention.",
+        "raw": "Okay, I will analyze the reported symptoms.\n\nHere's my assessment:\n\n**SEVERITY:**  **MEDIUM** (Swollen area on leg, warm to touch, small amount of pus.  This is a good indication that the patient is experiencing a problem that is not immediately life threatening, but still requires immediate attenti"
+      },
+      "time_s": 12.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V17",
+      "name": "Eclampsia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "eclampsia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** One-line diagnosis or concern (Due to the seizure, this is a time sensitive situation.)",
+        "raw": "Okay, I will analyze the reported symptoms and provide a structured assessment.\n\nHere's my assessment:\n\n**SEVERITY:** HIGH (Due to the seizure and unconsciousness, this is a high priority.)\n**URGENCY:** URGENT (Due to the seizure, this is a time sensitive situation.)\n**TRIAGE_CATEGORY:** RED (Due to"
+      },
+      "time_s": 12.2,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V18",
+      "name": "Chronic cough, low risk",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "cough"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "**  The patient is experiencing a cough that could be a sign of a respiratory infection.",
+        "raw": "Okay, based on the reported symptoms, here's a structured assessment:\n\n**Assessment:**\n\n*   **SEVERITY:**  **MEDIUM** (Dry cough for 1 week, no fever, no night sweats, eating well). This indicates a possible cough that could be a sign of a respiratory infection.\n*   **URGENCY:** **ROUTINE** (Dry cou"
+      },
+      "time_s": 9.3,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V19",
+      "name": "Snake bite",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "snake"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** One-line diagnosis or concern (Due to the fact that the patient is bitten on foot, swelling spreading up leg, very painful)",
+        "raw": "Okay, here's a structured assessment based on the reported symptoms:\n\n**Assessment:**\n\n*   **SEVERITY:** HIGH (Due to the fact that the patient is bitten on foot, swelling spreading up leg, very painful)\n*   **URGENCY:** URGENT (Due to the fact that the patient is bitten on foot, swelling spreading "
+      },
+      "time_s": 8.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V20",
+      "name": "Iron deficiency pregnancy",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "**  **Pregnancy-related issues** (Pregnancy is a risk factor, and the tiredness, craving ice, and pale appearance are all signs of a potential problem. These are all signs of a potential problem.",
+        "raw": "Okay, I will analyze the reported symptoms and provide a structured assessment.\n\nHere's the structured assessment:\n\n**Assessment:**\n\n*   **SEVERITY:**  **MEDIUM**  (The pregnancy is a risk factor, and the tiredness, craving ice, and pale appearance are all signs of a potential problem. These are all"
+      },
+      "time_s": 14.5,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    }
+  ]
+}

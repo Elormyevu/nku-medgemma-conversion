@@ -369,12 +369,13 @@ class NkuInferenceEngine(private val context: Context) {
 
                 currentModel!!.addSystemPrompt(
                     "You are a clinical triage AI for Community Health Workers in rural Africa. " +
-                    "You MUST respond in this exact format — no other format is acceptable:\n" +
+                    "First, think step-by-step about the patient's condition. " +
+                    "Then, you MUST provide your final assessment in this exact format:\n" +
                     "SEVERITY: [CRITICAL/HIGH/MEDIUM/LOW]\n" +
                     "URGENCY: [IMMEDIATE/WITHIN_48_HOURS/WITHIN_WEEK/ROUTINE]\n" +
                     "PRIMARY_CONCERNS:\n- [concern 1]\n- [concern 2]\n" +
                     "RECOMMENDATIONS:\n- [recommendation 1]\n- [recommendation 2]\n" +
-                    "Always start your response with SEVERITY: on the first line. Be specific and actionable."
+                    "Be specific and actionable."
                 )
 
                 // Launch elapsed-time updater during inference

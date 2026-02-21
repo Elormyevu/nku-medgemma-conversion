@@ -1,0 +1,970 @@
+{
+  "model": "medgemma-4b-it.Q4_K_M",
+  "port": 8787,
+  "timestamp": "2026-02-21T06:05:03",
+  "n_vignettes": 20,
+  "sensor_augmented": [
+    {
+      "id": "V01",
+      "name": "Severe malaria with anemia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "malaria"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Severe infection with possible complications (e.g., malaria, typhoid fever, or other febrile illness).",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Severe infection with possible complications (e.g., malaria, typhoid fever, or other febrile illness).\nRECOMMENDATIONS:\n- Immediate referral to a health facility for further evaluation and treatment.\n- Administer antipyretics (e.g.,"
+      },
+      "time_s": 2.4,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V02",
+      "name": "Uncomplicated URTI",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "upper respiratory"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Mild upper respiratory infection (URI)",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Mild upper respiratory infection (URI)\nRECOMMENDATIONS:\n- Monitor symptoms closely.\n- If symptoms worsen (e.g., fever, shortness of breath, chest pain), seek medical attention.\n- Encourage rest, hydration, and over-the-counter rem"
+      },
+      "time_s": 1.6,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V03",
+      "name": "Preeclampsia warning",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "preeclampsia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Severe pre-eclampsia with signs of end-organ damage (headache, blurry vision, edema).",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Severe pre-eclampsia with signs of end-organ damage (headache, blurry vision, edema).\nRECOMMENDATIONS:\n- Immediate referral to a facility with obstetric services for further evaluation and management.\n- Monitor blood pressure and ur"
+      },
+      "time_s": 1.7,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V04",
+      "name": "Childhood pneumonia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "pneumonia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Pneumonia (likely)",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Pneumonia (likely)\nRECOMMENDATIONS:\n- Immediate referral to a health facility for further assessment and treatment.\n- Administer oral rehydration salts (ORS) if the child is also experiencing diarrhea.\n- Monitor vital signs closely "
+      },
+      "time_s": 1.6,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V05",
+      "name": "Moderate anemia",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "Possible anemia and/or dehydration.",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: SOON\nTRIAGE_CATEGORY: YELLOW\nPRIMARY_CONCERN: Possible anemia and/or dehydration.\nRECOMMENDATIONS:\n- Advise patient to increase fluid intake.\n- Refer patient for a complete blood count (CBC) to assess for anemia."
+      },
+      "time_s": 1.2,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V06",
+      "name": "Neonatal jaundice",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "jaundice"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "Jaundice in a 3-day-old infant, requiring immediate assessment and management.",
+        "raw": "SEVERITY:HIGH\nURGENCY: IMMEDIATE\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Jaundice in a 3-day-old infant, requiring immediate assessment and management.\nRECOMMENDATIONS:\n- Immediately refer the infant to a healthcare facility with a pediatrician or neonatologist for evaluation and management of jaundic"
+      },
+      "time_s": 1.8,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V07",
+      "name": "Dehydration from diarrhea",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "dehydration"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Severe dehydration and possible acute gastroenteritis.",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Severe dehydration and possible acute gastroenteritis.\nRECOMMENDATIONS:\n- Immediate oral rehydration therapy (ORT) with a WHO-recommended solution.\n- Monitor vital signs (heart rate, temperature, respiratory rate, and mental status)"
+      },
+      "time_s": 2.3,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V08",
+      "name": "Normal prenatal check",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "normal"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "SOON",
+        "category": "GREEN",
+        "concern": "Mild ankle swelling in a 28-week pregnant patient.",
+        "raw": "SEVERITY:LOW\nURGENCY: SOON\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Mild ankle swelling in a 28-week pregnant patient.\nRECOMMENDATIONS:\n- Monitor for worsening edema.\n- Advise patient to elevate legs and stay hydrated.\n- Schedule a follow-up appointment for routine prenatal care."
+      },
+      "time_s": 1.4,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V09",
+      "name": "Tuberculosis suspect",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "tuberculosis"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Possible tuberculosis or other serious respiratory infection requiring immediate investigation and treatment.",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Possible tuberculosis or other serious respiratory infection requiring immediate investigation and treatment.\nRECOMMENDATIONS:\n- Immediately refer the patient to a local health facility for chest X-ray, sputum smear microscopy, and "
+      },
+      "time_s": 1.9,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V10",
+      "name": "Sickle cell crisis",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "sickle cell"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Severe sickle cell crisis with fever and significant pallor, indicating potential complications.",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Severe sickle cell crisis with fever and significant pallor, indicating potential complications.\nRECOMMENDATIONS:\n- Immediate referral to a hospital with sickle cell expertise for prompt management.\n- Administer prescribed medicatio"
+      },
+      "time_s": 2.0,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V11",
+      "name": "Mild gastroenteritis",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "gastroenteritis"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Gastroenteritis (likely viral or bacterial)",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Gastroenteritis (likely viral or bacterial)\nRECOMMENDATIONS:\n- Advise patient to continue oral rehydration therapy (ORT) with oral rehydration salts (ORS).\n- Monitor for signs of dehydration (decreased urine output, dizziness, wea"
+      },
+      "time_s": 1.8,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V12",
+      "name": "Postpartum hemorrhage",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "hemorrhage"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "Postpartum hemorrhage with signs of hypovolemic shock.",
+        "raw": "SEVERITY:HIGH\nURGENCY: IMMEDIATE\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Postpartum hemorrhage with signs of hypovolemic shock.\nRECOMMENDATIONS:\n- Immediate resuscitation with intravenous fluids (crystalloid solution).\n- Blood transfusion (packed red blood cells) if available.\n- Continuous monitoring "
+      },
+      "time_s": 1.9,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V13",
+      "name": "Mild asthma exacerbation",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "asthma"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "SOON",
+        "category": "GREEN",
+        "concern": "Wheezing and chest tightness, likely asthma exacerbation, managed with inhaler.",
+        "raw": "SEVERITY:LOW\nURGENCY: SOON\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Wheezing and chest tightness, likely asthma exacerbation, managed with inhaler.\nRECOMMENDATIONS:\n- Advise patient to continue using their inhaler as prescribed.\n- Instruct patient to monitor symptoms closely.\n- If symptoms worsen (di"
+      },
+      "time_s": 1.6,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V14",
+      "name": "Hepatitis A",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "hepatitis"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "Possible jaundice and right upper quadrant pain, requiring further evaluation.",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: SOON\nTRIAGE_CATEGORY: YELLOW\nPRIMARY_CONCERN: Possible jaundice and right upper quadrant pain, requiring further evaluation.\nRECOMMENDATIONS:\n- Advise the patient to rest and stay hydrated.\n- Instruct the patient to monitor their urine color and jaundice severity.\n- Recommen"
+      },
+      "time_s": 1.6,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V15",
+      "name": "Febrile seizure in child",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "seizure"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Febrile, shaking, drowsy 2-year-old child with elevated heart rate. Possible serious infection.",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Febrile, shaking, drowsy 2-year-old child with elevated heart rate. Possible serious infection.\nRECOMMENDATIONS:\n- Immediate referral to a healthcare facility for evaluation and treatment.\n- Monitor vital signs (temperature, heart r"
+      },
+      "time_s": 1.9,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V16",
+      "name": "Skin infection",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "infection"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": "SOON",
+        "category": "ORANGE",
+        "concern": "Possible cellulitis or other skin infection.",
+        "raw": "SEVERITY:YELLOW\nURGENCY: SOON\nTRIAGE_CATEGORY: ORANGE\nPRIMARY_CONCERN: Possible cellulitis or other skin infection.\nRECOMMENDATIONS:\n- Advise the patient to seek medical attention at a health clinic or hospital as soon as possible.\n- Provide information on signs and symptoms of worsening infection ("
+      },
+      "time_s": 1.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V17",
+      "name": "Eclampsia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "eclampsia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "Seizure in a 38-week pregnant woman with significant edema, unconsciousness, and facial swelling.",
+        "raw": "SEVERITY:URGENT\nURGENCY: IMMEDIATE\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Seizure in a 38-week pregnant woman with significant edema, unconsciousness, and facial swelling.\nRECOMMENDATIONS:\n- Immediate transfer to a facility with obstetric and neonatal care capabilities.\n- Continuous monitoring of vit"
+      },
+      "time_s": 2.1,
+      "correct": {
+        "severity": false,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V18",
+      "name": "Chronic cough, low risk",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "cough"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Dry cough, likely due to a common respiratory infection.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Dry cough, likely due to a common respiratory infection.\nRECOMMENDATIONS:\n- Advise the patient to monitor their symptoms.\n- Recommend rest and adequate hydration.\n- If the cough worsens or other symptoms develop (fever, shortness "
+      },
+      "time_s": 1.5,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V19",
+      "name": "Snake bite",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "snake"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "ORANGE",
+        "concern": "Possible cellulitis/lymphangitis secondary to animal bite.",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: SOON\nTRIAGE_CATEGORY: ORANGE\nPRIMARY_CONCERN: Possible cellulitis/lymphangitis secondary to animal bite.\nRECOMMENDATIONS:\n- Advise patient to clean the bite wound thoroughly with soap and water.\n- Advise patient to apply a topical antibiotic ointment (if available) to the wo"
+      },
+      "time_s": 2.1,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V20",
+      "name": "Iron deficiency pregnancy",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "SOON",
+        "category": "GREEN",
+        "concern": "Mild anemia and pregnancy-related symptoms.",
+        "raw": "SEVERITY:LOW\nURGENCY: SOON\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Mild anemia and pregnancy-related symptoms.\nRECOMMENDATIONS:\n- Advise the patient to rest and avoid strenuous activity.\n- Counsel the patient on the importance of iron-rich foods in her diet.\n- Recommend a simple iron supplement (e.g"
+      },
+      "time_s": 1.8,
+      "correct": {
+        "severity": false,
+        "urgency": true,
+        "category": false,
+        "concern": true
+      }
+    }
+  ],
+  "text_only": [
+    {
+      "id": "V01",
+      "name": "Severe malaria with anemia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "malaria"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "Possible malaria or other febrile illness.",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: SOON\nTRIAGE_CATEGORY: YELLOW\nPRIMARY_CONCERN: Possible malaria or other febrile illness.\nRECOMMENDATIONS:\n- Advise patient to rest and drink plenty of fluids.\n- Encourage patient to seek medical attention if symptoms worsen or do not improve within 24 hours.\n- Provide inform"
+      },
+      "time_s": 1.5,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V02",
+      "name": "Uncomplicated URTI",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "upper respiratory"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Common cold symptoms.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Common cold symptoms.\nRECOMMENDATIONS:\n- Monitor symptoms for worsening.\n- If symptoms worsen or fever develops, seek further medical attention.\n- Encourage rest and hydration."
+      },
+      "time_s": 1.1,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V03",
+      "name": "Preeclampsia warning",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "preeclampsia"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "Possible pregnancy-related complication requiring further evaluation.",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: SOON\nTRIAGE_CATEGORY: YELLOW\nPRIMARY_CONCERN: Possible pregnancy-related complication requiring further evaluation.\nRECOMMENDATIONS:\n- Immediately refer the patient to a healthcare facility for a comprehensive prenatal check-up, including blood pressure measurement, assessme"
+      },
+      "time_s": 1.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V04",
+      "name": "Childhood pneumonia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "pneumonia"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "Pneumonia",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: SOON\nTRIAGE_CATEGORY: YELLOW\nPRIMARY_CONCERN: Pneumonia\nRECOMMENDATIONS:\n- Administer oral rehydration salts (ORS) for possible dehydration.\n- Provide antipyretic medication (e.g., paracetamol) for fever.\n- Monitor respiratory rate and chest indrawing closely.\n- Advise paren"
+      },
+      "time_s": 1.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V05",
+      "name": "Moderate anemia",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Possible anemia or general fatigue.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Possible anemia or general fatigue.\nRECOMMENDATIONS:\n- Advise the patient to increase iron intake through diet (e.g., leafy greens, red meat).\n- Recommend a simple iron supplement if dietary changes are insufficient.\n- Instruct th"
+      },
+      "time_s": 1.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V06",
+      "name": "Neonatal jaundice",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "jaundice"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Jaundice in a newborn infant requiring immediate assessment and intervention.",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Jaundice in a newborn infant requiring immediate assessment and intervention.\nRECOMMENDATIONS:\n- Immediately refer the baby to a qualified healthcare provider (e.g., hospital, clinic) for evaluation and management of jaundice.\n- Ens"
+      },
+      "time_s": 1.6,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V07",
+      "name": "Dehydration from diarrhea",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "dehydration"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Severe dehydration and possible acute gastroenteritis.",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Severe dehydration and possible acute gastroenteritis.\nRECOMMENDATIONS:\n- Administer oral rehydration solution (ORS) immediately.\n- Monitor vital signs (temperature, pulse, respiration, and blood pressure) frequently.\n- Assess for s"
+      },
+      "time_s": 2.2,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V08",
+      "name": "Normal prenatal check",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "normal"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Mild ankle swelling in a 28-week pregnant woman.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Mild ankle swelling in a 28-week pregnant woman.\nRECOMMENDATIONS:\n- Monitor ankle swelling regularly.\n- Continue prenatal care as scheduled.\n- Discuss the ankle swelling with the attending healthcare provider."
+      },
+      "time_s": 1.2,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V09",
+      "name": "Tuberculosis suspect",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "tuberculosis"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Possible Tuberculosis (TB) or other serious respiratory infection requiring immediate investigation and treatment.",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Possible Tuberculosis (TB) or other serious respiratory infection requiring immediate investigation and treatment.\nRECOMMENDATIONS:\n- Immediately refer the patient to a health facility for chest X-ray and sputum sample collection fo"
+      },
+      "time_s": 1.9,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V10",
+      "name": "Sickle cell crisis",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "sickle cell"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Possible severe sickle cell crisis with potential infection.",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Possible severe sickle cell crisis with potential infection.\nRECOMMENDATIONS:\n- Immediately administer intravenous fluids (normal saline) to address dehydration and support blood flow.\n- Obtain a complete blood count (CBC) with diff"
+      },
+      "time_s": 2.7,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V11",
+      "name": "Mild gastroenteritis",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "gastroenteritis"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Gastroenteritis",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Gastroenteritis\nRECOMMENDATIONS:\n- Advise the patient to maintain adequate hydration with oral rehydration solution (ORS).\n- Instruct the patient to follow a bland diet (e.g., rice, bananas, toast) to reduce stool frequency.\n- Adv"
+      },
+      "time_s": 1.8,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V12",
+      "name": "Postpartum hemorrhage",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "hemorrhage"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "Postpartum hemorrhage with signs of hypovolemic shock.",
+        "raw": "SEVERITY:HIGH\nURGENCY: IMMEDIATE\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Postpartum hemorrhage with signs of hypovolemic shock.\nRECOMMENDATIONS:\n- Immediately contact a skilled birth attendant (doctor, midwife, or trained nurse) for emergency assistance.\n- Initiate resuscitation with oxygen and intrav"
+      },
+      "time_s": 2.0,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V13",
+      "name": "Mild asthma exacerbation",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "asthma"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Asthma exacerbation, well-controlled with inhaler use.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Asthma exacerbation, well-controlled with inhaler use.\nRECOMMENDATIONS:\n- Advise patient to continue using their inhaler as prescribed.\n- Instruct patient to monitor symptoms and return if they worsen or if they are unable to spea"
+      },
+      "time_s": 1.5,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V14",
+      "name": "Hepatitis A",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "hepatitis"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "Possible jaundice and/or hepatitis, requiring further investigation.",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: SOON\nTRIAGE_CATEGORY: YELLOW\nPRIMARY_CONCERN: Possible jaundice and/or hepatitis, requiring further investigation.\nRECOMMENDATIONS:\n- Collect a full blood count (FBC) and liver function tests (LFTs) to assess bilirubin levels, liver enzymes (ALT, AST, ALP), and other relevan"
+      },
+      "time_s": 2.7,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V15",
+      "name": "Febrile seizure in child",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "seizure"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "Febrile child with altered mental status (drowsy)",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: URGENT\nTRIAGE_CATEGORY: ORANGE\nPRIMARY_CONCERN: Febrile child with altered mental status (drowsy)\nRECOMMENDATIONS:\n- Immediately administer antipyretic medication (e.g., paracetamol/acetaminophen) for fever.\n- Assess vital signs (temperature, pulse, respiration, blood pressu"
+      },
+      "time_s": 2.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V16",
+      "name": "Skin infection",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "infection"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "ORANGE",
+        "concern": "Possible cellulitis/skin infection.",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: SOON\nTRIAGE_CATEGORY: ORANGE\nPRIMARY_CONCERN: Possible cellulitis/skin infection.\nRECOMMENDATIONS:\n- Advise patient to clean the affected area with soap and water.\n- Advise patient to apply a topical antibiotic ointment (if available) to the affected area.\n- Advise patient t"
+      },
+      "time_s": 1.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V17",
+      "name": "Eclampsia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "eclampsia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "Status epilepticus in a 38-week pregnant patient with facial edema, likely due to severe preeclampsia/eclampsia.",
+        "raw": "SEVERITY:HIGH\nURGENCY: IMMEDIATE\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Status epilepticus in a 38-week pregnant patient with facial edema, likely due to severe preeclampsia/eclampsia.\nRECOMMENDATIONS:\n- Immediate stabilization of the patient, including airway, breathing, and circulation (ABCs).\n- Co"
+      },
+      "time_s": 3.7,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V18",
+      "name": "Chronic cough, low risk",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "cough"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Dry cough, likely due to a common respiratory infection.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Dry cough, likely due to a common respiratory infection.\nRECOMMENDATIONS:\n- Monitor symptoms closely for worsening.\n- Encourage rest and hydration.\n- If cough persists or worsens, or if other symptoms develop (fever, shortness of "
+      },
+      "time_s": 1.5,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V19",
+      "name": "Snake bite",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "snake"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "ORANGE",
+        "concern": "Possible animal bite with signs of infection, requiring assessment for rabies and wound care.",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: SOON\nTRIAGE_CATEGORY: ORANGE\nPRIMARY_CONCERN: Possible animal bite with signs of infection, requiring assessment for rabies and wound care.\nRECOMMENDATIONS:\n- Immediately wash the wound thoroughly with soap and water.\n- Apply a sterile dressing to the wound.\n- Seek medical a"
+      },
+      "time_s": 1.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V20",
+      "name": "Iron deficiency pregnancy",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Mild pregnancy-related fatigue and cravings.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Mild pregnancy-related fatigue and cravings.\nRECOMMENDATIONS:\n- Advise the patient to rest and maintain a balanced diet.\n- Encourage the patient to consume iron-rich foods to address the slight pallor.\n- Counsel the patient on the"
+      },
+      "time_s": 1.5,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    }
+  ]
+}

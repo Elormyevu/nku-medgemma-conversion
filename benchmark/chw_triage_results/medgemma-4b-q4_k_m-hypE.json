@@ -1,0 +1,970 @@
+{
+  "model": "medgemma-4b-q4_k_m-hypE",
+  "port": 8787,
+  "timestamp": "2026-02-20T23:40:53",
+  "n_vignettes": 20,
+  "sensor_augmented": [
+    {
+      "id": "V01",
+      "name": "Severe malaria with anemia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "malaria"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: One-line diagnosis or concern?\nRECOMMENDATIONS:\n- Call a family member to help the patient.\n- Call a family member to help the patient.\n- Call a family member to help the patient.\n- Call a family member to help the patient.\n- Call a"
+      },
+      "time_s": 17.3,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V02",
+      "name": "Uncomplicated URTI",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "upper respiratory"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Runny nose, mild cough for 2 days, no fever.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Runny nose, mild cough for 2 days, no fever.\n\nACTION 1:\n- Provide the patient with a simple, simple, and clear assessment.\n- Provide the patient with a simple, simple, and clear assessment.\n- Provide the patient with a simple, sim"
+      },
+      "time_s": 19.4,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V03",
+      "name": "Preeclampsia warning",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "preeclampsia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: One-line diagnosis or concern?\nRECOMMENDATIONS:\n- Immediate action 1: Call the patient immediately.\n- Immediate action 2: Call the patient immediately."
+      },
+      "time_s": 2.8,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V04",
+      "name": "Childhood pneumonia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "pneumonia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "YELLOW",
+        "concern": "- [Action 1]",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: YELLOW\nPRIMARY_CONCERN:\n- [Action 1]\n- [Action 2]"
+      },
+      "time_s": 2.1,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V05",
+      "name": "Moderate anemia",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:MODERATE\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: One-line diagnosis or concern?\n\nHere's a structured assessment of the patient data:\n\nHeart Rate: 95 BPM (confidence: 0.80)\nPallor Score: 0.55 (severity: MODERATE)\n\nReported Symptoms:\n- <<<Tired all the time, dizzy when standi"
+      },
+      "time_s": 7.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V06",
+      "name": "Neonatal jaundice",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "jaundice"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "YELLOW",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: YELLOW\nPRIMARY_CONCERN: One-line diagnosis or concern?\n\nHere's a structured assessment of the patient data:\n\n**Assessment:**\n\nBased on the reported symptoms, the patient is likely experiencing a medical emergency. The baby's yellow skin and eyes, and no"
+      },
+      "time_s": 6.7,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V07",
+      "name": "Dehydration from diarrhea",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "dehydration"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "YELLOW",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: YELLOW\nPRIMARY_CONCERN: One-line diagnosis or concern?\nRECOMMENDATIONS:\n- [Action 1] Provide immediate treatment for diarrhea and vomiting.\n- [Action 2] Provide oral rehydration salts (ORS) to replace lost electrolytes.\n- [Action 3] Give the patient ora"
+      },
+      "time_s": 19.8,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V08",
+      "name": "Normal prenatal check",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "normal"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: One-line diagnosis or concern?\nRECOMMENDATIONS:\n- Action 1: If the patient is one-line diagnosis or concern, then the patient should be assessed for the appropriate treatment.\n- Action 2: If the patient is one-line diagnosis or co"
+      },
+      "time_s": 5.0,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V09",
+      "name": "Tuberculosis suspect",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "tuberculosis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": "SOON",
+        "category": "GREEN",
+        "concern": null,
+        "raw": "SEVERITY:MODERATE\nURGENCY: SOON\nTRIAGE_CATEGORY: GREEN\n\nAssessment:\n\nBased on the reported symptoms, the patient is likely experiencing a respiratory infection. The symptoms are consistent with a respiratory infection, such as cough, night sweats, and coughing blood.\n\nRecommendations:\n\n- [Action 1] "
+      },
+      "time_s": 5.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V10",
+      "name": "Sickle cell crisis",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "sickle cell"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: One-line diagnosis or concern?\nRECOMMENDATIONS:\n- Call a physician immediately.\n- Call a physician immediately."
+      },
+      "time_s": 2.6,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V11",
+      "name": "Mild gastroenteritis",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "gastroenteritis"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: One-line diagnosis or concern?\nRECOMMENDATIONS:\n- One-line diagnosis or concern?\n- One-line diagnosis or concern?\n- One-line diagnosis or concern?\n- One-line diagnosis or concern?\n- One-line diagnosis or concern?\n- One-line dia"
+      },
+      "time_s": 19.6,
+      "correct": {
+        "severity": false,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V12",
+      "name": "Postpartum hemorrhage",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "hemorrhage"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: One-line diagnosis or concern?\n\nHere's a structured assessment based on the patient data:\n\n**Assessment:**\n\nBased on the information provided, the patient is experiencing heavy bleeding that is not stopping, dizzy, cold sweaty. This"
+      },
+      "time_s": 22.5,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V13",
+      "name": "Mild asthma exacerbation",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "asthma"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Wheezing, tight chest, using inhaler.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Wheezing, tight chest, using inhaler.\nRECOMMENDATIONS:\n- Call the patient to the hospital."
+      },
+      "time_s": 2.5,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V14",
+      "name": "Hepatitis A",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "hepatitis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:MODERATE\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: One-line diagnosis or concern?\n\nHere's a structured assessment of the patient data:\n\n**Assessment:**\n\n*   **Jaundice:** The patient exhibits jaundice, dark urine, stomach pain on the right side, tiredness, and lack of appetit"
+      },
+      "time_s": 11.1,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V15",
+      "name": "Febrile seizure in child",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "seizure"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "YELLOW",
+        "concern": "- [action 1]",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: YELLOW\nPRIMARY_CONCERN:\n- [action 1]\n- [action 2]"
+      },
+      "time_s": 2.4,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V16",
+      "name": "Skin infection",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "infection"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: One-line diagnosis or concern?\n\nHere's a structured assessment:\n\n**Assessment:**\n\nBased on the reported symptoms, the patient is likely experiencing a skin infection, possibly a skin infection.\n\n**Assessment:**\n\nBased on the re"
+      },
+      "time_s": 6.4,
+      "correct": {
+        "severity": false,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V17",
+      "name": "Eclampsia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "eclampsia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "One-line diagnosis or concern.",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: One-line diagnosis or concern.\n\nHere's a structured assessment:\n\n**Assessment:**\n\n*   **Heart Rate:** 130 BPM (Confidence 0.68)\n*   **Edema Score:** Significant (Severity: Significant)\n*   **Pregnancy Status:** Confirmed (Pregnant)\n"
+      },
+      "time_s": 20.5,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V18",
+      "name": "Chronic cough, low risk",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "cough"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Dry cough for 1 week, no fever, no night sweats, eating well.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Dry cough for 1 week, no fever, no night sweats, eating well.\nRECOMMENDATIONS:\n- [action 1] Provide oral rehydration salts (ORS) as needed.\n- [action 2] Provide oral rehydration salts (ORS) as needed."
+      },
+      "time_s": 4.0,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V19",
+      "name": "Snake bite",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "snake"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "GREEN",
+        "concern": null,
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: GREEN\n\nAssessment:\n\nBased on the reported symptoms, the patient is experiencing a significant medical issue. The reported symptoms are severe enough to warrant immediate attention.\n\nRecommendations:\n\n- [Action 1] Call the patient to the hospital.\n- [Act"
+      },
+      "time_s": 4.2,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V20",
+      "name": "Iron deficiency pregnancy",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: One-line diagnosis or concern?\n\nHere's a structured assessment based on the patient data:\n\n**Assessment:**\n\nBased on the data provided, the patient is 24 weeks pregnant, and is tired, craving ice. The patient is slightly pale.\n"
+      },
+      "time_s": 8.4,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    }
+  ],
+  "text_only": [
+    {
+      "id": "V01",
+      "name": "Severe malaria with anemia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "malaria"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "One-line diagnosis or concern.",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: One-line diagnosis or concern.\nRECOMMENDATIONS:\n- [Action 1] Provide immediate care to the patient.\n- [Action 2] Refer the patient to a local health facility for further assessment."
+      },
+      "time_s": 3.5,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V02",
+      "name": "Uncomplicated URTI",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "upper respiratory"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Runny nose, mild cough for 2 days, no fever.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Runny nose, mild cough for 2 days, no fever.\nRECOMMENDATIONS:\n- [Action 1] Provide oral rehydration salts (ORS) and a simple food like porridge.\n- [Action 2] Give a simple food like porridge."
+      },
+      "time_s": 4.2,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V03",
+      "name": "Preeclampsia warning",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "preeclampsia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: One-line diagnosis or concern?\n\nHere's a structured assessment of the reported symptoms:\n\n**Assessment:**\n\n*   **Headache:** Suggests a possible headache.\n*   **Swollen face and hands:** Suggests a possible swelling.\n*   **Blurry vi"
+      },
+      "time_s": 12.6,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V04",
+      "name": "Childhood pneumonia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "pneumonia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: One-line diagnosis or concern?\nRECOMMENDATIONS:\n- Call the child to the hospital for evaluation."
+      },
+      "time_s": 3.0,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V05",
+      "name": "Moderate anemia",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: One-line diagnosis or concern?\nRECOMMENDATIONS:\n- Immediate action 1: Call a family member, and ask them to come to the hospital.\n- Immediate action 2: Call a family member, and ask them to come to the hospital."
+      },
+      "time_s": 4.5,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V06",
+      "name": "Neonatal jaundice",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "jaundice"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "YELLOW",
+        "concern": "The baby is showing signs of yellow skin and eyes, not feeding well. This indicates a potential life threatening situation.",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: YELLOW\nPRIMARY_CONCERN: The baby is showing signs of yellow skin and eyes, not feeding well. This indicates a potential life threatening situation.\nRECOMMENDATIONS:\n- Immediate action is needed to stabilize the baby.\n- Immediate action is needed to stab"
+      },
+      "time_s": 19.4,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V07",
+      "name": "Dehydration from diarrhea",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "dehydration"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: One-line diagnosis or concern?\n\nHere's a structured assessment:\n\n**Assessment:**\n\nBased on the reported symptoms, the patient is experiencing symptoms that are indicative of a serious condition. The patient is experiencing diarrhea,"
+      },
+      "time_s": 18.5,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V08",
+      "name": "Normal prenatal check",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "normal"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "The patient is pregnant and feeling well. The slight ankle swelling is likely a normal pregnancy symptom.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: The patient is pregnant and feeling well. The slight ankle swelling is likely a normal pregnancy symptom.\n\nRECOMMENDATIONS:\n- Action 1: If the patient is feeling well, monitor for any changes in symptoms. If symptoms worsen, call "
+      },
+      "time_s": 4.9,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V09",
+      "name": "Tuberculosis suspect",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "tuberculosis"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "- [action 1]",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN:\n- [action 1]\n- [action 2]"
+      },
+      "time_s": 2.8,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V10",
+      "name": "Sickle cell crisis",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "sickle cell"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: One-line diagnosis or concern?\nRECOMMENDATIONS:\n- [Action 1] The patient should be assessed for a possible need for urgent care.\n- [Action 2] The patient should be assessed for a possible need for urgent care."
+      },
+      "time_s": 4.3,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V11",
+      "name": "Mild gastroenteritis",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "gastroenteritis"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "One-line diagnosis or concern",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: One-line diagnosis or concern\n\nRecommendations:\n- [action 1]\n- [action 2]"
+      },
+      "time_s": 3.2,
+      "correct": {
+        "severity": false,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V12",
+      "name": "Postpartum hemorrhage",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "hemorrhage"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "- [Action 1]",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN:\n- [Action 1]\n- [Action 2]"
+      },
+      "time_s": 2.4,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V13",
+      "name": "Mild asthma exacerbation",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "asthma"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Wheezing, tight chest, using inhaler.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Wheezing, tight chest, using inhaler.\nRECOMMENDATIONS:\n- Call the patient immediately."
+      },
+      "time_s": 2.9,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V14",
+      "name": "Hepatitis A",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "hepatitis"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "YELLOW",
+        "concern": "The patient is exhibiting symptoms that suggest a serious condition, possibly requiring urgent intervention.",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: YELLOW\nPRIMARY_CONCERN: The patient is exhibiting symptoms that suggest a serious condition, possibly requiring urgent intervention.\n\nRECOMMENDATIONS:\n- Immediate action is needed to evaluate the patient's symptoms.\n- Immediate action is needed to evalu"
+      },
+      "time_s": 19.1,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V15",
+      "name": "Febrile seizure in child",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "seizure"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "- [action 1]",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN:\n- [action 1]\n- [action 2]"
+      },
+      "time_s": 2.4,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V16",
+      "name": "Skin infection",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "infection"
+      },
+      "predicted": {
+        "severity": "MEDIUM",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "One-line diagnosis or concern?",
+        "raw": "SEVERITY:MEDIUM\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: One-line diagnosis or concern?\nRECOMMENDATIONS:\n- Call the patient to the clinic for assessment.\n- The patient should be treated with antibiotics and wound care.\n- The patient should be referred to the community health worker f"
+      },
+      "time_s": 4.1,
+      "correct": {
+        "severity": false,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V17",
+      "name": "Eclampsia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "eclampsia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "- [action 1]",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN:\n- [action 1]\n- [action 2]"
+      },
+      "time_s": 2.2,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V18",
+      "name": "Chronic cough, low risk",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "cough"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Dry cough for 1 week, no fever, no night sweats, eating well.",
+        "raw": "SEVERITY:LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: Dry cough for 1 week, no fever, no night sweats, eating well.\nRECOMMENDATIONS:\n- [action 1] Call the patient's family to see if they have any additional symptoms.\n- [action 2] If the patient is able to eat well, then it is likely "
+      },
+      "time_s": 4.7,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
+      }
+    },
+    {
+      "id": "V19",
+      "name": "Snake bite",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "snake"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "This is a significant injury that requires immediate attention.",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: This is a significant injury that requires immediate attention.\nRECOMMENDATIONS:\n- Call the patient to the hospital immediately.\n- Call the patient to the hospital immediately."
+      },
+      "time_s": 3.6,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V20",
+      "name": "Iron deficiency pregnancy",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "- [action 1]",
+        "raw": "SEVERITY:HIGH\nURGENCY: URGENT\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN:\n- [action 1]\n- [action 2]"
+      },
+      "time_s": 2.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    }
+  ]
+}

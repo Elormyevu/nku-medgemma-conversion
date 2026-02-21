@@ -1061,15 +1061,23 @@ The model's response demonstrates appropriate clinical reasoning for a symptom-o
 
 ---
 
-## Appendix G: Resolving the "Sensor Paradox" in Nku Sentinel
+## Appendix G: Clinical Reasoning Superiority via Prompt Compression
 
-Initial testing revealed a profound architectural challenge for edge-deployed LLMs: **The Sensor Paradox**. By injecting dense, multi-modal sensor arrays into the prompt, the total prompt token size ballooned. To prevent the 2048-token limit from causing a KV-Cache overflow and crashing budget 3GB RAM devices, early iterations restricted the model from generating Chain-of-Thought (CoT) reasoning. While this prevented OOM crashes, it throttled the model's clinical intelligence.
+During the architectural development of Nku Sentinel, we confronted a strict limitation for on-device inference: budget 3GB RAM devices constrain the KV-Cache to exactly 2048 tokens. 
 
-Nku Sentinel permanently resolves this constraint through aggressive **Sensor Prompt Compression**. By computing the heuristics natively on the Android side—such as condensing an array of 478 MediaPipe facial landmarks into a single `Edema index: 0.84` parameter—the raw multimodal prompt size was halved from ~1600 tokens down to ~800 tokens.
+Initially, passing highly detailed multimodal sensor arrays (such as all 478 MediaPipe facial landmarks) into the prompt consumed ~1600 tokens. This mathematically prevented MedGemma from utilizing **Chain-of-Thought (CoT)** reasoning, as there was no token space left in the cache for the model to "think step-by-step" before outputting its JSON assessment.
 
-This massive efficiency gain securely unlocked over 1200 free tokens within the MedGemma KV-Cache. Equipped with this latency overhead, the model is fully empowered to engage in step-by-step clinical reasoning prior to outputting its highly-structured JSON.
+To securely bypass this limitation while preserving rich clinical data, Nku Sentinel implements aggressive **Sensor Prompt Compression**. By computing the heuristics natively on the Android edge—condensing verbose arrays into concise, structured clinical indicators (e.g., `Edema index: 0.84`)—the multimodal prompt size is halved from ~1600 tokens down to ~800 tokens.
 
-The empirical results prove the superiority of this compressed structural pipelining: **Sensor-augmented CoT triage outperforms text-only triage by +20 percentage points (70% vs 50%)**, while maintaining total architectural stability on strict budget hardware.
+This massive efficiency gain securely unlocks over 1200 free tokens within the KV-Cache. Equipped with this latency overhead, the MedGemma model is fully empowered to engage in step-by-step clinical reasoning prior to outputting its highly structured triage UI fields.
+
+The empirical results from locally executing the `benchmark/nku_medgemma_benchmark.py` prove the profound superiority of this compressed structural pipelining. When MedGemma uses CoT to evaluate complex multimorbidity vignettes, the availability of objective sensor data provides a massive surge in diagnostic accuracy:
+
+**Final Benchmark Results (MedGemma-4b-it Q4_K_M):**
+- **Text-Only Symptom Triage Accuracy:** 50%
+- **Sensor-Augmented Compressed Triage Accuracy:** 70%
+
+By integrating multidimensional sensor parameters within a structurally compressed prompt, Nku successfully unlocks the full reasoning potential of SLMs, delivering a robust +20 percentage point accuracy gain on clinical triage categorization.
 
 ---
 

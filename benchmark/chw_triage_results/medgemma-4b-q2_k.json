@@ -1,0 +1,970 @@
+{
+  "model": "medgemma-4b-q2_k",
+  "port": 8788,
+  "timestamp": "2026-02-20T23:19:17",
+  "n_vignettes": 20,
+  "sensor_augmented": [
+    {
+      "id": "V01",
+      "name": "Severe malaria with anemia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "malaria"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "[one-line diagnosis or concern]`",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa. I need to analyze the provided data and produce a structured assessment.\n\n**Data provided:**\n1.  **Sensor Biomarkers:**\n    *   Heart Rate: 128 BPM (confidence: 0.82)\n    *   Pallor Sc"
+      },
+      "time_s": 13.7,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V02",
+      "name": "Uncomplicated URTI",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "upper respiratory"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa. I need to analyze the provided data and provide a structured assessment.\n\n**Data provided:**\n1.  **Sensor Biomarkers:** Heart Rate: 78 BPM (confidence: 0.85), Method: Remote photopleth"
+      },
+      "time_s": 14.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V03",
+      "name": "Preeclampsia warning",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "preeclampsia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided patient data and produce a structured assessment.\n\n**Patient Data:**\n*   **Heart Rate:** 98 BPM (confidence: 0.79) - *This is likely irrelevant for triag"
+      },
+      "time_s": 13.7,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V04",
+      "name": "Childhood pneumonia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "pneumonia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "4-year-old, fast breathing, chest indrawing, fever 39\u00b0C for 2 days>>>",
+        "raw": "```\nassessment\nSEVERITY: HIGH\nURGENCY: IMMEDIATE\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: 4-year-old, fast breathing, chest indrawing, fever 39\u00b0C for 2 days>>>\nRECOMMENDATIONS:\n- [action 1]\n- [action 2]\n```\n```\nassessment\nSEVERITY: HIGH\nURGENCY: IMMEDIATE\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: 4-year-ol"
+      },
+      "time_s": 13.6,
+      "correct": {
+        "severity": true,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V05",
+      "name": "Moderate anemia",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n"
+      },
+      "time_s": 13.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V06",
+      "name": "Neonatal jaundice",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "jaundice"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** A one-line diagnosis or concern.",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided data and provide a structured assessment.\n\n**Patient Data:**\n- **Age:** 3-day-old baby\n- **Symptom:** Yellow skin and eyes\n- **Symptom:** Not feeding wel"
+      },
+      "time_s": 13.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V07",
+      "name": "Dehydration from diarrhea",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "dehydration"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "thought\n1.  **Analyze the input:** The user provides a clinical scenario and a data source (Sensor Biomatics). The user wants a structured assessment based on the provided data.\n2.  **Identify the goal:** The goal is to provide a structured assessment, including severity, urgency, triage category, p"
+      },
+      "time_s": 14.8,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V08",
+      "name": "Normal prenatal check",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "normal"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** one-line diagnosis or concern",
+        "raw": "```\n=== ASSESSMENT ===\n\n**SEVERITY:** HIGH\n**URGENCY:** IMMEDIATE\n**TRIAGE_CATEGORY:** RED\n**PRIMARY_CONCERN:** one-line diagnosis or concern\n**RECOMMENDATIONS:**\n- [action 1]\n- [action 2]\n```\n```\n=== ASSESSMENT ===\n\n**SEVERITY:** HIGH\n**URGENCY:** IMMEDIATE\n**TRIAGE_CATEGORY:** RED\n**PRIMARY_CONCER"
+      },
+      "time_s": 16.4,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V09",
+      "name": "Tuberculosis suspect",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "tuberculosis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** Potential serious condition requiring rapid assessment and intervention.",
+        "raw": "```json\n{\n  \"assessment\": \"A clinical triage assistant for Community Health Workers in Sub-Saharan Africa. Analyze the patient data below and provide a structured assessment.\n\n  **Patient Data:**\n  - **Heart Rate:** 92 BPM (confidence: 0.81)\n    - **Method:** Remote photoplethysmography \u2014 green chan"
+      },
+      "time_s": 25.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V10",
+      "name": "Sickle cell crisis",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "sickle cell"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "Severe bone pain, fever, very pale.",
+        "raw": "```\nASSESSMENT:\nSEVERITY: HIGH\nURGENCY: IMMEDIATE\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: Severe bone pain, fever, very pale.\nRECOMMENDATIONS:\n- Assess patient for potential severe complications.\n- Provide supportive care for the patient.\n- Monitor the patient for potential severe complications.\n```\n`"
+      },
+      "time_s": 25.9,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V11",
+      "name": "Mild gastroenteritis",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "gastroenteritis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided data:\n1.  **Sensor Biomarkers**: Heart Rate: 80 BPM (confidence: 0.84), Method: Remote photoplethysmography \u2014 green channel from facial video. This impli"
+      },
+      "time_s": 26.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V12",
+      "name": "Postpartum hemorrhage",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "hemorrhage"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n"
+      },
+      "time_s": 28.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V13",
+      "name": "Mild asthma exacerbation",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "asthma"
+      },
+      "predicted": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "One-line diagnosis or concern",
+        "raw": "```\nASSESSMENT:\nSEVERITY: LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: One-line diagnosis or concern\nRECOMMENDATIONS:\n- [action 1]\n- [action 2]\n```\n```\nASSESSMENT:\nSEVERITY: LOW\nURGENCY: ROUTINE\nTRIAGE_CATEGORY: GREEN\nPRIMARY_CONCERN: One-line diagnosis or concern\nRECOMMENDATIONS:\n- "
+      },
+      "time_s": 27.6,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V14",
+      "name": "Hepatitis A",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "hepatitis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "time_s": 28.2,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V15",
+      "name": "Febrile seizure in child",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "seizure"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** [one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided patient data and provide a structured assessment.\n\n**Patient Data:**\n*   **Age:** 2 years old\n*   **Symptom:** Fever (40\u00b0C)\n*   **Symptom:** Shaking epis"
+      },
+      "time_s": 30.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V16",
+      "name": "Skin infection",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "infection"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": "IMMEDIATE",
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa. I need to analyze the provided data and provide a structured assessment.\n\n**Data provided:**\n1.  **Heart Rate:** 85 BPM (confidence: 0.86)\n    *   Method: Remote photoplethysmography \u2014"
+      },
+      "time_s": 32.3,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V17",
+      "name": "Eclampsia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "eclampsia"
+      },
+      "predicted": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "One-line diagnosis or concern",
+        "raw": "```\n=== ASSESSMENT ===\nSEVERITY: HIGH\nURGENCY: IMMEDIATE\nTRIAGE_CATEGORY: RED\nPRIMARY_CONCERN: One-line diagnosis or concern\nRECOMMENDATIONS:\n- [action 1]\n- [action 2]\n```\n```\n=== SENSOR BIOMARKERS ===\nHeart Rate: 130 BPM (confidence: 0.68)\n  Method: Remote photoplethysmography \u2014 green channel from "
+      },
+      "time_s": 33.2,
+      "correct": {
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": false
+      }
+    },
+    {
+      "id": "V18",
+      "name": "Chronic cough, low risk",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "cough"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** Patient presents with a one-week history of dry cough, no fever, no night sweats, eating well.",
+        "raw": "```\n*** ASSESSMENT ***\n\n**SEVERITY:** LOW\n**URGENCY:** ROUTINE\n**TRIAGE_CATEGORY:** GREEN\n**PRIMARY_CONCERN:** Patient presents with a one-week history of dry cough, no fever, no night sweats, eating well.\n**RECOMMENDATIONS:**\n- Monitor for worsening symptoms.\n- Provide basic health advice on cough "
+      },
+      "time_s": 33.3,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": true
+      }
+    },
+    {
+      "id": "V19",
+      "name": "Snake bite",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "snake"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "thought\nHere's a thinking process to arrive at the final assessment:\n\n1.  **Understand the Goal:** The request asks for a *structured* assessment based on limited *sensor* data and *reported symptoms*. The goal is to determine the severity, urgency, triage category, and primary concern, leading to r"
+      },
+      "time_s": 38.1,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V20",
+      "name": "Iron deficiency pregnancy",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "** [one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided patient data and provide a structured assessment.\n\n**Patient Data:**\n*   **Heart Rate:** 88 BPM (confidence: 0.82) - Method: Remote photoplethysmography "
+      },
+      "time_s": 36.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    }
+  ],
+  "text_only": [
+    {
+      "id": "V01",
+      "name": "Severe malaria with anemia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "malaria"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"assessment\": \"Patient presents with symptoms suggestive of a severe illness. The patient is weak, has a high fever, chills, body aches, and is not eating. The patient's condition is potentially life-threatening. The patient's condition is potentially severe. The patient's condition is p"
+      },
+      "time_s": 34.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V02",
+      "name": "Uncomplicated URTI",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "upper respiratory"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"assessment\": \"Based on the reported symptoms of a runny nose, mild cough for 2 days, and no fever, the patient's condition appears to be **LOW** severity. The symptoms are non-specific and could represent a mild respiratory infection or allergic rhinitis. The lack of fever suggests the "
+      },
+      "time_s": 32.4,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V03",
+      "name": "Preeclampsia warning",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "preeclampsia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"assessment\": \"The patient is a pregnant woman presenting with symptoms suggestive of severe complications. The patient is 32 weeks pregnant and presents with symptoms that could indicate a severe condition. The patient is experiencing headache, swollen face and hands, blurry vision, and"
+      },
+      "time_s": 31.7,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V04",
+      "name": "Childhood pneumonia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "pneumonia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"assessment\": {\n    \"SEVERITY\": \"HIGH\",\n    \"URGENCY\": \"URGENT\",\n    \"TRIAGE_CATEGORY\": \"RED\",\n    \"PRIMARY_CONCERN\": \"Pneumonia\",\n    \"RECOMMENDATIONS\": [\n      \"1. Assess the child's respiratory status.\",\n      \"2. Assess the child's oxygen saturation.\",\n      \"3. Assess the child's te"
+      },
+      "time_s": 31.4,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V05",
+      "name": "Moderate anemia",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"assessment\": {\n    \"severity\": \"HIGH\",\n    \"urgency\": \"URGENT\",\n    \"triage_category\": \"RED\",\n    \"primary_concern\": \"Patient presents with symptoms suggestive of severe anemia and possible dizziness/vertigo, potentially related to a systemic issue or severe infection. The patient's sym"
+      },
+      "time_s": 31.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V06",
+      "name": "Neonatal jaundice",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "jaundice"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"assessment\": \"Based on the information provided, the infant is 3 days old, presenting with jaundice (yellow skin and eyes) and poor feeding. The infant is not feeding well. The infant is 3 days old, presenting with jaundice (yellow skin and eyes) and poor feeding. The infant is not feed"
+      },
+      "time_s": 30.5,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V07",
+      "name": "Dehydration from diarrhea",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "dehydration"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n"
+      },
+      "time_s": 30.4,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V08",
+      "name": "Normal prenatal check",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "normal"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"assessment\": \"Based on the reported symptoms and the context of pregnancy, the patient is likely experiencing a routine check-up. The slight ankle swelling is a common physiological change during pregnancy, often related to the physiological changes of pregnancy. The patient is feeling "
+      },
+      "time_s": 32.4,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V09",
+      "name": "Tuberculosis suspect",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "ORANGE",
+        "concern": "tuberculosis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "I am a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nAnalyze the patient data below and provide a structured assessment.\n\n=== REPORTED SYMPTOMS ===\n- <<<Cough for 3 weeks, night sweats, weight loss, coughing blood>>>\n\nProvide your assessment in this EXACT format:\nSEVE"
+      },
+      "time_s": 32.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V10",
+      "name": "Sickle cell crisis",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "sickle cell"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "I am sorry, but I am not a clinical triage assistant. I am a language model. I cannot provide a clinical assessment."
+      },
+      "time_s": 1.4,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V11",
+      "name": "Mild gastroenteritis",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "gastroenteritis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"assessment\": \"Based on the provided symptom data, the patient is experiencing gastrointestinal distress. The symptoms reported are:\n- Stomach cramps\n- Loose stools (3 times, no blood)\n- Drinking fluids\n- The patient is likely experiencing a low to medium severity issue, as the symptoms "
+      },
+      "time_s": 31.6,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V12",
+      "name": "Postpartum hemorrhage",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "hemorrhage"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"SEVERITY\": \"HIGH\",\n  \"URGENCY\": \"URGENT\",\n  \"TRIAGE_CATEGORY\": \"RED\",\n  \"PRIMARY_CONCERN\": \"Severe hemorrhagic event with potential for shock\",\n  \"RECOMMENDATIONS\": [\n    \"Assess vital signs and level of consciousness.\",\n    \"If severe, initiate IV access and fluid resuscitation.\",\n    "
+      },
+      "time_s": 32.1,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V13",
+      "name": "Mild asthma exacerbation",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "asthma"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "I am a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nAnalyze the patient data below and provide a structured assessment.\n\n=== REPORTED SYMPTOMS ===\n- <<<Wheezing, tight chest, can speak full sentences, using inhaler>>>\n\nProvide your assessment in this EXACT format:\nSE"
+      },
+      "time_s": 31.5,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V14",
+      "name": "Hepatitis A",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "hepatitis"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"assessment\": \"Based on the reported symptoms, the patient is likely experiencing a serious condition that requires urgent medical attention. The symptoms suggest a potential infection or inflammatory process. The patient's condition is likely severe, given the presence of multiple sympt"
+      },
+      "time_s": 26.9,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V15",
+      "name": "Febrile seizure in child",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "seizure"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"assessment\": \"Based on the provided information, the patient is a 2-year-old child presenting with a history of fever, shaking, and subsequent drowsiness. This is a concerning presentation, especially given the age and the potential for a serious underlying condition. The high fever and"
+      },
+      "time_s": 19.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V16",
+      "name": "Skin infection",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "infection"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"assessment\": \"Patient presents with a red, swollen area on the leg, which is warm to touch and has a small amount of pus. This is likely a localized infection, possibly from a cut or abrasion. The area is warm and has a small amount of pus, which is a sign of infection. The patient is l"
+      },
+      "time_s": 19.8,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V17",
+      "name": "Eclampsia",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "eclampsia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "time_s": 19.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V18",
+      "name": "Chronic cough, low risk",
+      "expected": {
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "cough"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"assessment\": \"Based on the provided data, the patient has a history of a dry cough for one week, without fever, night sweats, or significant appetite changes. The patient is eating well. This is a low-severity presentation. The patient does not have any acute symptoms or signs of a seve"
+      },
+      "time_s": 20.0,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V19",
+      "name": "Snake bite",
+      "expected": {
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "snake"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n```\n"
+      },
+      "time_s": 20.5,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    },
+    {
+      "id": "V20",
+      "name": "Iron deficiency pregnancy",
+      "expected": {
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "anemia"
+      },
+      "predicted": {
+        "severity": null,
+        "urgency": null,
+        "category": null,
+        "concern": null,
+        "raw": "```json\n{\n  \"assessment\": \"Based on the limited data provided, the patient is likely experiencing a common, low-severity issue. The symptoms are non-specific and do not immediately suggest a high-risk condition. The patient is pregnant, which is a significant factor, but the symptoms are not severe "
+      },
+      "time_s": 22.3,
+      "correct": {
+        "severity": false,
+        "urgency": false,
+        "category": false,
+        "concern": false
+      }
+    }
+  ]
+}

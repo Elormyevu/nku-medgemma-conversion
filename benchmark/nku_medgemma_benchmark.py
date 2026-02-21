@@ -208,19 +208,14 @@ def _build_nku_prompt(vignette: dict, include_sensors: bool = True) -> str:
         prompt += "=== SENSOR BIOMARKERS ===\n"
         if "hr_bpm" in s:
             prompt += f"Heart Rate: {s['hr_bpm']} BPM (confidence: {s.get('hr_conf', 0.5):.2f})\n"
-            prompt += "  Method: Remote photoplethysmography — green channel from facial video\n"
         if "pallor_score" in s:
             prompt += f"Pallor Score: {s['pallor_score']:.2f} (severity: {s['pallor_sev']})\n"
-            prompt += "  Method: HSV saturation of conjunctival tissue\n"
         if "jaundice_score" in s:
             prompt += f"Jaundice Score: {s['jaundice_score']:.2f} (severity: {s['jaundice_sev']})\n"
-            prompt += "  Method: Scleral yellow ratio with sigmoid mapping\n"
         if "edema_score" in s:
             prompt += f"Edema Score: {s['edema_score']:.2f} (severity: {s['edema_sev']})\n"
-            prompt += "  Method: Eye Aspect Ratio from MediaPipe landmarks\n"
         if "respiratory_risk" in s:
             prompt += f"Respiratory Risk: {s['respiratory_risk']} (confidence: {s.get('respiratory_conf', 0.5):.2f})\n"
-            prompt += "  Method: HeAR audio classifier (cough/wheeze/crackle detection)\n"
         if s.get("is_pregnant"):
             prompt += "Pregnancy Status: CONFIRMED\n"
         prompt += "\n"
@@ -236,8 +231,10 @@ def _build_nku_prompt(vignette: dict, include_sensors: bool = True) -> str:
         "RECOMMENDATIONS:\n"
         "- [action 1]\n"
         "- [action 2]\n"
+        "IMPORTANT: You MUST start your response with the SEVERITY and URGENCY lines exactly as shown above. Do not skip them.\n"
         "<end_of_turn>\n"
         "<start_of_turn>model\n"
+        "SEVERITY:"
     )
     return prompt
 
@@ -264,7 +261,7 @@ def _parse_triage_response(response: str) -> dict:
 # Inference
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def query_llama(prompt: str, port: int = 8787, max_tokens: int = 800) -> Optional[str]:
+def query_llama(prompt: str, port: int = 8787, max_tokens: int = 400) -> Optional[str]:
     """Query llama-server for inference."""
     url = f"http://localhost:{port}/completion"
     payload = json.dumps({
@@ -317,7 +314,10 @@ def run_triage(model_name: str, port: int, include_sensors: bool) -> list:
             results.append({"id": v["id"], "error": True})
             continue
 
-        parsed = _parse_triage_response(response)
+        # Llama.cpp will only return generation *after* the prefix if it supports prefix-caching/filling cleanly, 
+        # but to be safe we prepend 'SEVERITY:' back onto the string for the regex parser to catch it.
+        full_response_for_parser = "SEVERITY:" + response
+        parsed = _parse_triage_response(full_response_for_parser)
 
         sev_ok = parsed["severity"] == v["expected_severity"]
         urg_ok = parsed["urgency"] == v["expected_urgency"]

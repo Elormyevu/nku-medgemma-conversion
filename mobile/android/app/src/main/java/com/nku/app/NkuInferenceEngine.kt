@@ -58,6 +58,7 @@ class NkuInferenceEngine(private val context: Context) {
         // SHA-256 for the pinned MedGemma Q4_K_M artifact distributed in this repo/PAD pack.
         // Keep in sync with medgemma/src/main/assets/medgemma-4b-it-q4_k_m.gguf.
         private const val MEDGEMMA_SHA256 = "bff1ff2ed6aebe1b5ecb96b5dc2ee64cd6dfdec3ea4fc2e318d74087119a0ff9"
+        private const val MEDGEMMA_EXPECTED_BYTES = 2_489_894_048L  // From HuggingFace LFS metadata
         // Translation handled by Android ML Kit (not a GGUF model)
         // HeAR Event Detector: TFLite, ships in app assets (loaded by RespiratoryDetector)
         // HeAR ViT-L encoder: future upgrade — XLA/StableHLO ops block ONNX/TFLite conversion
@@ -570,7 +571,11 @@ class NkuInferenceEngine(private val context: Context) {
                 return@withContext null
             }
 
-            val totalBytes = connection?.contentLength?.toLong() ?: -1L
+            val serverBytes = connection?.contentLength?.toLong() ?: -1L
+            // HuggingFace LFS uses chunked transfer so Content-Length is often -1.
+            // Fall back to the known model size for accurate progress reporting.
+            val totalBytes = if (serverBytes > 0) serverBytes else MEDGEMMA_EXPECTED_BYTES
+            val totalMB = totalBytes / (1024 * 1024)
             Log.i(TAG, "Starting native download of $fileName ($totalBytes bytes)")
 
             // Download to temp file — never to the final name
@@ -586,17 +591,11 @@ class NkuInferenceEngine(private val context: Context) {
                         output.write(buffer, 0, read)
                         bytesWritten += read
 
-                        if (totalBytes > 0) {
-                            val percent = ((bytesWritten * 100) / totalBytes).toInt()
-                            if (percent != lastReportedPercent) {
-                                lastReportedPercent = percent
-                                _progress.value = "Downloading MedGemma… $percent%"
-                            }
-                        } else {
-                            val mb = bytesWritten / (1024 * 1024)
-                            if (mb % 50 == 0L) { // Update every ~50MB to reduce UI churn
-                                _progress.value = "Downloading MedGemma… ${mb}MB"
-                            }
+                        val mb = bytesWritten / (1024 * 1024)
+                        val percent = ((bytesWritten * 100) / totalBytes).toInt()
+                        if (percent != lastReportedPercent) {
+                            lastReportedPercent = percent
+                            _progress.value = "Downloading MedGemma… $percent% (${mb}MB / ${totalMB}MB)"
                         }
                     }
                 }

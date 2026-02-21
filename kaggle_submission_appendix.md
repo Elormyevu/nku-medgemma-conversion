@@ -1090,28 +1090,28 @@ By integrating multidimensional sensor parameters within a structurally compress
 
 These are the 20 hand-tailored, multi-morbidity stress tests utilized in the CoT benchmark:
 
-| ID | Description | Presenting Symptoms | Compressed Sensor Array | Expected Triage | Text-Only Match | Sensor-Augmented Match |
+| ID | Description | Presenting Symptoms | Compressed Sensor Array | Expected Triage | Text-Only Triage | Sensor-Augmented Triage |
 |:---|:---|:---|:---|:---|:---|:---|
-| **V01** | Severe malaria with anemia | High fever for 3 days, chills, body aches, very weak, not eating | `HR: 128`, `Pallor: SEVERE`, `Jaundice: MILD` | RED (Immediate) | ❌ | ✅ |
-| **V02** | Uncomplicated URTI | Runny nose, mild cough for 2 days, no fever | `HR: 78` | GREEN (Routine) | ✅ | ✅ |
-| **V03** | Preeclampsia warning | Headache, swollen face and hands, blurry vision, 32 weeks pregnant | `HR: 98`, `Edema_sev: SIGNIFICANT`, `is_pregnant: True` | RED (Immediate) | ❌ | ✅ |
-| **V04** | Childhood pneumonia | 4-year-old, fast breathing, chest indrawing, fever 39°C for 2 days | `HR: 140`, `Respiratory_risk: HIGH` | ORANGE (Urgent) | ❌ | ❌ |
-| **V05** | Moderate anemia | Tired all the time, dizzy when standing, pale inside eyelids | `HR: 95`, `Pallor_sev: MODERATE` | YELLOW (Soon) | ❌ | ✅ |
-| **V06** | Neonatal jaundice | 3-day-old baby, yellow skin and eyes, not feeding well | `Jaundice_sev: SEVERE` | RED (Immediate) | ✅ | ✅ |
-| **V07** | Dehydration from diarrhea | Watery diarrhea 8 times today, vomiting, sunken eyes, very thirsty | `HR: 115` | ORANGE (Urgent) | ❌ | ❌ |
-| **V08** | Normal prenatal check | 28 weeks pregnant, feeling well, slight ankle swelling | `HR: 82`, `Edema_sev: NORMAL`, `is_pregnant: True` | GREEN (Routine) | ✅ | ✅ |
-| **V09** | Tuberculosis suspect | Cough for 3 weeks, night sweats, weight loss, coughing blood | `HR: 92`, `Respiratory_risk: MODERATE` | ORANGE (Urgent) | ❌ | ❌ |
-| **V10** | Sickle cell crisis | Known sickle cell, severe bone pain, fever, very pale | `HR: 135`, `Pallor_sev: SEVERE`, `Jaundice: MILD` | RED (Immediate) | ✅ | ✅ |
-| **V11** | Mild gastroenteritis | Stomach cramps, loose stools 3 times, no blood, drinking fluids | `HR: 80` | GREEN (Routine) | ✅ | ✅ |
-| **V12** | Postpartum hemorrhage | Delivered 2 hours ago, heavy bleeding not stopping, dizzy, cold sweaty | `HR: 145`, `Pallor_sev: SEVERE`, `is_pregnant: True` | RED (Immediate) | ✅ | ✅ |
-| **V13** | Mild asthma exacerbation | Wheezing, tight chest, can speak full sentences, using inhaler | `HR: 90`, `Respiratory_risk: LOW` | GREEN (Routine) | ✅ | ✅ |
-| **V14** | Hepatitis A | Yellow eyes, dark urine, stomach pain right side, tired, no appetite | `Jaundice_sev: MODERATE` | YELLOW (Soon) | ✅ | ✅ |
-| **V15** | Febrile seizure in child | 2-year-old, fever 40°C, had shaking episode lasting 2 minutes, now drowsy | `HR: 155` | RED (Immediate) | ❌ | ✅ |
-| **V16** | Skin infection | Red swollen area on leg, warm to touch, small amount of pus | `HR: 85` | GREEN (Routine) | ❌ | ❌ |
-| **V17** | Eclampsia | 38 weeks pregnant, seizure, unconscious, very swollen face | `HR: 130`, `Edema_sev: SIGNIFICANT`, `is_pregnant: True` | RED (Immediate) | ✅ | ✅ |
-| **V18** | Chronic cough, low risk | Dry cough for 1 week, no fever, no night sweats, eating well | `HR: 74`, `Respiratory_risk: LOW` | GREEN (Routine) | ✅ | ✅ |
-| **V19** | Snake bite | Bitten on foot 1 hour ago, swelling spreading up leg, very painful | `HR: 110` | RED (Immediate) | ❌ | ❌ |
-| **V20** | Iron deficiency pregnancy | 24 weeks pregnant, tired, craving ice, slightly pale | `HR: 88`, `Pallor_sev: MILD`, `is_pregnant: True` | YELLOW (Soon) | ❌ | ❌ |
+| **V01** | Severe malaria with anemia | High fever for 3 days, chills, body aches, very weak, not eating | `HR: 128`, `Pallor: SEVERE`, `Jaundice: MILD` | RED (Immediate) | YELLOW (Fail) | RED (Pass) |
+| **V02** | Uncomplicated URTI | Runny nose, mild cough for 2 days, no fever | `HR: 78` | GREEN (Routine) | GREEN (Pass) | GREEN (Pass) |
+| **V03** | Preeclampsia warning | Headache, swollen face and hands, blurry vision, 32 weeks pregnant | `HR: 98`, `Edema_sev: SIGNIFICANT`, `is_pregnant: True` | RED (Immediate) | YELLOW (Fail) | RED (Pass) |
+| **V04** | Childhood pneumonia | 4-year-old, fast breathing, chest indrawing, fever 39°C for 2 days | `HR: 140`, `Respiratory_risk: HIGH` | ORANGE (Urgent) | YELLOW (Fail) | RED (Fail) |
+| **V05** | Moderate anemia | Tired all the time, dizzy when standing, pale inside eyelids | `HR: 95`, `Pallor_sev: MODERATE` | YELLOW (Soon) | GREEN (Fail) | YELLOW (Pass) |
+| **V06** | Neonatal jaundice | 3-day-old baby, yellow skin and eyes, not feeding well | `Jaundice_sev: SEVERE` | RED (Immediate) | RED (Pass) | RED (Pass) |
+| **V07** | Dehydration from diarrhea | Watery diarrhea 8 times today, vomiting, sunken eyes, very thirsty | `HR: 115` | ORANGE (Urgent) | RED (Fail) | RED (Fail) |
+| **V08** | Normal prenatal check | 28 weeks pregnant, feeling well, slight ankle swelling | `HR: 82`, `Edema_sev: NORMAL`, `is_pregnant: True` | GREEN (Routine) | GREEN (Pass) | GREEN (Pass) |
+| **V09** | Tuberculosis suspect | Cough for 3 weeks, night sweats, weight loss, coughing blood | `HR: 92`, `Respiratory_risk: MODERATE` | ORANGE (Urgent) | RED (Fail) | RED (Fail) |
+| **V10** | Sickle cell crisis | Known sickle cell, severe bone pain, fever, very pale | `HR: 135`, `Pallor_sev: SEVERE`, `Jaundice: MILD` | RED (Immediate) | RED (Pass) | RED (Pass) |
+| **V11** | Mild gastroenteritis | Stomach cramps, loose stools 3 times, no blood, drinking fluids | `HR: 80` | GREEN (Routine) | GREEN (Pass) | GREEN (Pass) |
+| **V12** | Postpartum hemorrhage | Delivered 2 hours ago, heavy bleeding not stopping, dizzy, cold sweaty | `HR: 145`, `Pallor_sev: SEVERE`, `is_pregnant: True` | RED (Immediate) | RED (Pass) | RED (Pass) |
+| **V13** | Mild asthma exacerbation | Wheezing, tight chest, can speak full sentences, using inhaler | `HR: 90`, `Respiratory_risk: LOW` | GREEN (Routine) | GREEN (Pass) | GREEN (Pass) |
+| **V14** | Hepatitis A | Yellow eyes, dark urine, stomach pain right side, tired, no appetite | `Jaundice_sev: MODERATE` | YELLOW (Soon) | YELLOW (Pass) | YELLOW (Pass) |
+| **V15** | Febrile seizure in child | 2-year-old, fever 40°C, had shaking episode lasting 2 minutes, now drowsy | `HR: 155` | RED (Immediate) | ORANGE (Fail) | RED (Pass) |
+| **V16** | Skin infection | Red swollen area on leg, warm to touch, small amount of pus | `HR: 85` | GREEN (Routine) | ORANGE (Fail) | ORANGE (Fail) |
+| **V17** | Eclampsia | 38 weeks pregnant, seizure, unconscious, very swollen face | `HR: 130`, `Edema_sev: SIGNIFICANT`, `is_pregnant: True` | RED (Immediate) | RED (Pass) | RED (Pass) |
+| **V18** | Chronic cough, low risk | Dry cough for 1 week, no fever, no night sweats, eating well | `HR: 74`, `Respiratory_risk: LOW` | GREEN (Routine) | GREEN (Pass) | GREEN (Pass) |
+| **V19** | Snake bite | Bitten on foot 1 hour ago, swelling spreading up leg, very painful | `HR: 110` | RED (Immediate) | ORANGE (Fail) | ORANGE (Fail) |
+| **V20** | Iron deficiency pregnancy | 24 weeks pregnant, tired, craving ice, slightly pale | `HR: 88`, `Pallor_sev: MILD`, `is_pregnant: True` | YELLOW (Soon) | GREEN (Fail) | GREEN (Fail) |
 
 ---
 

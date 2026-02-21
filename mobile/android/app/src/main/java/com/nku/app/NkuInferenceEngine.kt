@@ -518,13 +518,30 @@ class NkuInferenceEngine(private val context: Context) {
 
     /**
      * Native HTTP downloader fallback for Kaggle reviewers installing via APK.
-     * Downloads the 2.3GB GGUF model directly from HuggingFace to internal storage.
+     * Downloads the 2.49GB GGUF model directly from HuggingFace to internal storage.
+     *
+     * Safety:
+     *  - Pre-flight storage check (requires ≥3 GB free)
+     *  - Downloads to .tmp file, renames only after SHA-256 validation
+     *  - All failure paths clean up the temp file
      */
     private suspend fun downloadModelNative(urlStr: String, fileName: String): File? = withContext(Dispatchers.IO) {
         val outFile = File(modelDir, fileName)
+        val tmpFile = File(modelDir, "$fileName.tmp")
         var connection: java.net.HttpURLConnection? = null
+
         try {
-            _progress.value = "Connecting to HuggingFace to download MedGemma..."
+            // Pre-flight: ensure enough disk space (3 GB headroom)
+            val freeBytes = modelDir.usableSpace
+            val requiredBytes = 3L * 1024 * 1024 * 1024  // 3 GB
+            if (freeBytes < requiredBytes) {
+                val freeMB = freeBytes / (1024 * 1024)
+                Log.e(TAG, "Insufficient storage for model download: ${freeMB}MB free, need ~3GB")
+                _progress.value = "Not enough storage (${freeMB}MB free). Free up space and restart."
+                return@withContext null
+            }
+
+            _progress.value = "Connecting to download MedGemma..."
             var downloadUrl = java.net.URL(urlStr)
             
             // Handle redirects (HuggingFace CDN usually redirects)
@@ -553,12 +570,13 @@ class NkuInferenceEngine(private val context: Context) {
                 return@withContext null
             }
 
-            val totalBytes = connection?.contentLength ?: -1
+            val totalBytes = connection?.contentLength?.toLong() ?: -1L
             Log.i(TAG, "Starting native download of $fileName ($totalBytes bytes)")
 
+            // Download to temp file — never to the final name
             connection?.inputStream?.use { input ->
-                outFile.outputStream().use { output ->
-                    val buffer = ByteArray(8 * 1024)
+                tmpFile.outputStream().use { output ->
+                    val buffer = ByteArray(256 * 1024) // 256KB chunks for faster throughput
                     var bytesWritten = 0L
                     var lastReportedPercent = -1
 
@@ -572,32 +590,41 @@ class NkuInferenceEngine(private val context: Context) {
                             val percent = ((bytesWritten * 100) / totalBytes).toInt()
                             if (percent != lastReportedPercent) {
                                 lastReportedPercent = percent
-                                _progress.value = "Downloading Model (Reviewer Fallback)... $percent%"
+                                _progress.value = "Downloading MedGemma… $percent%"
                             }
                         } else {
-                            // Indeterminate progress
-                            _progress.value = "Downloading Model (Reviewer Fallback)... ${bytesWritten / (1024 * 1024)}MB"
+                            val mb = bytesWritten / (1024 * 1024)
+                            if (mb % 50 == 0L) { // Update every ~50MB to reduce UI churn
+                                _progress.value = "Downloading MedGemma… ${mb}MB"
+                            }
                         }
                     }
                 }
             }
             
-            Log.i(TAG, "Download complete: $fileName")
-            if (!outFile.exists() || outFile.length() <= 0) {
+            Log.i(TAG, "Download complete: $fileName (${tmpFile.length() / (1024*1024)}MB)")
+            if (!tmpFile.exists() || tmpFile.length() <= 0) {
                 return@withContext null
             }
 
+            // Validate GGUF header + SHA-256 BEFORE renaming to final path
+            _progress.value = "Validating model integrity..."
             val expectedHash = if (fileName == MEDGEMMA_MODEL) MEDGEMMA_SHA256 else null
-            if (!ModelFileValidator.isValidGguf(outFile, expectedSha256 = expectedHash)) {
+            if (!ModelFileValidator.isValidGguf(tmpFile, expectedSha256 = expectedHash)) {
                 Log.e(TAG, "Downloaded model failed validation/trust check: $fileName")
-                outFile.delete()
+                tmpFile.delete()
+                _progress.value = "Model download failed integrity check. Will retry on next launch."
                 return@withContext null
             }
 
+            // Validation passed — atomically move to final name
+            tmpFile.renameTo(outFile)
+            Log.i(TAG, "Model validated and saved: ${outFile.absolutePath}")
             return@withContext outFile
 
         } catch (e: Exception) {
             Log.e(TAG, "Native download failed for $fileName", e)
+            if (tmpFile.exists()) tmpFile.delete()
             if (outFile.exists()) outFile.delete()
             return@withContext null
         } finally {

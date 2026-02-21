@@ -76,13 +76,19 @@ fun HomeScreen(
 
         Spacer(Modifier.height(12.dp))
 
-        // ── Model Download Banner ──
-        if (engineState == EngineState.LOADING_MODEL && engineProgress.isNotEmpty()) {
+        // ── Model Download / Error Banner ──
+        val isDownloading = engineState == EngineState.LOADING_MODEL && engineProgress.isNotEmpty()
+        val isError = engineProgress.contains("Not enough storage") ||
+                      engineProgress.contains("failed") ||
+                      engineProgress.contains("Connect to Wi-Fi")
+
+        if (isDownloading || isError) {
+            val bannerColor = if (isError) NkuColors.Warning else NkuColors.Info
             Card(
                 colors = CardDefaults.cardColors(
-                    containerColor = NkuColors.Info.copy(alpha = 0.15f)
+                    containerColor = bannerColor.copy(alpha = 0.15f)
                 ),
-                border = BorderStroke(1.dp, NkuColors.Info.copy(alpha = 0.4f)),
+                border = BorderStroke(1.dp, bannerColor.copy(alpha = 0.4f)),
                 modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
             ) {
                 Column(
@@ -90,22 +96,34 @@ fun HomeScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(18.dp),
-                            color = NkuColors.Info,
-                            strokeWidth = 2.dp
-                        )
+                        if (isDownloading && !isError) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(18.dp),
+                                color = bannerColor,
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Icon(
+                                Icons.Default.Warning,
+                                contentDescription = "Warning",
+                                tint = bannerColor,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
                         Spacer(Modifier.width(10.dp))
                         Text(
                             engineProgress,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Medium,
-                            color = NkuColors.Info
+                            color = bannerColor
                         )
                     }
                     Spacer(Modifier.height(6.dp))
                     Text(
-                        "The app may be slower while the AI model downloads. You can still use the screening tools.",
+                        if (isError)
+                            "The AI model could not be downloaded. Triage will use rule-based assessment until resolved."
+                        else
+                            "The app may be slower while the AI model downloads. You can still use the screening tools.",
                         fontSize = 11.sp,
                         color = NkuColors.TextSecondary,
                         textAlign = TextAlign.Center

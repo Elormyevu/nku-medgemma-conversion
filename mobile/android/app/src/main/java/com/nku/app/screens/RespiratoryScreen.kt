@@ -65,6 +65,7 @@ fun RespiratoryScreen(
 ) {
     var isRecording by remember { mutableStateOf(false) }
     var recordingProgress by remember { mutableFloatStateOf(0f) }
+    var recordingComplete by remember { mutableStateOf(false) }
     var micPermissionDenied by remember { mutableStateOf(false) }
     var recordingJob by remember { mutableStateOf<Job?>(null) }
     val scope = rememberCoroutineScope()
@@ -241,7 +242,7 @@ fun RespiratoryScreen(
         Spacer(Modifier.height(8.dp))
 
         // Result details
-        if (respiratoryResult.confidence > 0.4f) {
+        if (respiratoryResult.confidence > 0.4f || recordingComplete) {
             Text(
                 "${strings.confidenceLabel}: ${(respiratoryResult.confidence * 100).toInt()}%",
                 color = NkuColors.TextSecondary,
@@ -310,13 +311,17 @@ fun RespiratoryScreen(
                         micPermissionDenied = false
                         isRecording = true
                         recordingProgress = 0f
+                        recordingComplete = false
                         respiratoryDetector.reset()
 
                         recordingJob = scope.launch {
                             recordAndAnalyze(
                                 respiratoryDetector = respiratoryDetector,
                                 onProgress = { progress -> recordingProgress = progress },
-                                onComplete = { isRecording = false }
+                                onComplete = {
+                                    isRecording = false
+                                    recordingComplete = true
+                                }
                             )
                         }
                     } else {

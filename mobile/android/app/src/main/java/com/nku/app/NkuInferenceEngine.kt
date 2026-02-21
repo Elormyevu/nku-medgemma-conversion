@@ -201,7 +201,7 @@ class NkuInferenceEngine(private val context: Context) {
      */
     private suspend fun loadModel(modelFileName: String): SmolLM? = withContext(Dispatchers.IO) {
         _state.value = EngineState.LOADING_MODEL
-        _progress.value = "Loading ${modelFileName}..."
+        _progress.value = "Loading ${modelFileName}… 0%"
 
         var resolvedFile = resolveModelFile(modelFileName)
         if (resolvedFile == null) {
@@ -223,6 +223,22 @@ class NkuInferenceEngine(private val context: Context) {
         for (attempt in 0 until MAX_LOAD_RETRIES) {
             try {
                 val smolLM = SmolLM()
+                
+                // Launch a concurrent progress estimator — SmolLM.load() is blocking JNI
+                // with no callback, so we estimate based on elapsed time.
+                // Typical load: 15-45s on device, 60-120s on emulator.
+                val startTime = System.currentTimeMillis()
+                val estimatedLoadMs = 30_000L  // Conservative estimate
+                val progressJob = kotlinx.coroutines.CoroutineScope(Dispatchers.Main).launch {
+                    while (true) {
+                        val elapsed = System.currentTimeMillis() - startTime
+                        // Asymptotic curve: approaches 95% but never hits 100% until actual completion
+                        val pct = (95.0 * (1.0 - Math.exp(-2.0 * elapsed / estimatedLoadMs))).toInt().coerceIn(0, 95)
+                        _progress.value = "Loading ${modelFileName}… ${pct}%"
+                        delay(500)
+                    }
+                }
+                
                 smolLM.load(
                     modelPath = modelPath,
                     params = SmolLM.InferenceParams(
@@ -234,6 +250,8 @@ class NkuInferenceEngine(private val context: Context) {
                         numThreads = Runtime.getRuntime().availableProcessors().coerceIn(2, 4)
                     )
                 )
+                progressJob.cancel()
+                _progress.value = "Loading ${modelFileName}… 100%"
                 Log.i(TAG, "Model loaded: $modelFileName (attempt ${attempt + 1})")
                 return@withContext smolLM
             } catch (t: Throwable) {

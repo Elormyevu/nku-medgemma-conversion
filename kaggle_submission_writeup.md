@@ -51,11 +51,9 @@ Each stage operates independently. These built-in safety checks ensure the syste
 
 > `Conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10), pallor index: 0.68, severity: MODERATE. EAR: 2.15 (normal ≈2.8, edema threshold ≤2.2), edema index: 0.52. Patient pregnant, 32 weeks.`
 
-MedGemma's response to this structured input:
+Previous studies have demonstrated that this structured prompting achieves a median 53% improvement over zero-shot baselines [9]. MedGemma's response to this structured input:
 
 > `SEVERITY: HIGH | URGENCY: IMMEDIATE` — Identifies the classic preeclampsia triad (edema + headache + pregnancy >20 weeks), flags concurrent anemia, and recommends same-day facility referral with specific danger signs to communicate to the patient.
-
-Previous studies have demonstrated that this structured prompting achieves a median 53% improvement over zero-shot baselines [9].
 
 **Prompt Compression & CoT Constraint:** Crucially, budget Android 3GB RAM devices constrain the model's KV-Cache to exactly 2048 tokens. If Nku passed raw multimodal arrays natively, they would consume ~1600 tokens, leaving no space for MedGemma to reason. Nku circumvents this via **Sensor Prompt Compression**: the Android edge converts verbose sensor matrices into the concise biomarkers shown above, halving prompt token consumption. This unlocks over 1200 free KV-Cache tokens, empowering MedGemma to utilize full **Chain-of-Thought (CoT)** reasoning before outputting its triage JSON response. This architectural tradeoff unlocks a +20pp triage accuracy gain (detailed in Appendix G).
 

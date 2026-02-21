@@ -1061,7 +1061,7 @@ The model's response demonstrates appropriate clinical reasoning for a symptom-o
 
 ---
 
-## Appendix G: Clinical Reasoning Superiority via Prompt Compression
+## Appendix I: Clinical Reasoning Superiority via Prompt Compression
 
 During the architectural development of Nku Sentinel, we confronted a strict limitation for on-device inference: budget 3GB RAM devices constrain the KV-Cache to exactly 2048 tokens. 
 
@@ -1081,6 +1081,8 @@ The empirical results from locally executing the `benchmark/nku_medgemma_benchma
 | **Severity** | 60% (12/20) | **80% (16/20)** | ↑ +20pp |
 | **Urgency** | 50% (10/20) | **60% (12/20)** | ↑ +10pp |
 | **Primary Concern** | 70% (14/20) | **70% (14/20)** | → +0pp |
+
+**Note on Sample Size (N=20 vs N=1,000+):** While our primary quantization benchmark evaluated raw reasoning power across an N=1,273 MedQA dataset, this specific architectural benchmark targets a different variable. These 20 vignettes are entirely hand-tailored, multi-morbidity "stress tests" representing realistic Sub-Saharan African clinical presentations (e.g., concurrent severe malaria and anemia, postpartum hemorrhage, preeclampsia). They are specifically engineered to evaluate the *impact* of the compressed sensor prompt on CoT reasoning against complex edge cases, not general medical knowledge. 
 
 By integrating multidimensional sensor parameters within a structurally compressed prompt, Nku successfully unlocks the full reasoning potential of SLMs, delivering a robust +20 percentage point accuracy gain on clinical triage categorization.
 

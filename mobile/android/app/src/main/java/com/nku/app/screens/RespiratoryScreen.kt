@@ -65,7 +65,8 @@ fun RespiratoryScreen(
 ) {
     var isRecording by remember { mutableStateOf(false) }
     var recordingProgress by remember { mutableFloatStateOf(0f) }
-    var recordingComplete by remember { mutableStateOf(false) }
+    // Derive completion from the result object (persisted in parent) — survives navigation
+    val recordingComplete = respiratoryResult.audioQuality != "unknown"
     var micPermissionDenied by remember { mutableStateOf(false) }
     var recordingJob by remember { mutableStateOf<Job?>(null) }
     val scope = rememberCoroutineScope()
@@ -311,17 +312,13 @@ fun RespiratoryScreen(
                         micPermissionDenied = false
                         isRecording = true
                         recordingProgress = 0f
-                        recordingComplete = false
                         respiratoryDetector.reset()
 
                         recordingJob = scope.launch {
                             recordAndAnalyze(
                                 respiratoryDetector = respiratoryDetector,
                                 onProgress = { progress -> recordingProgress = progress },
-                                onComplete = {
-                                    isRecording = false
-                                    recordingComplete = true
-                                }
+                                onComplete = { isRecording = false }
                             )
                         }
                     } else {

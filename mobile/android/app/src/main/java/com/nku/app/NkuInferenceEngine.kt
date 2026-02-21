@@ -359,17 +359,33 @@ class NkuInferenceEngine(private val context: Context) {
             }
 
             _state.value = EngineState.RUNNING_MEDGEMMA
-            _progress.value = "MedGemma analyzing..."
+            _progress.value = "MedGemma analyzing…"
 
             currentModel = loadModel(MEDGEMMA_MODEL)
             if (currentModel != null) {
+                // Transition to RUNNING_MEDGEMMA now that model is loaded
+                _state.value = EngineState.RUNNING_MEDGEMMA
+                _progress.value = "Analyzing symptoms… (this may take 30-60s)"
+
                 currentModel!!.addSystemPrompt(
                     "You are a clinical triage AI for Community Health Workers in rural Africa. " +
                     "Provide structured medical assessment with: SEVERITY (HIGH/MEDIUM/LOW), " +
                     "URGENCY, PRIMARY_CONCERNS, and RECOMMENDATIONS. " +
                     "Be specific and actionable. Always include safety disclaimers."
                 )
+
+                // Launch elapsed-time updater during inference
+                val inferenceStart = System.currentTimeMillis()
+                val timerJob = kotlinx.coroutines.CoroutineScope(Dispatchers.Main).launch {
+                    while (true) {
+                        val elapsed = (System.currentTimeMillis() - inferenceStart) / 1000
+                        _progress.value = "Analyzing symptoms… ${elapsed}s elapsed"
+                        delay(1000)
+                    }
+                }
+
                 val rawClinical = currentModel!!.getResponse(englishText ?: patientInput)
+                timerJob.cancel()
                 val speed = currentModel!!.getResponseGenerationSpeed()
                 // F-SEC-2: Validate MedGemma output for injection pass-through
                 clinicalResponse = if (PromptSanitizer.validateOutput(rawClinical)) {

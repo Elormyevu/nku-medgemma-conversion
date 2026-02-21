@@ -531,12 +531,12 @@ class NkuInferenceEngine(private val context: Context) {
         var connection: java.net.HttpURLConnection? = null
 
         try {
-            // Pre-flight: ensure enough disk space (3 GB headroom)
+            // Pre-flight: ensure enough disk space (model is 2.49GB, need ~100MB headroom)
             val freeBytes = modelDir.usableSpace
-            val requiredBytes = 3L * 1024 * 1024 * 1024  // 3 GB
+            val requiredBytes = 2_600L * 1024 * 1024  // 2.6 GB
             if (freeBytes < requiredBytes) {
                 val freeMB = freeBytes / (1024 * 1024)
-                Log.e(TAG, "Insufficient storage for model download: ${freeMB}MB free, need ~3GB")
+                Log.e(TAG, "Insufficient storage for model download: ${freeMB}MB free, need ~2.6GB")
                 _progress.value = "Not enough storage (${freeMB}MB free). Free up space and restart."
                 return@withContext null
             }

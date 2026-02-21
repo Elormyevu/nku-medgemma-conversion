@@ -39,7 +39,9 @@ fun HomeScreen(
     strings: LocalizedStrings.UiStrings,
     selectedLanguage: String,
     onLanguageChange: (String) -> Unit,
-    onNavigateToTab: (Int) -> Unit = {}
+    onNavigateToTab: (Int) -> Unit = {},
+    engineState: EngineState = EngineState.IDLE,
+    engineProgress: String = ""
 ) {
     // Progress tracking
     val hasHR = rppgResult.bpm != null && rppgResult.confidence > 0.4f
@@ -73,7 +75,45 @@ fun HomeScreen(
         // ── Language Selector Moved to Settings ──
 
         Spacer(Modifier.height(12.dp))
-        
+
+        // ── Model Download Banner ──
+        if (engineState == EngineState.LOADING_MODEL && engineProgress.isNotEmpty()) {
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = NkuColors.Info.copy(alpha = 0.15f)
+                ),
+                border = BorderStroke(1.dp, NkuColors.Info.copy(alpha = 0.4f)),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(14.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(18.dp),
+                            color = NkuColors.Info,
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(Modifier.width(10.dp))
+                        Text(
+                            engineProgress,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = NkuColors.Info
+                        )
+                    }
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        "The app may be slower while the AI model downloads. You can still use the screening tools.",
+                        fontSize = 11.sp,
+                        color = NkuColors.TextSecondary,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+
         // ── Progress Indicator ──
         Card(
             colors = CardDefaults.cardColors(

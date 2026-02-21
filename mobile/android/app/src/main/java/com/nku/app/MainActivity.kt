@@ -306,7 +306,8 @@ fun NkuSentinelApp(
                             scope.launch { appSettingsStore.saveLanguagePreference(newLang) } 
                         },
                         onNavigateToTab = { selectedTab = it },
-
+                        engineState = engineState,
+                        engineProgress = engineProgress,
                     )
                     1 -> CardioScreen(
                         rppgResult = rppgResult,

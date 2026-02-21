@@ -1073,9 +1073,14 @@ This massive efficiency gain securely unlocks over 1200 free tokens within the K
 
 The empirical results from locally executing the `benchmark/nku_medgemma_benchmark.py` prove the superiority of this compressed structural pipelining. When MedGemma uses CoT to evaluate complex multimorbidity vignettes, the availability of objective sensor data provides a massive surge in diagnostic accuracy:
 
-**Final Benchmark Results (MedGemma-4b-it Q4_K_M):**
-- **Text-Only Symptom Triage Accuracy:** 50%
-- **Sensor-Augmented Compressed Triage Accuracy:** 70%
+**Detailed Benchmark Results (MedGemma-4b-it Q4_K_M):**
+
+| Metric | Text-Only (Symptoms) | Sensor-Augmented (Compressed) | Impact (Δ) |
+|:-------|:---------------------|:------------------------------|:-----------|
+| **Triage Category** | 50% (10/20) | **70% (14/20)** | **↑ +20pp** |
+| **Severity** | 60% (12/20) | **80% (16/20)** | ↑ +20pp |
+| **Urgency** | 50% (10/20) | **60% (12/20)** | ↑ +10pp |
+| **Primary Concern** | 70% (14/20) | **70% (14/20)** | → +0pp |
 
 By integrating multidimensional sensor parameters within a structurally compressed prompt, Nku successfully unlocks the full reasoning potential of SLMs, delivering a robust +20 percentage point accuracy gain on clinical triage categorization.
 

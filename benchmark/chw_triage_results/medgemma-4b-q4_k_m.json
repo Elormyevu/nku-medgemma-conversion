@@ -1,7 +1,7 @@
 {
   "model": "medgemma-4b-q4_k_m",
   "port": 8787,
-  "timestamp": "2026-02-20T22:34:20",
+  "timestamp": "2026-02-20T22:43:34",
   "n_vignettes": 20,
   "sensor_augmented": [
     {
@@ -14,17 +14,17 @@
         "concern": "malaria"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data Analysis:**\n\n1.  **Sensor Biomarkers:**\n    *   **Heart Rate (HR): 128 BPM:** This is elevated (tachycardia)"
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "** Severe systemic illness, possibly infectious, with dehydration and anemia.",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and provide a structured assessment for a patient based on provided sensor data and reported symptoms.\n\n1.  **Analyze the Sensor Data:**\n    *   Heart Rate: 128 BPM (high). This indicat"
       },
-      "time_s": 4.5,
+      "time_s": 11.9,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
+        "severity": true,
+        "urgency": true,
+        "category": true,
         "concern": false
       }
     },
@@ -38,17 +38,17 @@
         "concern": "upper respiratory"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient based on provided sensor data and reported symptoms.\n\n1.  **Analyze the data:**\n    *   **Sensor Biomarkers:** Heart Rate (HR) is 78 BPM, which is within the normal"
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and provide a structured assessment for a patient based on the provided data.\n\n**Patient Data:**\n- **Sensor Biomarkers:** Heart Rate: 78 BPM (confidence: 0.85) via remote photoplethysmo"
       },
-      "time_s": 4.8,
+      "time_s": 12.1,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
+        "severity": true,
+        "urgency": true,
+        "category": true,
         "concern": false
       }
     },
@@ -62,18 +62,18 @@
         "concern": "preeclampsia"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:**\n    - Heart Rate: 98 BPM (confidence: 0.79) - Slightly elevated, but within norm"
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Preeclampsia",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- Heart Rate: 98 BPM (confidence: 0.79) - Method: Remote photoplethysmography \u2014 green channel from facial"
       },
-      "time_s": 4.6,
+      "time_s": 10.7,
       "correct": {
-        "severity": false,
+        "severity": true,
         "urgency": false,
-        "category": false,
-        "concern": false
+        "category": true,
+        "concern": true
       }
     },
     {
@@ -86,18 +86,18 @@
         "concern": "pneumonia"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient based on sensor data and reported symptoms.\n\n**Patient Data:**\n- **Age:** 4 years old\n- **Symptoms:** Fast breathing, chest indrawing, fever 39\u00b0C for 2 days.\n\n**Sen"
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "** Pneumonia with respiratory distress",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Age:** 4-year-old\n- **Symptoms:**\n    - Fast breathing\n    - Chest indrawing\n    - Fever (39\u00b0C) for 2"
       },
-      "time_s": 4.7,
+      "time_s": 9.3,
       "correct": {
-        "severity": false,
+        "severity": true,
         "urgency": false,
         "category": false,
-        "concern": false
+        "concern": true
       }
     },
     {
@@ -110,18 +110,18 @@
         "concern": "anemia"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "Anemia or low oxygenation causing dizziness",
         "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:**\n    - Heart Rate: 95 BPM (confidence: 0.80) - Slightly elevated, but within norm"
       },
-      "time_s": 4.6,
+      "time_s": 12.0,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
-        "concern": false
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
       }
     },
     {
@@ -134,17 +134,17 @@
         "concern": "jaundice"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Age:** 3-day-old baby\n- **Symptoms:** Yellow skin and eyes (jaundice), not feeding well\n- **Sensor Bi"
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided patient data:\n- Jaundice Score: 0.82 (severity: SEVERE)\n- Reported Symptoms: <<<3-day-old baby, yellow skin and eyes, not feeding well>>>\n\nBased on this "
       },
-      "time_s": 4.7,
+      "time_s": 10.0,
       "correct": {
-        "severity": false,
+        "severity": true,
         "urgency": false,
-        "category": false,
+        "category": true,
         "concern": false
       }
     },
@@ -158,18 +158,18 @@
         "concern": "dehydration"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Dehydration",
         "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:** Heart Rate: 115 BPM (confidence: 0.78) using remote photoplethysmography (PPG).\n"
       },
-      "time_s": 4.6,
+      "time_s": 13.7,
       "correct": {
-        "severity": false,
-        "urgency": false,
+        "severity": true,
+        "urgency": true,
         "category": false,
-        "concern": false
+        "concern": true
       }
     },
     {
@@ -182,17 +182,17 @@
         "concern": "normal"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n*   **Sensor Biomarkers:**\n    *   Heart Rate: 82 BPM (confidence: 0.88) - Normal range.\n    *   Edema Sc"
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "[Slight ankle swelling]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and provide a structured assessment based on the provided patient data.\n\n**Patient Data:**\n*   **Sensor Biomarkers:**\n    *   Heart Rate: 82 BPM (confidence: 0.88) - Normal range.\n    *"
       },
-      "time_s": 4.7,
+      "time_s": 11.9,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
+        "severity": true,
+        "urgency": true,
+        "category": true,
         "concern": false
       }
     },
@@ -206,18 +206,18 @@
         "concern": "tuberculosis"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data Analysis:**\n\n1.  **Sensor Biomarkers:**\n    *   Heart Rate: 92 BPM (normal range is typically 60-100 BPM, so"
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Potential serious respiratory infection (e.g., Tuberculosis) or malignancy",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient based on sensor data and reported symptoms.\n\n1.  **Analyze the data:**\n    *   **Sensor Biomarkers:**\n        *   Heart Rate: 92 BPM (slightly elevated, but within "
       },
-      "time_s": 5.2,
+      "time_s": 11.9,
       "correct": {
-        "severity": false,
-        "urgency": false,
+        "severity": true,
+        "urgency": true,
         "category": false,
-        "concern": false
+        "concern": true
       }
     },
     {
@@ -230,17 +230,17 @@
         "concern": "sickle cell"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data Analysis:**\n\n1.  **Sensor Biomarkers:**\n    *   Heart Rate: 135 BPM (high)\n    *   Pallor Score: 0.85 (sever"
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Severe anemia / Vaso-occlusive crisis",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:**\n    - Heart Rate: 135 BPM (confidence: 0.76) - Elevated (tachycardia)\n    - Pall"
       },
-      "time_s": 5.4,
+      "time_s": 14.2,
       "correct": {
-        "severity": false,
+        "severity": true,
         "urgency": false,
-        "category": false,
+        "category": true,
         "concern": false
       }
     },
@@ -257,15 +257,15 @@
         "severity": null,
         "urgency": null,
         "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:** Heart Rate: 80 BPM (confidence: 0.84) via remote photoplethysmography (green cha"
+        "concern": "** Gastrointestinal upset (likely gastroenteritis)",
+        "raw": "**SEVERITY:** LOW\n**URGENCY:** ROUTINE\n**TRIAGE_CATEGORY:** GREEN\n**PRIMARY_CONCERN:** Gastrointestinal upset (likely gastroenteritis)\n**RECOMMENDATIONS:**\n- Monitor symptoms.\n- Encourage fluid intake.\n- Advise on seeking care if symptoms worsen or persist."
       },
-      "time_s": 5.3,
+      "time_s": 1.7,
       "correct": {
         "severity": false,
         "urgency": false,
         "category": false,
-        "concern": false
+        "concern": true
       }
     },
     {
@@ -278,18 +278,18 @@
         "concern": "hemorrhage"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:**\n    - Heart Rate: 145 BPM (confidence: 0.72) - High heart rate (tachycardia)\n   "
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "POSTPARTUM HEMORRHAGE (PPH) with potential hypovolemic shock",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and provide a structured assessment based on the provided patient data.\n\n**Patient Data Analysis:**\n\n1.  **Sensor Biomarkers:**\n    *   Heart Rate: 145 BPM (high) - Indicates distress, "
       },
-      "time_s": 5.5,
+      "time_s": 13.5,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
-        "concern": false
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
       }
     },
     {
@@ -302,13 +302,13 @@
         "concern": "asthma"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:**\n    - Heart Rate: 90 BPM (confidence: 0.83) - Normal range is typically 60-100 B"
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "Wheezing/chest tightness",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data Analysis:**\n\n1.  **Sensor Biomarkers:**\n    *   Heart Rate (HR): 90 BPM (confidence 0.83). This is within th"
       },
-      "time_s": 5.1,
+      "time_s": 15.2,
       "correct": {
         "severity": false,
         "urgency": false,
@@ -327,15 +327,15 @@
       },
       "predicted": {
         "severity": null,
-        "urgency": null,
-        "category": null,
+        "urgency": "SOON",
+        "category": "ORANGE",
         "concern": "[one-line diagnosis or concern]",
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided patient data:\n- Jaundice Score: 0.65 (severity: MODERATE)\n- Reported Symptoms: Yellow eyes, dark urine, stomach pain right side, tired, no appetite.\n\nBas"
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:** Jaundice Score: 0.65 (severity: MODERATE)\n- **Reported Symptoms:** Yellow eyes, "
       },
-      "time_s": 5.5,
+      "time_s": 14.1,
       "correct": {
         "severity": false,
-        "urgency": false,
+        "urgency": true,
         "category": false,
         "concern": false
       }
@@ -350,18 +350,18 @@
         "concern": "seizure"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and provide a structured assessment for a specific patient case.\n\n**Patient Data:**\n- **Age:** 2 years old\n- **Symptoms:**\n    - Fever: 40\u00b0C\n    - Shaking episode (convulsion/seizure): "
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Altered mental status (drowsiness) in a young child with high fever and possible seizure.",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- Age: 2 years old\n- Symptoms: Fever (40\u00b0C), shaking episode (2 minutes), now drowsy.\n- Sensor Data: Hear"
       },
-      "time_s": 6.4,
+      "time_s": 12.8,
       "correct": {
-        "severity": false,
+        "severity": true,
         "urgency": false,
-        "category": false,
-        "concern": false
+        "category": true,
+        "concern": true
       }
     },
     {
@@ -374,13 +374,13 @@
         "concern": "infection"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": "** What is the main issue?",
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided patient data:\n- **Sensor Biomarkers:** Heart rate 85 BPM (remote photoplethysmography). This is a normal resting heart rate.\n- **Reported Symptoms:** Red"
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:** Heart Rate: 85 BPM (confidence: 0.86) using remote photoplethysmography (green c"
       },
-      "time_s": 6.2,
+      "time_s": 16.4,
       "correct": {
         "severity": false,
         "urgency": false,
@@ -401,15 +401,15 @@
         "severity": null,
         "urgency": null,
         "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data Analysis:**\n1.  **Heart Rate:** 130 BPM (high, tachycardia)\n2.  **Edema Score:** 0.92 (significant swelling)"
+        "concern": "[one-line diagnosis or concern] -> SEVERE PREECLAMPSIA / ECAMPLESIA / SEIZURE / UNCONSCIOUSNESS",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:**\n    - Heart Rate: 130 BPM (confidence: 0.68)\n    - Edema Score: 0.92 (severity: "
       },
-      "time_s": 5.1,
+      "time_s": 20.3,
       "correct": {
         "severity": false,
         "urgency": false,
         "category": false,
-        "concern": false
+        "concern": true
       }
     },
     {
@@ -422,18 +422,18 @@
         "concern": "cough"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- Heart Rate: 74 BPM (confidence: 0.87) - Normal range.\n- Respiratory Risk: LOW (confidence: 0.80) - No s"
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "[Persistent dry cough]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided patient data (sensor biomarkers and reported symptoms) and provide a structured assessment in a specific format.\n\n**Patient Data Analysis:**\n1.  **Heart "
       },
-      "time_s": 4.9,
+      "time_s": 18.4,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
-        "concern": false
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
       }
     },
     {
@@ -450,9 +450,9 @@
         "urgency": null,
         "category": null,
         "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:** Heart Rate: 110 BPM (confidence: 0.77) using remote photoplethysmography.\n- **Re"
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:** Heart Rate: 110 BPM (confidence: 0.77) - Method: Remote photoplethysmography \u2014 g"
       },
-      "time_s": 5.5,
+      "time_s": 22.1,
       "correct": {
         "severity": false,
         "urgency": false,
@@ -470,13 +470,13 @@
         "concern": "anemia"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:**\n    - Heart Rate: 88 BPM (confidence: 0.82) - Normal range\n    - Pallor Score: 0"
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- **Sensor Biomarkers:**\n    - Heart Rate: 88 BPM (confidence: 0.82) - Normal range.\n    - Pallor Score: "
       },
-      "time_s": 5.4,
+      "time_s": 16.7,
       "correct": {
         "severity": false,
         "urgency": false,
@@ -496,17 +496,17 @@
         "concern": "malaria"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and provide a structured assessment for a patient presenting with specific symptoms.\n\n**Patient Data:**\n- High fever (3 days)\n- Chills\n- Body aches\n- Very weak\n- Not eating\n\n**Analysis:"
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "[one-line diagnosis or concern] -> febrile illness with systemic symptoms",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient based on the provided symptoms.\n\n**Patient Data:**\n- High fever (3 days)\n- Chills\n- Body aches\n- Very weak\n- Not eating\n\n**Analysis:**\n1.  **Severity:** The symptom"
       },
-      "time_s": 5.5,
+      "time_s": 13.0,
       "correct": {
-        "severity": false,
+        "severity": true,
         "urgency": false,
-        "category": false,
+        "category": true,
         "concern": false
       }
     },
@@ -520,17 +520,17 @@
         "concern": "upper respiratory"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data.\n\n**Patient Data:**\n- <<<Runny nose, mild cough for 2 days, no fever>>>\n\n**Analysis:**\n1.  **Symptoms:** Runny nose, mild cough.\n2.  **Duration:** 2 days.\n3.  *"
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient with the following reported symptoms:\n- Runny nose\n- Mild cough\n- Duration: 2 days\n- No fever\n\nI need to provide an assessment in a specific format:\n- SEVERITY: [LO"
       },
-      "time_s": 5.1,
+      "time_s": 15.3,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
+        "severity": true,
+        "urgency": true,
+        "category": true,
         "concern": false
       }
     },
@@ -544,17 +544,17 @@
         "concern": "preeclampsia"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": "** Pregnancy-related symptoms, potentially preeclampsia or other complications.",
-        "raw": "**SEVERITY:** MEDIUM\n**URGENCY:** SOON\n**TRIAGE_CATEGORY:** YELLOW\n**PRIMARY_CONCERN:** Pregnancy-related symptoms, potentially preeclampsia or other complications.\n**RECOMMENDATIONS:**\n- **Action 1:** Advise the patient to seek immediate evaluation at a facility equipped to handle pregnancy complic"
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "** Preeclampsia",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data.\n\n**Patient Data:**\n- Age: Not specified\n- Sex: Not specified\n- Location: Sub-Saharan Africa (implied by context)\n- Chief Complaint: Headache, swollen face and "
       },
-      "time_s": 2.3,
+      "time_s": 18.8,
       "correct": {
-        "severity": false,
+        "severity": true,
         "urgency": false,
-        "category": false,
+        "category": true,
         "concern": true
       }
     },
@@ -569,17 +569,17 @@
       },
       "predicted": {
         "severity": "HIGH",
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a 4-year-old child presenting with specific symptoms.\n\n1.  **Analyze the symptoms:**\n    *   **Age:** 4 years old (child)\n    *   **Fast breathing (tachypnea):** This is a si"
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "** Pneumonia with respiratory distress",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- Age: 4 years old\n- Symptoms: Fast breathing, chest indrawing, fever 39\u00b0C for 2 days.\n\n**Analysis:**\n1. "
       },
-      "time_s": 5.3,
+      "time_s": 12.9,
       "correct": {
         "severity": true,
-        "urgency": false,
+        "urgency": true,
         "category": false,
-        "concern": false
+        "concern": true
       }
     },
     {
@@ -592,18 +592,18 @@
         "concern": "anemia"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
+        "severity": "LOW",
+        "urgency": "SOON",
+        "category": "YELLOW",
+        "concern": "Anemia / Dehydration",
         "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient based on the provided symptoms.\n\n**Patient Symptoms:**\n- Tired all the time\n- Dizzy when standing\n- Pale inside eyelids\n\n**Analysis:**\n1.  **Tired all the time:** T"
       },
-      "time_s": 7.1,
+      "time_s": 16.1,
       "correct": {
         "severity": false,
-        "urgency": false,
-        "category": false,
-        "concern": false
+        "urgency": true,
+        "category": true,
+        "concern": true
       }
     },
     {
@@ -616,18 +616,18 @@
         "concern": "jaundice"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze the provided patient data.\n\n**Patient Data:**\n- <<<3-day-old baby, yellow skin and eyes, not feeding well>>>\n\n**Analysis:**\n1.  **Age:** 3-day-old baby. This is a very young"
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "ORANGE",
+        "concern": "Jaundice in a neonate with poor feeding",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data.\n\n**Patient Data:**\n- <<<3-day-old baby, yellow skin and eyes, not feeding well>>>\n\n**Analysis:**\n1.  **Age:** 3-day-old baby. This is a very young infant.\n2.  "
       },
-      "time_s": 4.9,
+      "time_s": 13.9,
       "correct": {
         "severity": false,
         "urgency": false,
         "category": false,
-        "concern": false
+        "concern": true
       }
     },
     {
@@ -640,15 +640,15 @@
         "concern": "dehydration"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data.\n\n**Patient Data:**\n- Watery diarrhea 8 times today\n- Vomiting\n- Sunken eyes\n- Very thirsty\n\n**Analysis:**\n1.  **Severity:** The patient has multiple symptoms i"
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient presenting with specific symptoms.\n\n**Patient Data Analysis:**\n- **Symptoms:** Watery diarrhea (8 times today), vomiting, sunken eyes, very thirsty.\n- **Context:** "
       },
-      "time_s": 4.7,
+      "time_s": 12.9,
       "correct": {
-        "severity": false,
+        "severity": true,
         "urgency": false,
         "category": false,
         "concern": false
@@ -664,17 +664,17 @@
         "concern": "normal"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient based on the provided symptom report.\n\n**Patient Data:**\n- <<<28 weeks pregnant, feeling well, slight ankle swelling>>>\n\n**Analysis:**\n1.  **Pregnancy Status:** 28 "
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided patient data: \"<<<28 weeks pregnant, feeling well, slight ankle swelling>>>\".\nBased on this data, I need to provide a structured assessment in a specific"
       },
-      "time_s": 4.7,
+      "time_s": 12.2,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
+        "severity": true,
+        "urgency": true,
+        "category": true,
         "concern": false
       }
     },
@@ -688,16 +688,16 @@
         "concern": "tuberculosis"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
+        "severity": "HIGH",
+        "urgency": "URGENT",
         "category": null,
         "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and provide a structured assessment for a patient presenting with specific symptoms.\n\n**Patient Data:**\n- Cough for 3 weeks\n- Night sweats\n- Weight loss\n- Coughing blood\n\n**Analysis:**\n"
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data.\n\n**Patient Data:**\n- Cough for 3 weeks\n- Night sweats\n- Weight loss\n- Coughing blood\n\n**Analysis:**\n1.  **Symptoms:** Cough (prolonged), night sweats, weight l"
       },
-      "time_s": 4.6,
+      "time_s": 14.5,
       "correct": {
-        "severity": false,
-        "urgency": false,
+        "severity": true,
+        "urgency": true,
         "category": false,
         "concern": false
       }
@@ -712,18 +712,18 @@
         "concern": "sickle cell"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- <<<Known sickle cell, severe bone pain, fever, very pale>>>\n\n**Analysis:**\n1.  **Identify the core prob"
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "** The most pressing issues are likely the vaso-occlusive crisis (bone pain) and potential infection (fever) in a known sickle cell patient.",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient based on the provided symptoms.\n\n**Patient Data:**\n- Known sickle cell\n- Severe bone pain\n- Fever\n- Very pale\n\n**Analysis:**\n1.  **Known sickle cell:** This is a pr"
       },
-      "time_s": 4.6,
+      "time_s": 13.8,
       "correct": {
-        "severity": false,
+        "severity": true,
         "urgency": false,
-        "category": false,
-        "concern": false
+        "category": true,
+        "concern": true
       }
     },
     {
@@ -736,18 +736,18 @@
         "concern": "gastroenteritis"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": "[one-line diagnosis or concern]",
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data.\n\n**Patient Data:**\n- Stomach cramps\n- Loose stools (diarrhea)\n- 3 times\n- No blood\n- Drinking fluids\n\n**Task:**\n- Provide a structured assessment in a specific"
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Gastroenteritis",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient with stomach cramps and loose stools.\n\n1.  **Analyze the symptoms:**\n    *   Stomach cramps: Common, can be many things.\n    *   Loose stools (diarrhea): Common, ca"
       },
-      "time_s": 4.6,
+      "time_s": 12.2,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
-        "concern": false
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
       }
     },
     {
@@ -760,18 +760,18 @@
         "concern": "hemorrhage"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": "[one-line diagnosis or concern]",
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided patient data: \"Delivered 2 hours ago, heavy bleeding not stopping, dizzy, cold sweaty\".\nThen, I need to provide a structured assessment in a specific for"
+        "severity": "HIGH",
+        "urgency": "IMMEDIATE",
+        "category": "RED",
+        "concern": "Postpartum hemorrhage (PPH)",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient based on the provided symptoms.\n\n1.  **Analyze the symptoms:**\n    *   \"Delivered 2 hours ago\": This indicates a recent childbirth.\n    *   \"heavy bleeding not stop"
       },
-      "time_s": 4.7,
+      "time_s": 9.3,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
-        "concern": false
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
       }
     },
     {
@@ -784,18 +784,18 @@
         "concern": "asthma"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data to provide a structured assessment.\n\n**Patient Data:**\n- Wheezing\n- Tight chest\n- Can speak full sentences\n- Using inhaler\n\n**Analysis:**\n1.  **Symptoms:** Whee"
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "Respiratory symptoms (likely asthma exacerbation)",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and provide a structured assessment for a patient presenting with wheezing, tight chest, and using an inhaler.\n\n1.  **Analyze the symptoms:**\n    *   Wheezing: Indicates airway narrowin"
       },
-      "time_s": 4.6,
+      "time_s": 10.9,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
-        "concern": false
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
       }
     },
     {
@@ -812,9 +812,9 @@
         "urgency": null,
         "category": null,
         "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided patient symptoms and provide a structured assessment in a specific format.\n\n**Patient Symptoms:**\n- Yellow eyes (jaundice)\n- Dark urine\n- Stomach pain (r"
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data.\n\n**Patient Data:**\n- Yellow eyes\n- Dark urine\n- Stomach pain (right side)\n- Tired\n- No appetite\n\n**Analysis:**\n1.  **Identify Key Symptoms:** Yellow eyes (jaun"
       },
-      "time_s": 4.5,
+      "time_s": 14.1,
       "correct": {
         "severity": false,
         "urgency": false,
@@ -832,18 +832,18 @@
         "concern": "seizure"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "[one-line diagnosis or concern] -> Potential serious infection/neurological event causing seizure and drowsiness",
         "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient report.\n\n**Patient Data:**\n- Age: 2 years old\n- Symptoms:\n    - Fever: 40\u00b0C (very high)\n    - Shaking episode: lasted 2 minutes\n    - Current state: Drowsy\n\n**Analy"
       },
-      "time_s": 4.5,
+      "time_s": 12.8,
       "correct": {
-        "severity": false,
+        "severity": true,
         "urgency": false,
-        "category": false,
-        "concern": false
+        "category": true,
+        "concern": true
       }
     },
     {
@@ -856,17 +856,17 @@
         "concern": "infection"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze patient data.\n\n**Patient Data:**\n- <<<Red swollen area on leg, warm to touch, small amount of pus>>>\n\n**Analysis:**\n1.  **Symptoms:** Redness, swelling, warmth, and pus are "
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "one-line diagnosis or concern",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the reported symptoms: \"Red swollen area on leg, warm to touch, small amount of pus\".\nBased on these symptoms, I need to provide a structured assessment in a specific"
       },
-      "time_s": 4.5,
+      "time_s": 12.1,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
+        "severity": true,
+        "urgency": true,
+        "category": true,
         "concern": false
       }
     },
@@ -882,15 +882,15 @@
       "predicted": {
         "severity": "HIGH",
         "urgency": "IMMEDIATE",
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient based on the provided symptoms.\n\n**Patient Data:**\n- 38 weeks pregnant\n- Seizure\n- Unconscious\n- Very swollen face\n\n**Analysis:**\n1.  **Pregnancy:** 38 weeks is lat"
+        "category": "RED",
+        "concern": "[one-line diagnosis or concern]",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided patient data:\n- <<<38 weeks pregnant, seizure, unconscious, very swollen face>>>\n\nAnd provide a structured assessment in a specific format:\nSEVERITY: [LO"
       },
-      "time_s": 4.6,
+      "time_s": 12.9,
       "correct": {
         "severity": true,
         "urgency": true,
-        "category": false,
+        "category": true,
         "concern": false
       }
     },
@@ -904,18 +904,18 @@
         "concern": "cough"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient based on the provided symptoms.\n\n**Patient Data:**\n- Dry cough for 1 week\n- No fever\n- No night sweats\n- Eating well\n\n**Analysis:**\n1.  **Dry cough:** Common sympto"
+        "severity": "LOW",
+        "urgency": "ROUTINE",
+        "category": "GREEN",
+        "concern": "** Persistent dry cough",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and analyze the provided patient data.\n\n**Patient Data:**\n- <<<Dry cough for 1 week, no fever, no night sweats, eating well>>>\n\n**Analysis:**\n1.  **Symptoms:** Dry cough for 1 week.\n2. "
       },
-      "time_s": 4.7,
+      "time_s": 11.6,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
-        "concern": false
+        "severity": true,
+        "urgency": true,
+        "category": true,
+        "concern": true
       }
     },
     {
@@ -928,17 +928,17 @@
         "concern": "snake"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
-        "concern": null,
-        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and provide a structured assessment for a patient presenting with a foot bite causing swelling and pain.\n\n1.  **Analyze the reported symptoms:**\n    *   **Bitten on foot:** This is a po"
+        "severity": "HIGH",
+        "urgency": "URGENT",
+        "category": "RED",
+        "concern": "Bite wound complication (infection/venomous envenomation)",
+        "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa and assess a patient presenting with a foot bite.\n\n1.  **Analyze the symptoms:**\n    *   Bitten on foot 1 hour ago.\n    *   Swelling spreading up the leg.\n    *   Very painful.\n\n2.  **E"
       },
-      "time_s": 4.6,
+      "time_s": 8.3,
       "correct": {
-        "severity": false,
+        "severity": true,
         "urgency": false,
-        "category": false,
+        "category": true,
         "concern": false
       }
     },
@@ -952,17 +952,17 @@
         "concern": "anemia"
       },
       "predicted": {
-        "severity": null,
-        "urgency": null,
-        "category": null,
+        "severity": "MEDIUM",
+        "urgency": "SOON",
+        "category": "YELLOW",
         "concern": "[one-line diagnosis or concern]",
         "raw": "thought\nThe user wants me to act as a clinical triage assistant for Community Health Workers in Sub-Saharan Africa.\nI need to analyze the provided patient data: \"<<<24 weeks pregnant, tired, craving ice, slightly pale>>>\"\nand provide a structured assessment in a specific format:\nSEVERITY: [LOW/MEDIU"
       },
-      "time_s": 4.6,
+      "time_s": 13.7,
       "correct": {
-        "severity": false,
-        "urgency": false,
-        "category": false,
+        "severity": true,
+        "urgency": true,
+        "category": true,
         "concern": false
       }
     }

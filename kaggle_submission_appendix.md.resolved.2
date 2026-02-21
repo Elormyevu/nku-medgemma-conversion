@@ -6,7 +6,7 @@ Companion document to the Kaggle submission writeup.
 
 ## Appendix A: Clinical Calibration Dataset (Complete)
 
-Source: `scripts/calibration/african_primary_care.txt`
+Source: [scripts/calibration/african_primary_care.txt](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/scripts/calibration/african_primary_care.txt)
 
 This dataset generates the medical importance matrix (imatrix) for IQ2_XS quantization. It contains patient-clinician dialogue pairs across 15 medical/language sections, covering the conditions most frequently encountered by CHWs in Sub-Saharan Africa. The complete dataset is reproduced verbatim below.
 
@@ -628,7 +628,7 @@ A prospective, observational study in Nyabihu and Musanze districts, Rwanda is e
 
 ### Evidence 4: Structured Prompting Substantially Improves Performance
 
-Research on automated prompt optimization for medical vision-language models found that structured prompting achieves a median 53% improvement over zero-shot baselines [9]. Nku's `ClinicalReasoner.kt` generates a highly structured, clinically explicit prompt that includes measurement methodology, raw biomarker values, literature references, and screening disclaimers:
+Research on automated prompt optimization for medical vision-language models found that structured prompting achieves a median 53% improvement over zero-shot baselines [9]. Nku's [ClinicalReasoner.kt](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt) generates a highly structured, clinically explicit prompt that includes measurement methodology, raw biomarker values, literature references, and screening disclaimers:
 
 ```
 === HEART RATE (rPPG) ===
@@ -702,7 +702,7 @@ graph LR
     F --> G["MedGemma\nQ4_K_M"]
 ```
 
-All four detectors produce structured result objects with derived scores, confidence, and raw biomarker values. `SensorFusion` merges these into a single `VitalSigns` data class, and `ClinicalReasoner.generatePrompt()` serializes everything into a clinically explicit text prompt.
+All four detectors produce structured result objects with derived scores, confidence, and raw biomarker values. [SensorFusion](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/SensorFusion.kt#74-296) merges these into a single [VitalSigns](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/SensorFusion.kt#21-67) data class, and `ClinicalReasoner.generatePrompt()` serializes everything into a clinically explicit text prompt.
 
 ---
 
@@ -721,7 +721,7 @@ Source file: `RPPGProcessor.kt`
 | Windowing | Hamming window | `0.54 − 0.46·cos(2πn/(N−1))` reduces spectral leakage |
 | Frequency analysis | Discrete Fourier Transform | Scans 40–200 BPM (0.67–3.33 Hz) at 0.05 Hz resolution. Throttled to every 5th frame (P-1 optimization) |
 | Peak detection | Magnitude maximum | Frequency with highest DFT magnitude → BPM |
-| Confidence | Peak prominence ratio | `(peak_magnitude / avg_magnitude − 1) / 4`, clamped to [0, 1] |
+| Confidence | Peak prominence ratio | [(peak_magnitude / avg_magnitude − 1) / 4](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/benchmark/nku_medgemma_benchmark.py#443-513), clamped to [0, 1] |
 | Quality label | Confidence thresholds | ≥0.8 excellent, ≥0.6 good, ≥0.4 poor, else insufficient |
 
 Output → VitalSigns:
@@ -881,7 +881,7 @@ Note: This is a screening heuristic, not a bilirubin measurement.
 
 **Clinical Validation & Architectural Value:** While traditional audio encoders output dense acoustic embeddings, MedGemma thrives on structured data. The 1.1MB TFLite HeAR Event Detector rapidly classifies 8 specific health sound events (cough, snore, breathe, sneeze, etc.) and outputs explicit confidence probabilities for each. Rather than passing a vector that an SLM cannot easily interpret, the Event Detector passes a structured summary (`Cough: 0.82`) directly into the prompt. In Sub-Saharan Africa, where 10.8M new TB cases occur annually (only 44% of MDR-TB diagnosed) [1], COPD prevalence is projected to rise 59% by 2050 [30], and pneumonia claims over 500,000 children under five each year [31], even a binary cough detection signal combined with clinical LLM reasoning provides a screening capability CHWs currently lack. This audio analysis exceeds what any standard clinical auscultation tool offers at the community health level.
 
-Source file: `RespiratoryDetector.kt`
+Source file: [RespiratoryDetector.kt](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/RespiratoryDetector.kt)
 
 | Stage | Technique | Detail |
 |:------|:----------|:-------|
@@ -920,7 +920,7 @@ Note: This is a screening tool for TB/respiratory illness risk.
 
 ### F.7: Confidence Gating
 
-All four modalities pass through confidence gating in `ClinicalReasoner` before reaching MedGemma:
+All four modalities pass through confidence gating in [ClinicalReasoner](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt#74-665) before reaching MedGemma:
 
 | Condition | Prompt behavior |
 |:----------|:----------------|
@@ -929,7 +929,7 @@ All four modalities pass through confidence gating in `ClinicalReasoner` before 
 | Sensor not captured | Section shows `Not measured` / `Not performed` |
 | All sensors < 75% and no symptoms | Triage abstains entirely — no MedGemma call |
 
-This ensures MedGemma never reasons on unreliable data. The same 75% threshold gates both the LLM prompt path and the rule-based fallback path (`createRuleBasedAssessment`).
+This ensures MedGemma never reasons on unreliable data. The same 75% threshold gates both the LLM prompt path and the rule-based fallback path ([createRuleBasedAssessment](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt#332-577)).
 
 ---
 
@@ -958,7 +958,7 @@ If MedGemma is unavailable (e.g., the device has <3GB RAM, model loading fails, 
 ### Layer 3: Risk-Stratified Triage
 A binary "refer everybody" strategy is catastrophic in rural sub-Saharan Africa. Given the extreme economic and physical cost of a 10km+ journey to an understaffed district hospital, false positives actively harm patients and degrade system trust.
 
-Instead of liberal over-referral, Nku's `ClinicalReasoner` utilizes a strict 4-tier risk-stratification system:
+Instead of liberal over-referral, Nku's [ClinicalReasoner](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt#74-665) utilizes a strict 4-tier risk-stratification system:
 - **Routine Care (Green):** Managed locally by CHW protocol.
 - **Monitor (Yellow):** Advised for local follow-up, avoiding unnecessary transport.
 - **Refer Within Days (Orange):** Moderate/emerging severity warranting clinic evaluation.
@@ -997,7 +997,7 @@ Verified on `nku_tecno_3gb` Android emulator (3GB RAM, API 34, x86_64) — repre
 
 | Parameter | Value |
 |:----------|:------|
-| Model | `medgemma-4b-it-q4_k_m.gguf` (2.3 GB) |
+| Model | `medgemma-4b-it-q4_k_m.gguf` (2.49 GB) |
 | Device | Android emulator, 3GB RAM, API 34 |
 | Input | Symptom-only: "fever headache vomiting" (no sensor data) |
 | Language | English (no translation pipeline) |
@@ -1041,7 +1041,7 @@ RECOMMENDATIONS:
 - Perform anemia screening using a validated method.
 ```
 
-`ClinicalReasoner` successfully parsed this into:
+[ClinicalReasoner](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt#74-665) successfully parsed this into:
 
 | Field | Parsed Value |
 |:------|:-------------|
@@ -1061,7 +1061,7 @@ The model's response demonstrates appropriate clinical reasoning for a symptom-o
 
 ---
 
-## Appendix I: Clinical Reasoning Superiority via Prompt Compression
+## Appendix G: Clinical Reasoning Superiority via Prompt Compression
 
 During the architectural development of Nku Sentinel, we confronted a strict limitation for on-device inference: budget 3GB RAM devices constrain the KV-Cache to exactly 2048 tokens. 
 
@@ -1071,7 +1071,7 @@ To securely bypass this limitation while preserving rich clinical data, Nku Sent
 
 This massive efficiency gain securely unlocks over 1200 free tokens within the KV-Cache. Equipped with this latency overhead, the MedGemma model is fully empowered to engage in step-by-step clinical reasoning prior to outputting its highly structured triage UI fields.
 
-The empirical results from locally executing the `benchmark/nku_medgemma_benchmark.py` prove the superiority of this compressed structural pipelining. When MedGemma uses CoT to evaluate complex multimorbidity vignettes, the availability of objective sensor data provides a massive surge in diagnostic accuracy:
+The empirical results from locally executing the [benchmark/nku_medgemma_benchmark.py](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/benchmark/nku_medgemma_benchmark.py) prove the superiority of this compressed structural pipelining. When MedGemma uses CoT to evaluate complex multimorbidity vignettes, the availability of objective sensor data provides a massive surge in diagnostic accuracy:
 
 **Detailed Benchmark Results (MedGemma-4b-it Q4_K_M):**
 
@@ -1082,36 +1082,7 @@ The empirical results from locally executing the `benchmark/nku_medgemma_benchma
 | **Urgency** | 50% (10/20) | **60% (12/20)** | ↑ +10pp |
 | **Primary Concern** | 70% (14/20) | **70% (14/20)** | → +0pp |
 
-**Note on Sample Size (N=20 vs N=1,000+):** While our primary quantization benchmark evaluated raw reasoning power across an N=1,273 MedQA dataset, this specific architectural benchmark targets a different variable. These 20 vignettes are entirely hand-tailored, multi-morbidity "stress tests" representing realistic Sub-Saharan African clinical presentations (e.g., concurrent severe malaria and anemia, postpartum hemorrhage, preeclampsia). They are specifically engineered to evaluate the *impact* of the compressed sensor prompt on CoT reasoning against complex edge cases, not general medical knowledge. 
-
 By integrating multidimensional sensor parameters within a structurally compressed prompt, Nku successfully unlocks the full reasoning potential of SLMs, delivering a robust +20 percentage point accuracy gain on clinical triage categorization.
-
-### Custom Clinical Vignettes (N=20)
-
-These are the 20 hand-tailored, multi-morbidity stress tests utilized in the CoT benchmark:
-
-| ID | Description | Presenting Symptoms | Compressed Sensor Array | Expected Triage | Text-Only Triage | Sensor-Augmented Triage |
-|:---|:---|:---|:---|:---|:---|:---|
-| **V01** | Severe malaria with anemia | High fever for 3 days, chills, body aches, very weak, not eating | `HR: 128`, `Pallor: SEVERE`, `Jaundice: MILD` | RED (Immediate) | YELLOW (Fail) | RED (Pass) |
-| **V02** | Uncomplicated URTI | Runny nose, mild cough for 2 days, no fever | `HR: 78` | GREEN (Routine) | GREEN (Pass) | GREEN (Pass) |
-| **V03** | Preeclampsia warning | Headache, swollen face and hands, blurry vision, 32 weeks pregnant | `HR: 98`, `Edema_sev: SIGNIFICANT`, `is_pregnant: True` | RED (Immediate) | YELLOW (Fail) | RED (Pass) |
-| **V04** | Childhood pneumonia | 4-year-old, fast breathing, chest indrawing, fever 39°C for 2 days | `HR: 140`, `Respiratory_risk: HIGH` | ORANGE (Urgent) | YELLOW (Fail) | RED (Fail) |
-| **V05** | Moderate anemia | Tired all the time, dizzy when standing, pale inside eyelids | `HR: 95`, `Pallor_sev: MODERATE` | YELLOW (Soon) | GREEN (Fail) | YELLOW (Pass) |
-| **V06** | Neonatal jaundice | 3-day-old baby, yellow skin and eyes, not feeding well | `Jaundice_sev: SEVERE` | RED (Immediate) | RED (Pass) | RED (Pass) |
-| **V07** | Dehydration from diarrhea | Watery diarrhea 8 times today, vomiting, sunken eyes, very thirsty | `HR: 115` | ORANGE (Urgent) | RED (Fail) | RED (Fail) |
-| **V08** | Normal prenatal check | 28 weeks pregnant, feeling well, slight ankle swelling | `HR: 82`, `Edema_sev: NORMAL`, `is_pregnant: True` | GREEN (Routine) | GREEN (Pass) | GREEN (Pass) |
-| **V09** | Tuberculosis suspect | Cough for 3 weeks, night sweats, weight loss, coughing blood | `HR: 92`, `Respiratory_risk: MODERATE` | ORANGE (Urgent) | RED (Fail) | RED (Fail) |
-| **V10** | Sickle cell crisis | Known sickle cell, severe bone pain, fever, very pale | `HR: 135`, `Pallor_sev: SEVERE`, `Jaundice: MILD` | RED (Immediate) | RED (Pass) | RED (Pass) |
-| **V11** | Mild gastroenteritis | Stomach cramps, loose stools 3 times, no blood, drinking fluids | `HR: 80` | GREEN (Routine) | GREEN (Pass) | GREEN (Pass) |
-| **V12** | Postpartum hemorrhage | Delivered 2 hours ago, heavy bleeding not stopping, dizzy, cold sweaty | `HR: 145`, `Pallor_sev: SEVERE`, `is_pregnant: True` | RED (Immediate) | RED (Pass) | RED (Pass) |
-| **V13** | Mild asthma exacerbation | Wheezing, tight chest, can speak full sentences, using inhaler | `HR: 90`, `Respiratory_risk: LOW` | GREEN (Routine) | GREEN (Pass) | GREEN (Pass) |
-| **V14** | Hepatitis A | Yellow eyes, dark urine, stomach pain right side, tired, no appetite | `Jaundice_sev: MODERATE` | YELLOW (Soon) | YELLOW (Pass) | YELLOW (Pass) |
-| **V15** | Febrile seizure in child | 2-year-old, fever 40°C, had shaking episode lasting 2 minutes, now drowsy | `HR: 155` | RED (Immediate) | ORANGE (Fail) | RED (Pass) |
-| **V16** | Skin infection | Red swollen area on leg, warm to touch, small amount of pus | `HR: 85` | GREEN (Routine) | ORANGE (Fail) | ORANGE (Fail) |
-| **V17** | Eclampsia | 38 weeks pregnant, seizure, unconscious, very swollen face | `HR: 130`, `Edema_sev: SIGNIFICANT`, `is_pregnant: True` | RED (Immediate) | RED (Pass) | RED (Pass) |
-| **V18** | Chronic cough, low risk | Dry cough for 1 week, no fever, no night sweats, eating well | `HR: 74`, `Respiratory_risk: LOW` | GREEN (Routine) | GREEN (Pass) | GREEN (Pass) |
-| **V19** | Snake bite | Bitten on foot 1 hour ago, swelling spreading up leg, very painful | `HR: 110` | RED (Immediate) | ORANGE (Fail) | ORANGE (Fail) |
-| **V20** | Iron deficiency pregnancy | 24 weeks pregnant, tired, craving ice, slightly pale | `HR: 88`, `Pallor_sev: MILD`, `is_pregnant: True` | YELLOW (Soon) | GREEN (Fail) | GREEN (Fail) |
 
 ---
 

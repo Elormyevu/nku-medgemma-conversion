@@ -6,7 +6,7 @@ Companion document to the Kaggle submission writeup.
 
 ## Appendix A: Clinical Calibration Dataset (Complete)
 
-Source: `scripts/calibration/african_primary_care.txt`
+Source: [scripts/calibration/african_primary_care.txt](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/scripts/calibration/african_primary_care.txt)
 
 This dataset generates the medical importance matrix (imatrix) for IQ2_XS quantization. It contains patient-clinician dialogue pairs across 15 medical/language sections, covering the conditions most frequently encountered by CHWs in Sub-Saharan Africa. The complete dataset is reproduced verbatim below.
 
@@ -628,7 +628,7 @@ A prospective, observational study in Nyabihu and Musanze districts, Rwanda is e
 
 ### Evidence 4: Structured Prompting Substantially Improves Performance
 
-Research on automated prompt optimization for medical vision-language models found that structured prompting achieves a median 53% improvement over zero-shot baselines [9]. Nku's `ClinicalReasoner.kt` generates a highly structured, clinically explicit prompt that includes measurement methodology, raw biomarker values, literature references, and screening disclaimers:
+Research on automated prompt optimization for medical vision-language models found that structured prompting achieves a median 53% improvement over zero-shot baselines [9]. Nku's [ClinicalReasoner.kt](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt) generates a highly structured, clinically explicit prompt that includes measurement methodology, raw biomarker values, literature references, and screening disclaimers:
 
 ```
 === HEART RATE (rPPG) ===
@@ -702,7 +702,7 @@ graph LR
     F --> G["MedGemma\nQ4_K_M"]
 ```
 
-All four detectors produce structured result objects with derived scores, confidence, and raw biomarker values. `SensorFusion` merges these into a single `VitalSigns` data class, and `ClinicalReasoner.generatePrompt()` serializes everything into a clinically explicit text prompt.
+All four detectors produce structured result objects with derived scores, confidence, and raw biomarker values. [SensorFusion](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/SensorFusion.kt#74-296) merges these into a single [VitalSigns](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/SensorFusion.kt#21-67) data class, and `ClinicalReasoner.generatePrompt()` serializes everything into a clinically explicit text prompt.
 
 ---
 
@@ -721,7 +721,7 @@ Source file: `RPPGProcessor.kt`
 | Windowing | Hamming window | `0.54 − 0.46·cos(2πn/(N−1))` reduces spectral leakage |
 | Frequency analysis | Discrete Fourier Transform | Scans 40–200 BPM (0.67–3.33 Hz) at 0.05 Hz resolution. Throttled to every 5th frame (P-1 optimization) |
 | Peak detection | Magnitude maximum | Frequency with highest DFT magnitude → BPM |
-| Confidence | Peak prominence ratio | `(peak_magnitude / avg_magnitude − 1) / 4`, clamped to [0, 1] |
+| Confidence | Peak prominence ratio | [(peak_magnitude / avg_magnitude − 1) / 4](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/benchmark/nku_medgemma_benchmark.py#443-513), clamped to [0, 1] |
 | Quality label | Confidence thresholds | ≥0.8 excellent, ≥0.6 good, ≥0.4 poor, else insufficient |
 
 Output → VitalSigns:
@@ -881,7 +881,7 @@ Note: This is a screening heuristic, not a bilirubin measurement.
 
 **Clinical Validation & Architectural Value:** While traditional audio encoders output dense acoustic embeddings, MedGemma thrives on structured data. The 1.1MB TFLite HeAR Event Detector rapidly classifies 8 specific health sound events (cough, snore, breathe, sneeze, etc.) and outputs explicit confidence probabilities for each. Rather than passing a vector that an SLM cannot easily interpret, the Event Detector passes a structured summary (`Cough: 0.82`) directly into the prompt. In Sub-Saharan Africa, where 10.8M new TB cases occur annually (only 44% of MDR-TB diagnosed) [1], COPD prevalence is projected to rise 59% by 2050 [30], and pneumonia claims over 500,000 children under five each year [31], even a binary cough detection signal combined with clinical LLM reasoning provides a screening capability CHWs currently lack. This audio analysis exceeds what any standard clinical auscultation tool offers at the community health level.
 
-Source file: `RespiratoryDetector.kt`
+Source file: [RespiratoryDetector.kt](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/RespiratoryDetector.kt)
 
 | Stage | Technique | Detail |
 |:------|:----------|:-------|
@@ -920,7 +920,7 @@ Note: This is a screening tool for TB/respiratory illness risk.
 
 ### F.7: Confidence Gating
 
-All four modalities pass through confidence gating in `ClinicalReasoner` before reaching MedGemma:
+All four modalities pass through confidence gating in [ClinicalReasoner](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt#74-665) before reaching MedGemma:
 
 | Condition | Prompt behavior |
 |:----------|:----------------|
@@ -929,7 +929,7 @@ All four modalities pass through confidence gating in `ClinicalReasoner` before 
 | Sensor not captured | Section shows `Not measured` / `Not performed` |
 | All sensors < 75% and no symptoms | Triage abstains entirely — no MedGemma call |
 
-This ensures MedGemma never reasons on unreliable data. The same 75% threshold gates both the LLM prompt path and the rule-based fallback path (`createRuleBasedAssessment`).
+This ensures MedGemma never reasons on unreliable data. The same 75% threshold gates both the LLM prompt path and the rule-based fallback path ([createRuleBasedAssessment](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt#332-577)).
 
 ---
 
@@ -958,7 +958,7 @@ If MedGemma is unavailable (e.g., the device has <3GB RAM, model loading fails, 
 ### Layer 3: Risk-Stratified Triage
 A binary "refer everybody" strategy is catastrophic in rural sub-Saharan Africa. Given the extreme economic and physical cost of a 10km+ journey to an understaffed district hospital, false positives actively harm patients and degrade system trust.
 
-Instead of liberal over-referral, Nku's `ClinicalReasoner` utilizes a strict 4-tier risk-stratification system:
+Instead of liberal over-referral, Nku's [ClinicalReasoner](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt#74-665) utilizes a strict 4-tier risk-stratification system:
 - **Routine Care (Green):** Managed locally by CHW protocol.
 - **Monitor (Yellow):** Advised for local follow-up, avoiding unnecessary transport.
 - **Refer Within Days (Orange):** Moderate/emerging severity warranting clinic evaluation.
@@ -1041,7 +1041,7 @@ RECOMMENDATIONS:
 - Perform anemia screening using a validated method.
 ```
 
-`ClinicalReasoner` successfully parsed this into:
+[ClinicalReasoner](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt#74-665) successfully parsed this into:
 
 | Field | Parsed Value |
 |:------|:-------------|
@@ -1071,7 +1071,7 @@ To securely bypass this limitation while preserving rich clinical data, Nku Sent
 
 This massive efficiency gain securely unlocks over 1200 free tokens within the KV-Cache. Equipped with this latency overhead, the MedGemma model is fully empowered to engage in step-by-step clinical reasoning prior to outputting its highly structured triage UI fields.
 
-The empirical results from locally executing the `benchmark/nku_medgemma_benchmark.py` prove the superiority of this compressed structural pipelining. When MedGemma uses CoT to evaluate complex multimorbidity vignettes, the availability of objective sensor data provides a massive surge in diagnostic accuracy:
+The empirical results from locally executing the [benchmark/nku_medgemma_benchmark.py](file:///Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My%20Drive/0AntigravityProjects/nku-impact-challenge-1335/benchmark/nku_medgemma_benchmark.py) prove the superiority of this compressed structural pipelining. When MedGemma uses CoT to evaluate complex multimorbidity vignettes, the availability of objective sensor data provides a massive surge in diagnostic accuracy:
 
 **Detailed Benchmark Results (MedGemma-4b-it Q4_K_M):**
 

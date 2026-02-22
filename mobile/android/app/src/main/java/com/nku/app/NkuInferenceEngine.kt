@@ -123,10 +123,12 @@ class NkuInferenceEngine(private val context: Context) {
      * 3. External storage candidates — dev/testing fallback
      */
     private fun resolveModelFile(modelFileName: String): File? {
+        val expectedHash = if (modelFileName == MEDGEMMA_MODEL) MEDGEMMA_SHA256 else null
+        
         // Primary: extracted from asset packs (cached in internal storage)
         val internal = File(modelDir, modelFileName)
         if (internal.exists()) {
-            if (ModelFileValidator.isValidGguf(internal)) {
+            if (ModelFileValidator.isValidGguf(internal, expectedSha256 = expectedHash)) {
                 return internal
             }
             Log.w(TAG, "Invalid/corrupt GGUF in internal storage: $modelFileName (${internal.length()} bytes)")
@@ -139,7 +141,7 @@ class NkuInferenceEngine(private val context: Context) {
                 val packLocation = assetPackManager.getPackLocation(packName)
                 if (packLocation != null) {
                     val packFile = File(packLocation.assetsPath(), modelFileName)
-                    if (packFile.exists() && ModelFileValidator.isValidGguf(packFile)) {
+                    if (packFile.exists() && ModelFileValidator.isValidGguf(packFile, expectedSha256 = expectedHash)) {
                         Log.i(TAG, "Model found in PAD pack '$packName': $modelFileName")
                         return packFile
                     } else if (packFile.exists()) {
@@ -153,7 +155,6 @@ class NkuInferenceEngine(private val context: Context) {
 
         // Fallback: external storage for development/testing/reviewer sideloading.
         // Include both shared Download and app-specific external dirs.
-        val expectedHash = if (modelFileName == MEDGEMMA_MODEL) MEDGEMMA_SHA256 else null
         val externalCandidates = buildList<Pair<String, File>> {
             context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.let {
                 add("app-external/downloads" to File(it, modelFileName))
@@ -240,18 +241,21 @@ class NkuInferenceEngine(private val context: Context) {
                     }
                 }
                 
-                smolLM.load(
-                    modelPath = modelPath,
-                    params = SmolLM.InferenceParams(
-                        temperature = 0.3f,    // Low temperature for clinical precision
-                        minP = 0.05f,
-                        contextSize = 2048,
-                        useMmap = true,         // Critical: memory-mapped for 2GB devices
-                        useMlock = false,       // Don't lock — allow OS to manage pages
-                        numThreads = Runtime.getRuntime().availableProcessors().coerceIn(2, 4)
+                try {
+                    smolLM.load(
+                        modelPath = modelPath,
+                        params = SmolLM.InferenceParams(
+                            temperature = 0.3f,    // Low temperature for clinical precision
+                            minP = 0.05f,
+                            contextSize = 2048,
+                            useMmap = true,         // Critical: memory-mapped for 2GB devices
+                            useMlock = false,       // Don't lock — allow OS to manage pages
+                            numThreads = Runtime.getRuntime().availableProcessors().coerceIn(2, 4)
+                        )
                     )
-                )
-                progressJob.cancel()
+                } finally {
+                    progressJob.cancel()
+                }
                 _progress.value = "Loading ${modelFileName}… 100%"
                 Log.i(TAG, "Model loaded: $modelFileName (attempt ${attempt + 1})")
                 return@withContext smolLM
@@ -640,7 +644,12 @@ class NkuInferenceEngine(private val context: Context) {
             }
 
             // Validation passed — atomically move to final name
-            tmpFile.renameTo(outFile)
+            val renameSuccess = tmpFile.renameTo(outFile)
+            if (!renameSuccess) {
+                // Fallback for cross-device/partition renames
+                tmpFile.copyTo(outFile, overwrite = true)
+                tmpFile.delete()
+            }
             Log.i(TAG, "Model validated and saved: ${outFile.absolutePath}")
             return@withContext outFile
 

@@ -26,7 +26,7 @@ class ModelIntegrationInstrumentedTest {
         )
         // Ensure the environment is clean for the negative test
         if (modelFile.exists()) {
-            assumeTrue("Skipping negative test because model is present", false)
+            modelFile.delete()
         }
         val engine = NkuInferenceEngine(context)
         assertFalse("Engine should report not ready when model is absent", engine.areModelsReady())

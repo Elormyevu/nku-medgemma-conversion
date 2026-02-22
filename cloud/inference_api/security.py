@@ -674,13 +674,19 @@ def validate_json_request(required_fields: List[str] = None, max_size_bytes: int
         def decorated_function(*args, **kwargs):
             from flask import request, jsonify
 
-            # F-08: Check content length against max_size_bytes.
-            # Also verify actual body size after parse (Content-Length may be absent).
-            content_length = request.content_length
-            if content_length and content_length > max_size_bytes:
+            # F-007: Defense-in-depth size check (first Werkzeug catches, then we verify raw bytes here)
+            # Verify actual body size (Content-Length header can be spoofed or absent).
+            try:
+                raw_data = request.get_data(cache=True, as_text=False)
+                if len(raw_data) > max_size_bytes:
+                    return jsonify({
+                        'error': 'payload_too_large',
+                        'message': f'Request body exceeds maximum size of {max_size_bytes} bytes'
+                    }), 413
+            except Exception:
                 return jsonify({
                     'error': 'payload_too_large',
-                    'message': f'Request body exceeds maximum size of {max_size_bytes} bytes'
+                    'message': 'Failed to read payload size'
                 }), 413
 
             # Check content type

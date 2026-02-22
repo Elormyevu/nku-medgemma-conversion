@@ -366,15 +366,19 @@ fun NkuSentinelApp(
                             val currentVitals = sensorFusion.vitalSigns.value
                             val prompt = clinicalReasoner.generatePrompt(currentVitals)
 
-                            // F-03: Thermal gate — route to WHO/IMCI if device is overheating
-                            if (thermalStatus.temperatureCelsius > 42f) {
+                            // F-002: Abstention gate — bypass MedGemma if data is low-confidence
+                            if (clinicalReasoner.shouldAbstain(currentVitals)) {
+                                scope.launch { clinicalReasoner.createRuleBasedAssessment(currentVitals) }
+                            } else if (thermalStatus.temperatureCelsius > 42f) {
+                                // F-03: Thermal gate — route to WHO/IMCI if device is overheating
                                 scope.launch { clinicalReasoner.createRuleBasedAssessment(currentVitals) }
                             } else if (!MemoryManager.isRamAvailableForMedGemma(context)) {
                                 pendingTriagePrompt = prompt
                                 showLowMemoryDialog = true
                             } else {
                                 scope.launch {
-                                    val result = nkuEngine.runNkuCycle(prompt, selectedLanguage)
+                                    // F-005: Always pass thermalManager into main inference entrypoint
+                                    val result = nkuEngine.runNkuCycle(prompt, selectedLanguage, thermalManager)
                                     if (result.clinicalResponse.isNotBlank() &&
                                         !result.clinicalResponse.startsWith("Error") &&
                                         !result.clinicalResponse.startsWith("Models not")) {

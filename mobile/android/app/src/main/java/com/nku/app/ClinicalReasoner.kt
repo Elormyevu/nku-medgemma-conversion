@@ -330,6 +330,28 @@ class ClinicalReasoner {
     }
     
     /**
+     * Determine if all sensors are below confidence threshold and no symptoms are reported,
+     * meaning MedGemma execution should be bypassed completely.
+     */
+    fun shouldAbstain(vitals: VitalSigns): Boolean {
+        val hrConfident = vitals.heartRateConfidence >= CONFIDENCE_THRESHOLD
+        val pallorConfident = vitals.pallorConfidence >= CONFIDENCE_THRESHOLD
+        val jaundiceConfident = vitals.jaundiceConfidence >= CONFIDENCE_THRESHOLD
+        val edemaConfident = vitals.edemaConfidence >= CONFIDENCE_THRESHOLD
+        val respiratoryConfident = vitals.respiratoryConfidence >= CONFIDENCE_THRESHOLD
+        val hasSymptoms = vitals.reportedSymptoms.isNotEmpty()
+
+        val hasHR = vitals.heartRateBpm != null
+        val hasPallor = vitals.pallorSeverity != null
+        val hasJaundice = vitals.jaundiceSeverity != null
+        val hasEdema = vitals.edemaSeverity != null
+        val hasRespiratory = vitals.respiratoryRisk != null
+        val allBelowThreshold = (!hasHR || !hrConfident) && (!hasPallor || !pallorConfident) && (!hasJaundice || !jaundiceConfident) && (!hasEdema || !edemaConfident) && (!hasRespiratory || !respiratoryConfident)
+
+        return allBelowThreshold && !hasSymptoms
+    }
+
+    /**
      * Create assessment based on sensor data alone (fallback if MedGemma unavailable)
      * This provides rule-based triage without requiring the LLM
      */
@@ -339,23 +361,8 @@ class ClinicalReasoner {
         var maxSeverity = Severity.LOW
         var maxUrgency = Urgency.ROUTINE
 
-        // Abstention logic: track which sensors have sufficient confidence
-        val hrConfident = vitals.heartRateConfidence >= CONFIDENCE_THRESHOLD
-        val pallorConfident = vitals.pallorConfidence >= CONFIDENCE_THRESHOLD
-        val jaundiceConfident = vitals.jaundiceConfidence >= CONFIDENCE_THRESHOLD
-        val edemaConfident = vitals.edemaConfidence >= CONFIDENCE_THRESHOLD
-        val respiratoryConfident = vitals.respiratoryConfidence >= CONFIDENCE_THRESHOLD
-        val hasSymptoms = vitals.reportedSymptoms.isNotEmpty()
-
-        // If ALL sensor data is below confidence threshold and no symptoms, abstain
-        val hasHR = vitals.heartRateBpm != null
-        val hasPallor = vitals.pallorSeverity != null
-        val hasJaundice = vitals.jaundiceSeverity != null
-        val hasEdema = vitals.edemaSeverity != null
-        val hasRespiratory = vitals.respiratoryRisk != null
-        val allBelowThreshold = (!hasHR || !hrConfident) && (!hasPallor || !pallorConfident) && (!hasJaundice || !jaundiceConfident) && (!hasEdema || !edemaConfident) && (!hasRespiratory || !respiratoryConfident)
-
-        if (allBelowThreshold && !hasSymptoms) {
+        // F-002: Abstention logic extracted to shouldAbstain() for use in UI gating
+        if (shouldAbstain(vitals)) {
             val assessment = ClinicalAssessment(
                 triageCategory = TriageCategory.GREEN,
                 overallSeverity = Severity.LOW,
@@ -372,6 +379,19 @@ class ClinicalReasoner {
             _assessment.value = assessment
             return assessment
         }
+
+        // Re-declare for local logic use
+        val hrConfident = vitals.heartRateConfidence >= CONFIDENCE_THRESHOLD
+        val pallorConfident = vitals.pallorConfidence >= CONFIDENCE_THRESHOLD
+        val jaundiceConfident = vitals.jaundiceConfidence >= CONFIDENCE_THRESHOLD
+        val edemaConfident = vitals.edemaConfidence >= CONFIDENCE_THRESHOLD
+        val respiratoryConfident = vitals.respiratoryConfidence >= CONFIDENCE_THRESHOLD
+
+        val hasHR = vitals.heartRateBpm != null
+        val hasPallor = vitals.pallorSeverity != null
+        val hasJaundice = vitals.jaundiceSeverity != null
+        val hasEdema = vitals.edemaSeverity != null
+        val hasRespiratory = vitals.respiratoryRisk != null
 
         // Log low-confidence sensors as advisory notes
         if (hasHR && !hrConfident) {

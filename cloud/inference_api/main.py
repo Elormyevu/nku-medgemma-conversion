@@ -78,6 +78,9 @@ except ImportError:
 app = Flask(__name__)
 config = get_config()
 
+# F-007: Enforce MAX_CONTENT_LENGTH at the Flask/Werkzeug layer for early rejection
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
+
 # Setup logging
 logger = setup_logging(level=config.log_level, json_format=config.log_json)
 request_logger = get_logger('nku.api')

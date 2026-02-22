@@ -1,0 +1,7 @@
+%%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
+graph TD
+    P[Raw Input\nLocal Language] --> T[ML Kit\nTranslation]
+    T --> S[Prompt\nSanitizer Guard]
+    S --> L[llama.cpp JNI\nExecution]
+    L --> O[JSON Output\nParser]
+    O --> T2[ML Kit\nReverse Translation]

@@ -1,0 +1,7 @@
+%%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
+graph LR
+    S[Sensors\nCamera & Mic] --> F[Feature Extractors\nCV & TFLite]
+    F --> A[Aggregator\nSensor Fusion]
+    A --> R[Clinical Logic\nConfidence Gate]
+    R --> M[MedGemma 4B\nOffline Engine]
+    M --> U[UI & TTS\nResults Output]

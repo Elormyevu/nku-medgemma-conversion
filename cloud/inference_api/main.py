@@ -230,8 +230,10 @@ def _timeout_handler(signum, frame):
 def with_timeout(timeout_seconds: int = 120):
     """Decorator: abort LLM call if it exceeds timeout_seconds (B-06).
 
-    B-1 fix: Primary mechanism is SIGALRM (main thread only).
-    Fallback uses threading.Timer + ctypes for worker threads.
+    # F-010 Audit Note: C-extension blocking calls (like llama.cpp) hold the GIL implicitly
+    # or block natively. True process-level isolation would require a subprocess per request,
+    # which breaks the 2.5GB model memory sharing across requests in this memory-constrained container.
+    # Therefore, we retain `PyThreadState_SetAsyncExc` as a best-effort mitigation.
     """
     def decorator(f):
         @wraps(f)

@@ -73,7 +73,7 @@ When MedGemma is unavailable, the app displays a transparency banner identifying
 
 **Prize Track:** Main + Edge AI — Q4_K_M compression (8GB→2.3GB), mmap loading on $60+ phones (3GB+ RAM), llama.cpp JNI (NDK 29, ARM64 NEON), systematic 4-level quantization benchmark (IQ2_XS with medical imatrix calibration), 100% on-device inference with MedGemma bundled via Play Asset Delivery (2.3GB, install-time), and CHW-initiated respiratory screening via HeAR on-device: Event Detector (MobileNetV3-Small, 1.1MB TFLite with FP32 fallback) classifies 8 health sound events in ~50ms, with risk scores and event classes fed to MedGemma for TB/COPD/pneumonia triage.
 
-**Open source:** Nku is fully open source under the Apache License 2.0. Source code, scripts, and calibration data on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion). Quantized model weights on [HuggingFace](https://huggingface.co/wredd/medgemma-4b-gguf) (subject to Google Gemma Terms of Use).
+**Open source:** Nku is fully open source under the Apache License 2.0. Source code, scripts, and calibration data on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion). Quantized model weights on [HuggingFace](https://huggingface.co/hungqbui/medgemma-4b-it-Q4_K_M-GGUF) (subject to Google Gemma Terms of Use).
 
 *See `kaggle_submission_appendix.md` for full references [1–32], language list (46), calibration scenarios, MedGemma reasoning examples, sensor pipeline details, safety architecture, and more.*
 

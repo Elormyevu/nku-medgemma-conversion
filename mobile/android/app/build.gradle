@@ -82,7 +82,7 @@ android {
     }
 
     lint {
-        disable += ['GradleDependency', 'IconLauncherShape', 'IconDuplicates', 'ObsoleteSdkInt', 'UnusedResources']
+        disable += ['GradleDependency', 'IconLauncherShape', 'IconDuplicates', 'ObsoleteSdkInt', 'UnusedResources', 'ChromeOsAbiSupport']
     }
 }
 

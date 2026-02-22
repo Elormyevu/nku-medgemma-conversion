@@ -165,11 +165,11 @@ All inference models ship with the app via Play Asset Delivery (see `MODEL_DISTR
 
 ```bash
 # Download MedGemma Q4_K_M from HuggingFace
-huggingface-cli download mradermacher/medgemma-4b-it-GGUF medgemma-4b-it.Q4_K_M.gguf
+# In mobile/android/medgemma/src/main/assets/
+curl -L -o medgemma-4b-it-q4_k_m.gguf "https://huggingface.co/hungqbui/medgemma-4b-it-Q4_K_M-GGUF/resolve/main/medgemma-4b-it-q4_k_m.gguf?download=true"
 
-# Verify checksum (required by app-side trust validation)
-shasum -a 256 medgemma-4b-it.Q4_K_M.gguf
 # Expected: 8bcb19d3e363f7d1ab27f364032436fd702e735a6f479d6bb7b1cf066e76b443
+shasum -a 256 medgemma-4b-it-q4_k_m.gguf
 
 # Push to device (rename to match Kotlin constant)
 adb push medgemma-4b-it.Q4_K_M.gguf /sdcard/Android/data/com.nku.app/files/Download/medgemma-4b-it-q4_k_m.gguf

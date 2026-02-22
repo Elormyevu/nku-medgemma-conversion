@@ -30,6 +30,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=builder /install /usr/local
 
 # Security: run as non-root user
+# F-009 Fix / CVE-2025-69872 Mitigation: 
+# diskcache==5.6.3 has a known CVE. We mitigate this operationally by:
+# 1. Running as non-root `nku` user.
+# 2. Forcing XDG_CACHE_HOME and HG caches into an isolated, chmod 700 directory.
+# 3. Running with a read-only root filesystem in production.
 RUN useradd --create-home --shell /bin/bash nku && \
     mkdir -p /home/nku/.cache/huggingface/hub && \
     chown -R nku:nku /home/nku/.cache && \

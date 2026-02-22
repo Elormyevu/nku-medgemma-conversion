@@ -1,0 +1,8 @@
+%%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
+graph TD
+    User["User\n(Clinician)"] --> App["Nku Sentinel\n(Android Front-End)"]
+    App --> Sensors["Sensors\n(Camera / Mic)"]
+    App --> MedGemmaOnDevice["MedGemma 4B\n(LlamaCPP Local)"]
+    App --> CloudAPI["Inference API\n(Cloud Run)"]
+    CloudAPI --> Security["Sanitizer &\nSecurity Layer"]
+    Security --> CloudModel["Vertex AI\n(Cloud Model)"]

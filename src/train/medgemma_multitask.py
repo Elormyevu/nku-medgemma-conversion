@@ -1,8 +1,5 @@
-import os
 import jax
-import jax.numpy as jnp
 import keras
-from keras import ops
 
 # Hypothetical PaliGemma Import - assumes HAI-DEF library structure or KerasNLP
 # In a real scenario, this would import from keras_nlp.models

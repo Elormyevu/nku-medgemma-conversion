@@ -43,6 +43,10 @@ fun CameraPreview(
         }
     }
     
+    // P2-09 Fix: Prevent camera recomposition thrashing
+    class ConfigSnapshot(var lens: Int = -1, var analysis: Boolean? = null)
+    val configSnapshot = remember { ConfigSnapshot() }
+    
     AndroidView(
         factory = { ctx ->
             PreviewView(ctx).apply {
@@ -52,6 +56,12 @@ fun CameraPreview(
         },
         modifier = modifier,
         update = { previewView ->
+            if (configSnapshot.lens == lensFacing && configSnapshot.analysis == enableAnalysis) {
+                return@AndroidView // Configuration unchanged, skip expensive rebinding
+            }
+            configSnapshot.lens = lensFacing
+            configSnapshot.analysis = enableAnalysis
+
             val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
             cameraProviderFuture.addListener({
                 try {

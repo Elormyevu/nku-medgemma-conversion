@@ -5,7 +5,6 @@ Extracts heart rate from video frames by analyzing the green channel intensity v
 Type-annotated and production-hardened version.
 """
 
-import cv2
 import numpy as np
 import scipy.signal as signal
 from typing import List, Optional, Tuple

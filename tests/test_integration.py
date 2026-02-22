@@ -7,6 +7,7 @@ import unittest
 import json
 import sys
 import os
+import pytest
 from unittest.mock import patch
 
 # Add project root to path
@@ -324,10 +325,6 @@ class TestAdvancedInjectionPatterns(unittest.TestCase):
             self.assertTrue(result.is_valid, f"Should allow: {text}")
 
 
-import pytest
-import os
-import json
-
 @pytest.mark.integration
 class TestUnmockedSensorFusionIntegration(unittest.TestCase):
     """
@@ -338,16 +335,11 @@ class TestUnmockedSensorFusionIntegration(unittest.TestCase):
     
     @classmethod
     def setUpClass(cls):
-        # Only run if the model is locally available or downloading is permitted
-        # Skip if running in CI without models
-        if os.environ.get('CI') == 'true' and not os.environ.get('RUN_LLM_TESTS'):
-            raise unittest.SkipTest("Skipping unmocked LLM tests in CI")
-            
         from cloud.inference_api.main import load_models
         # Load the real models (MedGemma)
         success, error = load_models(require_medgemma=True, require_translategemma=False)
         if not success:
-            raise unittest.SkipTest(f"Could not load real MedGemma model: {error}")
+            raise AssertionError(f"Could not load real MedGemma model: {error}")
 
     def setUp(self):
         from cloud.inference_api.main import app, config

@@ -7,7 +7,6 @@ Run:  python3 -m pytest security_pytest_suite.py -v
 
 import base64
 import time
-import pytest
 
 from security import (
     InputValidator,

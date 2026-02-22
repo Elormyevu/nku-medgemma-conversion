@@ -44,101 +44,93 @@ fun CameraPreview(
     }
     
     // P2-09 Fix: Prevent camera recomposition thrashing
-    class ConfigSnapshot(var lens: Int = -1, var analysis: Boolean? = null)
-    val configSnapshot = remember { ConfigSnapshot() }
+    val previewView = remember { androidx.camera.view.PreviewView(context).apply {
+        implementationMode = androidx.camera.view.PreviewView.ImplementationMode.COMPATIBLE
+        scaleType = androidx.camera.view.PreviewView.ScaleType.FILL_CENTER
+    } }
+
+    androidx.compose.runtime.LaunchedEffect(lensFacing, enableAnalysis, enableTorch) {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+        cameraProviderFuture.addListener({
+            try {
+                val cameraProvider = cameraProviderFuture.get()
+                
+                val preview = Preview.Builder()
+                    .build()
+                    .also { it.setSurfaceProvider(previewView.surfaceProvider) }
+                
+                // Build selectors: preferred lens first, then fallback
+                val preferredFacing = lensFacing
+                val fallbackFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK)
+                    CameraSelector.LENS_FACING_FRONT else CameraSelector.LENS_FACING_BACK
+                
+                val preferredSelector = try {
+                    CameraSelector.Builder()
+                        .requireLensFacing(preferredFacing)
+                        .build()
+                } catch (e: Exception) { null }
+                
+                val fallbackSelector = try {
+                    CameraSelector.Builder()
+                        .requireLensFacing(fallbackFacing)
+                        .build()
+                } catch (e: Exception) { null }
+                
+                cameraProvider.unbindAll()
+                
+                val imageAnalysis = if (enableAnalysis && onFrameAnalyzed != null) {
+                    ImageAnalysis.Builder()
+                        .setTargetResolution(android.util.Size(320, 240))
+                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                        .build().also { analysis ->
+                            analysis.setAnalyzer(cameraExecutor) { imageProxy ->
+                                val bitmap = imageProxy.toBitmap()
+                                onFrameAnalyzed(bitmap)
+                                imageProxy.close()
+                            }
+                        }
+                } else null
+                
+                // Try preferred lens first, then fallback
+                var bound = false
+                for (selector in listOfNotNull(preferredSelector, fallbackSelector)) {
+                    try {
+                        val camera = if (imageAnalysis != null) {
+                            cameraProvider.bindToLifecycle(
+                                lifecycleOwner, selector, preview, imageAnalysis
+                            )
+                        } else {
+                            cameraProvider.bindToLifecycle(
+                                lifecycleOwner, selector, preview
+                            )
+                        }
+                        val facing = if (selector == preferredSelector) "PREFERRED" else "FALLBACK"
+                        Log.i("NkuCamera", "Camera bound ($facing) with lens ${if (selector == preferredSelector) preferredFacing else fallbackFacing}")
+                        
+                        // Enable torch/flashlight if requested
+                        if (enableTorch && camera.cameraInfo.hasFlashUnit()) {
+                            camera.cameraControl.enableTorch(true)
+                            Log.i("NkuCamera", "Torch enabled")
+                        }
+                        
+                        bound = true
+                        break
+                    } catch (e: Exception) {
+                        Log.w("NkuCamera", "Failed with selector, trying next: ${e.message}")
+                        cameraProvider.unbindAll()
+                    }
+                }
+                if (!bound) {
+                    Log.e("NkuCamera", "No camera available on this device")
+                }
+            } catch (e: Exception) {
+                Log.e("NkuCamera", "Camera init failed", e)
+            }
+        }, ContextCompat.getMainExecutor(context))
+    }
     
     AndroidView(
-        factory = { ctx ->
-            PreviewView(ctx).apply {
-                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
-                scaleType = PreviewView.ScaleType.FILL_CENTER
-            }
-        },
-        modifier = modifier,
-        update = { previewView ->
-            if (configSnapshot.lens == lensFacing && configSnapshot.analysis == enableAnalysis) {
-                return@AndroidView // Configuration unchanged, skip expensive rebinding
-            }
-            configSnapshot.lens = lensFacing
-            configSnapshot.analysis = enableAnalysis
-
-            val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-            cameraProviderFuture.addListener({
-                try {
-                    val cameraProvider = cameraProviderFuture.get()
-                    
-                    val preview = Preview.Builder()
-                        .build()
-                        .also { it.setSurfaceProvider(previewView.surfaceProvider) }
-                    
-                    // Build selectors: preferred lens first, then fallback
-                    val preferredFacing = lensFacing
-                    val fallbackFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK)
-                        CameraSelector.LENS_FACING_FRONT else CameraSelector.LENS_FACING_BACK
-                    
-                    val preferredSelector = try {
-                        CameraSelector.Builder()
-                            .requireLensFacing(preferredFacing)
-                            .build()
-                    } catch (e: Exception) { null }
-                    
-                    val fallbackSelector = try {
-                        CameraSelector.Builder()
-                            .requireLensFacing(fallbackFacing)
-                            .build()
-                    } catch (e: Exception) { null }
-                    
-                    cameraProvider.unbindAll()
-                    
-                    val imageAnalysis = if (enableAnalysis && onFrameAnalyzed != null) {
-                        ImageAnalysis.Builder()
-                            .setTargetResolution(android.util.Size(320, 240))
-                            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                            .build().also { analysis ->
-                                analysis.setAnalyzer(cameraExecutor) { imageProxy ->
-                                    val bitmap = imageProxy.toBitmap()
-                                    onFrameAnalyzed(bitmap)
-                                    imageProxy.close()
-                                }
-                            }
-                    } else null
-                    
-                    // Try preferred lens first, then fallback
-                    var bound = false
-                    for (selector in listOfNotNull(preferredSelector, fallbackSelector)) {
-                        try {
-                            val camera = if (imageAnalysis != null) {
-                                cameraProvider.bindToLifecycle(
-                                    lifecycleOwner, selector, preview, imageAnalysis
-                                )
-                            } else {
-                                cameraProvider.bindToLifecycle(
-                                    lifecycleOwner, selector, preview
-                                )
-                            }
-                            val facing = if (selector == preferredSelector) "PREFERRED" else "FALLBACK"
-                            Log.i("NkuCamera", "Camera bound ($facing) with lens ${if (selector == preferredSelector) preferredFacing else fallbackFacing}")
-                            
-                            // Enable torch/flashlight if requested
-                            if (enableTorch && camera.cameraInfo.hasFlashUnit()) {
-                                camera.cameraControl.enableTorch(true)
-                                Log.i("NkuCamera", "Torch enabled")
-                            }
-                            
-                            bound = true
-                            break
-                        } catch (e: Exception) {
-                            Log.w("NkuCamera", "Failed with selector, trying next: ${e.message}")
-                            cameraProvider.unbindAll()
-                        }
-                    }
-                    if (!bound) {
-                        Log.e("NkuCamera", "No camera available on this device")
-                    }
-                } catch (e: Exception) {
-                    Log.e("NkuCamera", "Camera init failed", e)
-                }
-            }, ContextCompat.getMainExecutor(context))
-        }
+        factory = { previewView },
+        modifier = modifier
     )
 }

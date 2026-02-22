@@ -94,6 +94,7 @@ fun TriageScreen(
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
                 putExtra(RecognizerIntent.EXTRA_PROMPT, strings.micOrType)
+                // F-11 Fix: Honor the UI selected language on permission grant, not device default
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE, java.util.Locale(selectedLanguage))
             }
             speechLauncher.launch(intent)

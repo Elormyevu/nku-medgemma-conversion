@@ -135,7 +135,7 @@ The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED
 ## 🚀 Quick Start
 
 > [!WARNING]
-> **Reviewer/Auditor Notice**: Direct APK installations (`app-debug.apk` or `app-release-unsigned.apk`) do not contain the 2.3GB MedGemma model due to Android's 150MB APK size limit. **No manual setup is needed** — the app automatically downloads the model from HuggingFace on app startup (MainActivity creation), validates its SHA-256 checksum, and proceeds. Just install the APK, connect to Wi-Fi, and run a triage. For offline testing, sideload the GGUF model via `adb push` (see below).
+> **Reviewer/Auditor Notice**: Direct APK installations (`app-debug.apk` or `app-release-unsigned.apk`) do not contain the 2.3GB MedGemma model due to Android's 150MB APK size limit. **No manual setup is needed** — the app automatically downloads the model from HuggingFace on app startup (MainActivity creation), validates its SHA-256 checksum, and proceeds. Just install the APK, connect to Wi-Fi to allow the initial launch download, and then run a triage offline. For offline testing, sideload the GGUF model via `adb push` (see below).
 
 ### Prerequisites
 

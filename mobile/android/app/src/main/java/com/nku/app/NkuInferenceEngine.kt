@@ -647,8 +647,13 @@ class NkuInferenceEngine(private val context: Context) {
             val renameSuccess = tmpFile.renameTo(outFile)
             if (!renameSuccess) {
                 // Fallback for cross-device/partition renames
-                tmpFile.copyTo(outFile, overwrite = true)
-                tmpFile.delete()
+                try {
+                    tmpFile.copyTo(outFile, overwrite = true)
+                    tmpFile.delete()
+                } catch (e: Exception) {
+                    outFile.delete()
+                    throw Exception("Failed to atomically extract/rename validated model")
+                }
             }
             Log.i(TAG, "Model validated and saved: ${outFile.absolutePath}")
             return@withContext outFile

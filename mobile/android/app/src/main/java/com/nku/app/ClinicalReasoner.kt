@@ -678,6 +678,38 @@ class ClinicalReasoner {
         }
     }
     
+    /**
+     * Translate the current rule-based assessment's clinical text into the target language.
+     * Called after createRuleBasedAssessment() when selectedLanguage ≠ "en".
+     * Uses NkuInferenceEngine's ML Kit on-device translation.
+     */
+    suspend fun translateAssessment(engine: NkuInferenceEngine, targetLanguage: String) {
+        if (targetLanguage == "en") return
+        val current = _assessment.value ?: return
+        
+        try {
+            // Batch translate concerns and recommendations
+            val translatedConcerns = current.primaryConcerns.map { concern ->
+                engine.translateFromEnglish(concern, targetLanguage)
+            }
+            val translatedRecs = current.recommendations.map { rec ->
+                engine.translateFromEnglish(rec, targetLanguage)
+            }
+            val translatedDisclaimer = engine.translateFromEnglish(current.disclaimer, targetLanguage)
+            
+            // Emit translated assessment
+            _assessment.value = current.copy(
+                primaryConcerns = translatedConcerns,
+                recommendations = translatedRecs,
+                disclaimer = translatedDisclaimer
+            )
+            Log.i("ClinicalReasoner", "Assessment translated to $targetLanguage")
+        } catch (e: Exception) {
+            Log.w("ClinicalReasoner", "Translation failed, keeping English: ${e.message}")
+            // Keep English — non-fatal
+        }
+    }
+    
     fun reset() {
         _assessment.value = null
     }

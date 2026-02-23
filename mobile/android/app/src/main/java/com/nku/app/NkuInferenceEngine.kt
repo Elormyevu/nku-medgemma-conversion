@@ -85,6 +85,16 @@ class NkuInferenceEngine(private val context: Context) {
 
     private var currentModel: SmolLM? = null
     private val nkuTranslator: NkuTranslator by lazy { NkuTranslator(context) }
+
+    /**
+     * Public translation API for rule-based assessment output.
+     * Delegates to ML Kit on-device translation (same mechanism as the Nku Cycle).
+     * Returns original text if language is unsupported or translation fails.
+     */
+    suspend fun translateFromEnglish(text: String, targetLanguage: String): String {
+        if (targetLanguage == "en") return text
+        return nkuTranslator.translateFromEnglish(text, targetLanguage) ?: text
+    }
     private val modelDir: File by lazy {
         File(context.filesDir, "models").also { it.mkdirs() }
     }

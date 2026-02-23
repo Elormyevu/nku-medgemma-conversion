@@ -211,7 +211,10 @@ fun NkuSentinelApp(
                     TextButton(onClick = {
                         showLowMemoryDialog = false
                         val vitals = sensorFusion.vitalSigns.value
-                        scope.launch { clinicalReasoner.createRuleBasedAssessment(vitals) }
+                        scope.launch {
+                            clinicalReasoner.createRuleBasedAssessment(vitals)
+                            clinicalReasoner.translateAssessment(nkuEngine, selectedLanguage)
+                        }
                     }) {
                         Text("Use WHO Guidelines")
                     }
@@ -230,6 +233,7 @@ fun NkuSentinelApp(
                                     clinicalReasoner.parseMedGemmaResponse(result.clinicalResponse, vitals)
                                 } else {
                                     clinicalReasoner.createRuleBasedAssessment(vitals)
+                                    clinicalReasoner.translateAssessment(nkuEngine, selectedLanguage)
                                 }
                             }
                         }
@@ -371,10 +375,16 @@ fun NkuSentinelApp(
 
                             // F-002: Abstention gate — bypass MedGemma if data is low-confidence
                             if (clinicalReasoner.shouldAbstain(currentVitals)) {
-                                scope.launch { clinicalReasoner.createRuleBasedAssessment(currentVitals) }
+                                scope.launch {
+                                    clinicalReasoner.createRuleBasedAssessment(currentVitals)
+                                    clinicalReasoner.translateAssessment(nkuEngine, selectedLanguage)
+                                }
                             } else if (thermalStatus.temperatureCelsius > 42f) {
                                 // F-03: Thermal gate — route to WHO/IMCI if device is overheating
-                                scope.launch { clinicalReasoner.createRuleBasedAssessment(currentVitals) }
+                                scope.launch {
+                                    clinicalReasoner.createRuleBasedAssessment(currentVitals)
+                                    clinicalReasoner.translateAssessment(nkuEngine, selectedLanguage)
+                                }
                             } else if (!MemoryManager.isRamAvailableForMedGemma(context)) {
                                 pendingTriagePrompt = prompt
                                 showLowMemoryDialog = true
@@ -388,6 +398,7 @@ fun NkuSentinelApp(
                                         clinicalReasoner.parseMedGemmaResponse(result.clinicalResponse, currentVitals)
                                     } else {
                                         clinicalReasoner.createRuleBasedAssessment(currentVitals)
+                                        clinicalReasoner.translateAssessment(nkuEngine, selectedLanguage)
                                     }
                                 }
                             }

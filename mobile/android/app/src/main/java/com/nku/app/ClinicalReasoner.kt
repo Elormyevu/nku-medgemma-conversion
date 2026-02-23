@@ -92,6 +92,13 @@ class ClinicalReasoner {
     }
     private val _assessment = MutableStateFlow<ClinicalAssessment?>(null)
     val assessment: StateFlow<ClinicalAssessment?> = _assessment.asStateFlow()
+
+    /**
+     * Clears the current assessment state to immediately reflect a "loading" state in the UI.
+     */
+    fun clearAssessment() {
+        _assessment.value = null
+    }
     
     /**
      * Generate structured prompt for MedGemma based on vital signs.

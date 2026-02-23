@@ -374,6 +374,7 @@ fun NkuSentinelApp(
                         selectedLanguage = selectedLanguage,  // F-11 fix
                         strings = strings,
                         onRunTriage = {
+                            clinicalReasoner.clearAssessment() // Clear UI state immediately
                             sensorFusion.updateVitalSigns()
                             val currentVitals = sensorFusion.vitalSigns.value
                             val prompt = clinicalReasoner.generatePrompt(currentVitals)

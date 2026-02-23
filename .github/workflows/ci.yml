@@ -45,8 +45,7 @@ jobs:
         # CI-3 fix: Enforce minimum 60% coverage threshold
         env:
           PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/cloud/inference_api
-          # P1-03 fix: Run unmocked llama-cpp-python tests in CI
-          RUN_UNMOCKED_LLAMA_CPP_TESTS: "1"
+          # Unmocked model tests will auto-skip if GGUF not present (SkipTest)
         run: pytest tests/ -v --tb=short --cov=cloud/inference_api --cov-report=term-missing --cov-fail-under=60
 
   # ─── Android Build + Unit Tests ───

@@ -685,7 +685,7 @@ Nku doesn't rely on MedGemma alone. The safety architecture provides multiple co
 | Confidence gating | Sensors below 75% excluded from prompt | Prevents low-quality data from misleading the model |
 | Rule-based fallback | WHO/IMCI decision trees if MedGemma unavailable | Ensures triage guidance regardless of model state |
 | Risk-stratified triage | 4-tier severity output | Optimizes limited transport resources by managing moderate cases locally
-| Prompt sanitization | 8-layer PromptSanitizer at every boundary | Prevents injection or adversarial manipulation |
+| Prompt sanitization | 6-layer PromptSanitizer at every boundary | Prevents injection or adversarial manipulation |
 | Always-on disclaimer | "Consult a healthcare professional" | Positions output as decision support, not diagnosis |
 
 ### Conclusion
@@ -951,7 +951,7 @@ Beyond sensor data, the prompt includes:
 | Section | Source | Purpose |
 |:--------|:-------|:--------|
 | Pregnancy context | User toggle + gestational weeks | Triggers preeclampsia risk assessment when ≥20 weeks |
-| Reported symptoms | Text/voice input | Sanitized via `PromptSanitizer` (8-layer injection defense), wrapped in `<<<>>>` delimiters |
+| Reported symptoms | Text/voice input | Sanitized via `PromptSanitizer` (6-layer injection defense), wrapped in `<<<>>>` delimiters |
 | Output instructions | Static template | Forces structured `SEVERITY/URGENCY/CONCERNS/RECOMMENDATIONS` format for reliable parsing |
 
 ---
@@ -981,7 +981,7 @@ This multi-tier design specifically addresses the health economics of rural tria
 Every triage result displays "Consult a healthcare professional" — this is not dismissible. The system outputs severity levels and referral recommendations, never diagnoses. It answers *"should this patient be referred urgently?"* not *"what disease does this patient have?"*
 
 ### Layer 5: Prompt Injection Defense
-All user input passes through an 8-layer `PromptSanitizer` at every model boundary:
+All user input passes through a 6-layer `PromptSanitizer` at every model boundary:
 
 | Layer | Defense | Purpose |
 |:------|:--------|:--------|
@@ -990,11 +990,9 @@ All user input passes through an 8-layer `PromptSanitizer` at every model bounda
 | 3 | Whitespace normalization | Collapses duplicate spaces to prevent token-stuffing |
 | 4 | Base64 payload detection | Decodes and checks for injection patterns |
 | 5 | Regex pattern matching | 15+ injection patterns ("ignore previous," "system prompt," etc.) |
-| 6 | Character allowlist | Only permits expected character ranges |
-| 7 | Delimiter escaping | Prevents spoofing of `<<<` or `>>>` boundary markers |
-| 8 | Length capping | Truncates overlong input to prevent buffer/context attacks |
+| 6 | Length capping | Truncates overlong input to prevent buffer/context attacks |
 
-Output validation additionally checks for leaked delimiters and suspicious patterns. Tests in `test_security.py` cover 30+ injection scenarios including Unicode bypasses and nested injections.
+Additionally, user content is wrapped in `<<<`/`>>>` delimiters at the prompt-building stage, and output validation checks for leaked delimiters and suspicious patterns. Tests in `test_security.py` cover 30+ injection scenarios including Unicode bypasses and nested injections.
 
 ### MedQA Benchmark Methodology Note
 

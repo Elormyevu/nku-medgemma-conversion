@@ -169,7 +169,7 @@ fun HomeScreen(
                 )
                 Spacer(Modifier.height(8.dp))
                 LinearProgressIndicator(
-                    progress = completedCount / 5f,
+                    progress = { completedCount / 5f },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp)

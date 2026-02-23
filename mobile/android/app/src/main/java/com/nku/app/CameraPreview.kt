@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import java.util.concurrent.Executors
@@ -72,7 +72,16 @@ fun CameraPreview(
                 
                 val imageAnalysis = if (enableAnalysis && onFrameAnalyzed != null) {
                     ImageAnalysis.Builder()
-                        .setTargetResolution(android.util.Size(320, 240))
+                        .setResolutionSelector(
+                            androidx.camera.core.resolutionselector.ResolutionSelector.Builder()
+                                .setResolutionStrategy(
+                                    androidx.camera.core.resolutionselector.ResolutionStrategy(
+                                        android.util.Size(320, 240),
+                                        androidx.camera.core.resolutionselector.ResolutionStrategy.FALLBACK_RULE_CLOSEST_LOWER_THEN_HIGHER
+                                    )
+                                )
+                                .build()
+                        )
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                         .build().also { analysis ->
                             analysis.setAnalyzer(cameraExecutor) { imageProxy ->

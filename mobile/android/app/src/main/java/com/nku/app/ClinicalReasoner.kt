@@ -595,8 +595,8 @@ class ClinicalReasoner {
                 if (vitals.edemaSeverity == EdemaSeverity.SIGNIFICANT) 1 else null,
                 if (vitals.respiratoryRisk == RespiratoryRisk.HIGH_RISK) 1 else null,
                 if (vitals.reportedSymptoms.any { s -> val l = s.lowercase(); "chest" in l && "pain" in l }) 1 else null,
-                if (vitals.heartRate?.let { it > 130 || it < 40 } == true) 1 else null,
-                if (vitals.jaundice == JaundiceSeverity.SEVERE) 1 else null
+                if (vitals.heartRateBpm?.let { it > 130 || it < 40 } == true) 1 else null,
+                if (vitals.jaundiceSeverity == JaundiceSeverity.SEVERE) 1 else null
             ).size
             
             if (highSeverityCount >= 3) {

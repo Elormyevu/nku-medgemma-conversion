@@ -65,7 +65,7 @@ Previous studies have demonstrated that this structured prompting achieves a med
 
 When MedGemma is unavailable, the app displays a transparency banner identifying the triage as guideline-based (WHO/IMCI) with actionable recovery steps — all in the CHW's selected language.
 
-**Safety:** 8-layer `PromptSanitizer` at every model boundary (zero-width stripping, homoglyph normalization, whitespace normalization, base64 detection, regex patterns, character allowlist, delimiter escaping, length capping). Auto-pause at 42°C. Always-on "Consult a healthcare professional" disclaimer.
+**Safety:** 6-layer `PromptSanitizer` at every model boundary (zero-width stripping, homoglyph normalization, whitespace normalization, base64 detection, regex patterns, length capping), plus delimiter-wrapped user input in every prompt. Auto-pause at 42°C. Always-on "Consult a healthcare professional" disclaimer.
 
 **46 Pan-African languages (14 clinically verified):** ML Kit on-device for supported national languages (100% offline). Unsupported indigenous languages pass through unchanged in offline mode; all final reasoning occurs entirely on-device in English.
 

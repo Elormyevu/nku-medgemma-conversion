@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -212,7 +213,12 @@ fun TriageScreen(
                     )
                     Spacer(Modifier.width(8.dp))
                     IconButton(onClick = {
-                        if (symptomText.isNotBlank()) { sensorFusion.addSymptom(symptomText.trim()); symptomText = "" }
+                        if (symptomText.isNotBlank()) {
+                            // C-03 audit fix: Sanitize typed input at earliest boundary (mirrors STT path at line 84)
+                            val sanitized = PromptSanitizer.sanitize(symptomText.trim())
+                            sensorFusion.addSymptom(sanitized)
+                            symptomText = ""
+                        }
                     }) {
                         Icon(Icons.Default.Add, contentDescription = strings.addSymptom, tint = NkuColors.Success, modifier = Modifier.size(28.dp))
                     }
@@ -387,7 +393,7 @@ fun TriageScreen(
                 modifier = Modifier.fillMaxWidth(0.7f).height(48.dp),
                 shape = RoundedCornerShape(24.dp)
             ) {
-                Icon(if (ttsState == TTSState.SPEAKING) Icons.Default.Stop else Icons.Default.VolumeUp, contentDescription = if (ttsState == TTSState.SPEAKING) strings.stopLabel else strings.listenLabel, modifier = Modifier.size(22.dp))
+                Icon(if (ttsState == TTSState.SPEAKING) Icons.Default.Stop else Icons.AutoMirrored.Filled.VolumeUp, contentDescription = if (ttsState == TTSState.SPEAKING) strings.stopLabel else strings.listenLabel, modifier = Modifier.size(22.dp))
                 Spacer(Modifier.width(8.dp))
                 Text(if (ttsState == TTSState.SPEAKING) strings.stopLabel else strings.listenLabel, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }

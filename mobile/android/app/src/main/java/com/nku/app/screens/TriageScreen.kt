@@ -59,13 +59,14 @@ fun TriageScreen(
 ) {
     val context = LocalContext.current
     val symptoms by sensorFusion.symptoms.collectAsState()
+    var symptomText by remember { mutableStateOf("") }
     val hasAnyData = (rppgResult.bpm != null && rppgResult.confidence > 0.4f) ||
                      pallorResult.hasBeenAnalyzed ||
                      jaundiceResult.hasBeenAnalyzed ||
                      edemaResult.hasBeenAnalyzed ||
                      respiratoryResult.confidence > 0.4f ||
-                     symptoms.isNotEmpty()  // F-10: Allow symptoms-only triage
-    var symptomText by remember { mutableStateOf("") }
+                     symptoms.isNotEmpty() || // F-10: Allow symptoms-only triage
+                     symptomText.isNotBlank() // Allow if text is typed but not yet explicitly added
     var isListening by remember { mutableStateOf(false) }
     var micPermissionDenied by remember { mutableStateOf(false) }
     
@@ -277,7 +278,14 @@ fun TriageScreen(
         }
         
         Button(
-            onClick = onRunTriage,
+            onClick = {
+                if (symptomText.isNotBlank()) {
+                    val sanitized = PromptSanitizer.sanitize(symptomText.trim())
+                    sensorFusion.addSymptom(sanitized)
+                    symptomText = ""
+                }
+                onRunTriage()
+            },
             enabled = hasAnyData && engineState == EngineState.IDLE,
             colors = ButtonDefaults.buttonColors(containerColor = NkuColors.Primary, disabledContainerColor = NkuColors.InactiveElement),
             modifier = Modifier.fillMaxWidth(0.8f).height(56.dp),

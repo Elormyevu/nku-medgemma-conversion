@@ -962,8 +962,29 @@ object LocalizedStrings {
         downloadSlowWarning = "Programu inaweza kuwa polepole wakati muundo wa AI unapakua. Unaweza kutumia zana za uchunguzi.",
         downloadFailedWarning = "Muundo wa AI haukuweza kupakuliwa. Hatua zitatumia tathmini ya miongozo.",
         dataSavedForTriage = "✓ Data imehifadhiwa kwa hatua",
-        measurementComplete = "Kipimo kimekamilika"
-
+        measurementComplete = "Kipimo kimekamilika",
+        retryDownload = "Jaribu tena kupakua",
+        downloadRetrying = "Inajaribu tena (%d/%d)…",
+        downloadRetryingIn = "Imeshindwa. Itajaribu tena %ds… (%d/%d)",
+        downloadFailedFull = "Upakuaji umeshindwa. Unganisha Wi-Fi na uanzishe upya.",
+        connectingToDownload = "Inaunganisha kupakua MedGemma...",
+        notEnoughStorageFull = "Hifadhi haitoshi (%dMB bure). Futa faili na uanzishe.",
+        downloadingProgress = "Kupakua MedGemma… %d%% (%dMB / %dMB)",
+        extractingModel = "Kutoa %s…",
+        extractingModelPct = "Kutoa %s… %d%%",
+        loadingModelPct = "Kupakia %s… %d%%",
+        assessmentComplete = "Tathmini imekamilika",
+        lowMemoryTitle = "⚠ Kumbukumbu ndogo",
+        lowMemoryMessage = "RAM ya simu ni ndogo. AI inaweza kushindwa.\n\nFunga programu nyingine au tumia miongozo ya WHO.",
+        useWhoGuidelines = "Miongozo ya WHO",
+        forceLoadAi = "Lazimisha AI",
+        retryingLoad = "Kupakia tena (%d/%d)...",
+        analyzingSymptoms = "Inachambua dalili… (sek 30-60)",
+        analyzingSymptomsSec = "Inachambua dalili… sek %d",
+        translatingSymptoms = "Kutafsiri dalili kwa Kiingereza...",
+        translatingResultOnDevice = "Kutafsiri matokeo (ML Kit)...",
+        translatingResultUnavailable = "Tafsiri haipo — matokeo kwa Kiingereza...",
+        integrityCheckFailed = "Upakuaji umeshindwa ukaguzi. Itajaribu tena."
     )
 
     val hausaStrings = UiStrings(
@@ -1117,8 +1138,29 @@ object LocalizedStrings {
         fallbackRecoveryTip = "Don dawo da AI: rufe manhajar baya ko sake kunna Nku.",
         lowConfidenceWarning = "\u26A0 Tabbaci ya yi ƙasa \u2014 wannan sakamakon bazai shiga bincike ba. Sake ɗauka a haske mai kyau.",
         dataSavedForTriage = "✓ An ajiye bayanan don bincike",
-        measurementComplete = "An gama auna"
-
+        measurementComplete = "An gama auna",
+        retryDownload = "Sake zazzagewa",
+        downloadRetrying = "Ana sake gwadawa (%d/%d)…",
+        downloadRetryingIn = "Ya kasa. Za a sake gwadawa cikin %ds… (%d/%d)",
+        downloadFailedFull = "Zazzagewa ta kasa. Ka haɗa Wi-Fi ka sake farawa.",
+        connectingToDownload = "Ana haɗawa don zazzage MedGemma...",
+        notEnoughStorageFull = "Babu isasshen ajiya (%dMB). Ka share wasu fayiloli.",
+        downloadingProgress = "Ana zazzage MedGemma… %d%% (%dMB / %dMB)",
+        extractingModel = "Ana cire %s…",
+        extractingModelPct = "Ana cire %s… %d%%",
+        loadingModelPct = "Ana lodi %s… %d%%",
+        assessmentComplete = "An gama bincike",
+        lowMemoryTitle = "⚠ Ƙarancin ƙwaƙwalwa",
+        lowMemoryMessage = "RAM ɗin wayar yana ƙaranci. AI na iya faɗuwa.\n\nKa rufe wasu manhajoji ko ka yi amfani da jagorar WHO.",
+        useWhoGuidelines = "Jagorar WHO",
+        forceLoadAi = "Tilasta AI",
+        retryingLoad = "Ana sake lodi (%d/%d)...",
+        analyzingSymptoms = "Ana binciken alamomi… (daƙiƙa 30-60)",
+        analyzingSymptomsSec = "Ana binciken alamomi… daƙiƙa %d",
+        translatingSymptoms = "Ana fassara zuwa Turanci...",
+        translatingResultOnDevice = "Ana fassara sakamako (ML Kit)...",
+        translatingResultUnavailable = "Fassara ba ta samu ba — sakamako cikin Turanci...",
+        integrityCheckFailed = "Zazzagewa ta kasa duba. Za a sake gwadawa."
     )
 
     val yorubaStrings = UiStrings(
@@ -1271,8 +1313,29 @@ object LocalizedStrings {
         fallbackRecoveryTip = "Láti mú AI padà: pa àwọn ohun èlò ẹ̀yìn tàbí tún Nku bẹ̀rẹ̀.",
         lowConfidenceWarning = "\u26A0 Ìgbàgbọ́ kéré jù \u2014 àbájáde yìí lè máa kòpà nínú àyẹ̀wò. Tún ya nínú ìmọ́lẹ̀ tó dára.",
         dataSavedForTriage = "✓ Dátà ti fipamọ́ fún àyẹ̀wò",
-        measurementComplete = "Wíwọ̀n ti parí"
-
+        measurementComplete = "Wíwọ̀n ti parí",
+        retryDownload = "Tún gba lọ́dọ̀wọ́",
+        downloadRetrying = "Ń gbìyànjú lọ́tún (%d/%d)…",
+        downloadRetryingIn = "Kò yọrí sí. Yóò tún gbìyànjú ní %ds… (%d/%d)",
+        downloadFailedFull = "Ìgbalọ́wọ́ kùnà. So Wi-Fi kí o tún bẹ̀rẹ̀.",
+        connectingToDownload = "Ń so mọ́ láti gba MedGemma...",
+        notEnoughStorageFull = "Àyè kò tó (%dMB). Pa àwọn fáìlì rẹ̀.",
+        downloadingProgress = "Ń gba MedGemma… %d%% (%dMB / %dMB)",
+        extractingModel = "Ń yọ %s jáde…",
+        extractingModelPct = "Ń yọ %s jáde… %d%%",
+        loadingModelPct = "Ń kó %s sí… %d%%",
+        assessmentComplete = "Ìgbéléwọ̀n ti parí",
+        lowMemoryTitle = "⚠ Ìrántí kékeré",
+        lowMemoryMessage = "Ìrántí fóònù kékeré. AI lè borí.\n\nPa àwọn ohun èlò tàbí lo ìlànà WHO.",
+        useWhoGuidelines = "Ìlànà WHO",
+        forceLoadAi = "Fipá mú AI",
+        retryingLoad = "Ń kó padà sí (%d/%d)...",
+        analyzingSymptoms = "Ń ṣàyẹ̀wò àmì… (ìṣẹ́jú 30-60)",
+        analyzingSymptomsSec = "Ń ṣàyẹ̀wò àmì… ìṣẹ́jú %d",
+        translatingSymptoms = "Ń túmọ̀ sí Gẹ̀ẹ́sì...",
+        translatingResultOnDevice = "Ń túmọ̀ èsì (ML Kit)...",
+        translatingResultUnavailable = "Ìtúmọ̀ kò sí — èsì ní Gẹ̀ẹ́sì...",
+        integrityCheckFailed = "Ìgbalọ́wọ́ kùnà àyẹ̀wò. Yóò tún gbìyànjú."
     )
 
     val igboStrings = UiStrings(
@@ -1333,8 +1396,29 @@ object LocalizedStrings {
         downloadSlowWarning = "Ngwa nwere ike ịnọ nwayọọ ka a na-ebudata AI. Ị nwere ike iji ngwa nlele.",
         downloadFailedWarning = "Enweghị ike ibudata ihe AI. Nlele ga-eji iwu.",
         dataSavedForTriage = "✓ Echekwara data maka nlele",
-        measurementComplete = "Ntụle emechara"
-
+        measurementComplete = "Ntụle emechara",
+        retryDownload = "Nwaa ọzọ ibudata",
+        downloadRetrying = "Na-anwa ọzọ (%d/%d)…",
+        downloadRetryingIn = "Ọ dara. Ga-anwa ọzọ na %ds… (%d/%d)",
+        downloadFailedFull = "Ibudata adaghị. Jikọọ Wi-Fi wee malitegharịa.",
+        connectingToDownload = "Na-ejikọ iji budata MedGemma...",
+        notEnoughStorageFull = "Ebe nchekwa ezughị (%dMB). Hichapụ faịlụ.",
+        downloadingProgress = "Na-ebudata MedGemma… %d%% (%dMB / %dMB)",
+        extractingModel = "Na-ewepụta %s…",
+        extractingModelPct = "Na-ewepụta %s… %d%%",
+        loadingModelPct = "Na-ebunye %s… %d%%",
+        assessmentComplete = "Nyocha agwụla",
+        lowMemoryTitle = "⚠ Ebe nchekwa dị ala",
+        lowMemoryMessage = "RAM ekweghi. AI nwere ike ịda.\n\nMechie ngwa ndị ọzọ ma ọ bụ jiri ntuziaka WHO.",
+        useWhoGuidelines = "Ntuziaka WHO",
+        forceLoadAi = "Manie AI",
+        retryingLoad = "Na-ebunye ọzọ (%d/%d)...",
+        analyzingSymptoms = "Na-enyocha ihe mgbaàmà… (nkeji 30-60)",
+        analyzingSymptomsSec = "Na-enyocha ihe mgbaàmà… nkeji %d",
+        translatingSymptoms = "Na-asụgharị na Bekee...",
+        translatingResultOnDevice = "Na-asụgharị nsopta (ML Kit)...",
+        translatingResultUnavailable = "Nsụgharị adịghị — nsopta na Bekee...",
+        integrityCheckFailed = "Ibudata agaghị nnyocha. Ga-anwa ọzọ."
     )
 
     val amharicStrings = UiStrings(
@@ -1388,10 +1472,31 @@ object LocalizedStrings {
         noSwelling = "✓ የፊት እብጠት የለም",
         downloadingModel = "MedGemma በማውረድ ላይ…",
         downloadSlowWarning = "የAI ሞዴሉ በሚወርድበት ጊዜ መተግበሪያው ሊዘገይ ይችላል። የምርመራ መሳሪያዎቹን መጠቀም ይችላሉ።",
-        downloadFailedWarning = "የAI ሞዴሉ ሊወርድ አልቻለም። ምርመራ መመሪያ-ተኮር ግምገማ ይጠቀማል።",
+        downloadFailedWarning = "የAI ሞዴሉ ሊወርድ አልቻለም። ምርመራ መመሪያ-ተኮሽ ግምገማ ይጠቀማል።",
         dataSavedForTriage = "✓ ውሂብ ለምርመራ ተቀምጧል",
-        measurementComplete = "መለኪያ ተጠናቅቋል"
-
+        measurementComplete = "መለኪያ ተጠናቅቋል",
+        retryDownload = "እንደገና ያውርዱ",
+        downloadRetrying = "እንደገና እየሞከረ (%d/%d)…",
+        downloadRetryingIn = "አልተሳካም። በ%ds ውስጥ እንደገና ይሞክራል… (%d/%d)",
+        downloadFailedFull = "ማውረድ አልተሳካም። Wi-Fi ያገናኙ እና እንደገና ይጀምሩ።",
+        connectingToDownload = "MedGemma ለማውረድ እያገናኘ...",
+        notEnoughStorageFull = "በቂ ማከማቻ የለም (%dMB)። ቦታ ያጽዱ።",
+        downloadingProgress = "MedGemma እያወረደ… %d%% (%dMB / %dMB)",
+        extractingModel = "%s እያወጣ…",
+        extractingModelPct = "%s እያወጣ… %d%%",
+        loadingModelPct = "%s እየጫነ… %d%%",
+        assessmentComplete = "ግምገማ ተጠናቀቀ",
+        lowMemoryTitle = "⚠ ዝቅተኛ ማህደረ ትውስታ",
+        lowMemoryMessage = "የስልኩ RAM ዝቅተኛ ነው። AI ሊወድቅ ይችላል።\n\nሌሎች መተግበሪያዎችን ይዝጉ ወይም የWHO መመሪያ ይጠቀሙ።",
+        useWhoGuidelines = "የWHO መመሪያ",
+        forceLoadAi = "AI ያስገድዱ",
+        retryingLoad = "እንደገና እየጫነ (%d/%d)...",
+        analyzingSymptoms = "ምልክቶችን እየመረመረ… (30-60 ሰከንድ)",
+        analyzingSymptomsSec = "ምልክቶችን እየመረመረ… %d ሰከንድ",
+        translatingSymptoms = "ወደ እንግሊዝኛ እየተረጎመ...",
+        translatingResultOnDevice = "ውጤት እየተረጎመ (ML Kit)...",
+        translatingResultUnavailable = "ትርጉም የለም — ውጤት በእንግሊዝኛ...",
+        integrityCheckFailed = "ማውረድ ፍተሻ አላለፈም። እንደገና ይሞክራል።"
     )
 
     val twiStrings = UiStrings(
@@ -1447,8 +1552,29 @@ object LocalizedStrings {
         downloadSlowWarning = "App no bɛyɛ nwanwa bere a AI model retwi no. Wubetumi de hwehwɛ nnwinnade no adi dwuma.",
         downloadFailedWarning = "Wɔantumi antwi AI model no. Hwehwɛ bɛfa mmara so.",
         dataSavedForTriage = "✓ Data no akyerɛ hwehwɛ",
-        measurementComplete = "Susu no awie"
-
+        measurementComplete = "Susu no awie",
+        retryDownload = "San hwɛ download",
+        downloadRetrying = "Ɛrehwɛ bio (%d/%d)…",
+        downloadRetryingIn = "Ɛanyɛ yiye. Ɛbɛhwɛ bio wɔ %ds mu… (%d/%d)",
+        downloadFailedFull = "Download no anyɛ yiye. Fa Wi-Fi ka na san hyɛ ase.",
+        connectingToDownload = "Ɛre kita MedGemma download...",
+        notEnoughStorageFull = "Beae nni hɔ (%dMB). Pepa faele bi.",
+        downloadingProgress = "MedGemma download… %d%% (%dMB / %dMB)",
+        extractingModel = "Ɛreyi %s…",
+        extractingModelPct = "Ɛreyi %s… %d%%",
+        loadingModelPct = "Ɛrehyɛ %s… %d%%",
+        assessmentComplete = "Nhwehwɛmu awie",
+        lowMemoryTitle = "⚠ Adaka mu ayɛ ketewa",
+        lowMemoryMessage = "Fon no RAM ayɛ ketewa. AI betumi atɔ.\n\nTa apps afoforɔ anaa fa WHO nkyerɛkyerɛ.",
+        useWhoGuidelines = "WHO nkyerɛkyerɛ",
+        forceLoadAi = "Hyɛ AI ma",
+        retryingLoad = "Ɛrehyɛ bio (%d/%d)...",
+        analyzingSymptoms = "Ɛrehwehwɛ nsɛm mu… (sɛkɛnd 30-60)",
+        analyzingSymptomsSec = "Ɛrehwehwɛ nsɛm mu… sɛkɛnd %d",
+        translatingSymptoms = "Ɛrekyerɛ ase kɔ Borɔfo mu...",
+        translatingResultOnDevice = "Ɛrekyerɛ nea ɛfiri mu ase (ML Kit)...",
+        translatingResultUnavailable = "Nkyerɛase nni hɔ — nea ɛfiri mu wɔ Borɔfo mu...",
+        integrityCheckFailed = "Download no antumi amfa nhwehwɛmu. Ɛbɛhwɛ bio."
     )
 
     val wolofStrings = UiStrings(
@@ -1480,8 +1606,29 @@ object LocalizedStrings {
         fallbackRecoveryTip = "Ngir délusi AI: tëj appli yi ci ginnaaw wala dooraat Nku.",
         lowConfidenceWarning = "\u26A0 Gis-gis bu néew \u2014 natalu bii bées na ko ci saytul bi. Def ko kenn ci leer bu baax.",
         dataSavedForTriage = "✓ Njàng yi dañu ko denc ngir saafara",
-        measurementComplete = "Nataal bi jeexna"
-
+        measurementComplete = "Nataal bi jeexna",
+        retryDownload = "Jàll download bi",
+        downloadRetrying = "Dañ a yegle (%d/%d)…",
+        downloadRetryingIn = "Baaxul. Di ko yegle ci %ds… (%d/%d)",
+        downloadFailedFull = "Download bi baaxul. Tàkkal Wi-Fi te dooraat.",
+        connectingToDownload = "Dafay tàkk download MedGemma...",
+        notEnoughStorageFull = "Demal ci mémoire (%dMB). Fàtt yi yeneen.",
+        downloadingProgress = "Download MedGemma… %d%% (%dMB / %dMB)",
+        extractingModel = "Dafay jëlee %s…",
+        extractingModelPct = "Dafay jëlee %s… %d%%",
+        loadingModelPct = "Dafay yobbu %s… %d%%",
+        assessmentComplete = "Xool bi jeex na",
+        lowMemoryTitle = "⚠ Mémoire bu néew",
+        lowMemoryMessage = "RAM bi dafa néew. AI mën naa daanu.\n\nTëj ay appli walla jëfandikool OMS.",
+        useWhoGuidelines = "Yoonu OMS",
+        forceLoadAi = "Fal AI",
+        retryingLoad = "Dafay yobbu ci kanam (%d/%d)...",
+        analyzingSymptoms = "Dafay xool xel yi… (30-60s)",
+        analyzingSymptomsSec = "Dafay xool xel yi… %ds",
+        translatingSymptoms = "Dafay tekki ci Angale...",
+        translatingResultOnDevice = "Dafay tekki nataal (ML Kit)...",
+        translatingResultUnavailable = "Tekki amul — nataal ci Angale...",
+        integrityCheckFailed = "Download bi dootul wóor. Dina yegle."
     )
 
     val zuluStrings = UiStrings(
@@ -1531,10 +1678,31 @@ object LocalizedStrings {
         noSwelling = "✓ Akukho ukuvuvukala kobuso",
         downloadingModel = "Ilanda i-MedGemma…",
         downloadSlowWarning = "Uhlelo lungahamba kancane ngenkathi kulandwa imodeli ye-AI. Ungasebenzisa amathuluzi okuhlola.",
-        downloadFailedWarning = "Imodeli ye-AI ayikwazanga ukulandwa. Ukuhlolwa kuzosebenzisa imithetho.",
+        downloadFailedWarning = "Imodeli ye-AI ayikwazanga ukulandwa. Ukuhlola kuzosebenzisa imithetho.",
         dataSavedForTriage = "✓ Idatha igcinwe ngokuhlolwa",
-        measurementComplete = "Ukukalwa kuqediwe"
-
+        measurementComplete = "Ukukalwa kuqediwe",
+        retryDownload = "Zama ukudawuniloda futhi",
+        downloadRetrying = "Kuzanywa futhi (%d/%d)…",
+        downloadRetryingIn = "Yehlulekile. Kuzozanywa futhi ngu-%ds… (%d/%d)",
+        downloadFailedFull = "Ukudawuniloda kwehlulekile. Xhuma i-Wi-Fi bese uqala kabusha.",
+        connectingToDownload = "Kuxhunywana ukudawuniloda i-MedGemma...",
+        notEnoughStorageFull = "Ayikho indawo yokugcina (%dMB). Khulula indawo.",
+        downloadingProgress = "Kudawunilodwa i-MedGemma… %d%% (%dMB / %dMB)",
+        extractingModel = "Kukhishwa %s…",
+        extractingModelPct = "Kukhishwa %s… %d%%",
+        loadingModelPct = "Kulayishwa %s… %d%%",
+        assessmentComplete = "Ukuhlola kuphelile",
+        lowMemoryTitle = "⚠ Inkumbulo ephansi",
+        lowMemoryMessage = "I-RAM yefoni iphansi. I-AI ingehluleka.\n\nVala ezinye izinhlelo zokusebenza noma usebenzise izikhombisi ze-WHO.",
+        useWhoGuidelines = "Izikhombisi ze-WHO",
+        forceLoadAi = "Phoqa i-AI",
+        retryingLoad = "Kulayishwa futhi (%d/%d)...",
+        analyzingSymptoms = "Kuhlolwa izimpawu… (imizuzwana 30-60)",
+        analyzingSymptomsSec = "Kuhlolwa izimpawu… imizuzwana %d",
+        translatingSymptoms = "Kuhunyushwa ngesiNgisi...",
+        translatingResultOnDevice = "Kuhunyushwa umphumela (ML Kit)...",
+        translatingResultUnavailable = "Ukuhumusha akutholakali — umphumela ngesiNgisi...",
+        integrityCheckFailed = "Ukudawuniloda kwehluleke ukuhlola. Kuzozanywa futhi."
     )
 
     val xhosaStrings = UiStrings(
@@ -1586,8 +1754,29 @@ object LocalizedStrings {
         downloadSlowWarning = "I-app inokucotha ngexesha lokukhuphela imodeli ye-AI. Ungasebenzisa izixhobo zokuhlola.",
         downloadFailedWarning = "Imodeli ye-AI ayikwazanga ukukhutshwa. Ukuhlolwa kuza kusebenzisa imithetho.",
         dataSavedForTriage = "✓ Idatha igcinwe ngokuhlolwa",
-        measurementComplete = "Ukulinganiswa kugqityiwe"
-
+        measurementComplete = "Ukulinganiswa kugqityiwe",
+        retryDownload = "Zama ukudawunilowuda kwakhona",
+        downloadRetrying = "Kuzanywa kwakhona (%d/%d)…",
+        downloadRetryingIn = "Kusilele. Kuza kuzanywa kwakhona nge-%ds… (%d/%d)",
+        downloadFailedFull = "Ukudawunilowuda kusilele. Qhagamshela i-Wi-Fi uze uqale kwakhona.",
+        connectingToDownload = "Kuqhagamshelwa ukudawunilowuda i-MedGemma...",
+        notEnoughStorageFull = "Akukho ndawo yaneleyo (%dMB). Khulula indawo.",
+        downloadingProgress = "Kudawunilowudwa i-MedGemma… %d%% (%dMB / %dMB)",
+        extractingModel = "Kukhutshelwa %s…",
+        extractingModelPct = "Kukhutshelwa %s… %d%%",
+        loadingModelPct = "Kulayishwa %s… %d%%",
+        assessmentComplete = "Uvavanyo lugqityiwe",
+        lowMemoryTitle = "⚠ Inkumbulo ephantsi",
+        lowMemoryMessage = "I-RAM yefowuni iphantsi. I-AI inokusilela.\n\nVala ezinye ii-apps okanye sebenzisa izikhokelo ze-WHO.",
+        useWhoGuidelines = "Izikhokelo ze-WHO",
+        forceLoadAi = "Nyanzelisa i-AI",
+        retryingLoad = "Kulayishwa kwakhona (%d/%d)...",
+        analyzingSymptoms = "Kuhlolwa iimpawu… (imizuzwana 30-60)",
+        analyzingSymptomsSec = "Kuhlolwa iimpawu… imizuzwana %d",
+        translatingSymptoms = "Kuguqulelwa ngesiNgesi...",
+        translatingResultOnDevice = "Kuguqulelwa iziphumo (ML Kit)...",
+        translatingResultUnavailable = "Uguqulelo alufumaneki — iziphumo ngesiNgesi...",
+        integrityCheckFailed = "Ukudawunilowuda kusilele ukuhlola. Kuza kuzanywa kwakhona."
     )
 
     val oromoStrings = UiStrings(
@@ -1616,7 +1805,7 @@ object LocalizedStrings {
         triageSourceAI = "Qorannoo AI (MedGemma)",
         triageSourceGuideline = "Qorannoo qajeelfama irratti hundaa'e",
         fallbackExplanation = "Moodeelli AI hin argamne. Bu'aan qajeelfama kilinika WHO/IMCI hordofa — nageenya fi mirkanaa'e.",
-        fallbackRecoveryTip = "AI deebisuuf: appii duubatti jiran cufi ykn Nku irra deebi'i.",
+        fallbackRecoveryTip = "AI deebisuuf: appii duubatti jiran cufi yookiin Nku irra deebi'i.",
         lowConfidenceWarning = "\u26A0 Amantaa gad-aanaa \u2014 lakkoofsi kun qorannoo keessa hin galuu ta'uu. Ifa keessatti irra deebi'i.",
 
         jaundiceScreen = "Qorannoo jaundice",
@@ -1639,8 +1828,29 @@ object LocalizedStrings {
         downloadSlowWarning = "Appiin suuta ta'uu dandeeysii yeroo moodeelli AI buufatamu. Meeshaalee qorannoo fayyadamuu dandeeysa.",
         downloadFailedWarning = "Moodeelli AI buufachuun hin danda'amne. Qorannoon seerawwan fayyadama.",
         dataSavedForTriage = "✓ Daataan qorannootiif qabame",
-        measurementComplete = "Safartuun xumurameera"
-
+        measurementComplete = "Safartuun xumurameera",
+        retryDownload = "Irra buufadhu",
+        downloadRetrying = "Irra yaaliif (%d/%d)…",
+        downloadRetryingIn = "Hin milkaa'in. Sekondii %d keessatti irra yaala… (%d/%d)",
+        downloadFailedFull = "Buufachuun hin milkaa'in. Wi-Fi qunnamsiisii irra deebi'i.",
+        connectingToDownload = "MedGemma buufachuuf qunnamsiisaa jira...",
+        notEnoughStorageFull = "Kuusaan hin ga'u (%dMB). Iddoo bilisa.",
+        downloadingProgress = "MedGemma buufachaa jira… %d%% (%dMB / %dMB)",
+        extractingModel = "%s baasaa jira…",
+        extractingModelPct = "%s baasaa jira… %d%%",
+        loadingModelPct = "%s fe'aa jira… %d%%",
+        assessmentComplete = "Qorannoon xumurameera",
+        lowMemoryTitle = "⚠ Yaadannoo xiqqaa",
+        lowMemoryMessage = "RAM bilbilaa xiqqaadha. AI kufu'uu danda'a.\n\nAppilii biroo cufi yookiin qajeelfama WHO fayyadami.",
+        useWhoGuidelines = "Qajeelfama WHO",
+        forceLoadAi = "AI dirqisiisi",
+        retryingLoad = "Irra fe'aa jira (%d/%d)...",
+        analyzingSymptoms = "Mallattoowwan qorachaa jira… (sek 30-60)",
+        analyzingSymptomsSec = "Mallattoowwan qorachaa jira… sek %d",
+        translatingSymptoms = "Gara Ingiliffaatti hiikaa jira...",
+        translatingResultOnDevice = "Bu'aa hiikaa jira (ML Kit)...",
+        translatingResultUnavailable = "Hiikkaan hin argamin — bu'aan Ingiliffaan...",
+        integrityCheckFailed = "Buufachuun qorannoo hin dabrin. Irra yaala."
     )
 
     val tigrinyaStrings = UiStrings(
@@ -1692,8 +1902,29 @@ object LocalizedStrings {
         downloadSlowWarning = "ናይ AI ሞዴል ክወርድ ከሎ ኣፕ ክደንጊ ይኽእል። ናይ ምርመራ መሳርሒታት ክትጥቀሙ ትኽእሉ።",
         downloadFailedWarning = "ናይ AI ሞዴል ክወርድ ኣይከኣለን። ምርመራ ናይ መምርሒ ግምገማ ክጥቀም እዩ።",
         dataSavedForTriage = "✓ ዳታ ንምርመራ ተዓቂቡ",
-        measurementComplete = "ዕቃን ተዛዚሙ"
-
+        measurementComplete = "ዕቃን ተዛዚሙ",
+        retryDownload = "ደጊምካ ኣውርድ",
+        downloadRetrying = "ደጊምካ ይፍትን (%d/%d)…",
+        downloadRetryingIn = "ኣይተዓወተን። ድሕሪ %ds ደጊምካ ክፍትን… (%d/%d)",
+        downloadFailedFull = "ምውራድ ኣይተዓወተን። Wi-Fi ኣራኽብ ደጊምካ ጀምር።",
+        connectingToDownload = "MedGemma ንምውራድ ይራኸብ...",
+        notEnoughStorageFull = "ዝኣክል ቦታ የለን (%dMB)። ቦታ ኣጽርይ።",
+        downloadingProgress = "MedGemma ይወርድ… %d%% (%dMB / %dMB)",
+        extractingModel = "%s ይወጽእ…",
+        extractingModelPct = "%s ይወጽእ… %d%%",
+        loadingModelPct = "%s ይጽዕን… %d%%",
+        assessmentComplete = "ምርመራ ተዛዚሙ",
+        lowMemoryTitle = "⚠ ትሑት ዝኽሪ",
+        lowMemoryMessage = "RAM ናይ ተሌፎን ትሑት እዩ። AI ክወድቕ ይኽእል።\n\nካልኦት ኣፕሊከይሽናት ዕጸው ወይ መምርሒ WHO ተጠቐም።",
+        useWhoGuidelines = "መምርሒ WHO",
+        forceLoadAi = "AI ኣገድድ",
+        retryingLoad = "ደጊምካ ይጽዕን (%d/%d)...",
+        analyzingSymptoms = "ምልክታት ይምርምር… (30-60 ሰከንድ)",
+        analyzingSymptomsSec = "ምልክታት ይምርምር… %d ሰከንድ",
+        translatingSymptoms = "ናብ እንግሊዝኛ ይትርጐም...",
+        translatingResultOnDevice = "ውጺት ይትርጐም (ML Kit)...",
+        translatingResultUnavailable = "ትርጉም የለን — ውጺት ብእንግሊዝኛ...",
+        integrityCheckFailed = "ምውራድ ፍተሻ ኣይሓለፈን። ደጊምካ ክፍትን።"
     )
 
     // ─── Tier 2 Languages ───────────────────────────────────────

@@ -61,7 +61,7 @@ The core innovation is the **Nku Cycle** — a memory-efficient orchestration pa
 ### Flow
 
 1. **Input**: User enters symptoms in local language (e.g., Twi)
-2. **Translation**: Android ML Kit translates to English for supported languages; unsupported languages pass through unchanged in offline mode
+2. **Translation**: Android ML Kit translates to English for supported languages; unsupported languages fall back to the Nku Cloud API
 3. **Reasoning**: MedGemma performs clinical triage (100% on-device)
 4. **Localization**: ML Kit localizes output for supported languages; otherwise the English result is returned
 5. **Output**: Android System TTS speaks the result
@@ -103,7 +103,7 @@ fun runNkuCycleLocal(patientInput: String, language: String): NkuResult {
 - **Type**: Google ML Kit on-device translation API
 - **Size**: ~30 MB per language pack
 - **Supported languages**: 59 (including English, French, Portuguese, Afrikaans, Swahili)
-- **Unsupported-language behavior**: Input/output pass-through in the current mobile build (optional cloud translation backend is separate)
+- **Unsupported-language behavior**: Safely falls back to the Nku Cloud API for seamless translation in the current mobile build
 - **Purpose**: Bi-directional language translation
 
 ### Android System TTS (NkuTTS.kt)

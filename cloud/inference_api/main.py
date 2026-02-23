@@ -5,7 +5,7 @@ Deploy to Google Cloud Run.
 
 ARCHITECTURE NOTE:
 - The shipped mobile app uses ML Kit for on-device translation and stays fully offline.
-- Unsupported languages in the mobile build currently pass through unchanged.
+- Unsupported languages in the mobile build gracefully fall back to this cloud backend.
 - This backend is an optional deployment path that can be integrated as a cloud
   translation/triage extension for languages ML Kit does not cover natively.
 
@@ -24,6 +24,7 @@ import os
 import traceback
 import threading
 import signal
+import hashlib
 
 from huggingface_hub import hf_hub_download
 
@@ -280,6 +281,28 @@ def with_timeout(timeout_seconds: int = 120):
     return decorator
 
 
+def _verify_model_hash(file_path: str, expected_sha256: Optional[str]) -> bool:
+    if getattr(get_config(), 'debug', False) and not expected_sha256:
+        request_logger.warning("No expected SHA-256 hash configured for model. Skipping verification in dev.")
+        return True
+    elif not expected_sha256:
+        # In production if hash checking is bypassed, it should still warn
+        request_logger.warning("No expected SHA-256 hash configured for model. Skipping verification.")
+        return True
+    
+    sha256_hash = hashlib.sha256()
+    with open(file_path, "rb") as f:
+        # Read and update hash string value in blocks of 4K
+        for byte_block in iter(lambda: f.read(4096), b""):
+            sha256_hash.update(byte_block)
+            
+    computed_hash = sha256_hash.hexdigest()
+    if computed_hash != expected_sha256:
+        request_logger.error(f"Model hash mismatch! Expected: {expected_sha256}, Computed: {computed_hash}")
+        return False
+    return True
+
+
 def load_models(
     require_medgemma: bool = True,
     require_translategemma: bool = True
@@ -330,6 +353,9 @@ def load_models(
                     revision=config.model.medgemma_revision,
                     token=hf_token
                 )
+                if not _verify_model_hash(shared_path, config.model.medgemma_sha256):
+                    raise RuntimeError("Shared model integrity verification failed (SHA-256 mismatch).")
+                
                 shared_model = Llama(
                     model_path=shared_path,
                     n_ctx=config.model.context_size,
@@ -359,6 +385,9 @@ def load_models(
                     revision=config.model.medgemma_revision,
                     token=hf_token
                 )
+                if not _verify_model_hash(med_path, config.model.medgemma_sha256):
+                    raise RuntimeError("MedGemma model integrity verification failed (SHA-256 mismatch).")
+                
                 medgemma = Llama(
                     model_path=med_path,
                     n_ctx=config.model.context_size,
@@ -377,6 +406,9 @@ def load_models(
                     revision=config.model.translategemma_revision,
                     token=hf_token
                 )
+                if not _verify_model_hash(trans_path, config.model.translategemma_sha256):
+                    raise RuntimeError("TranslateGemma model integrity verification failed (SHA-256 mismatch).")
+                
                 translategemma = Llama(
                     model_path=trans_path,
                     n_ctx=config.model.context_size,

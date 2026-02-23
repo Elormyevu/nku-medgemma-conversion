@@ -20,7 +20,7 @@ import java.io.File
  * ML Kit handling translation separately.
  *
  * Flow:
- *   1. ML Kit translates local language → English (on-device; unsupported languages pass through raw)
+ *   1. ML Kit translates local language → English (on-device; unsupported languages fall back to the cloud API)
  *   2. Load MedGemma → clinical reasoning (100% on-device)
  *   3. Unload MedGemma
  *   4. ML Kit translates English → local language
@@ -93,8 +93,8 @@ class NkuInferenceEngine(private val context: Context) {
 
     /**
      * Public translation API for rule-based assessment output.
-     * Delegates to ML Kit on-device translation (same mechanism as the Nku Cycle).
-     * Returns original text if language is unsupported or translation fails.
+     * Delegates to ML Kit on-device translation and the Nku Cloud API fallback.
+     * Returns original text only if both translation layers fail.
      */
     suspend fun translateFromEnglish(text: String, targetLanguage: String): String {
         if (targetLanguage == "en") return text
@@ -327,13 +327,8 @@ class NkuInferenceEngine(private val context: Context) {
         var englishText: String? = null
         if (language != "en") {
             _state.value = EngineState.TRANSLATING_TO_ENGLISH
-            if (NkuTranslator.isOnDeviceSupported(language)) {
-                _progress.value = strings.translatingSymptoms
-                englishText = nkuTranslator.translateToEnglish(structuredPrompt, language)
-            } else {
-                Log.w(TAG, "Language $language not supported for on-device translation. Proceeding with raw text.")
-                englishText = structuredPrompt
-            }
+            _progress.value = strings.translatingSymptoms
+            englishText = nkuTranslator.translateToEnglish(structuredPrompt, language) ?: structuredPrompt
         } else {
             englishText = structuredPrompt
         }
@@ -396,17 +391,12 @@ class NkuInferenceEngine(private val context: Context) {
                 // block at L432 already calls unloadModel() on all paths.
                 // Double-close on SmolLM is benign but wasteful.
 
-                // ── Stage 3: Translate back to local language via ML Kit ──
+                // ── Stage 3: Translate back to local language via ML Kit / Cloud ──
                 if (language != "en") {
                     _state.value = EngineState.TRANSLATING_TO_LOCAL
-                    if (NkuTranslator.isOnDeviceSupported(language)) {
-                        _progress.value = strings.translatingResultOnDevice
-                        val translated = nkuTranslator.translateFromEnglish(clinicalResponse, language)
-                        localizedResponse = translated ?: clinicalResponse  // Fallback to English
-                    } else {
-                        _progress.value = strings.translatingResultUnavailable
-                        localizedResponse = clinicalResponse
-                    }
+                    _progress.value = strings.translatingResultOnDevice
+                    val translated = nkuTranslator.translateFromEnglish(clinicalResponse, language)
+                    localizedResponse = translated ?: clinicalResponse  // Fallback to English
                 }
 
                 _state.value = EngineState.COMPLETE

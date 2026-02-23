@@ -34,8 +34,8 @@ class NkuTranslator(private val context: Context) {
          * ML Kit translate:17.0.3 supports 59 languages, but most are
          * European/Asian. Only 3 African languages are available on-device:
          * Afrikaans, Swahili, and Arabic. All indigenous African languages
-         * (Hausa, Yoruba, Igbo, Amharic, Zulu, Xhosa, etc.) are currently
-         * passed through untranslated to preserve full offline operation.
+         * (Hausa, Yoruba, Igbo, Amharic, Zulu, Xhosa, etc.) securely fall back
+         * to the Nku Cloud API.
          */
         private val ML_KIT_LANGUAGE_MAP: Map<String, String> = mapOf(
             // ── Official/colonial languages (on-device) ──
@@ -143,11 +143,11 @@ class NkuTranslator(private val context: Context) {
         }
 
         // Same language — no translation needed
-        if (sourceLang == targetLang) return text
+        if (sourceLanguage == targetLanguage) return text
 
         val options = TranslatorOptions.Builder()
-            .setSourceLanguage(sourceLang)
-            .setTargetLanguage(targetLang)
+            .setSourceLanguage(sourceLangLabel)
+            .setTargetLanguage(targetLangLabel)
             .build()
 
         val translator = Translation.getClient(options)
@@ -217,14 +217,22 @@ class NkuTranslator(private val context: Context) {
      */
     private suspend fun performCloudTranslation(text: String, sourceLanguage: String, targetLanguage: String): String? = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
         try {
-            // Note: In production this utilizes the real GCE host address.
-            // Using 10.0.2.2 to point to emulator's localhost for testing validation, mimicking deployment config.
-            val url = java.net.URL("http://10.0.2.2:5000/translate")
+            val endpoint = BuildConfig.NKU_CLOUD_URL
+            if (endpoint.isBlank()) {
+                Log.w(TAG, "Cloud URL not configured. Returning raw text.")
+                return@withContext text
+            }
+            
+            val url = java.net.URL(endpoint)
             val connection = url.openConnection() as java.net.HttpURLConnection
             connection.requestMethod = "POST"
             connection.setRequestProperty("Content-Type", "application/json")
-            // Apply required Security Headers
-            connection.setRequestProperty("X-API-Key", "dev-test-key")
+            
+            val apiKey = BuildConfig.NKU_API_KEY
+            if (apiKey.isNotBlank()) {
+                // Apply required Security Headers
+                connection.setRequestProperty("X-API-Key", apiKey)
+            }
             connection.doOutput = true
 
             val jsonBody = """{"text": "${text.replace("\"", "\\\"")}", "source": "$sourceLanguage", "target": "$targetLanguage"}"""

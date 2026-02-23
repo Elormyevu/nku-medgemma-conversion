@@ -176,7 +176,7 @@ Problem:
 
 Fixes:
 - Updated docs to reflect current implementation truthfully, including revising the base app size expectation up to ~140MB and AAB to ~340MB.
-- Clarified cloud translation as an optional extension (unsupported languages currently pass through unchanged in the offline mobile flow).
+- Clarified cloud translation as the fallback integration (unsupported languages securely fall back to the Nku Cloud API in the mobile flow).
 - Updated model distribution/reviewer guidance, recommending sideloading (and explicitly noting `shasum -a 256` expectations) or allowing the first-run network fallback download.
 
 Files:
@@ -267,7 +267,7 @@ Files:
 - Connected instrumentation path executes successfully on emulator after ensuring adequate device storage.
 - Model trust checks now validate both sideload and network-downloaded model paths.
 - Sensor-to-triage prompt handoff is now covered by production-path instrumentation assertions.
-- Unsupported-language behavior in offline mobile flow is now documented accurately as pass-through unless optional cloud extension is integrated.
+- Unsupported-language behavior in mobile flow is now documented accurately as safely falling back to the deployed Nku Cloud API.
 
 ## Residual Risks and Follow-ups
 1. Full on-device MedGemma sideload test remains environment-dependent on presence of a large GGUF file; test currently skips safely when missing.

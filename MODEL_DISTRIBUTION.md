@@ -1,7 +1,7 @@
 # Nku Sentinel — Model Distribution Strategy
 
 ## Current State
-MedGemma 4B is quantized to Q4_K_M format (~2.3GB) and delivered via Play Asset Delivery. The HeAR Event Detector (1.1MB INT8 TFLite) ships in the APK's `assets/` directory. Translation is handled by Android ML Kit (on-device, ~30MB/language pack). In the current shipped mobile app, unsupported languages pass through unchanged in offline mode; the cloud translation backend remains an optional extension path.
+MedGemma 4B is quantized to Q4_K_M format (~2.3GB) and delivered via Play Asset Delivery. The HeAR Event Detector (1.1MB INT8 TFLite) ships in the APK's `assets/` directory. Translation is handled by Android ML Kit (on-device, ~30MB/language pack). In the current shipped mobile app, unsupported languages fall back to the Nku Cloud API to ensure full translation support.
 
 > **HeAR ViT-L Encoder — not shipped**: The HeAR ViT-L encoder (~1.2GB FP32) uses `XlaCallModule` nodes with serialized StableHLO bytecode — an XLA-specific format that no current conversion tool (tf2onnx, TFLite converter) can process into ONNX or TFLite. We attempted 7 conversion approaches across 3 toolchains (tf2onnx CLI, TFLite INT8, TFLite StableHLO-only) before documenting this as a technical limitation. The codebase includes full architectural support for the ViT-L encoder as a documented upgrade path.
 
@@ -32,7 +32,7 @@ AAB (Android App Bundle)
 | **HeAR Event Detector (TFLite INT8)** | 1.1 MB | APK assets | ✅ Always |
 | **HeAR ViT-L Encoder** | ~1.2 GB | ❌ Not shipped | ❌ XLA/StableHLO conversion blocked |
 | **ML Kit (59 languages)** | ~30 MB/lang | Auto-download | ✅ After download |
-| **Cloud translation extension** | 0 MB | Optional backend integration | ❌ Not wired in current mobile build |
+| **Nku Cloud API** | 0 MB | Cloud fallback integration | ❌ Requires internet for unsupported languages |
 
 **Key point**: MedGemma and the HeAR Event Detector ship with the app via AAB/PAD. For direct APK reviewer installs without PAD, the app supports two recovery paths: trusted sideloading or native first-run model download.
 

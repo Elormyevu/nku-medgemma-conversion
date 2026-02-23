@@ -1,6 +1,8 @@
 package com.nku.app
 
 import android.util.Log
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -728,21 +730,23 @@ class ClinicalReasoner {
         val current = _assessment.value ?: return
         
         try {
-            // Batch translate concerns and recommendations
-            val translatedConcerns = current.primaryConcerns.map { concern ->
-                engine.translateFromEnglish(concern, targetLanguage)
+            // Batch translate concerns and recommendations concurrently
+            kotlinx.coroutines.coroutineScope {
+                val concernsDeferred = current.primaryConcerns.map { concern ->
+                    async { engine.translateFromEnglish(concern, targetLanguage) }
+                }
+                val recsDeferred = current.recommendations.map { rec ->
+                    async { engine.translateFromEnglish(rec, targetLanguage) }
+                }
+                val disclaimerDeferred = async { engine.translateFromEnglish(current.disclaimer, targetLanguage) }
+                
+                // Emit translated assessment
+                _assessment.value = current.copy(
+                    primaryConcerns = concernsDeferred.awaitAll(),
+                    recommendations = recsDeferred.awaitAll(),
+                    disclaimer = disclaimerDeferred.await()
+                )
             }
-            val translatedRecs = current.recommendations.map { rec ->
-                engine.translateFromEnglish(rec, targetLanguage)
-            }
-            val translatedDisclaimer = engine.translateFromEnglish(current.disclaimer, targetLanguage)
-            
-            // Emit translated assessment
-            _assessment.value = current.copy(
-                primaryConcerns = translatedConcerns,
-                recommendations = translatedRecs,
-                disclaimer = translatedDisclaimer
-            )
             Log.i("ClinicalReasoner", "Assessment translated to $targetLanguage")
         } catch (e: Exception) {
             Log.w("ClinicalReasoner", "Translation failed, keeping English: ${e.message}")

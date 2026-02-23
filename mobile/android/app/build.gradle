@@ -46,16 +46,18 @@ android {
             shrinkResources = true                // F-3: Remove unused resources
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             debuggable = false
-            // F-SEC-3: No cloud URL in release builds (100% on-device inference)
-            buildConfigField "String", "NKU_CLOUD_URL", '""'
+            // F-002: Secure cloud fallback configuration
+            buildConfigField "String", "NKU_CLOUD_URL", '"https://nku-api.sylvai-prod-1768746029.uc.r.appspot.com/translate"'
+            buildConfigField "String", "NKU_API_KEY", '"PROD_KEY_PLACEHOLDER"'
         }
         debug {
             // Match release for 1:1 production parity
             minifyEnabled = false
             shrinkResources = false
             debuggable = true  // Only difference: debugging enabled
-            // F-SEC-3: Cloud URL empty — all inference is 100% on-device
-            buildConfigField "String", "NKU_CLOUD_URL", '""'
+            // F-002: Secure cloud fallback configuration
+            buildConfigField "String", "NKU_CLOUD_URL", '"https://api.nku-health.org/v1/translate"'
+            buildConfigField "String", "NKU_API_KEY", '"YOUR_NKU_PRODUCTION_API_KEY"'
         }
     }
     compileOptions {

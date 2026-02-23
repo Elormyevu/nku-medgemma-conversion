@@ -31,6 +31,7 @@ class ModelConfig:
     translategemma_repo: str = "mradermacher/medgemma-4b-it-GGUF"
     translategemma_file: str = "medgemma-4b-it.Q2_K.gguf"
     translategemma_revision: Optional[str] = "7260922730e7f036ceae1fed95a01b980a5122ae"
+    translategemma_sha256: Optional[str] = None
     context_size: int = 2048
     n_batch: int = 512
     n_threads: int = 4
@@ -98,9 +99,11 @@ class AppConfig:
                 medgemma_repo=os.environ.get('MEDGEMMA_REPO', default_model.medgemma_repo),
                 medgemma_file=os.environ.get('MEDGEMMA_FILE', default_model.medgemma_file),
                 medgemma_revision=os.environ.get('MEDGEMMA_REVISION', default_model.medgemma_revision),
+                medgemma_sha256=os.environ.get('MEDGEMMA_SHA256', default_model.medgemma_sha256),
                 translategemma_repo=os.environ.get('TRANSLATEGEMMA_REPO', default_model.translategemma_repo),
                 translategemma_file=os.environ.get('TRANSLATEGEMMA_FILE', default_model.translategemma_file),
                 translategemma_revision=os.environ.get('TRANSLATEGEMMA_REVISION', default_model.translategemma_revision),
+                translategemma_sha256=os.environ.get('TRANSLATEGEMMA_SHA256', default_model.translategemma_sha256),
                 context_size=int(os.environ.get('MODEL_CONTEXT_SIZE', default_model.context_size)),
                 n_batch=int(os.environ.get('MODEL_BATCH', default_model.n_batch)),
                 n_threads=int(os.environ.get('MODEL_THREADS', default_model.n_threads)),

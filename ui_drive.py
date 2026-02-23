@@ -125,12 +125,12 @@ if found_edit:
     time.sleep(15)
     
     print("Pulling video...")
-    subprocess.run([adb, "pull", "/sdcard/triage_video.mp4", "/Users/elormyevudza/.gemini/antigravity/brain/e939734a-3448-40e7-a875-9f72679891c2/triage_video.mp4"])
+    subprocess.run([adb, "pull", "/sdcard/triage_video.mp4", "/Users/elormyevudza/.gemini/antigravity/brain/5ed3604d-8e50-40e0-8fe2-baebd68722c0/triage_video.mp4"])
     print("Video successfully captured and pulled!")
     
     print("Taking final screenshot...")
     subprocess.run([adb, "shell", "screencap", "-p", "/sdcard/triage_result.png"])
-    subprocess.run([adb, "pull", "/sdcard/triage_result.png", "/Users/elormyevudza/.gemini/antigravity/brain/e939734a-3448-40e7-a875-9f72679891c2/triage_result.png"])
+    subprocess.run([adb, "pull", "/sdcard/triage_result.png", "/Users/elormyevudza/.gemini/antigravity/brain/5ed3604d-8e50-40e0-8fe2-baebd68722c0/triage_result.png"])
     print("Screenshot successfully captured and pulled!")
 else:
     print("Could not find EditText.")

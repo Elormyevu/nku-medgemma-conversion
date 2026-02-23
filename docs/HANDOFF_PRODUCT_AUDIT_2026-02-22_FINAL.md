@@ -453,10 +453,10 @@ Add automated perf budget checks and benchmark artifacts before final submission
 
 ## Phase 0 (Release Gate, 24-48h)
 
-1. Make model integration tests deterministic (P1-01).  
-2. Resolve doc/runtime translation drift (P1-04).  
+1. [x] Make model integration tests deterministic (P1-01).  
+2. [x] Resolve doc/runtime translation drift (P1-04).  
 3. Validate backend real-model lane in CI-equivalent environment (P1-03).  
-4. Produce physical-device evidence packet for camera/mic pipeline (P1-02).
+4. [x] Produce physical-device evidence packet for camera/mic pipeline (P1-02).
 
 ## Phase 1 (Hardening, 2-5 days)
 

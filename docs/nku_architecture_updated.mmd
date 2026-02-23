@@ -1,0 +1,61 @@
+%%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
+graph TD
+    %% Model Provisioning Layer
+    subgraph Provisioning["Model Provisioning & Trust Validation"]
+        HF["HuggingFace (medgemma-4b-it-q4_k_m.gguf)"]
+        Sideload["ADB Sideload"]
+        Validator["Startup Check & SHA-256 Validator"]
+        HF -.->|Download on Startup| Validator
+        Sideload -.-> Validator
+    end
+
+    %% Mobile Layer
+    subgraph Android["Android End-User App (100% Offline)"]
+        UI["Android Native Compose UI"]
+        
+        %% Sensors
+        subgraph Sensors["Sensor Acquisition"]
+            Cam["Camera (rPPG, Edema, Pallor, Jaundice)"]
+            Mic["Microphone (Respiratory/Cough)"]
+        end
+
+        %% Mobile Inference
+        subgraph MobileInfer["On-Device Inference Pipeline"]
+            VisionProc["Vision Landmarker & MediaPipe"]
+            AudioProc["HeAR Event Detector \n(MobileNetV3 1.1MB TFLite)"]
+            Fusion["SensorFusion (Aggregator)"]
+            Reasoner["ClinicalReasoner \n(MedGemma + WHO Fallback)"]
+            Sanitizer["PromptSanitizer \n(6-layer Injection Protection)"]
+            Translator["Android ML Kit Translation \n(with pass-through for unsup)"]
+            Triage["MedGemma 4B Engine \n(Q4_K_M GGUF via llama.cpp)"]
+            TTS["Android System TTS"]
+        end
+
+        UI --> Sensors
+        Cam --> VisionProc
+        Mic --> AudioProc
+        
+        VisionProc --> Fusion
+        AudioProc --> Fusion
+        
+        Fusion --> Reasoner
+        Reasoner --> Sanitizer
+        Sanitizer --> Translator
+        Translator --> Triage
+        Triage --> Translator
+        Translator --> TTS
+        TTS --> UI
+    end
+
+    %% Backend Validation Environment
+    subgraph Cloud["Backend Validation Environment (Dev/CI Only)"]
+        FlaskAPI["Python Inference API"]
+        CloudSecurity["Cloud Prompt Protector"]
+        LlamaCPP["llama_cpp Native Runtime"]
+        
+        FlaskAPI --> CloudSecurity
+        CloudSecurity --> LlamaCPP
+    end
+
+    %% Connections
+    Validator ==> Triage

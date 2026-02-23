@@ -414,7 +414,31 @@ object LocalizedStrings {
 
         // Auto-stop completion feedback (UX-1)
         val dataSavedForTriage: String = "✓ Data saved for triage",
-        val measurementComplete: String = "Measurement complete"
+        val measurementComplete: String = "Measurement complete",
+
+        // Engine progress messages (i18n-1)
+        val retryDownload: String = "Retry Download",
+        val downloadRetrying: String = "Retrying download (attempt %d/%d)…",
+        val downloadRetryingIn: String = "Download failed. Retrying in %ds… (attempt %d/%d)",
+        val downloadFailedFull: String = "Model download failed. Connect to Wi-Fi and restart the app.",
+        val connectingToDownload: String = "Connecting to download MedGemma...",
+        val notEnoughStorageFull: String = "Not enough storage (%dMB free). Free up space and restart.",
+        val downloadingProgress: String = "Downloading MedGemma… %d%% (%dMB / %dMB)",
+        val extractingModel: String = "Extracting %s…",
+        val extractingModelPct: String = "Extracting %s… %d%%",
+        val loadingModelPct: String = "Loading %s… %d%%",
+        val assessmentComplete: String = "Assessment complete",
+        val lowMemoryTitle: String = "⚠ Low Memory Warning",
+        val lowMemoryMessage: String = "Your phone's RAM is currently running low due to background apps. This may cause the Nku Reasoning AI to crash. \n\nPlease close other apps to run the AI, or continue using standard WHO guidelines.",
+        val useWhoGuidelines: String = "Use WHO Guidelines",
+        val forceLoadAi: String = "Force Load AI",
+        val retryingLoad: String = "Retrying load (attempt %d/%d)...",
+        val analyzingSymptoms: String = "Analyzing symptoms… (this may take 30-60s)",
+        val analyzingSymptomsSec: String = "Analyzing symptoms… %ds elapsed",
+        val translatingSymptoms: String = "Translating symptoms to English...",
+        val translatingResultOnDevice: String = "Translating result (ML Kit, on-device)...",
+        val translatingResultUnavailable: String = "On-device result translation unavailable — returning English result...",
+        val integrityCheckFailed: String = "Model download failed integrity check. Will retry on next launch."
     ) {
         /** Map signal quality string to localized display name. */
         fun localizedSignalQuality(quality: String): String = when (quality) {
@@ -596,8 +620,29 @@ object LocalizedStrings {
         downloadSlowWarning = "App ateŋu anɔ blewu ke AI ƒe dɔwɔnu le dzadzram. Àteŋu azã kpɔkpɔ dɔwɔnuwo.",
         downloadFailedWarning = "Wometeŋu wɔ AI ƒe dɔwɔnu dzadzram o. Kpɔkpɔ azã alɔdzawo.",
         dataSavedForTriage = "✓ Wotsɔ data da na kpɔkpɔ",
-        measurementComplete = "Kpɔkpɔ vɔ"
-
+        measurementComplete = "Kpɔkpɔ vɔ",
+        retryDownload = "Gbugbɔ dzadzram",
+        downloadRetrying = "Le dzadzram (%d/%d)…",
+        downloadRetryingIn = "Emekpɔ o. Agbugbɔ le %ds me… (%d/%d)",
+        downloadFailedFull = "Dzadzram mekpɔ o. Tsɔ Wi-Fi ɖe edzi eye nàgbugbɔ.",
+        connectingToDownload = "Le MedGemma dzadzram…",
+        notEnoughStorageFull = "Teƒe mesɔ o (%dMB kpɔ). Ɖe nusiwo le enu.",
+        downloadingProgress = "MedGemma dzadzram… %d%% (%dMB / %dMB)",
+        extractingModel = "%s ƒe ɖeɖe…",
+        extractingModelPct = "%s ƒe ɖeɖe… %d%%",
+        loadingModelPct = "%s dzadzram… %d%%",
+        assessmentComplete = "Kpɔkpɔ vɔ",
+        lowMemoryTitle = "⚠ Nuxexe mesɔ o",
+        lowMemoryMessage = "Fɔn ƒe nuxexe mele o. AI ateŋu atsri.\n\nTsɔ dɔwɔnu bubuwo ɖa alo zã OMS ƒe alɔdza.",
+        useWhoGuidelines = "OMS ƒe alɔdza",
+        forceLoadAi = "AI ƒe dɔ",
+        retryingLoad = "Le dzadzram (%d/%d)...",
+        analyzingSymptoms = "Le kpɔkpɔ wɔm… (30-60s)",
+        analyzingSymptomsSec = "Le kpɔkpɔ wɔm… %ds",
+        translatingSymptoms = "Le eŋlisigbe me ɖem…",
+        translatingResultOnDevice = "Le gbe me ɖem (ML Kit)…",
+        translatingResultUnavailable = "Gbe ɖeɖe meli o — eŋlisi me…",
+        integrityCheckFailed = "Dzadzram mekpɔ ŋuɖoɖo o. Agbugbɔ."
     )
 
     val frenchStrings = UiStrings(
@@ -784,7 +829,29 @@ object LocalizedStrings {
         notEnoughStorage = "Stockage insuffisant",
         validatingModel = "Vérification de l'intégrité du modèle…",
         dataSavedForTriage = "✓ Données enregistrées pour le triage",
-        measurementComplete = "Mesure terminée"
+        measurementComplete = "Mesure terminée",
+        retryDownload = "Réessayer le téléchargement",
+        downloadRetrying = "Nouvelle tentative (%d/%d)…",
+        downloadRetryingIn = "Échec. Nouvelle tentative dans %ds… (%d/%d)",
+        downloadFailedFull = "Échec du téléchargement. Connectez-vous au Wi-Fi et redémarrez.",
+        connectingToDownload = "Connexion pour télécharger MedGemma...",
+        notEnoughStorageFull = "Stockage insuffisant (%dMo libres). Libérez de l'espace.",
+        downloadingProgress = "Téléchargement MedGemma… %d%% (%dMo / %dMo)",
+        extractingModel = "Extraction de %s…",
+        extractingModelPct = "Extraction de %s… %d%%",
+        loadingModelPct = "Chargement de %s… %d%%",
+        assessmentComplete = "Évaluation terminée",
+        lowMemoryTitle = "⚠ Mémoire insuffisante",
+        lowMemoryMessage = "La mémoire vive est faible. L'IA de raisonnement pourrait planter.\n\nFermez les applications en arrière-plan ou utilisez les directives OMS.",
+        useWhoGuidelines = "Directives OMS",
+        forceLoadAi = "Forcer l'IA",
+        retryingLoad = "Rechargement (%d/%d)...",
+        analyzingSymptoms = "Analyse des symptômes… (30-60s)",
+        analyzingSymptomsSec = "Analyse des symptômes… %ds écoulées",
+        translatingSymptoms = "Traduction des symptômes en anglais...",
+        translatingResultOnDevice = "Traduction du résultat (ML Kit, sur l'appareil)...",
+        translatingResultUnavailable = "Traduction sur l'appareil non disponible — résultat en anglais...",
+        integrityCheckFailed = "Le modèle n'a pas passé la vérification. Réessai au prochain démarrage."
     )
 
     val swahiliStrings = UiStrings(

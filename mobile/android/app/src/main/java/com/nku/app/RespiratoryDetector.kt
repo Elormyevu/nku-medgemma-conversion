@@ -669,6 +669,9 @@ class RespiratoryDetector(private val context: Context? = null) {
      */
     private fun resample(samples: FloatArray, fromRate: Int, toRate: Int): FloatArray {
         if (fromRate == toRate) return samples
+        // H-05 audit fix: guard against empty or single-element arrays where
+        // coerceIn(0, samples.size - 2) would throw IllegalArgumentException
+        if (samples.size < 2) return samples
         val ratio = toRate.toDouble() / fromRate
         val newLength = (samples.size * ratio).toInt()
         return FloatArray(newLength) { i ->

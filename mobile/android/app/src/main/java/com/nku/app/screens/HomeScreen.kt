@@ -79,10 +79,10 @@ fun HomeScreen(
 
         // ── Model Download / Error Banner ──
         val isDownloading = engineState == EngineState.LOADING_MODEL && engineProgress.isNotEmpty()
-        val isError = engineProgress.contains(strings.notEnoughStorage) ||
-                      engineProgress.contains("Not enough storage") ||
-                      engineProgress.contains("failed") ||
-                      engineProgress.contains("Connect to Wi-Fi")
+        // L-04 audit fix: Use EngineState for error detection instead of English
+        // string literals (the old approach broke in non-English locales).
+        // engineProgress is a localized user-facing string — never pattern-match on it.
+        val isError = engineState == EngineState.ERROR
 
         if (isDownloading || isError) {
             val bannerColor = if (isError) NkuColors.Warning else NkuColors.Info
@@ -143,7 +143,7 @@ fun HomeScreen(
                                 tint = NkuColors.Warning
                             )
                             Spacer(Modifier.width(6.dp))
-                            Text("Retry Download", fontSize = 13.sp, color = NkuColors.Warning)
+                            Text(strings.retryDownload, fontSize = 13.sp, color = NkuColors.Warning)
                         }
                     }
                 }

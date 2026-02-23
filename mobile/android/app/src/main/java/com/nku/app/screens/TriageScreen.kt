@@ -78,7 +78,11 @@ fun TriageScreen(
                 ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 ?.firstOrNull()
             if (!spokenText.isNullOrBlank()) {
-                sensorFusion.addSymptom(spokenText.trim())
+                // C-03 audit fix: Sanitize STT output before storage in SensorFusion.
+                // The prompt IS sanitized later in ClinicalReasoner, but defense-in-depth
+                // requires cleaning raw input at the earliest boundary.
+                val sanitized = PromptSanitizer.sanitize(spokenText.trim())
+                sensorFusion.addSymptom(sanitized)
             }
         }
     }

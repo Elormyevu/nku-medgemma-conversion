@@ -192,6 +192,11 @@ fun NkuSentinelApp(
     val strings = LocalizedStrings.forLanguage(selectedLanguage)
     val scope = rememberCoroutineScope()
     
+    // Keep engine strings in sync with selected language
+    LaunchedEffect(selectedLanguage) {
+        nkuEngine.strings = strings
+    }
+    
     val isSystemDark = androidx.compose.foundation.isSystemInDarkTheme()
     val isDarkTheme = when (currentTheme) {
         ThemePreference.LIGHT -> false
@@ -205,8 +210,8 @@ fun NkuSentinelApp(
         if (showLowMemoryDialog) {
             AlertDialog(
                 onDismissRequest = { showLowMemoryDialog = false },
-                title = { Text("⚠ Low Memory Warning", fontWeight = FontWeight.Bold) },
-                text = { Text("Your phone's RAM is currently running low due to background apps. This may cause the Nku Reasoning AI to crash. \n\nPlease close other apps to run the AI, or continue using standard WHO guidelines.") },
+                title = { Text(strings.lowMemoryTitle, fontWeight = FontWeight.Bold) },
+                text = { Text(strings.lowMemoryMessage) },
                 confirmButton = {
                     TextButton(onClick = {
                         showLowMemoryDialog = false
@@ -216,7 +221,7 @@ fun NkuSentinelApp(
                             clinicalReasoner.translateAssessment(nkuEngine, selectedLanguage)
                         }
                     }) {
-                        Text("Use WHO Guidelines")
+                        Text(strings.useWhoGuidelines)
                     }
                 },
                 dismissButton = {
@@ -238,7 +243,7 @@ fun NkuSentinelApp(
                             }
                         }
                     }) {
-                        Text("Force Load AI")
+                        Text(strings.forceLoadAi)
                     }
                 },
                 containerColor = NkuColors.Surface,

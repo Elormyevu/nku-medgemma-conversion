@@ -67,7 +67,11 @@ class JaundiceDetector {
 
         // Scleral tissue filter: healthy sclera is bright and low-saturation
         // Pixels with V>0.6 and S<0.35 are candidates for scleral tissue
-        private const val SCLERA_MAX_SAT = 0.35f
+        // M-01 audit fix: Raised from 0.35 to 0.50 — heavily jaundiced sclera
+        // has elevated saturation from bilirubin deposition. The original 0.35 cap
+        // excluded the most severely jaundiced pixels from the candidate pool,
+        // causing potential false negatives at high severity.
+        private const val SCLERA_MAX_SAT = 0.50f
         private const val SCLERA_MIN_VAL = 0.60f
     }
 

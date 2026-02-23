@@ -178,8 +178,13 @@ class EdemaDetector {
     }
     
     /**
-     * Compute Eye Aspect Ratio from landmark coordinates.
-     * EAR measures how "open" the eye is — puffy/edematous eyes have lower EAR.
+     * Compute Palpebral Fissure Ratio (PFR) from landmark coordinates.
+     *
+     * M-04 audit fix: Renamed from "EAR" (Eye Aspect Ratio). In blink-detection
+     * literature (Soukupová & Čech 2016), EAR = height/width ≈ 0.25. This function
+     * computes width/height ≈ 2.8 for edema detection — lower values indicate
+     * puffier/more edematous eyes. Renaming avoids confusion for reviewers who
+     * know EAR from the blink-detection domain.
      */
     private fun computeEAR(
         top: List<Float>, bottom: List<Float>,

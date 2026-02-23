@@ -83,7 +83,12 @@ class NkuInferenceEngine(private val context: Context) {
     private val _progress = MutableStateFlow("")
     val progress: StateFlow<String> = _progress.asStateFlow()
 
-    private var currentModel: SmolLM? = null
+    // L-01 audit fix: @Volatile for thread-safe visibility across coroutine dispatchers
+    @Volatile private var currentModel: SmolLM? = null
+
+    /** Localized strings for user-visible progress messages. Updated when language changes. */
+    var strings: LocalizedStrings.UiStrings = LocalizedStrings.UiStrings()
+        @Synchronized set
     private val nkuTranslator: NkuTranslator by lazy { NkuTranslator(context) }
 
     /**
@@ -106,7 +111,8 @@ class NkuInferenceEngine(private val context: Context) {
         val modifiedTime: Long,
         val isValid: Boolean
     )
-    private val sideloadValidationCache = mutableMapOf<String, ValidationCacheEntry>()
+    // H-02 audit fix: ConcurrentHashMap for thread-safe access from Dispatchers.IO
+    private val sideloadValidationCache = java.util.concurrent.ConcurrentHashMap<String, ValidationCacheEntry>()
 
     private fun validateSideloadedModel(file: File, expectedSha256: String?): Boolean {
         val cacheKey = file.absolutePath
@@ -213,7 +219,7 @@ class NkuInferenceEngine(private val context: Context) {
      */
     private suspend fun loadModel(modelFileName: String): SmolLM? = withContext(Dispatchers.IO) {
         _state.value = EngineState.LOADING_MODEL
-        _progress.value = "Loading ${modelFileName}… 0%"
+        _progress.value = strings.loadingModelPct.format(modelFileName, 0)
 
         var resolvedFile = resolveModelFile(modelFileName)
         if (resolvedFile == null) {
@@ -246,7 +252,7 @@ class NkuInferenceEngine(private val context: Context) {
                         val elapsed = System.currentTimeMillis() - startTime
                         // Asymptotic curve: approaches 95% but never hits 100% until actual completion
                         val pct = (95.0 * (1.0 - Math.exp(-2.0 * elapsed / estimatedLoadMs))).toInt().coerceIn(0, 95)
-                        _progress.value = "Loading ${modelFileName}… ${pct}%"
+                        _progress.value = strings.loadingModelPct.format(modelFileName, pct)
                         delay(500)
                     }
                 }
@@ -266,7 +272,7 @@ class NkuInferenceEngine(private val context: Context) {
                 } finally {
                     progressJob.cancel()
                 }
-                _progress.value = "Loading ${modelFileName}… 100%"
+                _progress.value = strings.loadingModelPct.format(modelFileName, 100)
                 Log.i(TAG, "Model loaded: $modelFileName (attempt ${attempt + 1})")
                 return@withContext smolLM
             } catch (t: Throwable) {
@@ -274,7 +280,7 @@ class NkuInferenceEngine(private val context: Context) {
                 if (attempt < MAX_LOAD_RETRIES - 1) {
                     // Free memory before retry — see F-9 note in unloadModel()
                     System.gc()
-                    _progress.value = "Retrying load (${attempt + 2}/$MAX_LOAD_RETRIES)..."
+                    _progress.value = strings.retryingLoad.format(attempt + 2, MAX_LOAD_RETRIES)
                     delay(backoffMs[attempt])
                 }
             }
@@ -322,7 +328,7 @@ class NkuInferenceEngine(private val context: Context) {
         if (language != "en") {
             _state.value = EngineState.TRANSLATING_TO_ENGLISH
             if (NkuTranslator.isOnDeviceSupported(language)) {
-                _progress.value = "Translating symptoms to English..."
+                _progress.value = strings.translatingSymptoms
                 englishText = nkuTranslator.translateToEnglish(structuredPrompt, language)
             } else {
                 Log.w(TAG, "Language $language not supported for on-device translation. Proceeding with raw text.")
@@ -343,13 +349,13 @@ class NkuInferenceEngine(private val context: Context) {
             }
 
             _state.value = EngineState.RUNNING_MEDGEMMA
-            _progress.value = "MedGemma analyzing…"
+            _progress.value = strings.medgemmaAnalyzing
 
             currentModel = loadModel(MEDGEMMA_MODEL)
             if (currentModel != null) {
                 // Transition to RUNNING_MEDGEMMA now that model is loaded
                 _state.value = EngineState.RUNNING_MEDGEMMA
-                _progress.value = "Analyzing symptoms… (this may take 30-60s)"
+                _progress.value = strings.analyzingSymptoms
 
                 currentModel!!.addSystemPrompt(
                     "You are a clinical triage AI for Community Health Workers in rural Africa. " +
@@ -367,7 +373,7 @@ class NkuInferenceEngine(private val context: Context) {
                 val timerJob = kotlinx.coroutines.CoroutineScope(Dispatchers.Main).launch {
                     while (true) {
                         val elapsed = (System.currentTimeMillis() - inferenceStart) / 1000
-                        _progress.value = "Analyzing symptoms… ${elapsed}s elapsed"
+                        _progress.value = strings.analyzingSymptomsSec.format(elapsed)
                         delay(1000)
                     }
                 }
@@ -386,23 +392,25 @@ class NkuInferenceEngine(private val context: Context) {
                     Log.w(TAG, "MedGemma output failed safety validation, using fallback")
                     "[Output filtered for safety] Please retry or use camera-based screening."
                 }
-                unloadModel()
+                // L-02 audit fix: Removed explicit unloadModel() here — the finally
+                // block at L432 already calls unloadModel() on all paths.
+                // Double-close on SmolLM is benign but wasteful.
 
                 // ── Stage 3: Translate back to local language via ML Kit ──
                 if (language != "en") {
                     _state.value = EngineState.TRANSLATING_TO_LOCAL
                     if (NkuTranslator.isOnDeviceSupported(language)) {
-                        _progress.value = "Translating result (ML Kit, on-device)..."
+                        _progress.value = strings.translatingResultOnDevice
                         val translated = nkuTranslator.translateFromEnglish(clinicalResponse, language)
                         localizedResponse = translated ?: clinicalResponse  // Fallback to English
                     } else {
-                        _progress.value = "On-device result translation unavailable — returning English result..."
+                        _progress.value = strings.translatingResultUnavailable
                         localizedResponse = clinicalResponse
                     }
                 }
 
                 _state.value = EngineState.COMPLETE
-                _progress.value = "Assessment complete"
+                _progress.value = strings.assessmentComplete
                 delay(500)  // P0 fix: let UI display "complete" briefly before re-enabling Run button
                 _state.value = EngineState.IDLE
 
@@ -495,7 +503,7 @@ class NkuInferenceEngine(private val context: Context) {
         // 2. Try APK-bundled assets (production .aab with PAD install-time pack)
         try {
             _state.value = EngineState.LOADING_MODEL
-            _progress.value = "Extracting $modelName..."
+            _progress.value = strings.extractingModel.format(modelName)
             val afd = context.assets.openFd(modelName)
             val totalBytes = afd.length
             afd.close()
@@ -517,7 +525,7 @@ class NkuInferenceEngine(private val context: Context) {
                         } else -1
                         if (percent != lastReportedPercent && percent >= 0) {
                             lastReportedPercent = percent
-                            _progress.value = "Extracting $modelName… $percent%"
+                            _progress.value = strings.extractingModelPct.format(modelName, percent)
                         }
                     }
                 }
@@ -541,7 +549,7 @@ class NkuInferenceEngine(private val context: Context) {
         
         for (attempt in 1..maxAttempts) {
             Log.i(TAG, "Download attempt $attempt/$maxAttempts")
-            _progress.value = if (attempt > 1) "Retrying download (attempt $attempt/$maxAttempts)…" else "Connecting to download MedGemma..."
+            _progress.value = if (attempt > 1) strings.downloadRetrying.format(attempt, maxAttempts) else strings.connectingToDownload
             
             downloaded = downloadModelNative(MEDGEMMA_DOWNLOAD_URL, modelName)
             if (downloaded != null) {
@@ -552,14 +560,14 @@ class NkuInferenceEngine(private val context: Context) {
             if (attempt < maxAttempts) {
                 val delaySec = backoffDelays[attempt - 1] / 1000
                 Log.w(TAG, "Download attempt $attempt failed, retrying in ${delaySec}s…")
-                _progress.value = "Download failed. Retrying in ${delaySec}s… (attempt ${attempt + 1}/$maxAttempts)"
+                _progress.value = strings.downloadRetryingIn.format(delaySec, attempt + 1, maxAttempts)
                 kotlinx.coroutines.delay(backoffDelays[attempt - 1])
             }
         }
         
         if (downloaded == null) {
             Log.e(TAG, "MedGemma download failed after $maxAttempts attempts — model will not be available for triage")
-            _progress.value = "Model download failed. Connect to Wi-Fi and restart the app."
+            _progress.value = strings.downloadFailedFull
         }
         _state.value = EngineState.IDLE
     }
@@ -605,11 +613,11 @@ class NkuInferenceEngine(private val context: Context) {
             if (freeBytes < requiredBytes) {
                 val freeMB = freeBytes / (1024 * 1024)
                 Log.e(TAG, "Insufficient storage for model download: ${freeMB}MB free, need ~2.6GB")
-                _progress.value = "Not enough storage (${freeMB}MB free). Free up space and restart."
+                _progress.value = strings.notEnoughStorageFull.format(freeMB)
                 return@withContext null
             }
 
-            _progress.value = "Connecting to download MedGemma..."
+            _progress.value = strings.connectingToDownload
             var downloadUrl = java.net.URL(urlStr)
             
             // Handle redirects (HuggingFace CDN usually redirects)
@@ -662,7 +670,7 @@ class NkuInferenceEngine(private val context: Context) {
                         val percent = ((bytesWritten * 100) / totalBytes).toInt()
                         if (percent != lastReportedPercent) {
                             lastReportedPercent = percent
-                            _progress.value = "Downloading MedGemma… $percent% (${mb}MB / ${totalMB}MB)"
+                            _progress.value = strings.downloadingProgress.format(percent, mb, totalMB)
                         }
                     }
                 }
@@ -674,12 +682,12 @@ class NkuInferenceEngine(private val context: Context) {
             }
 
             // Validate GGUF header + SHA-256 BEFORE renaming to final path
-            _progress.value = "Validating model integrity..."
+            _progress.value = strings.validatingModel
             val expectedHash = if (fileName == MEDGEMMA_MODEL) MEDGEMMA_SHA256 else null
             if (!ModelFileValidator.isValidGguf(tmpFile, expectedSha256 = expectedHash)) {
                 Log.e(TAG, "Downloaded model failed validation/trust check: $fileName")
                 tmpFile.delete()
-                _progress.value = "Model download failed integrity check. Will retry on next launch."
+                _progress.value = strings.integrityCheckFailed
                 return@withContext null
             }
 
@@ -700,8 +708,9 @@ class NkuInferenceEngine(private val context: Context) {
 
         } catch (e: Exception) {
             Log.e(TAG, "Native download failed for $fileName", e)
+            // H-03 audit fix: Only delete tmpFile on failure. Do NOT delete outFile —
+            // it may contain a previously valid model from an earlier successful download.
             if (tmpFile.exists()) tmpFile.delete()
-            if (outFile.exists()) outFile.delete()
             return@withContext null
         } finally {
             connection?.disconnect()

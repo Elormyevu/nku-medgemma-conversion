@@ -64,6 +64,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = '17'
+        // L-03 audit note: Required because SmolLM JNI bindings (project ':smollm')
+        // were compiled with a different Kotlin metadata version. Removing this flag
+        // causes compilation failures. If smollm is upgraded, re-test without this flag.
         freeCompilerArgs = ['-Xskip-metadata-version-check']
     }
     buildFeatures {

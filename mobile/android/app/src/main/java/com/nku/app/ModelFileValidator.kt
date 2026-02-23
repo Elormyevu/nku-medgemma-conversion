@@ -40,7 +40,9 @@ object ModelFileValidator {
             try {
                 val digest = java.security.MessageDigest.getInstance("SHA-256")
                 file.inputStream().use { fis ->
-                    val buffer = ByteArray(8192)
+                    // M-03 audit fix: 256KB buffer (was 8KB) — reduces read calls from
+                // ~280,000 to ~9,000 for the 2.3GB model on budget NAND.
+                val buffer = ByteArray(256 * 1024)
                     var read: Int
                     while (fis.read(buffer).also { read = it } != -1) {
                         digest.update(buffer, 0, read)

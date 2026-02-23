@@ -203,6 +203,14 @@ object PromptSanitizer {
      *
      * @param input Raw user text (symptoms, voice transcription, etc.)
      * @return Sanitized text safe for prompt interpolation
+     *
+     * M-02 audit note: This sanitizer **strips** injection patterns and continues
+     * processing (replaces with `[filtered]`). This is intentionally different from
+     * the cloud API's `InputValidator.validate_text()` which **hard-rejects** (returns
+     * `is_valid=False`). The on-device design choice enables the app to function
+     * even with partial input — the user may unknowingly trigger patterns through
+     * legitimate medical descriptions. The cloud API can afford to reject because
+     * it receives pre-sanitized input from the app.
      */
     fun sanitize(input: String): String {
         var cleaned = input

@@ -74,8 +74,20 @@ enum class TriageSource {
 class ClinicalReasoner {
 
     companion object {
-        /** Minimum confidence threshold for sensor data to be included in triage.
-         *  Sensors below this threshold are excluded (abstention). */
+        /**
+         * Minimum confidence threshold for sensor data to be included in triage.
+         * Sensors below this threshold are excluded (abstention).
+         *
+         * M-05 audit doc: Dual confidence gating design:
+         *   - SensorFusion gates at 0.3 → data appears in VitalSigns and is shown
+         *     to MedGemma with a "[LOW CONFIDENCE]" annotation in the prompt.
+         *   - ClinicalReasoner gates at 0.75 → data is included in rule-based
+         *     triage logic only if confidence is high enough.
+         * This is intentional: MedGemma can reason about low-confidence data
+         * (it sees the annotation), but rule-based triage should not act on
+         * unreliable measurements. TriageScreen shows a visual note when
+         * data falls in the 0.4–0.75 gap (see TriageScreen.kt:255).
+         */
         const val CONFIDENCE_THRESHOLD = 0.75f
     }
     private val _assessment = MutableStateFlow<ClinicalAssessment?>(null)
@@ -571,6 +583,27 @@ class ClinicalReasoner {
         if (concerns.isEmpty()) {
             concerns.add("No significant abnormalities detected")
             recommendations.add("Continue routine health monitoring")
+        }
+        
+        // C-02 audit fix: Escalate to CRITICAL when ≥3 distinct HIGH-severity
+        // indicators are active simultaneously. This aligns with WHO/IMCI
+        // multi-system danger sign criteria (e.g., respiratory distress +
+        // severe anaemia + significant edema = emergent presentation).
+        if (maxSeverity == Severity.HIGH) {
+            val highSeverityCount = listOfNotNull(
+                if (vitals.pallorSeverity in listOf(PallorSeverity.SEVERE, PallorSeverity.MODERATE)) 1 else null,
+                if (vitals.edemaSeverity == EdemaSeverity.SIGNIFICANT) 1 else null,
+                if (vitals.respiratoryRisk == RespiratoryRisk.HIGH_RISK) 1 else null,
+                if (vitals.reportedSymptoms.any { s -> val l = s.lowercase(); "chest" in l && "pain" in l }) 1 else null,
+                if (vitals.heartRate?.let { it > 130 || it < 40 } == true) 1 else null,
+                if (vitals.jaundice == JaundiceSeverity.SEVERE) 1 else null
+            ).size
+            
+            if (highSeverityCount >= 3) {
+                maxSeverity = Severity.CRITICAL
+                maxUrgency = Urgency.IMMEDIATE
+                recommendations.add(0, "EMERGENCY: Multiple critical indicators detected — refer to facility IMMEDIATELY")
+            }
         }
         
         // Determine triage category

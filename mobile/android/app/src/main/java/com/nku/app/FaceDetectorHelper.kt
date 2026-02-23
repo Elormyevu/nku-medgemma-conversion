@@ -84,8 +84,9 @@ class FaceDetectorHelper(private val context: Context) {
 
     private var faceDetector: FaceDetector? = null
     private var faceLandmarker: FaceLandmarker? = null
-    private var detectorInitialized = false
-    private var landmarkerInitialized = false
+    // H-01 audit fix: @Volatile ensures visibility across threads for lazy-init guards
+    @Volatile private var detectorInitialized = false
+    @Volatile private var landmarkerInitialized = false
 
     /**
      * Initialize the face detector for bounding box detection.
@@ -142,6 +143,8 @@ class FaceDetectorHelper(private val context: Context) {
      * Detect face bounding box in a bitmap.
      * Returns FaceROI or null if no face detected.
      */
+    // H-01 audit fix: @Synchronized prevents concurrent MediaPipe corruption
+    @Synchronized
     fun detectFace(bitmap: Bitmap): FaceROI? {
         if (!detectorInitialized) {
             initializeDetector()
@@ -174,6 +177,8 @@ class FaceDetectorHelper(private val context: Context) {
      * Detect face landmarks (478-point mesh) in a bitmap.
      * Returns FaceLandmarks or null if no face detected.
      */
+    // H-01 audit fix: @Synchronized prevents concurrent MediaPipe corruption
+    @Synchronized
     fun detectLandmarks(bitmap: Bitmap): FaceLandmarks? {
         if (!landmarkerInitialized) {
             initializeLandmarker()

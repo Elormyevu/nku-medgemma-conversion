@@ -19,6 +19,11 @@ class ModelConfig:
     # Pinned to exact commit SHA for submission reproducibility (audit §10 #2).
     # Re-verify digest if updating the model: huggingface-cli repo info <repo>
     medgemma_revision: Optional[str] = "7260922730e7f036ceae1fed95a01b980a5122ae"
+    # H-04 audit fix: SHA-256 expected hash for cloud-side model integrity verification.
+    # Mobile enforces SHA-256 on all 3 resolution paths (internal, PAD, sideload).
+    # Cloud should verify after hf_hub_download() completes, before loading.
+    # Set to None if hash is unknown; the app will log a warning but continue.
+    medgemma_sha256: Optional[str] = None  # TODO: compute and pin after first cloud deploy
     # Dedicated TranslateGemma GGUF is not publicly available.
     # Use MedGemma as a safe default translator model so /translate and /nku-cycle
     # are deployable out-of-the-box. Operators can still override to a better

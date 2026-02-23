@@ -130,3 +130,4 @@ task.md
 src/
 .coverage
 video_assets/
+launch_emu.sh

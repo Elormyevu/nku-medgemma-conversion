@@ -8,10 +8,11 @@
     <!-- Microphone permission for voice input (speech-to-text) -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     
-    <!-- INTERNET permission is pulled transitively via Play Asset Delivery manifest merge.
-         Network is used for: (1) cloud translation fallback for unsupported languages,
-         (2) reviewer-path MedGemma model download from HuggingFace.
+    <!-- INTERNET permission is explicitly required for downloading the model on 
+         sideloaded APK builds. Play Asset Delivery manifest merge only applies to AABs.
+         Network is used for: (1) reviewer-path MedGemma model download from HuggingFace.
          All clinical inference (MedGemma reasoning) is 100% on-device. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     
     <!-- Model loading fallback: read GGUF models from /sdcard/Download/ (dev/testing) -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"

@@ -49,7 +49,7 @@ fun CameraPreview(
         scaleType = androidx.camera.view.PreviewView.ScaleType.FILL_CENTER
     } }
 
-    androidx.compose.runtime.LaunchedEffect(lensFacing, enableAnalysis, enableTorch) {
+    androidx.compose.runtime.DisposableEffect(lensFacing, enableAnalysis, enableTorch) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
         cameraProviderFuture.addListener({
             try {
@@ -59,22 +59,14 @@ fun CameraPreview(
                     .build()
                     .also { it.setSurfaceProvider(previewView.surfaceProvider) }
                 
-                // Build selectors: preferred lens first, then fallback
+                // Fallbacks: L-02 Audit compliance (Support non-standard devices without default active lens)
                 val preferredFacing = lensFacing
-                val fallbackFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK)
-                    CameraSelector.LENS_FACING_FRONT else CameraSelector.LENS_FACING_BACK
+                val fallbackFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK) {
+                    CameraSelector.LENS_FACING_FRONT
+                } else CameraSelector.LENS_FACING_BACK
                 
-                val preferredSelector = try {
-                    CameraSelector.Builder()
-                        .requireLensFacing(preferredFacing)
-                        .build()
-                } catch (e: Exception) { null }
-                
-                val fallbackSelector = try {
-                    CameraSelector.Builder()
-                        .requireLensFacing(fallbackFacing)
-                        .build()
-                } catch (e: Exception) { null }
+                val preferredSelector = try { CameraSelector.Builder().requireLensFacing(preferredFacing).build() } catch (e: Exception) { null }
+                val fallbackSelector = try { CameraSelector.Builder().requireLensFacing(fallbackFacing).build() } catch (e: Exception) { null }
                 
                 cameraProvider.unbindAll()
                 
@@ -127,6 +119,16 @@ fun CameraPreview(
                 Log.e("NkuCamera", "Camera init failed", e)
             }
         }, ContextCompat.getMainExecutor(context))
+        
+        onDispose {
+            try {
+                val cameraProvider = ProcessCameraProvider.getInstance(context).get()
+                cameraProvider.unbindAll()
+                Log.i("NkuCamera", "Camera explicitly unbound on dispose")
+            } catch (e: Exception) {
+                Log.e("NkuCamera", "Error unbinding camera on dispose", e)
+            }
+        }
     }
     
     AndroidView(

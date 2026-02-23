@@ -30,7 +30,7 @@ from huggingface_hub import hf_hub_download
 # Cache hardening (CVE-2025-69872 mitigation context):
 # Keep all model/cache artifacts in a process-private directory so untrusted
 # users/processes cannot write cache entries that might later be deserialized.
-_secure_cache_root = os.environ.get('NKU_SECURE_CACHE_DIR', '/tmp/nku-cache')
+_secure_cache_root = os.environ.get('NKU_SECURE_CACHE_DIR', '/tmp/nku-cache')  # nosec B108 — intentional; dir is chmod 700 at startup
 try:
     os.makedirs(_secure_cache_root, mode=0o700, exist_ok=True)
     os.chmod(_secure_cache_root, 0o700)
@@ -324,7 +324,7 @@ def load_models(
             ):
                 request_logger.info("Loading shared MedGemma/TranslateGemma model once...")
                 hf_token = os.environ.get('HF_TOKEN') or os.environ.get('HUGGINGFACE_TOKEN')
-                shared_path = hf_hub_download(
+                shared_path = hf_hub_download(  # nosec B615 — revision pinned via config
                     config.model.medgemma_repo,
                     config.model.medgemma_file,
                     revision=config.model.medgemma_revision,
@@ -353,7 +353,7 @@ def load_models(
                 # B-07: Explicitly pass token — deploy.sh may set HUGGINGFACE_TOKEN
                 # but huggingface_hub expects HF_TOKEN. Support both.
                 hf_token = os.environ.get('HF_TOKEN') or os.environ.get('HUGGINGFACE_TOKEN')
-                med_path = hf_hub_download(
+                med_path = hf_hub_download(  # nosec B615 — revision pinned via config
                     config.model.medgemma_repo,
                     config.model.medgemma_file,
                     revision=config.model.medgemma_revision,
@@ -371,7 +371,7 @@ def load_models(
             if require_translategemma and translategemma is None:
                 request_logger.info("Downloading TranslateGemma...")
                 hf_token = os.environ.get('HF_TOKEN') or os.environ.get('HUGGINGFACE_TOKEN')
-                trans_path = hf_hub_download(
+                trans_path = hf_hub_download(  # nosec B615 — revision pinned via config
                     config.model.translategemma_repo,
                     config.model.translategemma_file,
                     revision=config.model.translategemma_revision,

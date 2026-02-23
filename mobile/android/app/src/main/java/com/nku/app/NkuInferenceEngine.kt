@@ -521,16 +521,46 @@ class NkuInferenceEngine(private val context: Context) {
         }
 
         // 3. Download from HuggingFace (reviewer/debug/emulator path)
+        //    Retry up to 3 times with exponential backoff (5s → 15s → 45s)
         Log.i(TAG, "Initiating MedGemma download from HuggingFace on app startup")
         _state.value = EngineState.LOADING_MODEL
-        val downloaded = downloadModelNative(MEDGEMMA_DOWNLOAD_URL, modelName)
-        if (downloaded != null) {
-            Log.i(TAG, "MedGemma downloaded and validated: ${downloaded.absolutePath}")
-        } else {
-            Log.e(TAG, "MedGemma download failed — model will not be available for triage")
+        
+        val maxAttempts = 3
+        val backoffDelays = longArrayOf(5_000L, 15_000L, 45_000L)
+        var downloaded: File? = null
+        
+        for (attempt in 1..maxAttempts) {
+            Log.i(TAG, "Download attempt $attempt/$maxAttempts")
+            _progress.value = if (attempt > 1) "Retrying download (attempt $attempt/$maxAttempts)…" else "Connecting to download MedGemma..."
+            
+            downloaded = downloadModelNative(MEDGEMMA_DOWNLOAD_URL, modelName)
+            if (downloaded != null) {
+                Log.i(TAG, "MedGemma downloaded and validated: ${downloaded.absolutePath}")
+                break
+            }
+            
+            if (attempt < maxAttempts) {
+                val delaySec = backoffDelays[attempt - 1] / 1000
+                Log.w(TAG, "Download attempt $attempt failed, retrying in ${delaySec}s…")
+                _progress.value = "Download failed. Retrying in ${delaySec}s… (attempt ${attempt + 1}/$maxAttempts)"
+                kotlinx.coroutines.delay(backoffDelays[attempt - 1])
+            }
+        }
+        
+        if (downloaded == null) {
+            Log.e(TAG, "MedGemma download failed after $maxAttempts attempts — model will not be available for triage")
             _progress.value = "Model download failed. Connect to Wi-Fi and restart the app."
         }
         _state.value = EngineState.IDLE
+    }
+
+    /**
+     * Public retry entrypoint for the UI "Retry Download" button.
+     * Re-runs the full model resolution + download flow.
+     */
+    suspend fun retryModelDownload() {
+        Log.i(TAG, "User-initiated model download retry")
+        extractModelsFromAssets()
     }
 
     /**

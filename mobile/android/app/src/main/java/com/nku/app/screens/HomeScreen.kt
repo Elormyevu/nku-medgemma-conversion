@@ -40,6 +40,7 @@ fun HomeScreen(
     selectedLanguage: String,
     onLanguageChange: (String) -> Unit,
     onNavigateToTab: (Int) -> Unit = {},
+    onRetryDownload: () -> Unit = {},
     engineState: EngineState = EngineState.IDLE,
     engineProgress: String = ""
 ) {
@@ -129,6 +130,22 @@ fun HomeScreen(
                         color = NkuColors.TextSecondary,
                         textAlign = TextAlign.Center
                     )
+                    if (isError) {
+                        Spacer(Modifier.height(10.dp))
+                        OutlinedButton(
+                            onClick = onRetryDownload,
+                            border = BorderStroke(1.dp, NkuColors.Warning)
+                        ) {
+                            Icon(
+                                Icons.Default.Refresh,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = NkuColors.Warning
+                            )
+                            Spacer(Modifier.width(6.dp))
+                            Text("Retry Download", fontSize = 13.sp, color = NkuColors.Warning)
+                        }
+                    }
                 }
             }
         }

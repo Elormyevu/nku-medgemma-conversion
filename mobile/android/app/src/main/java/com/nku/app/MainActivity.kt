@@ -308,6 +308,9 @@ fun NkuSentinelApp(
                             scope.launch { appSettingsStore.saveLanguagePreference(newLang) } 
                         },
                         onNavigateToTab = { selectedTab = it },
+                        onRetryDownload = {
+                            scope.launch { nkuEngine.retryModelDownload() }
+                        },
                         engineState = engineState,
                         engineProgress = engineProgress,
                     )

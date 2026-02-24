@@ -35,29 +35,29 @@ The Nku Cycle is a self-adapting, multi-stage orchestration pipeline:
 
 **Adaptive Memory Management:** While 3GB RAM is common, Android OS background tasks consume significant memory dynamically. Before executing MedGemma, Nku queries `ActivityManager.MemoryInfo` for an 800MB resident free buffer. Nku relies on Android's native `mmap` implementation, seamlessly paging the 2.3GB model into the active virtual address space dynamically. By ensuring 800MB of breathing room, `mmap` pages the weights without "thrashing" the CPU. If free RAM is insufficient, or if the Android OOM (Out-of-Memory) killer interrupts the C++ inference thread, Nku gracefully catches the exception and falls back to deterministic WHO/IMCI rules.
 
-**Why Compressed Structured Prompting Matters:** MedGemma was trained on clinical text, not raw matrices. A prompt like *"she looks pale and puffy"* although providing some detail that medgemma 4b can triage on in nku, doesn't provide enough context to extract the model's full potential. Instead, Nku fuses user text with structured sensor metrics, for example:
+**Why Compressed Structured Prompting Matters:** MedGemma was trained on clinical text, not raw matrices. A prompt like *"she looks pale and puffy"* although providing some detail that medgemma 4b can triage on in nku, doesn't provide enough context to extract the model's full potential. Instead, Nku fuses user text with structured sensor metrics (Appendix E), for example:
 
 > `EAR: 2.15 (normal ≈2.8, edema limit ≤2.2), edema index: 0.52. Conjunctiva sat: 0.08 (pallor limit ≤0.10). Patient pregnant.`
 
 MedGemma responds to this structured biomarker input with:
-> `SEVERITY: HIGH | URGENCY: IMMEDIATE` — specifically identifying the risk of preeclampsia and concurrent anemia, recommending immediate facility referral.
+> `SEVERITY: HIGH | URGENCY: IMMEDIATE` — specifically identifying the risk of preeclampsia and concurrent anemia, recommending immediate facility referral (see Appendix C for full inference trace).
 
 **Context Window Bottleneck:** Budget Android 3GB memory constraints restrict the KV-Cache to exactly 2048 tokens. Nku utilizes *Sensor Prompt Compression*, collapsing verbose sensory arrays natively on the Android layer before they hit the LLM prompt. This halves token consumption, unlocking over 1200 free tokens for MedGemma to utilize full Chain-of-Thought (CoT) reasoning, leading to a marked +20pp accuracy improvement in complex triage (detailed in Appendix I).
 
 ### Technical details
-**Edge AI — Quantization:** We achieved a 71% model size reduction (8GB → 2.3GB) via Q4_K_M quantization while preserving 81% of its original MedQA baseline (56% quantized vs 69% unquantized) (Appendix D).
+**Edge AI — Quantization:** We achieved a 71% model size reduction (8GB → 2.3GB) via Q4_K_M quantization while preserving 81% of its original MedQA baseline (56% quantized vs 69% unquantized) via our African clinical calibration dataset (Appendices A and D).
 
 **HeAR Respiratory Screening:** Sub-Saharan Africa carries a massive burden of TB, COPD, and pneumonia. Nku incorporates Google’s HeAR Event Detector (1.1MB TFLite) to screen 2 seconds of cough/breathing audio in ~50ms. The Event Detector yields a structured class distribution output (`Cough Probability: 0.82`, `Risk Score: High`) directly into the prompt. MedGemma reliably reasons over these acoustic probabilities alongside other reported qualitative symptoms (detailed in Appendix F).
 
 **Safety:** The system enforces a 6-layer `PromptSanitizer` at every model boundary (e.g., zero-width stripping, base64 detection, lengths caps), plus delimiter-wrapped injection defense. Inference auto-pauses at 42°C device thermal limits to prevent hardware throttling damage (detailed in Appendix G).
 
-**46 Pan-African Languages:** 14 clinically verified. ML Kit executes locally. Unsupported indigenous languages securely fall back to the Google Cloud Translate API, ensuring seamless coverage while maintaining MedGemma's reasoning firmly on-device in English.
+**46 Pan-African Languages:** 14 clinically verified (Appendix B). ML Kit executes locally. Unsupported indigenous languages securely fall back to the Google Cloud Translate API, ensuring seamless coverage while maintaining MedGemma's reasoning firmly on-device in English.
 
 ---
 
 **Prize Track: Main Track and Edge AI Prize** 
 - **HAI-DEF:** MedGemma 4B is the irreplaceable core of the clinical reasoning engine.
-- **Product Feasibility:** Q4_K_M compression (2.3GB), `mmap` loading on $60+ Androids, `llama.cpp` JNI, full Android UI.
+- **Product Feasibility:** Q4_K_M compression (2.3GB), `mmap` loading on $60+ Androids, `llama.cpp` JNI, full Android UI (see Appendix H for end-to-end deployment proof).
 - **Novelty:** Integrates Google's HeAR Event Detector (1.1MB FP32/INT8) dynamically with an LLM for respiratory triage on mobile.
 - **Open Source:** Fully open source under Apache 2.0. Source code, Python CI pipelines, and calibration tools available on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion) and [HuggingFace](https://huggingface.co/wredd).
 

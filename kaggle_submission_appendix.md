@@ -368,6 +368,9 @@ Important preventive measures:
 > Bukaanka: Waxaan qabaa xummad iyo madax xanuun saddex maalmood.
 > Dhakhtarka: Calaamadahan waxay tilmaamayaan malaria. Waa in aan baadhno dhiigga.
 
+
+[⬆ Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## Appendix B: Supported Languages (46 Total)
@@ -414,6 +417,9 @@ Important preventive measures:
 | Luo | luo | Tswana | tn |
 | | | Tumbuka | tum |
 | | | Venda | ve |
+
+
+[⬆ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -544,6 +550,9 @@ NOTE: Combination of preeclampsia warning signs and anemia in third trimester
 requires same-day clinical evaluation. This is not a "watch and wait" situation.
 ```
 
+
+[⬆ Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## Appendix D: Quantization & Translation Model Selection
@@ -636,6 +645,9 @@ Final architecture — hybrid translation:
 
 This hybrid approach eliminated ~2.3GB of TranslateGemma model weight, removed the model-swapping pipeline overhead (3 load/unload cycles → 1), and expanded language coverage from ~15 to 100+ languages — while preserving the 100% offline guarantee for the primary official-language use case.
 
+
+[⬆ Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## Appendix E: Why the Pipeline Provides Sufficient Context for Triage
@@ -718,6 +730,9 @@ Nku doesn't rely on MedGemma alone. The safety architecture provides multiple co
 ### Conclusion
 
 The literature and architectural realities demonstrate that: (a) triage is substantially easier for LLMs than MedQA, (b) LLM-based decision support reduces diagnostic errors in Sub-Saharan African clinical settings, (c) while zero-shot LLM performance degrades on real medical data, (d) structured prompting substantially improves model performance over zero-shot baselines, (e) on-device quantized models retain clinically useful accuracy, and (f) Nku's 6-layer safety architecture explicitly compensates for residual model limitations. Combined with the reality that the alternative for these CHWs is *zero* diagnostic support, the pipeline provides a well-grounded, defensible starting point for field validation.
+
+
+[⬆ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -981,6 +996,9 @@ Beyond sensor data, the prompt includes:
 | Reported symptoms | Text/voice input | Sanitized via `PromptSanitizer` (6-layer injection defense), wrapped in `<<<>>>` delimiters |
 | Output instructions | Static template | Forces structured `SEVERITY/URGENCY/CONCERNS/DIFFERENTIAL_DIAGNOSES/RECOMMENDATIONS` format for reliable parsing |
 
+
+[⬆ Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## Appendix G: Safety Architecture
@@ -1109,6 +1127,9 @@ The model's response demonstrates appropriate clinical reasoning for a symptom-o
 - Recommended immediate actionable CHW interventions: **Malaria RDT**, **hydration assessment**, and **ORS**.
 - Maintained safe guardrails: Advised avoiding NSAIDs (dengue risk) and provided clear escalation criteria (lethargy, inability to keep fluids down) for facility referral.
 
+
+[⬆ Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## Appendix I: Clinical Reasoning Superiority via Prompt Compression
@@ -1162,6 +1183,9 @@ These are the 20 hand-tailored, multi-morbidity stress tests utilized in the CoT
 | **V18** | Chronic cough, low risk | Dry cough for 1 week, no fever, no night sweats, eating well | `HR: 74`, `Respiratory_risk: LOW` | GREEN (Routine) | GREEN (Pass) | GREEN (Pass) |
 | **V19** | Snake bite | Bitten on foot 1 hour ago, swelling spreading up leg, very painful | `HR: 110` | RED (Immediate) | ORANGE (Fail) | ORANGE (Fail) |
 | **V20** | Iron deficiency pregnancy | 24 weeks pregnant, tired, craving ice, slightly pale | `HR: 88`, `Pallor_sev: MILD`, `is_pregnant: True` | YELLOW (Soon) | GREEN (Fail) | GREEN (Fail) |
+
+
+[⬆ Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -1230,3 +1254,5 @@ These are the 20 hand-tailored, multi-morbidity stress tests utilized in the CoT
 [31] Perin J, Mulick A, Yeung D, et al. Global, regional, and national causes of under-5 mortality in 2000-19: an updated systematic analysis with implications for the Sustainable Development Goals. *Lancet Child Adolesc Health*. 2022;6(2):106-115. doi:10.1016/S2352-4642(21)00311-4
 
 [32] Mahvar F., Liu Y., Golden D., et al. "The MedGemma Impact Challenge". *Kaggle*, 2026. https://kaggle.com/competitions/med-gemma-impact-challenge
+
+[⬆ Back to Table of Contents](#table-of-contents)

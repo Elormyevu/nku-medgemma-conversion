@@ -39,10 +39,12 @@ The Nku Cycle is a self-adapting, multi-stage orchestration pipeline:
 
 > `EAR: 2.15 (normal ≈2.8, edema limit ≤2.2), edema index: 0.52. Conjunctiva sat: 0.08 (pallor limit ≤0.10). Patient pregnant.`
 
-MedGemma responds to this structured biomarker input with an assessment specifically identifying the risk of preeclampsia [28] and concurrent anemia [27]:
-> `SEVERITY: HIGH | URGENCY: IMMEDIATE` — specifically identifying the risk of preeclampsia and concurrent anemia, recommending immediate facility referral (see Appendix C for full inference trace).
+MedGemma responds to this structured biomarker input with an assessment identifying the risk, mapping out differential diagnoses, and establishing urgency:
+> `SEVERITY: HIGH | URGENCY: IMMEDIATE`
+> `DIFFERENTIAL_DIAGNOSES: - Severe Preeclampsia - Chronic Hypertension with Superimposed Preeclampsia`
+> `PRIMARY_CONCERNS: - Significant facial edema in pregnancy...` (see Appendix C for full inference trace).
 
-**Context Window Bottleneck:** Budget Android 3GB memory constraints restrict the KV-Cache to exactly 2048 tokens. Nku utilizes *Sensor Prompt Compression*, collapsing verbose sensory arrays natively on the Android layer before they hit the LLM prompt. This halves token consumption, unlocking over 1200 free tokens for MedGemma to utilize full Chain-of-Thought (CoT) reasoning, leading to a marked +20pp accuracy improvement in complex triage [9, 19, 20] (detailed in Appendix I).
+**Context Window Bottleneck:** Budget Android 3GB memory constraints restrict the KV-Cache to exactly 2048 tokens. Nku utilizes *Sensor Prompt Compression*, collapsing verbose sensory arrays natively on the Android layer before they hit the LLM prompt. This halves token consumption, unlocking over 1200 free tokens for MedGemma to utilize full Chain-of-Thought (CoT) reasoning, leading to a marked +20pp accuracy improvement in complex triage and differential diagnosis mapping [9, 19, 20] (detailed in Appendix I).
 
 ### Technical details
 **Edge AI — Quantization [23]:** We achieved a 71% model size reduction (8GB → 2.3GB) via Q4_K_M quantization while preserving 81% of its original MedQA baseline (56% quantized vs 69% unquantized) via our African clinical calibration dataset (Appendices A and D).

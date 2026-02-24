@@ -393,6 +393,7 @@ fun TriageScreen(
                 append("${strings.severityLabel}: ${strings.localizedSeverity(result.overallSeverity)}. ")
                 append("${strings.urgencyLabel}: ${strings.localizedUrgency(result.urgency)}. ")
                 if (result.primaryConcerns.isNotEmpty()) { append("${strings.ttsConcerns}: "); result.primaryConcerns.forEach { append("$it. ") } }
+                if (result.differentialDiagnoses.isNotEmpty()) { append("Differential Diagnoses: "); result.differentialDiagnoses.forEach { append("$it. ") } }
                 if (result.recommendations.isNotEmpty()) { append("${strings.ttsRecommendations}: "); result.recommendations.forEach { append("$it. ") } }
             }
             Button(
@@ -418,6 +419,21 @@ fun TriageScreen(
                 }
             }
             Spacer(Modifier.height(12.dp))
+            
+            if (result.differentialDiagnoses.isNotEmpty()) {
+                Card(colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground),
+                    modifier = Modifier.fillMaxWidth().semantics {
+                        contentDescription = "Differential Diagnoses: ${result.differentialDiagnoses.joinToString(", ")}"
+                    }) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                        Text("Differential Diagnoses", fontWeight = FontWeight.Bold, color = NkuColors.TextPrimary)
+                        Spacer(Modifier.height(8.dp))
+                        result.differentialDiagnoses.forEach { diff -> Text("• $diff", color = NkuColors.TextSecondary, fontSize = 14.sp) }
+                    }
+                }
+                Spacer(Modifier.height(12.dp))
+            }
+
             Card(colors = CardDefaults.cardColors(containerColor = NkuColors.CardBackground),
                 modifier = Modifier.fillMaxWidth().semantics {
                     contentDescription = "Recommendations: ${result.recommendations.joinToString(", ")}"

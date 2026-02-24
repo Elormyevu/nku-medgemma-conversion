@@ -103,7 +103,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 | **Jaundice Screen** | `JaundiceDetector.kt` | Scleral HSV analysis | Jaundice severity (0-1) |
 | **Preeclampsia** | `EdemaDetector.kt` | Facial geometry (EAR + gradients) | Edema severity (0-1) |
 | **TB/Respiratory** | `RespiratoryDetector.kt` | HeAR Event Detector (TFLite, 1.1MB, FP32 fallback) | Risk score (0-1) + health sound class distribution |
-| **Triage** | `ClinicalReasoner.kt` | MedGemma + WHO/IMCI fallback | Severity & recommendations |
+| **Triage** | `ClinicalReasoner.kt` | MedGemma + WHO/IMCI fallback | Severity, differentials & recommendations |
 
 All screening uses **pure signal processing** (0 MB additional weights) except TB/respiratory which uses the HeAR Event Detector (MobileNetV3, 1.1MB TFLite with robust FP32 fallback, lazy-loaded on first inference). The HeAR Event Detector acts as the primary respiratory triage mechanism, classifying 8 distinct acoustic events to generate a synthetic respiratory risk score based on abnormal breathing patterns and cough prevalence.
 

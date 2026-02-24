@@ -36,6 +36,7 @@ import java.util.Locale
 data class ClinicalAssessment(
     val overallSeverity: Severity,
     val primaryConcerns: List<String>,
+    val differentialDiagnoses: List<String> = emptyList(),
     val recommendations: List<String>,
     val urgency: Urgency,
     val triageCategory: TriageCategory,
@@ -317,6 +318,8 @@ class ClinicalReasoner {
         sb.appendLine("URGENCY: [ROUTINE/WITHIN_WEEK/WITHIN_48_HOURS/IMMEDIATE]")
         sb.appendLine("PRIMARY_CONCERNS:")
         sb.appendLine("- [list each concern]")
+        sb.appendLine("DIFFERENTIAL_DIAGNOSES:")
+        sb.appendLine("- [list top 2-3 potential diagnoses based on data]")
         sb.appendLine("RECOMMENDATIONS:")
         sb.appendLine("- [list each recommendation]")
         sb.appendLine()
@@ -678,10 +681,18 @@ class ClinicalReasoner {
             }
             
             // Extract concerns
-            val concernsSection = Regex("PRIMARY_CONCERNS:(.*?)(?=RECOMMENDATIONS:|$)", RegexOption.DOT_MATCHES_ALL)
+            val concernsSection = Regex("PRIMARY_CONCERNS:(.*?)(?=DIFFERENTIAL_DIAGNOSES:|RECOMMENDATIONS:|$)", RegexOption.DOT_MATCHES_ALL)
                 .find(response)?.groupValues?.get(1) ?: ""
             val concerns = Regex("-\\s*(.+)")
                 .findAll(concernsSection)
+                .map { it.groupValues[1].trim() }
+                .toList()
+                
+            // Extract differentials
+            val diffDiagSection = Regex("DIFFERENTIAL_DIAGNOSES:(.*?)(?=RECOMMENDATIONS:|$)", RegexOption.DOT_MATCHES_ALL)
+                .find(response)?.groupValues?.get(1) ?: ""
+            val differentials = Regex("-\\s*(.+)")
+                .findAll(diffDiagSection)
                 .map { it.groupValues[1].trim() }
                 .toList()
             
@@ -703,6 +714,7 @@ class ClinicalReasoner {
             val assessment = ClinicalAssessment(
                 overallSeverity = severity,
                 primaryConcerns = concerns.ifEmpty { listOf("See full response") },
+                differentialDiagnoses = differentials,
                 recommendations = recommendations.ifEmpty { listOf("See full response") },
                 urgency = urgency,
                 triageCategory = triageCategory,
@@ -735,6 +747,9 @@ class ClinicalReasoner {
                 val concernsDeferred = current.primaryConcerns.map { concern ->
                     async { engine.translateFromEnglish(concern, targetLanguage) }
                 }
+                val diffsDeferred = current.differentialDiagnoses.map { diff ->
+                    async { engine.translateFromEnglish(diff, targetLanguage) }
+                }
                 val recsDeferred = current.recommendations.map { rec ->
                     async { engine.translateFromEnglish(rec, targetLanguage) }
                 }
@@ -743,6 +758,7 @@ class ClinicalReasoner {
                 // Emit translated assessment
                 _assessment.value = current.copy(
                     primaryConcerns = concernsDeferred.awaitAll(),
+                    differentialDiagnoses = diffsDeferred.awaitAll(),
                     recommendations = recsDeferred.awaitAll(),
                     disclaimer = disclaimerDeferred.await()
                 )

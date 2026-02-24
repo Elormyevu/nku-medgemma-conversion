@@ -62,3 +62,12 @@ MedGemma responds to this structured biomarker input with:
 - **Open Source:** Fully open source under Apache 2.0. Source code, Python CI pipelines, and calibration tools available on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion) and [HuggingFace](https://huggingface.co/wredd).
 
 *Refer to the Kaggle Submission Appendix for mathematical algorithms, validation schemas, calibration configurations, benchmarking datasets, and more.*
+
+### References
+[1] World Health Organization. *Health Workforce in the WHO African Region*. WHO AFRO, 2018.
+[2] World Health Organization. *Global Strategy on Human Resources for Health: Workforce 2030*. WHO, 2016.
+[3] Kruk, M.E., et al. "High-quality health systems in the SDG era." *The Lancet Global Health* 6(11), 2018.
+[4] WHO Regional Office for Africa. *Regional Strategy on Diagnostic and Laboratory Services and Systems 2023*. WHO AFRO, 2023.
+[5] Agarwal, S., et al. "Mobile technology in support of community health workers." *Human Resources for Health* 13(1), 2015.
+[6] GSMA. *The Mobile Economy Sub-Saharan Africa 2023*. GSMA Intelligence, 2023.
+[8] Canalys. *Africa Smartphone Market 2024*. Canalys Research, 2025.

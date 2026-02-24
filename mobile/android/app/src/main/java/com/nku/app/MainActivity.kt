@@ -256,7 +256,7 @@ fun NkuSentinelApp(
             topBar = {
                 TopAppBar(
                     title = { 
-                        Text("Nku Sentinel", fontWeight = FontWeight.Bold) 
+                        Text(strings.appTitle, fontWeight = FontWeight.Bold) 
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = NkuColors.Surface

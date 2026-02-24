@@ -438,7 +438,12 @@ object LocalizedStrings {
         val translatingSymptoms: String = "Translating symptoms to English...",
         val translatingResultOnDevice: String = "Translating result (ML Kit, on-device)...",
         val translatingResultUnavailable: String = "On-device result translation unavailable — returning English result...",
-        val integrityCheckFailed: String = "Model download failed integrity check. Will retry on next launch."
+        val integrityCheckFailed: String = "Model download failed integrity check. Will retry on next launch.",
+
+        // F-UI-5: Settings & Preferences Localization
+        val appearance: String = "Appearance",
+        val localization: String = "Localization",
+        val change: String = "Change"
     ) {
         /** Map signal quality string to localized display name. */
         fun localizedSignalQuality(quality: String): String = when (quality) {
@@ -642,7 +647,11 @@ object LocalizedStrings {
         translatingSymptoms = "Le eŋlisigbe me ɖem…",
         translatingResultOnDevice = "Le gbe me ɖem (ML Kit)…",
         translatingResultUnavailable = "Gbe ɖeɖe meli o — eŋlisi me…",
-        integrityCheckFailed = "Dzadzram mekpɔ ŋuɖoɖo o. Agbugbɔ."
+        integrityCheckFailed = "Dzadzram mekpɔ ŋuɖoɖo o. Agbugbɔ.",
+
+        appearance = "Dzedzeme",
+        localization = "Gbegbɔgblɔ",
+        change = "Trɔ"
     )
 
     val frenchStrings = UiStrings(
@@ -851,7 +860,11 @@ object LocalizedStrings {
         translatingSymptoms = "Traduction des symptômes en anglais...",
         translatingResultOnDevice = "Traduction du résultat (ML Kit, sur l'appareil)...",
         translatingResultUnavailable = "Traduction sur l'appareil non disponible — résultat en anglais...",
-        integrityCheckFailed = "Le modèle n'a pas passé la vérification. Réessai au prochain démarrage."
+        integrityCheckFailed = "Le modèle n'a pas passé la vérification. Réessai au prochain démarrage.",
+
+        appearance = "Apparence",
+        localization = "Localisation",
+        change = "Changer"
     )
 
     val swahiliStrings = UiStrings(
@@ -984,7 +997,11 @@ object LocalizedStrings {
         translatingSymptoms = "Kutafsiri dalili kwa Kiingereza...",
         translatingResultOnDevice = "Kutafsiri matokeo (ML Kit)...",
         translatingResultUnavailable = "Tafsiri haipo — matokeo kwa Kiingereza...",
-        integrityCheckFailed = "Upakuaji umeshindwa ukaguzi. Itajaribu tena."
+        integrityCheckFailed = "Upakuaji umeshindwa ukaguzi. Itajaribu tena.",
+
+        appearance = "Mwonekano",
+        localization = "Lugha",
+        change = "Badilisha"
     )
 
     val hausaStrings = UiStrings(
@@ -1160,7 +1177,11 @@ object LocalizedStrings {
         translatingSymptoms = "Ana fassara zuwa Turanci...",
         translatingResultOnDevice = "Ana fassara sakamako (ML Kit)...",
         translatingResultUnavailable = "Fassara ba ta samu ba — sakamako cikin Turanci...",
-        integrityCheckFailed = "Zazzagewa ta kasa duba. Za a sake gwadawa."
+        integrityCheckFailed = "Zazzagewa ta kasa duba. Za a sake gwadawa.",
+
+        appearance = "Kamanin",
+        localization = "Tsara Harshe",
+        change = "Canza"
     )
 
     val yorubaStrings = UiStrings(
@@ -1335,7 +1356,42 @@ object LocalizedStrings {
         translatingSymptoms = "Ń túmọ̀ sí Gẹ̀ẹ́sì...",
         translatingResultOnDevice = "Ń túmọ̀ èsì (ML Kit)...",
         translatingResultUnavailable = "Ìtúmọ̀ kò sí — èsì ní Gẹ̀ẹ́sì...",
-        integrityCheckFailed = "Ìgbalọ́wọ́ kùnà àyẹ̀wò. Yóò tún gbìyànjú."
+        integrityCheckFailed = "Ìgbalọ́wọ́ kùnà àyẹ̀wò. Yóò tún gbìyànjú.",
+
+        appearance = "Ìfihàn",
+        localization = "Ìtúmọ̀ Àdúgbò",
+        change = "Yí padà",
+
+        jaundiceTitle = "Àyẹ̀wò Ìbà Pọ́njú",
+        jaundiceSubtitle = "Wíwá ìbà pọ́njú lójú",
+        captureSclera = "Ya Ẹyinjú (Sclera)",
+        pointAtSclera = "Tọ́ka kámẹ́rà sí funfun inu ẹyinjú",
+        jaundiceScoreLabel = "Iye ìbà pọ́njú",
+        tapToCaptureEye = "Tẹ ibí yìí láti ya ojú",
+        noJaundice = "✓ Kò sí ìbà pọ́njú",
+        mildJaundice = "Ìbà pọ́njú kéré — ṣàyẹ̀wò ẹ̀dọ̀",
+        moderateJaundice = "⚠ Àárín — ṣe àyẹ̀wò ẹ̀dọ̀",
+        severeJaundice = "🚨 Líle — ránṣẹ́ lẹ́sẹ̀kẹsẹ̀",
+        jaundiceInstructions = "1. Ní kí aláìsàn wo òkè tàbí ẹ̀gbẹ́\n2. Tọ́ka kámẹ́rà sí funfun inu ẹyinjú\n3. Rí i dájú pé ìmọ́lẹ̀ dára\n4. Tẹ \"Ṣàyẹ̀wò\" nígbà tí àwòrán bá ṣe kedere",
+        cameraPermissionJaundice = "Àyẹ̀wò Ìbà pọ́njú nílò kámẹ́rà. Jọ̀wọ́ mú ṣiṣẹ́ ní Ètò.",
+
+        respiratoryTitle = "Àyẹ̀wò Mímí",
+        respiratorySubtitle = "Àyẹ̀wò IKỌ́-ÁTÌKẸ́ (TB) nínú ikọ́",
+        startRecording = "Bẹ̀rẹ̀ Wígbasílẹ̀",
+        stopRecording = "Dúró Wígbasílẹ̀",
+        recording = "Ń gbasílẹ̀…",
+        tapToRecordCough = "Tẹ ibí yìí láti gba ikọ́",
+        respiratoryNormal = "✓ Kò sí wàhálà mímí",
+        respiratoryLowRisk = "Ewu kéré — máa ṣàkíyèsí àmì",
+        respiratoryModerateRisk = "⚠ Àárín — ránṣẹ́ fún àyẹ̀wò",
+        respiratoryHighRisk = "🚨 Ewu gíga — ránṣẹ́ lẹ́sẹ̀kẹsẹ̀ fún TB",
+        respiratoryInstructions = "1. Ní kí aláìsàn wùkọ́ lẹ́ẹ̀mẹta sínú kámẹ́rà\n2. Da fóònù tọ́ka sí ẹnu aláìsàn\n3. Tẹ \"Bẹ̀rẹ̀ Wígbasílẹ̀\" kí o máa gbasílẹ̀ fún ìṣẹ́jú marun un\n4. Rí i dájú pé ibi yíyípo rẹ kò ní ariwo",
+        coughsDetected = "Àwọn ikọ́ tí a rí",
+        audioQualityLabel = "Díede ohùn",
+        micPermissionTitle = "⚠ A nílò àṣẹ maikirofóònù",
+        micPermissionMessage = "Àyẹ̀wò mímí nílò àṣẹ maikirofóònù. Jọ̀wọ́ mú ṣiṣẹ́ ní Ètò.",
+        poweredByHeAR = "Agbára láti HeAR",
+        hearDescription = "Ohun èlò tí Google mọ àyẹ̀wò mímí nínú áwọn ohùn ti o lé ni millionu 300."
     )
 
     val igboStrings = UiStrings(

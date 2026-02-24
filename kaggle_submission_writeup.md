@@ -1,6 +1,9 @@
 ### Project name
-
 Nku — Offline Medical AI for Pan-African Triage
+
+> [!IMPORTANT]
+> **Notice for Reviewers Testing on Windows Emulators**
+> If you are evaluating this APK natively on a Windows Android emulator, please ensure your emulator is running **Android 11 (API 30) or higher**. This is required so the ARM-to-x86 translation layer is present, allowing the `arm64-v8a` optimized LLM C++ bindings to execute. For full performance, test on a physical Android device or an ARM64 native environment (e.g., Apple Silicon Mac or Snapdragon X Elite).
 
 ### Your team
 

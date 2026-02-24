@@ -1,10 +1,6 @@
 ### Project name
 Nku — Offline Medical AI for Pan-African Triage
 
-> [!IMPORTANT]
-> **Notice for Reviewers on Windows Emulators**
-> If evaluating this APK on a Windows emulator, ensure it runs **Android 11 (API 30)+** for the ARM-to-x86 translation layer, necessary for the `arm64-v8a` LLM C++ bindings. Physical devices or ARM64 native environments (e.g., Apple Silicon) are recommended.
-
 ### Your team
 W. Elorm Yevudza Jnr, MD/MS — Solo developer. Born and raised in Ghana. Incoming surgery resident, NewYork-Presbyterian Queens. MD/MS Columbia VP&S (2025); BA Neuroscience (2019). Facilitates clinical connections across Ghana for field validation.
 

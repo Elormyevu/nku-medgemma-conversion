@@ -487,6 +487,8 @@ SEVERITY: [LOW/MEDIUM/HIGH/CRITICAL]
 URGENCY: [ROUTINE/WITHIN_WEEK/WITHIN_48_HOURS/IMMEDIATE]
 PRIMARY_CONCERNS:
 - [list each concern]
+DIFFERENTIAL_DIAGNOSES:
+- [list top 2-3 potential diagnoses based on data]
 RECOMMENDATIONS:
 - [list each recommendation]
 
@@ -510,6 +512,11 @@ PRIMARY_CONCERNS:
 - Tachycardia (108 bpm) may reflect anemia compensation or early
  cardiovascular stress
 - Classic triad present: edema + headache + pregnancy >20 weeks
+
+DIFFERENTIAL_DIAGNOSES:
+- Severe preeclampsia (periorbital edema + headache + tachycardia at 32 weeks)
+- Chronic hypertension with superimposed preeclampsia
+- Moderate iron-deficiency anemia with compensatory tachycardia
 
 RECOMMENDATIONS:
 - URGENT: Measure blood pressure immediately if equipment available
@@ -677,7 +684,7 @@ Gestational age: 32 weeks
 ...
 ```
 
-This is not a bare medical question — it's a guided reasoning template with raw biomarkers, measurement methodology, quantified inputs, clinical interpretations, confidence levels, and explicit output constraints. The model doesn't need to generate differential diagnoses from scratch; it needs to synthesize pre-labeled, pre-interpreted data into a severity classification.
+This is not a bare medical question — it's a guided reasoning template with raw biomarkers, measurement methodology, quantified inputs, clinical interpretations, confidence levels, and explicit output constraints. In addition to severity classification, MedGemma is instructed to generate a ranked list of differential diagnoses based on the structured data, enabling CHWs to communicate a more complete clinical picture when referring patients.
 
 ### Evidence 5: On-Device Clinical Models Achieve High Accuracy
 
@@ -959,7 +966,7 @@ Beyond sensor data, the prompt includes:
 |:--------|:-------|:--------|
 | Pregnancy context | User toggle + gestational weeks | Triggers preeclampsia risk assessment when ≥20 weeks |
 | Reported symptoms | Text/voice input | Sanitized via `PromptSanitizer` (6-layer injection defense), wrapped in `<<<>>>` delimiters |
-| Output instructions | Static template | Forces structured `SEVERITY/URGENCY/CONCERNS/RECOMMENDATIONS` format for reliable parsing |
+| Output instructions | Static template | Forces structured `SEVERITY/URGENCY/CONCERNS/DIFFERENTIAL_DIAGNOSES/RECOMMENDATIONS` format for reliable parsing |
 
 ---
 
@@ -1065,6 +1072,7 @@ RECOMMENDATIONS:
 | Severity | LOW |
 | Urgency | ROUTINE |
 | Primary Concerns | 4 items parsed |
+| Differential Diagnoses | 0 items (expected — insufficient sensor data for meaningful differentials) |
 | Recommendations | 2+ items parsed |
 
 ### Clinical Reasoning Quality

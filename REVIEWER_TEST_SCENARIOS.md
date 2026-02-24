@@ -2,9 +2,17 @@
 
 This document provides explicit, reproducible testing paths for reviewing the Nku Sentinel clinical logic and UI behavior on an Android device or emulator.
 
+## Setup Instructions
+The easiest way to test Nku Sentinel is to use the pre-built APK:
+1. Download `app-debug.apk` from the [GitHub Releases](https://github.com/Elormyevu/nku-medgemma-conversion/releases) page.
+2. Install the APK on your device or emulator.
+3. **First Launch Requirement:** The app requires an internet connection on its very first launch to download the 2.3GB MedGemma model. Once downloaded, all subsequent inference is 100% offline.
+
 ## Hardware Requirements
 - **Target OS:** Android 9.0 (API 28) or higher
-- **Resources:** At least 3GB of free storage for MedGemma 4B download, 4GB+ RAM.
+- **Storage:** ~6GB free space (1.2GB APK + 2.3GB Model + runtime headroom)
+- **RAM:** Minimum 3GB, recommended 4GB+
+- **Architecture:** The APK is compiled for `arm64-v8a`. It runs natively on physical Android phones. If testing on an emulator, ensure your emulator supports ARM translation (e.g., modern Android Studio emulators on Intel/Apple Silicon).
 
 ## Scenario 1: All Sensors Healthy (Green Triage)
 **Goal:** Verify the system outputs a routine monitoring assessment when all biomarkers are well within the healthy range.

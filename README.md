@@ -131,20 +131,20 @@ The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED
 
 ---
 
-## Quick Start
+### Quick Start
 
 > [!WARNING]
-> **Reviewer/Auditor Notice**: Direct APK installations (`app-debug.apk` or `app-release-unsigned.apk`) do not contain the 2.3GB MedGemma model due to Android's 150MB APK size limit. **No manual setup is needed** — the app automatically downloads the model from HuggingFace on app startup (MainActivity creation), validates its SHA-256 checksum, and proceeds. Just install the APK, connect to Wi-Fi to allow the initial launch download, and then run a triage offline. For offline testing, sideload the GGUF model via `adb push` (see below).
+> **Reviewer/Auditor Notice**: Direct APK installations do not contain the 2.3GB MedGemma model due to Android's 150MB APK size limit. **No manual setup is needed** — the app automatically downloads the model from HuggingFace on app startup (MainActivity creation), validates its SHA-256 checksum, and proceeds. Just install the APK, connect to Wi-Fi to allow the initial launch download, and then run a triage offline. For offline testing, sideload the GGUF model via `adb push` (see below).
 
-### Prerequisites
+#### Option 1: Download Pre-built APK (Recommended for Reviewers & Users)
+The easiest way to test Nku Sentinel is to download the pre-built APK from the GitHub Releases page:
+1. Go to the [Releases](https://github.com/Elormyevu/nku-medgemma-conversion/releases) page.
+2. Download `app-debug.apk` directly to your Android device (or emulator).
+3. Open the file to install it.
+4. **Device Compatibility:** The app is compiled for `arm64-v8a` architecture. It will run on almost all modern physical Android phones. If using an emulator on Windows/macOS, ensure the emulator supports ARM translation (e.g., Android Studio emulators with an ARM system image, or modern Intel/Apple Silicon host machines with translation enabled).
 
-- Android SDK 35+
-- NDK 29.0.13113456
-- Kotlin 2.1.0
-- **~6GB free device/emulator storage** (APK ~1.2GB + MedGemma 2.3GB + runtime headroom)
-- ~4GB free storage for models on development machine
-
-### Build the App
+#### Option 2: Build from Source
+If you prefer to build the app yourself:
 
 ```bash
 # Clone the repository

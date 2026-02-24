@@ -3,13 +3,13 @@
 %% Detailed flows: ./flows/server-flow.mmd, ./flows/models-flow.mmd, ./flows/chat-flow.mmd
 
 sequenceDiagram
-    participant User as 👤 User
-    participant UI as 🧩 UI
-    participant Stores as 🗄️ Stores
-    participant DB as 💾 IndexedDB
-    participant API as 🌐 llama-server
+    participant User as  User
+    participant UI as  UI
+    participant Stores as ️ Stores
+    participant DB as  IndexedDB
+    participant API as  llama-server
 
-    Note over User,API: 🚀 Initialization (see: server-flow.mmd, models-flow.mmd)
+    Note over User,API:  Initialization (see: server-flow.mmd, models-flow.mmd)
 
     UI->>Stores: initialize()
     Stores->>DB: load conversations
@@ -22,7 +22,7 @@ sequenceDiagram
         API-->>Stores: modalities (vision/audio)
     end
 
-    Note over User,API: 🔄 Model Selection (see: models-flow.mmd)
+    Note over User,API:  Model Selection (see: models-flow.mmd)
 
     User->>UI: select model
     alt model not loaded
@@ -42,7 +42,7 @@ sequenceDiagram
         UI->>User: show error toast
     end
 
-    Note over User,API: 💬 Chat Flow (see: chat-flow.mmd)
+    Note over User,API:  Chat Flow (see: chat-flow.mmd)
 
     User->>UI: send message
     UI->>Stores: sendMessage()
@@ -56,7 +56,7 @@ sequenceDiagram
     API-->>Stores: done + timings
     Stores->>DB: save assistant message + model used
 
-    Note over User,API: 🔁 Regenerate (optional: different model)
+    Note over User,API:  Regenerate (optional: different model)
 
     User->>UI: regenerate
     Stores->>Stores: validate modalities up to this message
@@ -69,7 +69,7 @@ sequenceDiagram
     Stores->>Stores: abort stream
     Stores->>DB: save partial response
 
-    Note over User,API: 🗑️ LRU Unloading
+    Note over User,API: ️ LRU Unloading
 
     Note right of API: Server auto-unloads LRU models<br/>when cache full
     User->>UI: select unloaded model

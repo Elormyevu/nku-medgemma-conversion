@@ -234,7 +234,7 @@ IBM VXE/VXE2 SIMD acceleration depends on the BLAS implementation. It is strongl
 | IBM zDNN | ✅      |                          |
 
 -   ✅ - supported and verified to run as intended
--   🚫 - unsupported, we are unlikely able to provide support
+-    - unsupported, we are unlikely able to provide support
 
 ## Appendix B: SIMD Support Matrix
 
@@ -242,34 +242,34 @@ IBM VXE/VXE2 SIMD acceleration depends on the BLAS implementation. It is strongl
 |------------|-------------|------|-------|
 | FP32       | ✅           | ✅    | ❓     |
 | FP16       | ✅           | ✅    | ❓     |
-| BF16       | 🚫           | ✅    | ❓     |
+| BF16       |            | ✅    | ❓     |
 | Q4_0       | ✅           | ❓    | ❓     |
 | Q4_1       | ✅           | ❓    | ❓     |
-| MXFP4      | 🚫           | ❓    | ❓     |
+| MXFP4      |            | ❓    | ❓     |
 | Q5_0       | ✅           | ❓    | ❓     |
 | Q5_1       | ✅           | ❓    | ❓     |
 | Q8_0       | ✅           | ❓    | ❓     |
-| Q2_K       | 🚫           | ❓    | ❓     |
+| Q2_K       |            | ❓    | ❓     |
 | Q3_K       | ✅           | ❓    | ❓     |
 | Q4_K       | ✅           | ❓    | ❓     |
 | Q5_K       | ✅           | ❓    | ❓     |
 | Q6_K       | ✅           | ❓    | ❓     |
-| TQ1_0      | 🚫           | ❓    | ❓     |
-| TQ2_0      | 🚫           | ❓    | ❓     |
-| IQ2_XXS    | 🚫           | ❓    | ❓     |
-| IQ2_XS     | 🚫           | ❓    | ❓     |
-| IQ2_S      | 🚫           | ❓    | ❓     |
-| IQ3_XXS    | 🚫           | ❓    | ❓     |
-| IQ3_S      | 🚫           | ❓    | ❓     |
-| IQ1_S      | 🚫           | ❓    | ❓     |
-| IQ1_M      | 🚫           | ❓    | ❓     |
+| TQ1_0      |            | ❓    | ❓     |
+| TQ2_0      |            | ❓    | ❓     |
+| IQ2_XXS    |            | ❓    | ❓     |
+| IQ2_XS     |            | ❓    | ❓     |
+| IQ2_S      |            | ❓    | ❓     |
+| IQ3_XXS    |            | ❓    | ❓     |
+| IQ3_S      |            | ❓    | ❓     |
+| IQ1_S      |            | ❓    | ❓     |
+| IQ1_M      |            | ❓    | ❓     |
 | IQ4_NL     | ✅           | ❓    | ❓     |
 | IQ4_XS     | ✅           | ❓    | ❓     |
-| FP32->FP16 | 🚫           | ❓    | ❓     |
-| FP16->FP32 | 🚫           | ❓    | ❓     |
+| FP32->FP16 |            | ❓    | ❓     |
+| FP16->FP32 |            | ❓    | ❓     |
 
 -   ✅ - acceleration available
--   🚫 - acceleration unavailable, will still run using scalar implementation
+-    - acceleration unavailable, will still run using scalar implementation
 -   ❓ - acceleration unknown, please contribute if you can test it yourself
 
 Last Updated by **Aaron Teo (aaron.teo1@ibm.com)** on Sep 7, 2025.

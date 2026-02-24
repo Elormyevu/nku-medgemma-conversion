@@ -1,1 +1,1 @@
-# Nku Cloud Inference API package
+# Nku Inference API Inference API package

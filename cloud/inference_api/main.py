@@ -1,5 +1,5 @@
 """
-Nku Cloud Inference API
+Nku Inference API Inference API
 Offloads LLM processing to cloud for low-memory devices.
 Deploy to Google Cloud Run.
 

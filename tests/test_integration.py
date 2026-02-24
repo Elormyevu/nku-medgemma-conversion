@@ -1,5 +1,5 @@
 """
-Mock Integration Tests for Nku Cloud Inference API
+Mock Integration Tests for Nku Inference API Inference API
 M-6 fix: Tests LLM endpoint behavior with mocked model inference.
 """
 

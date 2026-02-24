@@ -562,6 +562,8 @@ Selecting the right quantization level required balancing two competing goals: m
 
 Decision rationale: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The Q4_K_M model is a standard quantization (from [mradermacher/medgemma-4b-it-GGUF](https://huggingface.co/mradermacher/medgemma-4b-it-GGUF)). The other three quantization levels (IQ1_M, Q2_K, IQ2_XS) were benchmarked to validate our model selection: they confirmed that aggressive quantization below Q4 degrades accuracy below clinically useful thresholds, and that domain-specific imatrix calibration (applied to IQ2_XS) is essential at lower bit rates. Only Q4_K_M is deployed in the Nku application. With `mmap` memory mapping, the 2.3 GB Q4_K_M model runs on 3GB+ RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
 
+> **Storage Metric Note:** Nku architecture standardizes on the base-2 (1024) measurement natively utilized by Android and `ActivityManager`, which accurately calculates the deployment footprint at **2.3 GB**. Web indexing platforms (such as HuggingFace) sometimes default to base-10 (1000) calculations for UI rendering, which divides the exact same `2,456,793,024 byte` file into a displayed ~2.4 GB. The physical payload is identical.
+
 > imatrix representativeness: The 24 scenarios cover WHO/IMCI triage conditions accounting for >80% of CHW encounters in Sub-Saharan Africa. The imatrix was used for the IQ2_XS quantization experiment — its purpose is weight importance estimation, identifying which model weights are most critical for the deployment vocabulary (malaria, anemia, pneumonia, maternal health terms across 14+ languages). This is a quantization calibration technique, not clinical training data; 24 scenarios across 8 condition categories and 14 languages provides sufficient diversity for weight importance ranking. The deployed Q4_K_M does not use this imatrix.
 
 ### Why Not Unquantized MedGemma 4B or MedGemma 4B Multimodal?
@@ -708,7 +710,7 @@ This appendix documents the complete signal processing chain for each of Nku's f
 ```mermaid
 %%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
 graph LR
-    A["📷 Camera\nFrame"] --> B["RPPGProcessor\n(Green channel DFT)"]
+    A[" Camera\nFrame"] --> B["RPPGProcessor\n(Green channel DFT)"]
     A --> C["PallorDetector\n(HSV saturation)"]
     A --> D["EdemaDetector\n(MediaPipe EAR)"]
     B --> E["SensorFusion\n(VitalSigns)"]

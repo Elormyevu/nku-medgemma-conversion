@@ -1,4 +1,4 @@
-# Nku Cloud Inference API Dependencies
+# Nku Inference API Inference API Dependencies
 # All versions pinned for security and reproducibility
 # Last updated: February 2026
 

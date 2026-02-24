@@ -1,14 +1,14 @@
 ```mermaid
 sequenceDiagram
-    participant UI as 🧩 +layout.svelte
-    participant serverStore as 🗄️ serverStore
+    participant UI as  +layout.svelte
+    participant serverStore as ️ serverStore
     participant PropsSvc as ⚙️ PropsService
-    participant API as 🌐 llama-server
+    participant API as  llama-server
 
     Note over serverStore: State:<br/>props: ApiLlamaCppServerProps | null<br/>loading, error<br/>role: ServerRole | null (MODEL | ROUTER)<br/>fetchPromise (deduplication)
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,API: 🚀 INITIALIZATION
+    Note over UI,API:  INITIALIZATION
     %% ═══════════════════════════════════════════════════════════════════════════
 
     UI->>serverStore: fetch()
@@ -38,7 +38,7 @@ sequenceDiagram
     deactivate serverStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,API: 📊 COMPUTED GETTERS
+    Note over UI,API:  COMPUTED GETTERS
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Note over serverStore: Getters from props:
@@ -60,7 +60,7 @@ sequenceDiagram
     end
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,API: 🔗 RELATIONSHIPS
+    Note over UI,API:  RELATIONSHIPS
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Note over serverStore: Used by:

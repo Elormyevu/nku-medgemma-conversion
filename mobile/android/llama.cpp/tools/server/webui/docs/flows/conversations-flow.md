@@ -1,15 +1,15 @@
 ```mermaid
 sequenceDiagram
-    participant UI as 🧩 ChatSidebar / ChatScreen
-    participant convStore as 🗄️ conversationsStore
-    participant chatStore as 🗄️ chatStore
+    participant UI as  ChatSidebar / ChatScreen
+    participant convStore as ️ conversationsStore
+    participant chatStore as ️ chatStore
     participant DbSvc as ⚙️ DatabaseService
-    participant IDB as 💾 IndexedDB
+    participant IDB as  IndexedDB
 
     Note over convStore: State:<br/>conversations: DatabaseConversation[]<br/>activeConversation: DatabaseConversation | null<br/>activeMessages: DatabaseMessage[]<br/>isInitialized: boolean<br/>usedModalities: $derived({vision, audio})
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,IDB: 🚀 INITIALIZATION
+    Note over UI,IDB:  INITIALIZATION
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Note over convStore: Auto-initialized in constructor (browser only)
@@ -40,7 +40,7 @@ sequenceDiagram
     deactivate convStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,IDB: 📂 LOAD CONVERSATION
+    Note over UI,IDB:  LOAD CONVERSATION
     %% ═══════════════════════════════════════════════════════════════════════════
 
     UI->>convStore: loadConversation(convId)
@@ -63,7 +63,7 @@ sequenceDiagram
     deactivate convStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,IDB: 🌳 MESSAGE BRANCHING MODEL
+    Note over UI,IDB:  MESSAGE BRANCHING MODEL
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Note over IDB: Message Tree Structure:<br/>- Each message has parent (null for root)<br/>- Each message has children[] array<br/>- Conversation.currNode points to active leaf<br/>- filterByLeafNodeId() traverses from root to currNode
@@ -91,7 +91,7 @@ sequenceDiagram
     deactivate convStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,IDB: 📝 UPDATE CONVERSATION
+    Note over UI,IDB:  UPDATE CONVERSATION
     %% ═══════════════════════════════════════════════════════════════════════════
 
     UI->>convStore: updateConversationName(convId, newName)
@@ -107,7 +107,7 @@ sequenceDiagram
     Note right of convStore: Shows dialog if title would change
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,IDB: 🗑️ DELETE CONVERSATION
+    Note over UI,IDB: ️ DELETE CONVERSATION
     %% ═══════════════════════════════════════════════════════════════════════════
 
     UI->>convStore: deleteConversation(convId)
@@ -122,7 +122,7 @@ sequenceDiagram
     deactivate convStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,IDB: 📊 MODALITY TRACKING
+    Note over UI,IDB:  MODALITY TRACKING
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Note over convStore: usedModalities = $derived.by(() => {<br/>  calculateModalitiesFromMessages(activeMessages)<br/>})
@@ -133,7 +133,7 @@ sequenceDiagram
     Note right of convStore: Used for regeneration validation<br/>Only checks messages BEFORE target
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,IDB: 📤 EXPORT / 📥 IMPORT
+    Note over UI,IDB:  EXPORT /  IMPORT
     %% ═══════════════════════════════════════════════════════════════════════════
 
     UI->>convStore: exportAllConversations()

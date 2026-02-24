@@ -1,12 +1,12 @@
 ```mermaid
 flowchart TB
-    subgraph Routes["📍 Routes"]
+    subgraph Routes[" Routes"]
         R1["/ (Welcome)"]
         R2["/chat/[id]"]
         RL["+layout.svelte"]
     end
 
-    subgraph Components["🧩 Components"]
+    subgraph Components[" Components"]
         C_Sidebar["ChatSidebar"]
         C_Screen["ChatScreen"]
         C_Form["ChatForm"]
@@ -17,12 +17,12 @@ flowchart TB
         C_Settings["ChatSettings"]
     end
 
-    subgraph Hooks["🪝 Hooks"]
+    subgraph Hooks[" Hooks"]
         H1["useModelChangeValidation"]
         H2["useProcessingState"]
     end
 
-    subgraph Stores["🗄️ Stores"]
+    subgraph Stores["️ Stores"]
         S1["chatStore<br/><i>Chat interactions & streaming</i>"]
         S2["conversationsStore<br/><i>Conversation data & messages</i>"]
         S3["modelsStore<br/><i>Model selection & loading</i>"]
@@ -38,12 +38,12 @@ flowchart TB
         SV5["ParameterSyncService"]
     end
 
-    subgraph Storage["💾 Storage"]
+    subgraph Storage[" Storage"]
         ST1["IndexedDB<br/><i>conversations, messages</i>"]
         ST2["LocalStorage<br/><i>config, userOverrides</i>"]
     end
 
-    subgraph APIs["🌐 llama-server API"]
+    subgraph APIs[" llama-server API"]
         API1["/v1/chat/completions"]
         API2["/props"]
         API3["/models/*"]

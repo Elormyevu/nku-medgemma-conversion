@@ -1,5 +1,5 @@
 """
-Security Tests for Nku Cloud Inference API
+Security Tests for Nku Inference API Inference API
 Tests input validation, prompt injection protection, and rate limiting.
 """
 

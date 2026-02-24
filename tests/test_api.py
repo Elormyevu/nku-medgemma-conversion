@@ -1,5 +1,5 @@
 """
-API Integration Tests for Nku Cloud Inference API
+API Integration Tests for Nku Inference API Inference API
 Tests Flask endpoints, error handling, and response validation.
 
 NOTE: Tests mock the model loading layer so they can run in CI

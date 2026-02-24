@@ -242,13 +242,13 @@ See: [`docs/architecture/high-level-architecture-simplified.md`](docs/architectu
 
 ```mermaid
 flowchart TB
-    subgraph Routes["📍 Routes"]
+    subgraph Routes[" Routes"]
         R1["/ (Welcome)"]
         R2["/chat/[id]"]
         RL["+layout.svelte"]
     end
 
-    subgraph Components["🧩 Components"]
+    subgraph Components[" Components"]
         C_Sidebar["ChatSidebar"]
         C_Screen["ChatScreen"]
         C_Form["ChatForm"]
@@ -257,7 +257,7 @@ flowchart TB
         C_Settings["ChatSettings"]
     end
 
-    subgraph Stores["🗄️ Stores"]
+    subgraph Stores["️ Stores"]
         S1["chatStore"]
         S2["conversationsStore"]
         S3["modelsStore"]
@@ -272,12 +272,12 @@ flowchart TB
         SV4["DatabaseService"]
     end
 
-    subgraph Storage["💾 Storage"]
+    subgraph Storage[" Storage"]
         ST1["IndexedDB"]
         ST2["LocalStorage"]
     end
 
-    subgraph APIs["🌐 llama-server"]
+    subgraph APIs[" llama-server"]
         API1["/v1/chat/completions"]
         API2["/props"]
         API3["/models/*"]

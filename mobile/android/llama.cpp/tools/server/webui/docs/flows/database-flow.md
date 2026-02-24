@@ -1,14 +1,14 @@
 ```mermaid
 sequenceDiagram
-    participant Store as 🗄️ Stores
+    participant Store as ️ Stores
     participant DbSvc as ⚙️ DatabaseService
-    participant Dexie as 📦 Dexie ORM
-    participant IDB as 💾 IndexedDB
+    participant Dexie as  Dexie ORM
+    participant IDB as  IndexedDB
 
     Note over DbSvc: Stateless service - all methods static<br/>Database: "LlamacppWebui"
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over Store,IDB: 📊 SCHEMA
+    Note over Store,IDB:  SCHEMA
     %% ═══════════════════════════════════════════════════════════════════════════
 
     rect rgb(240, 248, 255)
@@ -20,7 +20,7 @@ sequenceDiagram
     end
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over Store,IDB: 💬 CONVERSATIONS CRUD
+    Note over Store,IDB:  CONVERSATIONS CRUD
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Store->>DbSvc: createConversation(name)
@@ -55,7 +55,7 @@ sequenceDiagram
     deactivate DbSvc
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over Store,IDB: 📝 MESSAGES CRUD
+    Note over Store,IDB:  MESSAGES CRUD
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Store->>DbSvc: createRootMessage(convId)
@@ -99,7 +99,7 @@ sequenceDiagram
     Dexie->>IDB: DELETE
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over Store,IDB: 🌳 BRANCHING OPERATIONS
+    Note over Store,IDB:  BRANCHING OPERATIONS
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Store->>DbSvc: updateCurrentNode(convId, nodeId)
@@ -119,7 +119,7 @@ sequenceDiagram
     deactivate DbSvc
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over Store,IDB: 📥 IMPORT
+    Note over Store,IDB:  IMPORT
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Store->>DbSvc: importConversations(data)
@@ -136,7 +136,7 @@ sequenceDiagram
     deactivate DbSvc
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over Store,IDB: 🔗 MESSAGE TREE UTILITIES
+    Note over Store,IDB:  MESSAGE TREE UTILITIES
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Note over DbSvc: Used by stores (imported from utils):

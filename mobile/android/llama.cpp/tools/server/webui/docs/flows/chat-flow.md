@@ -1,17 +1,17 @@
 ```mermaid
 sequenceDiagram
-    participant UI as 🧩 ChatForm / ChatMessage
-    participant chatStore as 🗄️ chatStore
-    participant convStore as 🗄️ conversationsStore
-    participant settingsStore as 🗄️ settingsStore
+    participant UI as  ChatForm / ChatMessage
+    participant chatStore as ️ chatStore
+    participant convStore as ️ conversationsStore
+    participant settingsStore as ️ settingsStore
     participant ChatSvc as ⚙️ ChatService
     participant DbSvc as ⚙️ DatabaseService
-    participant API as 🌐 /v1/chat/completions
+    participant API as  /v1/chat/completions
 
     Note over chatStore: State:<br/>isLoading, currentResponse<br/>errorDialogState, activeProcessingState<br/>chatLoadingStates (Map)<br/>chatStreamingStates (Map)<br/>abortControllers (Map)<br/>processingStates (Map)
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,API: 💬 SEND MESSAGE
+    Note over UI,API:  SEND MESSAGE
     %% ═══════════════════════════════════════════════════════════════════════════
 
     UI->>chatStore: sendMessage(content, extras)
@@ -38,7 +38,7 @@ sequenceDiagram
     deactivate chatStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,API: 🌊 STREAMING
+    Note over UI,API:  STREAMING
     %% ═══════════════════════════════════════════════════════════════════════════
 
     activate chatStore
@@ -125,7 +125,7 @@ sequenceDiagram
     deactivate chatStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,API: 🔁 REGENERATE
+    Note over UI,API:  REGENERATE
     %% ═══════════════════════════════════════════════════════════════════════════
 
     UI->>chatStore: regenerateMessageWithBranching(msgId, model?)

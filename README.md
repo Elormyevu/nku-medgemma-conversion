@@ -27,7 +27,7 @@
 
 ---
 
-## 🌍 The Problem
+##  The Problem
 
 In rural Sub-Saharan Africa:
 - **Physician-to-patient ratio exceeds 1:10,000**
@@ -37,7 +37,7 @@ In rural Sub-Saharan Africa:
 
 Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
-## 💡 The Solution
+##  The Solution
 
 **Nku** ("eye" in Ewe) is designed to turn any $60+ Android phone into an offline clinical triage engine. It is a **proof-of-concept edge system** — 100% on-device inference, zero cloud dependency for clinical reasoning.
 
@@ -54,16 +54,15 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 ## ✨ Features
 
-- 🧠 **MedGemma 4B** — Google's clinical reasoning model, quantized to ~2.3GB Q4_K_M (56% MedQA, quantized; 69% unquantized)
-- 🌐 **Android ML Kit** — On-device translation for 59 languages; unsupported languages fall back to the Google Cloud Translate API
-- 🔊 **Android System TTS** — Device-native voice synthesis for spoken clinical results
-- 💎 **Premium UI** — Glassmorphism design with localized strings
+-  **MedGemma 4B** — Google's clinical reasoning model, quantized to ~2.3GB Q4_K_M (56% MedQA, quantized; 69% unquantized)
+-  **Android ML Kit** — On-device translation for 59 languages; unsupported languages fall back to the Google Cloud Translate API
+-  **Android System TTS** — Device-native voice synthesis for spoken clinical results
 - ⚡ **Nku Cycle** — Memory-efficient mmap orchestration on budget devices (3–4GB RAM)
-- 📷 **Nku Sentinel** — Camera-based screening for heart rate, anemia, jaundice, & preeclampsia; microphone-based TB/respiratory screening via HeAR Event Detector (MobileNetV3, 1.1MB TFLite)
+-  **Nku Sentinel** — Camera-based screening for heart rate, anemia, jaundice, & preeclampsia; microphone-based TB/respiratory screening via HeAR Event Detector (MobileNetV3, 1.1MB TFLite)
 
 ---
 
-## 🏗 Architecture
+##  Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -110,7 +109,7 @@ All screening uses **pure signal processing** (0 MB additional weights) except T
 
 The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED** in the app — its XlaCallModule/StableHLO format cannot be converted to ONNX or TFLite by any current tool (see `ARCHITECTURE.md`). Sensor outputs are aggregated by `SensorFusion.kt` and interpreted by MedGemma for clinical reasoning.
 
-### Fitzpatrick-Aware Design
+### Fitzpatrick-Independent Design
 
 - **Pallor**: Conjunctiva-only analysis — consistent across all skin tones
 - **Jaundice**: Scleral tissue analysis — unpigmented, consistent across all skin tones
@@ -132,7 +131,7 @@ The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 > [!WARNING]
 > **Reviewer/Auditor Notice**: Direct APK installations (`app-debug.apk` or `app-release-unsigned.apk`) do not contain the 2.3GB MedGemma model due to Android's 150MB APK size limit. **No manual setup is needed** — the app automatically downloads the model from HuggingFace on app startup (MainActivity creation), validates its SHA-256 checksum, and proceeds. Just install the APK, connect to Wi-Fi to allow the initial launch download, and then run a triage offline. For offline testing, sideload the GGUF model via `adb push` (see below).
@@ -179,7 +178,7 @@ adb push medgemma-4b-it.Q4_K_M.gguf /sdcard/Android/data/com.nku.app/files/Downl
 
 ---
 
-## 🧠 Models
+##  Models
 
 ### Compression Pipeline
 
@@ -211,7 +210,7 @@ We created a **243-scenario African clinical triage calibration dataset** across
 
 ---
 
-## 🌐 Languages
+##  Languages
 
 ### Verified Core (14)
 ✅ English | ✅ French | ✅ Swahili | ✅ Hausa | ✅ Yoruba | ✅ Igbo | ✅ Amharic | ✅ Ewe | ✅ Twi | ✅ Wolof | ✅ Zulu | ✅ Xhosa | ✅ Oromo | ✅ Tigrinya
@@ -231,7 +230,7 @@ Afrikaans, Arabic, Bambara, Bemba, Chichewa, Dinka, Fula, Ga, Kikuyu, Kinyarwand
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 nku-medgemma-conversion/
@@ -273,7 +272,7 @@ nku-medgemma-conversion/
 
 ---
 
-## 🏆 MedGemma Impact Challenge
+##  MedGemma Impact Challenge
 
 This project is a submission for the [MedGemma Impact Challenge](https://www.kaggle.com/competitions/med-gemma-impact-challenge) on Kaggle.
 
@@ -288,19 +287,19 @@ This project is a submission for the [MedGemma Impact Challenge](https://www.kag
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 **Priority Areas:**
-- 🌍 Language model improvements for low-resource African languages
+-  Language model improvements for low-resource African languages
 - ⚡ Inference optimization for ARM Mali/Adreno GPUs
-- 🔬 Clinical validation with CHW partners
-- 📱 UI/UX improvements for low-literacy users
+-  Clinical validation with CHW partners
+-  UI/UX improvements for low-literacy users
 
 ---
 
-## 📄 License
+##  License
 
 **Nku is fully open source.** All application source code, build scripts, calibration data, and quantization artifacts are free to download, fork, modify, and use with attribution. Apache 2.0 is compatible with the MedGemma Impact Challenge's CC BY 4.0 requirement (Apache 2.0 is strictly more permissive).
 
@@ -312,7 +311,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 
 ---
 
-## 📚 References
+##  References
 
 - [MedGemma Model Card](https://huggingface.co/google/medgemma-4b)
 - [llama.cpp](https://github.com/ggerganov/llama.cpp)
@@ -321,7 +320,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 ---
 
 <p align="center">
-  <strong>🌍 450M+ lives • 💰 $60+ phones • 🧠 100% on-device medical inference • 🗣️ 46 languages</strong>
+  <strong> 450M+ lives •  $60+ phones •  100% on-device medical inference • ️ 46 languages</strong>
 </p>
 
 <p align="center">

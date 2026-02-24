@@ -1,15 +1,15 @@
 ```mermaid
 sequenceDiagram
-    participant UI as 🧩 ChatSettings
-    participant settingsStore as 🗄️ settingsStore
-    participant serverStore as 🗄️ serverStore
+    participant UI as  ChatSettings
+    participant settingsStore as ️ settingsStore
+    participant serverStore as ️ serverStore
     participant ParamSvc as ⚙️ ParameterSyncService
-    participant LS as 💾 LocalStorage
+    participant LS as  LocalStorage
 
     Note over settingsStore: State:<br/>config: SettingsConfigType<br/>theme: string ("auto" | "light" | "dark")<br/>isInitialized: boolean<br/>userOverrides: Set&lt;string&gt;
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,LS: 🚀 INITIALIZATION
+    Note over UI,LS:  INITIALIZATION
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Note over settingsStore: Auto-initialized in constructor (browser only)
@@ -39,7 +39,7 @@ sequenceDiagram
     deactivate settingsStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,LS: 🔄 SYNC WITH SERVER DEFAULTS
+    Note over UI,LS:  SYNC WITH SERVER DEFAULTS
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Note over UI: Triggered from +layout.svelte when serverStore.props loaded
@@ -83,7 +83,7 @@ sequenceDiagram
     deactivate settingsStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,LS: 🔄 RESET
+    Note over UI,LS:  RESET
     %% ═══════════════════════════════════════════════════════════════════════════
 
     UI->>settingsStore: resetConfig()
@@ -104,7 +104,7 @@ sequenceDiagram
     deactivate settingsStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,LS: 🎨 THEME
+    Note over UI,LS:  THEME
     %% ═══════════════════════════════════════════════════════════════════════════
 
     UI->>settingsStore: updateTheme(newTheme)
@@ -115,7 +115,7 @@ sequenceDiagram
     deactivate settingsStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,LS: 📊 PARAMETER INFO
+    Note over UI,LS:  PARAMETER INFO
     %% ═══════════════════════════════════════════════════════════════════════════
 
     UI->>settingsStore: getParameterInfo(key)
@@ -129,7 +129,7 @@ sequenceDiagram
     Note right of ParamSvc: Array of parameters where user != server
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,LS: 📋 CONFIG CATEGORIES
+    Note over UI,LS:  CONFIG CATEGORIES
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Note over settingsStore: Syncable with server (from /props):

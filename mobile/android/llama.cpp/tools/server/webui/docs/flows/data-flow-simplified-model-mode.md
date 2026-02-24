@@ -3,13 +3,13 @@
 %% Detailed flows: ./flows/server-flow.mmd, ./flows/models-flow.mmd, ./flows/chat-flow.mmd
 
 sequenceDiagram
-    participant User as 👤 User
-    participant UI as 🧩 UI
-    participant Stores as 🗄️ Stores
-    participant DB as 💾 IndexedDB
-    participant API as 🌐 llama-server
+    participant User as  User
+    participant UI as  UI
+    participant Stores as ️ Stores
+    participant DB as  IndexedDB
+    participant API as  llama-server
 
-    Note over User,API: 🚀 Initialization (see: server-flow.mmd, models-flow.mmd)
+    Note over User,API:  Initialization (see: server-flow.mmd, models-flow.mmd)
 
     UI->>Stores: initialize()
     Stores->>DB: load conversations
@@ -18,7 +18,7 @@ sequenceDiagram
     Stores->>API: GET /v1/models
     API-->>Stores: single model (auto-selected)
 
-    Note over User,API: 💬 Chat Flow (see: chat-flow.mmd)
+    Note over User,API:  Chat Flow (see: chat-flow.mmd)
 
     User->>UI: send message
     UI->>Stores: sendMessage()
@@ -31,7 +31,7 @@ sequenceDiagram
     API-->>Stores: done + timings
     Stores->>DB: save assistant message
 
-    Note over User,API: 🔁 Regenerate
+    Note over User,API:  Regenerate
 
     User->>UI: regenerate
     Stores->>DB: create message branch

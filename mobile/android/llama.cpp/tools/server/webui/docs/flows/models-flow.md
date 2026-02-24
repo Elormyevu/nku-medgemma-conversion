@@ -1,18 +1,18 @@
 ```mermaid
 sequenceDiagram
-    participant UI as 🧩 ModelsSelector
-    participant Hooks as 🪝 useModelChangeValidation
-    participant modelsStore as 🗄️ modelsStore
-    participant serverStore as 🗄️ serverStore
-    participant convStore as 🗄️ conversationsStore
+    participant UI as  ModelsSelector
+    participant Hooks as  useModelChangeValidation
+    participant modelsStore as ️ modelsStore
+    participant serverStore as ️ serverStore
+    participant convStore as ️ conversationsStore
     participant ModelsSvc as ⚙️ ModelsService
     participant PropsSvc as ⚙️ PropsService
-    participant API as 🌐 llama-server
+    participant API as  llama-server
 
     Note over modelsStore: State:<br/>models: ModelOption[]<br/>routerModels: ApiModelDataEntry[]<br/>selectedModelId, selectedModelName<br/>loading, updating, error<br/>modelLoadingStates (Map)<br/>modelPropsCache (Map)<br/>propsCacheVersion
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,API: 🚀 INITIALIZATION (MODEL mode)
+    Note over UI,API:  INITIALIZATION (MODEL mode)
     %% ═══════════════════════════════════════════════════════════════════════════
 
     UI->>modelsStore: fetch()
@@ -41,7 +41,7 @@ sequenceDiagram
     deactivate modelsStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,API: 🚀 INITIALIZATION (ROUTER mode)
+    Note over UI,API:  INITIALIZATION (ROUTER mode)
     %% ═══════════════════════════════════════════════════════════════════════════
 
     UI->>modelsStore: fetch()
@@ -72,7 +72,7 @@ sequenceDiagram
     deactivate modelsStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,API: 🔄 MODEL SELECTION (ROUTER mode)
+    Note over UI,API:  MODEL SELECTION (ROUTER mode)
     %% ═══════════════════════════════════════════════════════════════════════════
 
     UI->>Hooks: useModelChangeValidation({getRequiredModalities, onSuccess?, onValidationFailure?})
@@ -172,7 +172,7 @@ sequenceDiagram
     deactivate modelsStore
 
     %% ═══════════════════════════════════════════════════════════════════════════
-    Note over UI,API: 📊 COMPUTED GETTERS
+    Note over UI,API:  COMPUTED GETTERS
     %% ═══════════════════════════════════════════════════════════════════════════
 
     Note over modelsStore: Getters:<br/>- selectedModel: ModelOption | null<br/>- loadedModelIds: string[] (from routerModels)<br/>- loadingModelIds: string[] (from modelLoadingStates)<br/>- singleModelName: string | null (MODEL mode only)

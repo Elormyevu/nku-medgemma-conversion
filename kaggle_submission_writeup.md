@@ -55,7 +55,7 @@ MedGemma responds to this structured biomarker input with:
 
 ---
 
-**Prize Track: Edge AI Prize** 
+**Prize Track: Main Track and Edge AI Prize** 
 - **HAI-DEF:** MedGemma 4B is the irreplaceable core of the clinical reasoning engine.
 - **Product Feasibility:** Q4_K_M compression (2.3GB), `mmap` loading on $60+ Androids, `llama.cpp` JNI, full Android UI.
 - **Novelty:** Integrates Google's HeAR Event Detector (1.1MB FP32/INT8) dynamically with an LLM for respiratory triage on mobile.

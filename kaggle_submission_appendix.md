@@ -6,6 +6,18 @@ Companion document to the Kaggle submission writeup.
 > **Notice for Reviewers Testing on Windows Emulators**
 > If you are evaluating this APK natively on a Windows Android emulator, please ensure your emulator is running **Android 11 (API 30) or higher**. This is required so the ARM-to-x86 translation layer is present, allowing the `arm64-v8a` optimized LLM C++ bindings to execute. For full performance, test on a physical Android device or an ARM64 native environment (e.g., Apple Silicon Mac or Snapdragon X Elite).
 
+## Table of Contents
+- [Appendix A: Clinical Calibration Dataset (Complete)](#appendix-a-clinical-calibration-dataset-complete)
+- [Appendix B: Supported Languages (46 Total)](#appendix-b-supported-languages-46-total)
+- [Appendix C: MedGemma Reasoning Example](#appendix-c-medgemma-reasoning-example)
+- [Appendix D: Quantization & Translation Model Selection](#appendix-d-quantization--translation-model-selection)
+- [Appendix E: Why the Pipeline Provides Sufficient Context for Triage](#appendix-e-why-the-pipeline-provides-sufficient-context-for-triage)
+- [Appendix F: Sensor-to-Prompt Signal Processing Pipeline](#appendix-f-sensor-to-prompt-signal-processing-pipeline)
+- [Appendix G: Safety Architecture](#appendix-g-safety-architecture)
+- [Appendix H: End-to-End MedGemma Inference Proof](#appendix-h-end-to-end-medgemma-inference-proof)
+- [Appendix I: Clinical Reasoning Superiority via Prompt Compression](#appendix-i-clinical-reasoning-superiority-via-prompt-compression)
+- [References](#references)
+
 ---
 
 
@@ -1056,36 +1068,46 @@ Verified on `nku_tecno_3gb` Android emulator (3GB RAM, API 34, x86_64) — repre
 MedGemma produced correctly formatted structured output:
 
 ```
-SEVERITY: LOW
-URGENCY: ROUTINE
+SEVERITY: HIGH
+URGENCY: WITHIN_48_HOURS
 PRIMARY_CONCERNS:
-- No heart rate measurement available.
-- No anemia screening performed.
-- No jaundice screening performed.
-- No preeclampsia screening performed.
+- High suspicion for acute febrile illness with systemic involvement given the
+  combination of fever, headache, and vomiting.
+- Risk of dehydration from vomiting and fever.
+- Need to rule out severe endemic infections like malaria or typhoid fever.
+DIFFERENTIAL_DIAGNOSES:
+- Malaria (uncomplicated or severe; highly likely given regional epidemiology)
+- Typhoid Fever (fever, headache, gastrointestinal symptoms)
+- Acute Gastroenteritis (viral or bacterial)
+- Meningitis (must exclude if severe headache persists; check for neck stiffness)
 RECOMMENDATIONS:
-- Re-measure heart rate using a validated device.
-- Perform anemia screening using a validated method.
+- URGENT: Perform rapid diagnostic test (RDT) for Malaria today.
+- Assess hydration status (check for sunken eyes, skin pinch return, lethargy).
+- Begin Oral Rehydration Salts (ORS) immediately to prevent dehydration.
+- Administer paracetamol for fever and headache; avoid NSAIDs if dengue is 
+  suspected.
+- REFER TODAY: If patient cannot keep fluids down, is lethargic, or if malaria
+  RDT comes back negative, transport to health facility for further evaluation.
 ```
 
 `ClinicalReasoner` successfully parsed this into:
 
 | Field | Parsed Value |
 |:------|:-------------|
-| Triage Category | **GREEN** (Routine Care) |
-| Severity | LOW |
-| Urgency | ROUTINE |
-| Primary Concerns | 4 items parsed |
-| Differential Diagnoses | 0 items (expected — insufficient sensor data for meaningful differentials) |
-| Recommendations | 2+ items parsed |
+| Triage Category | **ORANGE** (Refer Within 48 Hours) |
+| Severity | HIGH |
+| Urgency | WITHIN_48_HOURS |
+| Primary Concerns | 3 items parsed |
+| Differential Diagnoses | 4 items parsed (Malaria, Typhoid, Gastroenteritis, Meningitis) |
+| Recommendations | 5 items parsed (RDT, Hydration, ORS, Paracetamol, Referral criteria) |
 
 ### Clinical Reasoning Quality
 
-The model's response demonstrates appropriate clinical reasoning for a symptom-only input:
-- Correctly classified common symptoms (fever, headache, vomiting) without sensor data as **low severity** — appropriate because no objective signs of danger were detected
-- Identified the absence of screening data as a primary concern
-- Recommended completing objective measurements before escalating
-- Did not over-triage based on symptoms alone, avoiding unnecessary referrals
+The model's response demonstrates appropriate clinical reasoning for a symptom-only input in a rural African context:
+- Correctly classified a potentially dangerous triad of symptoms (fever, headache, vomiting) as **high severity** warranting attention within 48 hours.
+- Identified **Malaria** and **Typhoid Fever** as top differential diagnoses, representing the most urgent epidemiological risks for these symptoms.
+- Recommended immediate actionable CHW interventions: **Malaria RDT**, **hydration assessment**, and **ORS**.
+- Maintained safe guardrails: Advised avoiding NSAIDs (dengue risk) and provided clear escalation criteria (lethargy, inability to keep fluids down) for facility referral.
 
 ---
 

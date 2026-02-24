@@ -35,12 +35,12 @@ The Nku Cycle is a self-adapting, multi-stage orchestration pipeline:
 
 **Adaptive Memory Management:** While 3GB RAM is common, Android OS background tasks consume significant memory dynamically. Before executing MedGemma, Nku queries `ActivityManager.MemoryInfo` for an 800MB resident free buffer. Nku relies on Android's native `mmap` implementation, seamlessly paging the 2.3GB model into the active virtual address space dynamically. By ensuring 800MB of breathing room, `mmap` pages the weights without "thrashing" the CPU. If free RAM is insufficient, or if the Android OOM (Out-of-Memory) killer interrupts the C++ inference thread, Nku gracefully catches the exception and falls back to deterministic WHO/IMCI rules.
 
-**Why Compressed Structured Prompting Matters:** MedGemma was trained on clinical text, not raw matrices. A prompt like *"she looks pale and puffy"*, although providing some qualitative detail that the MedGemma 4B (Q4_K_M) model can triage on in Nku, does not provide enough context to extract the model's full reasoning potential. Instead, Nku fuses user text with structured sensor metrics (Appendix E), for example:
+**Why Compressed Structured Prompting Matters:** MedGemma was trained on clinical text, not raw matrices. A prompt like *"she looks pale and puffy"*, although providing some qualitative detail that the MedGemma 4B (Q4_K_M) model can triage on in Nku, does not provide enough context to extract the model's full reasoning potential. Instead, Nku fuses user text with structured sensor metrics [13, 14] (Appendix E), for example:
 
-> `EAR: 2.15 (normal ≈2.8, edema limit ≤2.2), edema index: 0.52. Conjunctiva sat: 0.08 (pallor limit ≤0.10) [13, 14]. Patient pregnant.`
+> `EAR: 2.15 (normal ≈2.8, edema limit ≤2.2), edema index: 0.52. Conjunctiva sat: 0.08 (pallor limit ≤0.10). Patient pregnant.`
 
-MedGemma responds to this structured biomarker input with:
-> `SEVERITY: HIGH | URGENCY: IMMEDIATE` — specifically identifying the risk of preeclampsia [28] and concurrent anemia [27], recommending immediate facility referral (see Appendix C for full inference trace).
+MedGemma responds to this structured biomarker input with an assessment specifically identifying the risk of preeclampsia [28] and concurrent anemia [27]:
+> `SEVERITY: HIGH | URGENCY: IMMEDIATE` — specifically identifying the risk of preeclampsia and concurrent anemia, recommending immediate facility referral (see Appendix C for full inference trace).
 
 **Context Window Bottleneck:** Budget Android 3GB memory constraints restrict the KV-Cache to exactly 2048 tokens. Nku utilizes *Sensor Prompt Compression*, collapsing verbose sensory arrays natively on the Android layer before they hit the LLM prompt. This halves token consumption, unlocking over 1200 free tokens for MedGemma to utilize full Chain-of-Thought (CoT) reasoning, leading to a marked +20pp accuracy improvement in complex triage [9, 19, 20] (detailed in Appendix I).
 

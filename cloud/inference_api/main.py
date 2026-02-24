@@ -289,13 +289,13 @@ def _verify_model_hash(file_path: str, expected_sha256: Optional[str]) -> bool:
         # In production if hash checking is bypassed, it should still warn
         request_logger.warning("No expected SHA-256 hash configured for model. Skipping verification.")
         return True
-    
+
     sha256_hash = hashlib.sha256()
     with open(file_path, "rb") as f:
         # Read and update hash string value in blocks of 4K
         for byte_block in iter(lambda: f.read(4096), b""):
             sha256_hash.update(byte_block)
-            
+
     computed_hash = sha256_hash.hexdigest()
     if computed_hash != expected_sha256:
         request_logger.error(f"Model hash mismatch! Expected: {expected_sha256}, Computed: {computed_hash}")
@@ -355,7 +355,7 @@ def load_models(
                 )
                 if not _verify_model_hash(shared_path, config.model.medgemma_sha256):
                     raise RuntimeError("Shared model integrity verification failed (SHA-256 mismatch).")
-                
+
                 shared_model = Llama(
                     model_path=shared_path,
                     n_ctx=config.model.context_size,
@@ -387,7 +387,7 @@ def load_models(
                 )
                 if not _verify_model_hash(med_path, config.model.medgemma_sha256):
                     raise RuntimeError("MedGemma model integrity verification failed (SHA-256 mismatch).")
-                
+
                 medgemma = Llama(
                     model_path=med_path,
                     n_ctx=config.model.context_size,
@@ -408,7 +408,7 @@ def load_models(
                 )
                 if not _verify_model_hash(trans_path, config.model.translategemma_sha256):
                     raise RuntimeError("TranslateGemma model integrity verification failed (SHA-256 mismatch).")
-                
+
                 translategemma = Llama(
                     model_path=trans_path,
                     n_ctx=config.model.context_size,

@@ -150,8 +150,7 @@ jobs:
         # uses read-only filesystem). Re-evaluate when a fix is released.
         run: |
           pip install pip-audit
-          # P3-14 fix: suppress dependency resolution errors for jaxlib/python3.14 on macOS
-          pip-audit -r cloud/inference_api/requirements.txt --ignore-vuln CVE-2025-69872 --skip jaxlib
+          pip-audit -r cloud/inference_api/requirements.txt --ignore-vuln CVE-2025-69872
 
       - name: Bandit SAST (Cloud API)
         run: |

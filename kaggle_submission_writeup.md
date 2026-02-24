@@ -64,3 +64,6 @@ MedGemma responds to this structured biomarker input with an assessment identify
 - **Open Source:** Fully open source under Apache 2.0. Source code, Python CI pipelines, and calibration tools available on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion) and [HuggingFace](https://huggingface.co/wredd/medgemma-4b-gguf).
 
 *Please refer to the Kaggle Submission Appendix for references, mathematical algorithms, validation schemas, calibration configurations, benchmarking datasets, and more.*
+
+---
+**Appendix:** The full Project Appendix is available here: [Project Appendix](https://github.com/Elormyevu/nku-medgemma-conversion/blob/main/kaggle_submission_appendix.md)

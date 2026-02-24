@@ -7,7 +7,7 @@
 
 ---
 
-## 1. rPPG Processor (`RPPGProcessor.kt`)
+## 1. rPPG Processor (`PulseOximeter.kt`)
 
 ### Threshold-to-Literature Mapping
 

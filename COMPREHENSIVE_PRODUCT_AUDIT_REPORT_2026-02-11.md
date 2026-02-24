@@ -112,7 +112,7 @@ flowchart LR
  H --> P[PreeclampsiaScreen]
  H --> T[TriageScreen]
 
- C --> RPPG[RPPGProcessor]
+ C --> RPPG[PulseOximeter]
  A --> PAL[PallorDetector]
  P --> FD[FaceDetectorHelper]
  FD --> EDE[EdemaDetector]

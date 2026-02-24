@@ -98,7 +98,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 | Screening | Module | Method | Output |
 |:----------|:-------|:-------|:-------|
-| **Cardio Check** | `RPPGProcessor.kt` | Green channel DFT (30fps) | Heart rate ±5 BPM |
+| **Cardio Check** | `PulseOximeter.kt` | Red channel thresholding | Heart rate ±5 BPM |
 | **Anemia Screen** | `PallorDetector.kt` | Conjunctival HSV analysis | Pallor severity (0-1) |
 | **Jaundice Screen** | `JaundiceDetector.kt` | Scleral HSV analysis | Jaundice severity (0-1) |
 | **Preeclampsia** | `EdemaDetector.kt` | Facial geometry (EAR + gradients) | Edema severity (0-1) |
@@ -121,7 +121,7 @@ The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED
 | Layer | Technology |
 |:------|:-----------|
 | **UI** | Jetpack Compose (Glassmorphism) |
-| **Perception** | RPPGProcessor, PallorDetector, JaundiceDetector, EdemaDetector, RespiratoryDetector |
+| **Perception** | PulseOximeter, PallorDetector, JaundiceDetector, EdemaDetector, RespiratoryDetector |
 | **Orchestration** | ClinicalReasoner + SensorFusion + ThermalManager (42°C) |
 | **Security** | PromptSanitizer (6-layer injection protection at every model boundary) |
 | **Inference** | llama.cpp via JNI (NDK 29, ARM64 NEON) |
@@ -240,7 +240,7 @@ nku-medgemma-conversion/
 │    │  ├── MainActivity.kt     # UI + Compose
 │    │  ├── NkuInferenceEngine.kt  # MedGemma orchestration
 │    │  ├── NkuTranslator.kt    # ML Kit translation wrapper
-│    │  ├── RPPGProcessor.kt    # Heart rate (rPPG)
+│    │  ├── PulseOximeter.kt    # Heart rate (finger pulse oximetry)
 │    │  ├── PallorDetector.kt    # Anemia (conjunctiva)
 │    │  ├── JaundiceDetector.kt   # Jaundice (scleral icterus)
 │    │  ├── EdemaDetector.kt    # Preeclampsia (edema)

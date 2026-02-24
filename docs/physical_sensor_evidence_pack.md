@@ -27,7 +27,7 @@ The validation executed the full Android Test Suite located in:
 ### Specific Validations
 
 1. **SensorBinding (Camera/Mic)**: `ProcessCameraProvider` and `AudioRecord` lifecycles successfully bound to local lifecycle owners, emitting uncalibrated data effectively within the limited VRAM of the emulator.
-2. **RPPGProcessor**: Successfully initiated and parsed buffer frames under load conditions (PASS).
+2. **PulseOximeter**: Successfully initiated and parsed buffer frames under load conditions (PASS).
 3. **Pallor/Jaundice/Edema**: MLKit ImageAnalysis bound properly without excessive rebinding (P2-09 mitigation effective on the 3GB target).
 4. **HeAR Respiratory Event Detector**: Handled `float32` vs `float16` fallback properly when MobileNetV3 TFLite evaluated dummy wav buffers.
 

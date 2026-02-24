@@ -150,7 +150,7 @@ Instrumented tests use synthetic image/audio payloads; JVM tests include null-bi
 - `mobile/android/app/src/androidTest/java/com/nku/app/CameraTriageInstrumentedTest.kt:16` 
 - `mobile/android/app/src/androidTest/java/com/nku/app/CameraTriageInstrumentedTest.kt:33` 
 - `mobile/android/app/src/androidTest/java/com/nku/app/RespiratoryPipelineInstrumentedTest.kt:29` 
-- `mobile/android/app/src/test/java/com/nku/app/RPPGProcessorTest.kt:11` 
+- `mobile/android/app/src/test/java/com/nku/app/PulseOximeterTest.kt:11` 
 - `docs/ManualValidationChecklist.md:3`
 
 **Impact:** 

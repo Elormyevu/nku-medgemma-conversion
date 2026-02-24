@@ -418,7 +418,7 @@ All measurements below were captured on-device using a smartphone camera.
 
 === HEART RATE (rPPG) ===
 Method: Remote photoplethysmography — green channel intensity extracted from
- facial video, frequency analysis via DFT over a sliding window.
+ finger video, frequency analysis via DFT over a sliding window.
  [11, 12]
 Heart rate: 108 bpm (tachycardia: >100 bpm)
 Signal quality: good
@@ -582,7 +582,7 @@ Decision rationale: Q4_K_M at 56% accuracy represents 81% of the published basel
 
 Why not use the multimodal MedGemma 4B with raw camera images? A natural question: MedGemma 4B multimodal includes a MedSigLIP vision encoder (400M parameters). Why not feed it raw camera images directly, skipping the sensor-to-text pipeline entirely? Four reasons:
 
-1. rPPG requires temporal video analysis, not single images. Heart rate detection via rPPG extracts pulse frequency from 10 seconds of facial video (300 frames) using DFT. A vision-language model processes single images — it cannot perform temporal frequency analysis across a video stream. No single frame contains heart rate information.
+1. rPPG requires temporal video analysis, not single images. Heart rate detection via rPPG extracts pulse frequency from 10 seconds of finger video (300 frames) using DFT. A vision-language model processes single images — it cannot perform temporal frequency analysis across a video stream. No single frame contains heart rate information.
 
 2. MedSigLIP was trained on clinical imagery, not smartphone images. The vision encoder was fine-tuned on chest X-rays, dermatoscopy, ophthalmology scans, and histopathology slides — none of which resemble a smartphone photo of a lower eyelid (pallor) or a face (edema). It would require fine-tuning on these specific modalities, for which no labeled training data currently exists to our knowledge.
 
@@ -658,7 +658,7 @@ Research on automated prompt optimization for medical vision-language models fou
 ```
 === HEART RATE (rPPG) ===
 Method: Remote photoplethysmography — green channel intensity extracted from
- facial video, frequency analysis via DFT over a sliding window.
+ finger video, frequency analysis via DFT over a sliding window.
  [11, 12]
 Heart rate: 108 bpm (tachycardia: >100 bpm)
 Signal quality: good
@@ -701,23 +701,24 @@ Nku doesn't rely on MedGemma alone. The safety architecture provides multiple co
 | Risk-stratified triage | 4-tier severity output | Optimizes limited transport resources by managing moderate cases locally
 | Prompt sanitization | 6-layer PromptSanitizer at every boundary | Prevents injection or adversarial manipulation |
 | Always-on disclaimer | "Consult a healthcare professional" | Positions output as decision support, not diagnosis |
+| Thermal management | Auto-pauses inference at 42°C | Prevents hardware overheating and model hallucinatory degradation |
 
 ### Conclusion
 
-The literature and architectural realities demonstrate that: (a) triage is substantially easier for LLMs than MedQA, (b) LLM-based decision support reduces diagnostic errors in Sub-Saharan African clinical settings, (c) while zero-shot LLM performance degrades on real medical data, (d) structured prompting substantially improves model performance over zero-shot baselines, (e) on-device quantized models retain clinically useful accuracy, and (f) Nku's 5-layer safety architecture explicitly compensates for residual model limitations. Combined with the reality that the alternative for these CHWs is *zero* diagnostic support, the pipeline provides a well-grounded, defensible starting point for field validation.
+The literature and architectural realities demonstrate that: (a) triage is substantially easier for LLMs than MedQA, (b) LLM-based decision support reduces diagnostic errors in Sub-Saharan African clinical settings, (c) while zero-shot LLM performance degrades on real medical data, (d) structured prompting substantially improves model performance over zero-shot baselines, (e) on-device quantized models retain clinically useful accuracy, and (f) Nku's 6-layer safety architecture explicitly compensates for residual model limitations. Combined with the reality that the alternative for these CHWs is *zero* diagnostic support, the pipeline provides a well-grounded, defensible starting point for field validation.
 
 ---
 
 ## Appendix F: Sensor-to-Prompt Signal Processing Pipeline
 
-This appendix documents the complete signal processing chain for each of Nku's four camera-based screening modalities — from raw pixel input through biomarker extraction to the final text prompt consumed by MedGemma Q4_K_M.
+This appendix documents the complete signal processing chain for each of Nku's four camera and finger-based screening modalities — from raw pixel input through biomarker extraction to the final text prompt consumed by MedGemma Q4_K_M.
 
 ### F.1: Architecture Overview
 
 ```mermaid
 %%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
 graph LR
-  A[" Camera\nFrame"] --> B["RPPGProcessor\n(Green channel DFT)"]
+  A[" Camera\nFrame"] --> B["PulseOximeter\n(Red channel thresholding)"]
   A --> C["PallorDetector\n(HSV saturation)"]
   A --> D["EdemaDetector\n(MediaPipe EAR)"]
   B --> E["SensorFusion\n(VitalSigns)"]
@@ -735,11 +736,11 @@ All four detectors produce structured result objects with derived scores, confid
 
 **Clinical Validation & Architectural Value:** The rPPG pipeline extracts a fundamental vital sign without requiring external pulse oximetry hardware. Empirical research confirms that smartphone-based rPPG, particularly when optimizing the green channel to measure hemoglobin absorption, offers robust accuracy for continuous heart rate monitoring [10, 11, 12]. In the context of Nku's triage engine, providing an accurate BPM reading helps MedGemma contextualize other symptoms (e.g., differentiating anemia with compensatory tachycardia from simple fatigue).
 
-Source file: `RPPGProcessor.kt`
+Source file: `PulseOximeter.kt`
 
 | Stage | Technique | Detail |
 |:------|:----------|:-------|
-| Input | Camera video frames | 30 fps facial video |
+| Input | Camera video frames | 30 fps finger video |
 | Channel extraction | Green channel mean | Batch pixel copy (`getPixels()`), sample every 4th pixel for performance. Green channel shows strongest plethysmographic signal [11] |
 | Signal buffer | Sliding window | 10-second buffer (300 frames), `ArrayDeque` for O(1) push/pop |
 | Detrending | DC removal | Subtract mean from signal to eliminate baseline drift |
@@ -760,7 +761,7 @@ Output → prompt:
 ```
 === HEART RATE (rPPG) ===
 Method: Remote photoplethysmography — green channel intensity extracted from
- facial video, frequency analysis via DFT over a sliding window.
+ finger video, frequency analysis via DFT over a sliding window.
  [11, 12]
 Heart rate: 72 bpm (normal range: 50-100 bpm)
 Signal quality: good
@@ -972,7 +973,7 @@ Beyond sensor data, the prompt includes:
 
 ## Appendix G: Safety Architecture
 
-Nku implements five independent safety layers to minimize risk from incorrect triage output:
+Nku implements six independent safety layers to minimize risk from incorrect triage output:
 
 ### Layer 1: Confidence Gating
 Sensor readings below 75% confidence are excluded from MedGemma's prompt (marked `[LOW CONFIDENCE — excluded from assessment]`). If all sensors are below threshold and no symptoms are entered, triage abstains entirely — no MedGemma call is made. This prevents the LLM from reasoning on unreliable data. The CHW sees a localized warning on the capture screen prompting re-capture in better conditions.
@@ -1007,6 +1008,9 @@ All user input passes through a 6-layer `PromptSanitizer` at every model boundar
 | 6 | Length capping | Truncates overlong input to prevent buffer/context attacks |
 
 Additionally, user content is wrapped in `<<<`/`>>>` delimiters at the prompt-building stage, and output validation checks for leaked delimiters and suspicious patterns. Tests in `test_security.py` cover 30+ injection scenarios including Unicode bypasses and nested injections.
+
+### Layer 6: Thermal Management
+Intensive edge LLM inference rapidly heats localized mobile SOC components. On $60–100 devices that lack advanced cooling arrays, crossing 42–45°C significantly degrades the processor, leading to catastrophic token hallucination or hardware damage. Nku incorporates a `ThermalManager` that continuously polls Android's `HardwarePropertiesManager`. If device skin temperature exceeds 42°C, inference is auto-paused mid-generation, effectively saving the device and safely reverting to rule-based fallback guidelines until the thermal envelope cools.
 
 ### MedQA Benchmark Methodology Note
 

@@ -276,7 +276,7 @@ Residual concerns:
 
 Confirmed positives:
 - rPPG performance optimizations in place (buffer/deque, throttled DFT):
- - `mobile/android/app/src/main/java/com/nku/app/RPPGProcessor.kt:52`, `mobile/android/app/src/main/java/com/nku/app/RPPGProcessor.kt:96`
+ - `mobile/android/app/src/main/java/com/nku/app/PulseOximeter.kt:52`, `mobile/android/app/src/main/java/com/nku/app/PulseOximeter.kt:96`
 - Thermal read caching exists:
  - `mobile/android/app/src/main/java/com/nku/app/ThermalManager.kt:34`
 - Memory-aware MedGemma mmap loading/retry path exists:

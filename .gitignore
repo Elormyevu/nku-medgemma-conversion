@@ -131,3 +131,12 @@ src/
 .coverage
 video_assets/
 launch_emu.sh
+
+# Cleanup: large/duplicate files
+*.zip
+*.mp4
+*.docx
+*.pdf
+NKU_Final_Submission/
+NKU_KAGGLE_SUBMISSION_FINAL/
+NKU_KAGGLE_SUBMISSION_FINAL 2/

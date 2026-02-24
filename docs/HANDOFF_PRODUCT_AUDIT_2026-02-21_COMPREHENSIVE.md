@@ -197,7 +197,7 @@ The following were explicitly covered:
 **Evidence:**
 
 - rPPG unit tests do not exercise real Bitmap processing:
- - `mobile/android/app/src/test/java/com/nku/app/RPPGProcessorTest.kt:14`
+ - `mobile/android/app/src/test/java/com/nku/app/PulseOximeterTest.kt:14`
 - Pallor/Jaundice/Edema unit tests primarily check initial state/enums/reset:
  - `mobile/android/app/src/test/java/com/nku/app/PallorDetectorTest.kt:13`
  - `mobile/android/app/src/test/java/com/nku/app/JaundiceDetectorTest.kt:13`

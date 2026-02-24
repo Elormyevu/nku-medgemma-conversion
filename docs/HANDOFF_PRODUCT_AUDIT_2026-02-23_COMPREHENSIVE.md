@@ -290,7 +290,7 @@ Android core:
 - `/mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt`
 - `/mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt`
 - `/mobile/android/app/src/main/java/com/nku/app/SensorFusion.kt`
-- `/mobile/android/app/src/main/java/com/nku/app/RPPGProcessor.kt`
+- `/mobile/android/app/src/main/java/com/nku/app/PulseOximeter.kt`
 - `/mobile/android/app/src/main/java/com/nku/app/RespiratoryDetector.kt`
 - `/mobile/android/app/src/main/java/com/nku/app/ModelFileValidator.kt`
 - `/mobile/android/app/src/main/java/com/nku/app/ThermalManager.kt`

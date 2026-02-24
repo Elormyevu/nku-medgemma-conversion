@@ -146,7 +146,7 @@ Scope: Android frontend, backend API, performance/efficiency, security (includin
 flowchart TB
   User["CHW / Patient"]
   UI["Android UI (Jetpack Compose)\nMainActivity + Screens"]
-  Sensors["Sensor Layer\nRPPGProcessor + PallorDetector + EdemaDetector"]
+  Sensors["Sensor Layer\nPulseOximeter + PallorDetector + EdemaDetector"]
   Face["FaceDetectorHelper\n(MediaPipe)"]
   Fusion["SensorFusion"]
   Reasoner["ClinicalReasoner\nPrompt Builder + Rule Fallback"]

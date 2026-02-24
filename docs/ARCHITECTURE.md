@@ -165,7 +165,7 @@ mobile/android/app/src/main/
 │  ├── MainActivity.kt     # UI + Compose (Jetpack Compose)
 │  ├── NkuInferenceEngine.kt  # MedGemma orchestration
 │  ├── NkuTranslator.kt    # ML Kit translation wrapper
-│  ├── RPPGProcessor.kt    # Heart rate via rPPG
+│  ├── PulseOximeter.kt    # Heart rate via finger pulse oximetry
 │  ├── RespiratoryDetector.kt # TB/Respiratory (HeAR Event Detector; ViT-L = future upgrade)
 │  ├── PallorDetector.kt    # Anemia via conjunctival pallor
 │  ├── JaundiceDetector.kt   # Jaundice via scleral icterus

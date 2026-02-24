@@ -1,0 +1,8 @@
+%%{init: {'theme':'dark', 'themeVariables':{'fontSize':'22px'}}}%%
+graph TD
+    Fusion["SensorFusion Output"] --> Reasoner["ClinicalReasoner\n(Structural Prompting)"]
+    Reasoner --> Sanitizer["PromptSanitizer\n(6-Layer Security Filter)"]
+    Sanitizer --> TransIn["ML Kit Translator\n(Source to English)"]
+    TransIn --> Engine["MedGemma 4B Engine\n(llama.cpp GGUF)"]
+    Engine --> TransOut["ML Kit Translator\n(English to Source)"]
+    TransOut --> TTS["System Target TTS"]

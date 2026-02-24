@@ -1,0 +1,9 @@
+%%{init: {'theme':'dark', 'themeVariables':{'fontSize':'22px'}}}%%
+graph LR
+    UI["Compose UI"] --> Cam["Camera"]
+    UI --> Mic["Microphone"]
+    Cam --> MP_Vis["MediaPipe Vision\n(Face Landmarks)"]
+    MP_Vis --> FeatExt["Feature Extraction\n(rPPG, Edema, Jaundice)"]
+    Mic --> HeAR_Aud["HeAR Audio Engine\n(MobileNetV3 TFLite)"]
+    FeatExt --> Fusion["SensorFusion\n(Synchronized Output)"]
+    HeAR_Aud --> Fusion

@@ -61,6 +61,6 @@ MedGemma responds to this structured biomarker input with an assessment identify
 - **HAI-DEF:** MedGemma 4B is the irreplaceable core of the clinical reasoning engine.
 - **Product Feasibility:** Q4_K_M compression (2.3GB), `mmap` loading on $60+ Androids, `llama.cpp` JNI, full Android UI (see Appendix H for end-to-end deployment proof).
 - **Novelty:** Integrates Google's HeAR Event Detector (1.1MB FP32/INT8) dynamically with an LLM for respiratory triage on mobile.
-- **Open Source:** Fully open source under Apache 2.0. Source code, Python CI pipelines, and calibration tools available on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion) and [HuggingFace](https://huggingface.co/wredd).
+- **Open Source:** Fully open source under Apache 2.0. Source code, Python CI pipelines, and calibration tools available on [GitHub](https://github.com/Elormyevu/nku-medgemma-conversion) and [HuggingFace](https://huggingface.co/wredd/medgemma-4b-gguf).
 
 *Please refer to the Kaggle Submission Appendix for references, mathematical algorithms, validation schemas, calibration configurations, benchmarking datasets, and more.*

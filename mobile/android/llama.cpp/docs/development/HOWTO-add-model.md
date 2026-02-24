@@ -29,7 +29,7 @@ The required steps to implement for an HF model are:
 ```python
 @ModelBase.register("MyModelForCausalLM")
 class MyModel(TextModel):
-    model_arch = gguf.MODEL_ARCH.MYMODEL
+  model_arch = gguf.MODEL_ARCH.MYMODEL
 ```
 
 or
@@ -37,7 +37,7 @@ or
 ```python
 @ModelBase.register("MyModelForConditionalGeneration")
 class MyModel(MmprojModel):
-    model_arch = gguf.MODEL_ARCH.MYMODEL
+  model_arch = gguf.MODEL_ARCH.MYMODEL
 ```
 
 2. Define the layout of the GGUF tensors in [constants.py](/gguf-py/gguf/constants.py)
@@ -46,17 +46,17 @@ Add an enum entry in `MODEL_ARCH`, the model human friendly name in `MODEL_ARCH_
 
 Example for `falcon` model:
 ```python
-    MODEL_ARCH.FALCON: [
-        MODEL_TENSOR.TOKEN_EMBD,
-        MODEL_TENSOR.OUTPUT_NORM,
-        MODEL_TENSOR.OUTPUT,
-        MODEL_TENSOR.ATTN_NORM,
-        MODEL_TENSOR.ATTN_NORM_2,
-        MODEL_TENSOR.ATTN_QKV,
-        MODEL_TENSOR.ATTN_OUT,
-        MODEL_TENSOR.FFN_DOWN,
-        MODEL_TENSOR.FFN_UP,
-    ]
+  MODEL_ARCH.FALCON: [
+    MODEL_TENSOR.TOKEN_EMBD,
+    MODEL_TENSOR.OUTPUT_NORM,
+    MODEL_TENSOR.OUTPUT,
+    MODEL_TENSOR.ATTN_NORM,
+    MODEL_TENSOR.ATTN_NORM_2,
+    MODEL_TENSOR.ATTN_QKV,
+    MODEL_TENSOR.ATTN_OUT,
+    MODEL_TENSOR.FFN_DOWN,
+    MODEL_TENSOR.FFN_UP,
+  ]
 ```
 
 3. Map the original tensor names to the standardize equivalent in GGUF
@@ -71,13 +71,13 @@ Example for the normalization tensor in attention layers:
 
 ```python
 block_mappings_cfg: dict[MODEL_TENSOR, tuple[str, ...]] = {
-        # Attention norm
-        MODEL_TENSOR.ATTN_NORM: (
-            "gpt_neox.layers.{bid}.input_layernorm",                # gptneox
-            "transformer.h.{bid}.ln_1",                             # gpt2 gpt-j refact qwen
-            "transformer.blocks.{bid}.norm_1",                      # mpt
-            ...
-        )
+    # Attention norm
+    MODEL_TENSOR.ATTN_NORM: (
+      "gpt_neox.layers.{bid}.input_layernorm",        # gptneox
+      "transformer.h.{bid}.ln_1",               # gpt2 gpt-j refact qwen
+      "transformer.blocks.{bid}.norm_1",           # mpt
+      ...
+    )
 }
 ```
 
@@ -96,8 +96,8 @@ NOTE: Tensor names must end with `.weight` or `.bias` suffixes, that is the conv
 The model params and tensors layout must be defined in `llama.cpp` source files:
 1. Define a new `llm_arch` enum value in `src/llama-arch.h`.
 2. In `src/llama-arch.cpp`:
-    - Add the architecture name to the `LLM_ARCH_NAMES` map.
-    - Add the list of model tensors to `llm_get_tensor_names` (you may also need to update `LLM_TENSOR_NAMES`)
+  - Add the architecture name to the `LLM_ARCH_NAMES` map.
+  - Add the list of model tensors to `llm_get_tensor_names` (you may also need to update `LLM_TENSOR_NAMES`)
 3. Add any non-standard metadata loading in the `llama_model_loader` constructor in `src/llama-model-loader.cpp`.
 4. If the model has a RoPE operation, add a case for the architecture in `llama_model_rope_type` function in `src/llama-model.cpp`.
 

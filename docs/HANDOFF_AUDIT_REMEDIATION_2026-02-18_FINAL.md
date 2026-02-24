@@ -98,8 +98,8 @@ It covers:
 
 5. Test hygiene
 - Renamed cloud pytest suite file:
-  - from `cloud/inference_api/test_security.py`
-  - to `cloud/inference_api/security_pytest_suite.py`
+ - from `cloud/inference_api/test_security.py`
+ - to `cloud/inference_api/security_pytest_suite.py`
 - Prevents import collisions under generic `unittest discover`.
 
 ## B. Android App (`mobile/android/app`)
@@ -108,9 +108,9 @@ It covers:
 - Added `ModelFileValidator.kt` with GGUF signature + minimum-size checks.
 - Added `ModelFileValidatorTest.kt` coverage for null/tiny/invalid/valid cases.
 - Wired validation into `NkuInferenceEngine.resolveModelFile()` for:
-  - internal extracted model
-  - Play Asset Delivery model
-  - sdcard fallback model
+ - internal extracted model
+ - Play Asset Delivery model
+ - sdcard fallback model
 
 2. Prompt injection hardening parity
 - Extended `PromptSanitizer.kt` with paraphrase-resistant checks and intent heuristic.
@@ -197,21 +197,21 @@ It covers:
 1. Backend verification
 - Run: `./.audit_venv/bin/python -m unittest discover -s tests -v`
 - Confirm API key flow in staging:
-  - no key in production mode -> `503 misconfigured`
-  - wrong key -> `401`
-  - correct key -> request reaches model stage
+ - no key in production mode -> `503 misconfigured`
+ - wrong key -> `401`
+ - correct key -> request reaches model stage
 
 2. Android verification
 - Run: `./gradlew :app:testDebugUnitTest`
 - Run: `./gradlew :app:connectedDebugAndroidTest` (emulator/device)
 - Inspect reports at:
-  - `mobile/android/app/build/reports/tests/testDebugUnitTest/index.html`
-  - `mobile/android/app/build/reports/androidTests/connected/debug/index.html`
+ - `mobile/android/app/build/reports/tests/testDebugUnitTest/index.html`
+ - `mobile/android/app/build/reports/androidTests/connected/debug/index.html`
 
 3. Deployment readiness
 - Ensure one of:
-  - secret `nku-api-key` exists (preferred)
-  - or `NKU_API_KEY` env var is explicitly set
+ - secret `nku-api-key` exists (preferred)
+ - or `NKU_API_KEY` env var is explicitly set
 - Ensure `HF_TOKEN` provisioning path is configured (secret preferred)
 
 ## 8) File-Level Reference (Latest Commit `fd8831a`)

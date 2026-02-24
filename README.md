@@ -1,33 +1,33 @@
 <p align="center">
-  <img src="docs/assets/nku_logo.png" alt="Nku Logo" width="120" />
+ <img src="docs/assets/nku_logo.png" alt="Nku Logo" width="120" />
 </p>
 
 <h1 align="center">Nku: Offline Medical AI for Pan-Africa</h1>
 
 <p align="center">
-  <strong>Nku Sentinel — Clinical Triage on $60–100 Phones</strong>
+ <strong>Nku Sentinel — Clinical Triage on $60–100 Phones</strong>
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> •
-  <a href="#architecture">Architecture</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#models">Models</a> •
-  <a href="#languages">Languages</a> •
-  <a href="./CONTRIBUTING.md">Contributing</a>
+ <a href="#features">Features</a> •
+ <a href="#architecture">Architecture</a> •
+ <a href="#quick-start">Quick Start</a> •
+ <a href="#models">Models</a> •
+ <a href="#languages">Languages</a> •
+ <a href="./CONTRIBUTING.md">Contributing</a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/MedGemma-4B-blue?style=flat-square" alt="MedGemma" />
-  <img src="https://img.shields.io/badge/Inference-100%25_On--Device-green?style=flat-square" alt="On-Device" />
-  <img src="https://img.shields.io/badge/Languages-46-orange?style=flat-square" alt="Languages" />
-  <img src="https://img.shields.io/badge/RAM-3GB-purple?style=flat-square" alt="RAM" />
-  <img src="https://img.shields.io/badge/License-Apache%202.0-lightgrey?style=flat-square" alt="License" />
+ <img src="https://img.shields.io/badge/MedGemma-4B-blue?style=flat-square" alt="MedGemma" />
+ <img src="https://img.shields.io/badge/Inference-100%25_On--Device-green?style=flat-square" alt="On-Device" />
+ <img src="https://img.shields.io/badge/Languages-46-orange?style=flat-square" alt="Languages" />
+ <img src="https://img.shields.io/badge/RAM-3GB-purple?style=flat-square" alt="RAM" />
+ <img src="https://img.shields.io/badge/License-Apache%202.0-lightgrey?style=flat-square" alt="License" />
 </p>
 
 ---
 
-##  The Problem
+## The Problem
 
 In rural Sub-Saharan Africa:
 - **Physician-to-patient ratio exceeds 1:10,000**
@@ -37,7 +37,7 @@ In rural Sub-Saharan Africa:
 
 Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
-##  The Solution
+## The Solution
 
 **Nku** ("eye" in Ewe) is designed to turn any $60+ Android phone into an offline clinical triage engine. It is a **proof-of-concept edge system** — 100% on-device inference, zero cloud dependency for clinical reasoning.
 
@@ -52,45 +52,45 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 
 ---
 
-## ✨ Features
+## Features
 
--  **MedGemma 4B** — Google's clinical reasoning model, quantized to ~2.3GB Q4_K_M (56% MedQA, quantized; 69% unquantized)
--  **Android ML Kit** — On-device translation for 59 languages; unsupported languages fall back to the Google Cloud Translate API
--  **Android System TTS** — Device-native voice synthesis for spoken clinical results
-- ⚡ **Nku Cycle** — Memory-efficient mmap orchestration on budget devices (3–4GB RAM)
--  **Nku Sentinel** — Camera-based screening for heart rate, anemia, jaundice, & preeclampsia; microphone-based TB/respiratory screening via HeAR Event Detector (MobileNetV3, 1.1MB TFLite)
+- **MedGemma 4B** — Google's clinical reasoning model, quantized to ~2.3GB Q4_K_M (56% MedQA, quantized; 69% unquantized)
+- **Android ML Kit** — On-device translation for 59 languages; unsupported languages fall back to the Google Cloud Translate API
+- **Android System TTS** — Device-native voice synthesis for spoken clinical results
+- **Nku Cycle** — Memory-efficient mmap orchestration on budget devices (3–4GB RAM)
+- **Nku Sentinel** — Camera-based screening for heart rate, anemia, jaundice, & preeclampsia; microphone-based TB/respiratory screening via HeAR Event Detector (MobileNetV3, 1.1MB TFLite)
 
 ---
 
-##  Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    THE NKU CYCLE                            │
+│          THE NKU CYCLE              │
 ├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   [Patient Symptom in Ewe / Camera Screening]              │
-│           ↓                                                 │
-│   ┌───────────────────┐                                    │
-│   │  Android ML Kit   │  ← On-device (~30MB/lang)           │
-│   │  Local → English  │  (or cloud fallback if unsupported) │
-│   └────────┬──────────┘                                    │
-│            ↓                                                │
-│   ┌───────────────────┐                                    │
-│   │    MedGemma 4B    │  ← Q4_K_M (2.3GB) • 100% on-device │
-│   │  Clinical Triage  │                                    │
-│   └────────┬──────────┘                                    │
-│            ↓                                                │
-│   ┌───────────────────┐                                    │
-│   │  Android ML Kit   │                                    │
-│   │  English → Local  │                                    │
-│   └────────┬──────────┘                                    │
-│            ↓                                                │
-│   ┌───────────────────┐                                    │
-│   │  Android System TTS │                                    │
-│   │  Spoken Result    │                                    │
-│   └───────────────────┘                                    │
-│                                                             │
+│                               │
+│  [Patient Symptom in Ewe / Camera Screening]       │
+│      ↓                         │
+│  ┌───────────────────┐                  │
+│  │ Android ML Kit  │ ← On-device (~30MB/lang)      │
+│  │ Local → English │ (or cloud fallback if unsupported) │
+│  └────────┬──────────┘                  │
+│      ↓                        │
+│  ┌───────────────────┐                  │
+│  │  MedGemma 4B  │ ← Q4_K_M (2.3GB) • 100% on-device │
+│  │ Clinical Triage │                  │
+│  └────────┬──────────┘                  │
+│      ↓                        │
+│  ┌───────────────────┐                  │
+│  │ Android ML Kit  │                  │
+│  │ English → Local │                  │
+│  └────────┬──────────┘                  │
+│      ↓                        │
+│  ┌───────────────────┐                  │
+│  │ Android System TTS │                  │
+│  │ Spoken Result  │                  │
+│  └───────────────────┘                  │
+│                               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -131,7 +131,7 @@ The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED
 
 ---
 
-##  Quick Start
+## Quick Start
 
 > [!WARNING]
 > **Reviewer/Auditor Notice**: Direct APK installations (`app-debug.apk` or `app-release-unsigned.apk`) do not contain the 2.3GB MedGemma model due to Android's 150MB APK size limit. **No manual setup is needed** — the app automatically downloads the model from HuggingFace on app startup (MainActivity creation), validates its SHA-256 checksum, and proceeds. Just install the APK, connect to Wi-Fi to allow the initial launch download, and then run a triage offline. For offline testing, sideload the GGUF model via `adb push` (see below).
@@ -178,7 +178,7 @@ adb push medgemma-4b-it.Q4_K_M.gguf /sdcard/Android/data/com.nku.app/files/Downl
 
 ---
 
-##  Models
+## Models
 
 ### Compression Pipeline
 
@@ -199,21 +199,21 @@ We created a **243-scenario African clinical triage calibration dataset** across
 ```bash
 # Generate calibration imatrix (used for IQ2_XS experiments)
 ./llama-imatrix -m medgemma-4b-f16.gguf \
-  -f calibration/african_primary_care.txt \
-  --chunks 64 \
-  -o medgemma-medical.imatrix
+ -f calibration/african_primary_care.txt \
+ --chunks 64 \
+ -o medgemma-medical.imatrix
 
 # Quantize with imatrix (used for IQ2_XS — see Appendix D)
 ./llama-quantize medgemma-4b-f16.gguf medgemma-4b-IQ2_XS.gguf IQ2_XS \
-  --imatrix medgemma-medical.imatrix
+ --imatrix medgemma-medical.imatrix
 ```
 
 ---
 
-##  Languages
+## Languages
 
 ### Verified Core (14)
-✅ English | ✅ French | ✅ Swahili | ✅ Hausa | ✅ Yoruba | ✅ Igbo | ✅ Amharic | ✅ Ewe | ✅ Twi | ✅ Wolof | ✅ Zulu | ✅ Xhosa | ✅ Oromo | ✅ Tigrinya
+ English | French | Swahili | Hausa | Yoruba | Igbo | Amharic | Ewe | Twi | Wolof | Zulu | Xhosa | Oromo | Tigrinya
 
 ### Extended Pan-African Suite (32)
 Afrikaans, Arabic, Bambara, Bemba, Chichewa, Dinka, Fula, Ga, Kikuyu, Kinyarwanda, Kongo, Kuanyama, Lingala, Luba-Kasai, Luo, Luganda, Malagasy, Ndebele, Northern Sotho, Nuer, Pidgin (Nigerian), Pidgin (Cameroonian), Portuguese, Rundi, Sesotho, Shona, Somali, Swati, Tsonga, Tswana, Tumbuka, Venda
@@ -230,49 +230,49 @@ Afrikaans, Arabic, Bambara, Bemba, Chichewa, Dinka, Fula, Ga, Kikuyu, Kinyarwand
 
 ---
 
-##  Project Structure
+## Project Structure
 
 ```
 nku-medgemma-conversion/
-├── mobile/android/           # Android application (PRODUCTION CODE)
-│   └── app/src/main/
-│       ├── java/com/nku/app/
-│       │   ├── MainActivity.kt         # UI + Compose
-│       │   ├── NkuInferenceEngine.kt   # MedGemma orchestration
-│       │   ├── NkuTranslator.kt        # ML Kit translation wrapper
-│       │   ├── RPPGProcessor.kt        # Heart rate (rPPG)
-│       │   ├── PallorDetector.kt       # Anemia (conjunctiva)
-│       │   ├── JaundiceDetector.kt     # Jaundice (scleral icterus)
-│       │   ├── EdemaDetector.kt        # Preeclampsia (edema)
-│       │   ├── RespiratoryDetector.kt  # TB/Respiratory (HeAR Event Detector; ViT-L = future upgrade)
-│       │   ├── SensorFusion.kt         # Vital signs aggregator
-│       │   ├── ClinicalReasoner.kt     # MedGemma + WHO fallback
-│       │   ├── PromptSanitizer.kt      # 6-layer prompt injection defense
-│       │   ├── ThermalManager.kt       # 42°C auto-throttle
-│       │   ├── LocalizedStrings.kt     # 46-language UI strings
-│       │   ├── NkuTTS.kt              # Android System TTS wrapper
-│       │   ├── CameraPreview.kt       # Camera2 preview composable
-│       │   ├── FaceDetectorHelper.kt  # MediaPipe face landmark wrapper
-│       │   └── screens/               # Screen composables (Cardio, Anemia, Jaundice, Preeclampsia, Respiratory, Triage)
-│       └── assets/           # HeAR Event Detector TFLite (1.1MB); large models via PAD asset packs
-├── cloud/                    # DEVELOPMENT BACKEND — optional Flask API used during prototyping.
-│                             #   NOT part of the production Android app. Shares triage logic
-│                             #   for validation. Retained as development artifact.
-├── benchmark/                # Quantization model selection study — MedQA benchmarks
-│                             #   for IQ1_M, Q2_K, IQ2_XS, Q4_K_M. Only Q4_K_M is deployed.
-├── tests/                    # Python test suite (48 tests: API, security, integration, algorithms)
+├── mobile/android/      # Android application (PRODUCTION CODE)
+│  └── app/src/main/
+│    ├── java/com/nku/app/
+│    │  ├── MainActivity.kt     # UI + Compose
+│    │  ├── NkuInferenceEngine.kt  # MedGemma orchestration
+│    │  ├── NkuTranslator.kt    # ML Kit translation wrapper
+│    │  ├── RPPGProcessor.kt    # Heart rate (rPPG)
+│    │  ├── PallorDetector.kt    # Anemia (conjunctiva)
+│    │  ├── JaundiceDetector.kt   # Jaundice (scleral icterus)
+│    │  ├── EdemaDetector.kt    # Preeclampsia (edema)
+│    │  ├── RespiratoryDetector.kt # TB/Respiratory (HeAR Event Detector; ViT-L = future upgrade)
+│    │  ├── SensorFusion.kt     # Vital signs aggregator
+│    │  ├── ClinicalReasoner.kt   # MedGemma + WHO fallback
+│    │  ├── PromptSanitizer.kt   # 6-layer prompt injection defense
+│    │  ├── ThermalManager.kt    # 42°C auto-throttle
+│    │  ├── LocalizedStrings.kt   # 46-language UI strings
+│    │  ├── NkuTTS.kt       # Android System TTS wrapper
+│    │  ├── CameraPreview.kt    # Camera2 preview composable
+│    │  ├── FaceDetectorHelper.kt # MediaPipe face landmark wrapper
+│    │  └── screens/        # Screen composables (Cardio, Anemia, Jaundice, Preeclampsia, Respiratory, Triage)
+│    └── assets/      # HeAR Event Detector TFLite (1.1MB); large models via PAD asset packs
+├── cloud/          # DEVELOPMENT BACKEND — optional Flask API used during prototyping.
+│               #  NOT part of the production Android app. Shares triage logic
+│               #  for validation. Retained as development artifact.
+├── benchmark/        # Quantization model selection study — MedQA benchmarks
+│               #  for IQ1_M, Q2_K, IQ2_XS, Q4_K_M. Only Q4_K_M is deployed.
+├── tests/          # Python test suite (48 tests: API, security, integration, algorithms)
 ├── scripts/
-│   ├── quantization/         # Q4_K_M quantization (see Appendix D)
-│   ├── calibration/          # Medical imatrix generation
-│   └── conversion/           # HF → GGUF conversion
-├── calibration/              # Clinical calibration datasets
-├── llama.cpp/                # Inference engine (submodule)
-└── docs/                     # Documentation & assets
+│  ├── quantization/     # Q4_K_M quantization (see Appendix D)
+│  ├── calibration/     # Medical imatrix generation
+│  └── conversion/      # HF → GGUF conversion
+├── calibration/       # Clinical calibration datasets
+├── llama.cpp/        # Inference engine (submodule)
+└── docs/           # Documentation & assets
 ```
 
 ---
 
-##  MedGemma Impact Challenge
+## MedGemma Impact Challenge
 
 This project is a submission for the [MedGemma Impact Challenge](https://www.kaggle.com/competitions/med-gemma-impact-challenge) on Kaggle.
 
@@ -287,19 +287,19 @@ This project is a submission for the [MedGemma Impact Challenge](https://www.kag
 
 ---
 
-##  Contributing
+## Contributing
 
 We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 **Priority Areas:**
--  Language model improvements for low-resource African languages
-- ⚡ Inference optimization for ARM Mali/Adreno GPUs
--  Clinical validation with CHW partners
--  UI/UX improvements for low-literacy users
+- Language model improvements for low-resource African languages
+- Inference optimization for ARM Mali/Adreno GPUs
+- Clinical validation with CHW partners
+- UI/UX improvements for low-literacy users
 
 ---
 
-##  License
+## License
 
 **Nku is fully open source.** All application source code, build scripts, calibration data, and quantization artifacts are free to download, fork, modify, and use with attribution. Apache 2.0 is compatible with the MedGemma Impact Challenge's CC BY 4.0 requirement (Apache 2.0 is strictly more permissive).
 
@@ -311,7 +311,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 
 ---
 
-##  References
+## References
 
 - [MedGemma Model Card](https://huggingface.co/google/medgemma-4b)
 - [llama.cpp](https://github.com/ggerganov/llama.cpp)
@@ -320,9 +320,9 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 ---
 
 <p align="center">
-  <strong> 450M+ lives •  $60+ phones •  100% on-device medical inference • ️ 46 languages</strong>
+ <strong> 450M+ lives • $60+ phones • 100% on-device medical inference • 46 languages</strong>
 </p>
 
 <p align="center">
-  Made with ❤️ for Pan-Africa
+ Made with for Pan-Africa
 </p>

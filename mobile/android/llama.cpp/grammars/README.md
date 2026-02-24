@@ -16,13 +16,13 @@ Before going deeper, let's look at some of the features demonstrated in `grammar
 ```
 # `root` specifies the pattern for the overall output
 root ::= (
-    # it must start with the characters "1. " followed by a sequence
-    # of characters that match the `move` rule, followed by a space, followed
-    # by another move, and then a newline
-    "1. " move " " move "\n"
+  # it must start with the characters "1. " followed by a sequence
+  # of characters that match the `move` rule, followed by a space, followed
+  # by another move, and then a newline
+  "1. " move " " move "\n"
 
-    # it's followed by one or more subsequent moves, numbered with one or two digits
-    ([1-9] [0-9]? ". " move " " move "\n")+
+  # it's followed by one or more subsequent moves, numbered with one or two digits
+  ([1-9] [0-9]? ". " move " " move "\n")+
 )
 
 # `move` is an abstract representation, which can be a pawn, nonpawn, or castle.
@@ -143,12 +143,12 @@ You can use GBNF grammars:
 `llama.cpp` supports converting a subset of https://json-schema.org/ to GBNF grammars:
 
 - In [llama-server](../tools/server):
-    - For any completion endpoints, passed as the `json_schema` body field
-    - For the `/chat/completions` endpoint, passed inside the `response_format` body field (e.g. `{"type", "json_object", "schema": {"items": {}}}` or `{ type: "json_schema", json_schema: {"schema": ...} }`)
+  - For any completion endpoints, passed as the `json_schema` body field
+  - For the `/chat/completions` endpoint, passed inside the `response_format` body field (e.g. `{"type", "json_object", "schema": {"items": {}}}` or `{ type: "json_schema", json_schema: {"schema": ...} }`)
 - In [llama-cli](../tools/cli) and [llama-completion](../tools/completion), passed as the `--json` / `-j` flag
 - To convert to a grammar ahead of time:
-    - in CLI, with [examples/json_schema_to_grammar.py](../examples/json_schema_to_grammar.py)
-    - in JavaScript with [json-schema-to-grammar.mjs](../tools/server/public_legacy/json-schema-to-grammar.mjs) (this is used by the [server](../tools/server)'s Web UI)
+  - in CLI, with [examples/json_schema_to_grammar.py](../examples/json_schema_to_grammar.py)
+  - in JavaScript with [json-schema-to-grammar.mjs](../tools/server/public_legacy/json-schema-to-grammar.mjs) (this is used by the [server](../tools/server)'s Web UI)
 
 > [!NOTE]
 > The JSON schema is only used to constrain the model output and is not injected into the prompt. The model has no visibility into the schema, so if you want it to understand the expected structure, describe it explicitly in your prompt. This does not apply to tool calling, where schemas are injected into the prompt.
@@ -157,31 +157,31 @@ Take a look at [tests](../tests/test-json-schema-to-grammar.cpp) to see which fe
 
 ```bash
 llama-cli \
-  -hfr bartowski/Phi-3-medium-128k-instruct-GGUF \
-  -hff Phi-3-medium-128k-instruct-Q8_0.gguf \
-  -j '{
-    "type": "array",
-    "items": {
-        "type": "object",
-        "properties": {
-            "name": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 100
-            },
-            "age": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 150
-            }
-        },
-        "required": ["name", "age"],
-        "additionalProperties": false
+ -hfr bartowski/Phi-3-medium-128k-instruct-GGUF \
+ -hff Phi-3-medium-128k-instruct-Q8_0.gguf \
+ -j '{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100
+      },
+      "age": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 150
+      }
     },
-    "minItems": 10,
-    "maxItems": 100
-  }' \
-  -p 'Generate a {name, age}[] JSON array with famous actors of all ages.'
+    "required": ["name", "age"],
+    "additionalProperties": false
+  },
+  "minItems": 10,
+  "maxItems": 100
+ }' \
+ -p 'Generate a {name, age}[] JSON array with famous actors of all ages.'
 ```
 
 <details>
@@ -244,17 +244,17 @@ import json
 from typing import Annotated, List
 from pydantic import BaseModel, Extra, Field
 class QAPair(BaseModel):
-    class Config:
-        extra = 'allow'  # triggers additionalProperties: true in the JSON schema
-    question: str
-    concise_answer: str
-    justification: str
+  class Config:
+    extra = 'allow' # triggers additionalProperties: true in the JSON schema
+  question: str
+  concise_answer: str
+  justification: str
 
 class Summary(BaseModel):
-    class Config:
-        extra = 'allow'
-    key_facts: List[Annotated[str, Field(pattern='- .{5,}')]]
-    question_answers: List[Annotated[List[QAPair], Field(min_items=5)]]
+  class Config:
+    extra = 'allow'
+  key_facts: List[Annotated[str, Field(pattern='- .{5,}')]]
+  question_answers: List[Annotated[List[QAPair], Field(min_items=5)]]
 
 print(json.dumps(Summary.model_json_schema(), indent=2))
 ```
@@ -264,60 +264,60 @@ print(json.dumps(Summary.model_json_schema(), indent=2))
 
 ```json
 {
-  "$defs": {
-    "QAPair": {
-      "additionalProperties": true,
-      "properties": {
-        "question": {
-          "title": "Question",
-          "type": "string"
-        },
-        "concise_answer": {
-          "title": "Concise Answer",
-          "type": "string"
-        },
-        "justification": {
-          "title": "Justification",
-          "type": "string"
-        }
-      },
-      "required": [
-        "question",
-        "concise_answer",
-        "justification"
-      ],
-      "title": "QAPair",
-      "type": "object"
-    }
-  },
-  "additionalProperties": true,
-  "properties": {
-    "key_facts": {
-      "items": {
-        "pattern": "^- .{5,}$",
-        "type": "string"
-      },
-      "title": "Key Facts",
-      "type": "array"
+ "$defs": {
+  "QAPair": {
+   "additionalProperties": true,
+   "properties": {
+    "question": {
+     "title": "Question",
+     "type": "string"
     },
-    "question_answers": {
-      "items": {
-        "items": {
-          "$ref": "#/$defs/QAPair"
-        },
-        "minItems": 5,
-        "type": "array"
-      },
-      "title": "Question Answers",
-      "type": "array"
+    "concise_answer": {
+     "title": "Concise Answer",
+     "type": "string"
+    },
+    "justification": {
+     "title": "Justification",
+     "type": "string"
     }
+   },
+   "required": [
+    "question",
+    "concise_answer",
+    "justification"
+   ],
+   "title": "QAPair",
+   "type": "object"
+  }
+ },
+ "additionalProperties": true,
+ "properties": {
+  "key_facts": {
+   "items": {
+    "pattern": "^- .{5,}$",
+    "type": "string"
+   },
+   "title": "Key Facts",
+   "type": "array"
   },
-  "required": [
-    "key_facts",
-    "question_answers"
-  ],
-  "title": "Summary",
-  "type": "object"
+  "question_answers": {
+   "items": {
+    "items": {
+     "$ref": "#/$defs/QAPair"
+    },
+    "minItems": 5,
+    "type": "array"
+   },
+   "title": "Question Answers",
+   "type": "array"
+  }
+ },
+ "required": [
+  "key_facts",
+  "question_answers"
+ ],
+ "title": "Summary",
+ "type": "object"
 }
 ```
 
@@ -362,8 +362,8 @@ import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
 const Foo = z.object({
-  age: z.number().positive(),
-  email: z.string().email(),
+ age: z.number().positive(),
+ email: z.string().email(),
 }).strict();
 
 console.log(zodToJsonSchema(Foo));
@@ -374,23 +374,23 @@ console.log(zodToJsonSchema(Foo));
 
 ```json
 {
-  "type": "object",
-  "properties": {
-    "age": {
-      "type": "number",
-      "exclusiveMinimum": 0
-    },
-    "email": {
-      "type": "string",
-      "format": "email"
-    }
+ "type": "object",
+ "properties": {
+  "age": {
+   "type": "number",
+   "exclusiveMinimum": 0
   },
-  "required": [
-    "age",
-    "email"
-  ],
-  "additionalProperties": false,
-  "$schema": "http://json-schema.org/draft-07/schema#"
+  "email": {
+   "type": "string",
+   "format": "email"
+  }
+ },
+ "required": [
+  "age",
+  "email"
+ ],
+ "additionalProperties": false,
+ "$schema": "http://json-schema.org/draft-07/schema#"
 }
 ```
 

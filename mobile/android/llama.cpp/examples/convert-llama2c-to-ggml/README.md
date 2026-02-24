@@ -8,10 +8,10 @@ To convert the model first download the models from the [llama2.c](https://githu
 usage: ./llama-convert-llama2c-to-ggml [options]
 
 options:
-  -h, --help                       show this help message and exit
-  --copy-vocab-from-model FNAME    path of gguf llama model or llama2.c vocabulary from which to copy vocab (default 'models/7B/ggml-model-f16.gguf')
-  --llama2c-model FNAME            [REQUIRED] model path from which to load Karpathy's llama2.c model
-  --llama2c-output-model FNAME     model path to save the converted llama2.c model (default ak_llama_model.bin')
+ -h, --help            show this help message and exit
+ --copy-vocab-from-model FNAME  path of gguf llama model or llama2.c vocabulary from which to copy vocab (default 'models/7B/ggml-model-f16.gguf')
+ --llama2c-model FNAME      [REQUIRED] model path from which to load Karpathy's llama2.c model
+ --llama2c-output-model FNAME   model path to save the converted llama2.c model (default ak_llama_model.bin')
 ```
 
 An example command using a model from [karpathy/tinyllamas](https://huggingface.co/karpathy/tinyllamas) is as follows:

@@ -36,9 +36,9 @@ Hello my name is Cody. I am a 3 year old neutered male. I am a very friendly cat
 
 main: decoded 108 tokens in 3.57 s, speed: 30.26 t/s
 
-llama_print_timings:        load time =   587.00 ms
-llama_print_timings:      sample time =     2.56 ms /   112 runs   (    0.02 ms per token, 43664.72 tokens per second)
-llama_print_timings: prompt eval time =  4089.11 ms /   118 tokens (   34.65 ms per token,    28.86 tokens per second)
-llama_print_timings:        eval time =     0.00 ms /     1 runs   (    0.00 ms per token,      inf tokens per second)
-llama_print_timings:       total time =  4156.04 ms
+llama_print_timings:    load time =  587.00 ms
+llama_print_timings:   sample time =   2.56 ms /  112 runs  (  0.02 ms per token, 43664.72 tokens per second)
+llama_print_timings: prompt eval time = 4089.11 ms /  118 tokens (  34.65 ms per token,  28.86 tokens per second)
+llama_print_timings:    eval time =   0.00 ms /   1 runs  (  0.00 ms per token,   inf tokens per second)
+llama_print_timings:    total time = 4156.04 ms
 ```

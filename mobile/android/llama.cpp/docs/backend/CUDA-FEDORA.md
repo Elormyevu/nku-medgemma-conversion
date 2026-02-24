@@ -45,41 +45,41 @@ This guide focuses on Fedora hosts, but with small adjustments, it can work for 
 
 1. **Create a Fedora 41 Toolbox:**
 
-   ```bash
-   toolbox create --image registry.fedoraproject.org/fedora-toolbox:41 --container fedora-toolbox-41-cuda
-   ```
+  ```bash
+  toolbox create --image registry.fedoraproject.org/fedora-toolbox:41 --container fedora-toolbox-41-cuda
+  ```
 
 2. **Enter the Toolbox:**
 
-   ```bash
-   toolbox enter --container fedora-toolbox-41-cuda
-   ```
+  ```bash
+  toolbox enter --container fedora-toolbox-41-cuda
+  ```
 
-   Inside the toolbox, you have root privileges and can install packages without affecting the host system.
+  Inside the toolbox, you have root privileges and can install packages without affecting the host system.
 
 ## Installing Essential Development Tools
 
 1. **Synchronize the DNF Package Manager:**
 
-   ```bash
-   sudo dnf distro-sync
-   ```
+  ```bash
+  sudo dnf distro-sync
+  ```
 
 2. **Install **Vim** the default text editor (Optional):**
 
-   ```bash
-   sudo dnf install vim-default-editor --allowerasing
-   ```
+  ```bash
+  sudo dnf install vim-default-editor --allowerasing
+  ```
 
-   The `--allowerasing` flag will allow the removal of the conflicting `nano-default-editor` package.
+  The `--allowerasing` flag will allow the removal of the conflicting `nano-default-editor` package.
 
 3. **Install Development Tools and Libraries:**
 
-   ```bash
-   sudo dnf install @c-development @development-tools cmake
-   ```
+  ```bash
+  sudo dnf install @c-development @development-tools cmake
+  ```
 
-   This installs essential packages for compiling software, including `gcc`, `make`, and other development headers.
+  This installs essential packages for compiling software, including `gcc`, `make`, and other development headers.
 
 ## Adding the CUDA Repository
 
@@ -184,28 +184,28 @@ To use CUDA, add its binary directory to your system's `PATH`.
 
 1. **Create a Profile Script:**
 
-   ```bash
-   sudo sh -c 'echo "export PATH=\$PATH:/usr/local/cuda/bin" >> /etc/profile.d/cuda.sh'
-   ```
+  ```bash
+  sudo sh -c 'echo "export PATH=\$PATH:/usr/local/cuda/bin" >> /etc/profile.d/cuda.sh'
+  ```
 
-   **Explanation:**
+  **Explanation:**
 
-   - We add to `/etc/profile.d/` as the `/etc/` folder is unique to this particular container, and is not shared with other containers or the host system.
-   - The backslash `\` before `$PATH` ensures the variable is correctly written into the script.
+  - We add to `/etc/profile.d/` as the `/etc/` folder is unique to this particular container, and is not shared with other containers or the host system.
+  - The backslash `\` before `$PATH` ensures the variable is correctly written into the script.
 
 2. **Make the Script Executable:**
 
-   ```bash
-   sudo chmod +x /etc/profile.d/cuda.sh
-   ```
+  ```bash
+  sudo chmod +x /etc/profile.d/cuda.sh
+  ```
 
 3. **Source the Script to Update Your Environment:**
 
-   ```bash
-   source /etc/profile.d/cuda.sh
-   ```
+  ```bash
+  source /etc/profile.d/cuda.sh
+  ```
 
-   **Note:** This command updates your current shell session with the new `PATH`. The `/etc/profile.d/cuda.sh` script ensures that the CUDA binaries are available in your `PATH` for all future sessions.
+  **Note:** This command updates your current shell session with the new `PATH`. The `/etc/profile.d/cuda.sh` script ensures that the CUDA binaries are available in your `PATH` for all future sessions.
 
 ## Verifying the Installation
 
@@ -235,38 +235,38 @@ You have successfully set up CUDA on Fedora within a toolbox environment using t
 
 - **Installation Failures:**
 
-  - If you encounter errors during installation, carefully read the error messages. They often indicate conflicting files or missing dependencies.
-  - You may use the `--excludepath` option with `rpm` to exclude conflicting files during manual RPM installations.
+ - If you encounter errors during installation, carefully read the error messages. They often indicate conflicting files or missing dependencies.
+ - You may use the `--excludepath` option with `rpm` to exclude conflicting files during manual RPM installations.
 
 - **Rebooting the Container:**
 
-  - Sometimes there may be a bug in the NVIDIA driver host passthrough (such as missing a shared library). Rebooting the container may solve this issue:
+ - Sometimes there may be a bug in the NVIDIA driver host passthrough (such as missing a shared library). Rebooting the container may solve this issue:
 
-  ```bash
-  # on the host system
-  podman container restart --all
-  ```
+ ```bash
+ # on the host system
+ podman container restart --all
+ ```
 
 - **Environment Variables Not Set:**
-  - If `nvcc` is not found after installation, ensure that `/usr/local/cuda/bin` is in your `PATH`.
-  - Run `echo $PATH` to check if the path is included.
-  - Re-source the profile script or open a new terminal session.
+ - If `nvcc` is not found after installation, ensure that `/usr/local/cuda/bin` is in your `PATH`.
+ - Run `echo $PATH` to check if the path is included.
+ - Re-source the profile script or open a new terminal session.
 
 ## Additional Notes
 
 - **Updating CUDA in the Future:**
 
-  - Keep an eye on the official NVIDIA repositories for updates to your Fedora version.
-  - When an updated repository becomes available, adjust your `dnf` configuration accordingly.
+ - Keep an eye on the official NVIDIA repositories for updates to your Fedora version.
+ - When an updated repository becomes available, adjust your `dnf` configuration accordingly.
 
 - **Building `llama.cpp`:**
 
-  - With CUDA installed, you can follow these [build instructions for `llama.cpp`](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md) to compile it with CUDA support.
-  - Ensure that any CUDA-specific build flags or paths are correctly set in your build configuration.
+ - With CUDA installed, you can follow these [build instructions for `llama.cpp`](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md) to compile it with CUDA support.
+ - Ensure that any CUDA-specific build flags or paths are correctly set in your build configuration.
 
 - **Using the Toolbox Environment:**
-  - The toolbox environment is isolated from your host system, which helps prevent conflicts.
-  - Remember that system files and configurations inside the toolbox are separate from the host. By default the home directory of the user is shared between the host and the toolbox.
+ - The toolbox environment is isolated from your host system, which helps prevent conflicts.
+ - Remember that system files and configurations inside the toolbox are separate from the host. By default the home directory of the user is shared between the host and the toolbox.
 
 ---
 

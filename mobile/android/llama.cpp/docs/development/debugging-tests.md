@@ -74,12 +74,12 @@ This may return output similar to below (focusing on key lines to pay attention 
 1: Test command: ~/llama.cpp/build-ci-debug/bin/test-tokenizer-0 "~/llama.cpp/tests/../models/ggml-vocab-llama-spm.gguf"
 1: Working Directory: .
 Labels: main
-  Test  #1: test-tokenizer-0-llama-spm
+ Test #1: test-tokenizer-0-llama-spm
 ...
 4: Test command: ~/llama.cpp/build-ci-debug/bin/test-tokenizer-0 "~/llama.cpp/tests/../models/ggml-vocab-falcon.gguf"
 4: Working Directory: .
 Labels: main
-  Test  #4: test-tokenizer-0-falcon
+ Test #4: test-tokenizer-0-falcon
 ...
 ```
 

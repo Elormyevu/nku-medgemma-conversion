@@ -32,7 +32,7 @@ SYCL cross-platform capabilities enable support for other vendor GPUs as well.
 
 The following releases are verified and recommended:
 
-|Commit ID|Tag|Release|Verified  Platform| Update date|
+|Commit ID|Tag|Release|Verified Platform| Update date|
 |-|-|-|-|-|
 |24e86cae7219b0f3ede1d5abdf5bf3ad515cccb8|b5377 |[llama-b5377-bin-win-sycl-x64.zip](https://github.com/ggml-org/llama.cpp/releases/download/b5377/llama-b5377-bin-win-sycl-x64.zip) |Arc B580/Linux/oneAPI 2025.1<br>LNL Arc GPU/Windows 11/oneAPI 2025.1.1|2025-05-15|
 |3bcd40b3c593d14261fb2abfabad3c0fb5b9e318|b4040 |[llama-b4040-bin-win-sycl-x64.zip](https://github.com/ggml-org/llama.cpp/releases/download/b4040/llama-b4040-bin-win-sycl-x64.zip) |Arc A770/Linux/oneAPI 2024.1<br>MTL Arc GPU/Windows 11/oneAPI 2024.1| 2024-11-19|
@@ -42,56 +42,56 @@ The following releases are verified and recommended:
 ## News
 
 - 2026.02
-  - Remove support for Nvidia & AMD GPU, because the oneAPI plugin for Nvidia & AMD GPU is unavailable: download/installation channels are out of work. User can't build up the software for Nvidia & AMD GPU.
+ - Remove support for Nvidia & AMD GPU, because the oneAPI plugin for Nvidia & AMD GPU is unavailable: download/installation channels are out of work. User can't build up the software for Nvidia & AMD GPU.
 
 - 2025.11
-  - Support malloc memory on device more than 4GB.
+ - Support malloc memory on device more than 4GB.
 
 - 2025.2
-  - Optimize MUL_MAT Q4_0 on Intel GPU for all dGPUs and built-in GPUs since MTL. Increase the performance of LLM (llama-2-7b.Q4_0.gguf) 21%-87% on Intel GPUs (MTL, ARL-H, Arc, Flex, PVC).
-    |GPU|Base tokens/s|Increased tokens/s|Percent|
-    |-|-|-|-|
-    |PVC 1550|39|73|+87%|
-    |Flex 170|39|50|+28%|
-    |Arc A770|42|55|+30%|
-    |MTL|13|16|+23%|
-    |ARL-H|14|17|+21%|
+ - Optimize MUL_MAT Q4_0 on Intel GPU for all dGPUs and built-in GPUs since MTL. Increase the performance of LLM (llama-2-7b.Q4_0.gguf) 21%-87% on Intel GPUs (MTL, ARL-H, Arc, Flex, PVC).
+  |GPU|Base tokens/s|Increased tokens/s|Percent|
+  |-|-|-|-|
+  |PVC 1550|39|73|+87%|
+  |Flex 170|39|50|+28%|
+  |Arc A770|42|55|+30%|
+  |MTL|13|16|+23%|
+  |ARL-H|14|17|+21%|
 
 - 2024.11
-  - Use syclcompat to improve the performance on some platforms. This requires to use oneAPI 2025.0 or newer.
+ - Use syclcompat to improve the performance on some platforms. This requires to use oneAPI 2025.0 or newer.
 
 - 2024.8
-  - Use oneDNN as the default GEMM library, improve the compatibility for new Intel GPUs.
+ - Use oneDNN as the default GEMM library, improve the compatibility for new Intel GPUs.
 
 - 2024.5
-  - Performance is increased: 34 -> 37 tokens/s of llama-2-7b.Q4_0 on Arc A770.
-  - Arch Linux is verified successfully.
+ - Performance is increased: 34 -> 37 tokens/s of llama-2-7b.Q4_0 on Arc A770.
+ - Arch Linux is verified successfully.
 
 - 2024.4
-  - Support data types: GGML_TYPE_IQ4_NL, GGML_TYPE_IQ4_XS, GGML_TYPE_IQ3_XXS, GGML_TYPE_IQ3_S, GGML_TYPE_IQ2_XXS, GGML_TYPE_IQ2_XS, GGML_TYPE_IQ2_S, GGML_TYPE_IQ1_S, GGML_TYPE_IQ1_M.
+ - Support data types: GGML_TYPE_IQ4_NL, GGML_TYPE_IQ4_XS, GGML_TYPE_IQ3_XXS, GGML_TYPE_IQ3_S, GGML_TYPE_IQ2_XXS, GGML_TYPE_IQ2_XS, GGML_TYPE_IQ2_S, GGML_TYPE_IQ1_S, GGML_TYPE_IQ1_M.
 
 - 2024.3
-  - Release binary files of Windows.
-  - A blog is published: **Run LLM on all Intel GPUs Using llama.cpp**: [intel.com](https://www.intel.com/content/www/us/en/developer/articles/technical/run-llm-on-all-gpus-using-llama-cpp-artical.html) or [medium.com](https://medium.com/@jianyu_neo/run-llm-on-all-intel-gpus-using-llama-cpp-fd2e2dcbd9bd).
-  - New base line is ready: [tag b2437](https://github.com/ggml-org/llama.cpp/tree/b2437).
-  - Support multiple cards: **--split-mode**: [none|layer]; not support [row], it's on developing.
-  - Support to assign main GPU by **--main-gpu**, replace $GGML_SYCL_DEVICE.
-  - Support detecting all GPUs with level-zero and same top **Max compute units**.
-  - Support OPs
-    - hardsigmoid
-    - hardswish
-    - pool2d
+ - Release binary files of Windows.
+ - A blog is published: **Run LLM on all Intel GPUs Using llama.cpp**: [intel.com](https://www.intel.com/content/www/us/en/developer/articles/technical/run-llm-on-all-gpus-using-llama-cpp-artical.html) or [medium.com](https://medium.com/@jianyu_neo/run-llm-on-all-intel-gpus-using-llama-cpp-fd2e2dcbd9bd).
+ - New base line is ready: [tag b2437](https://github.com/ggml-org/llama.cpp/tree/b2437).
+ - Support multiple cards: **--split-mode**: [none|layer]; not support [row], it's on developing.
+ - Support to assign main GPU by **--main-gpu**, replace $GGML_SYCL_DEVICE.
+ - Support detecting all GPUs with level-zero and same top **Max compute units**.
+ - Support OPs
+  - hardsigmoid
+  - hardswish
+  - pool2d
 
 - 2024.1
-  - Create SYCL backend for Intel GPU.
-  - Support Windows build
+ - Create SYCL backend for Intel GPU.
+ - Support Windows build
 
 ## OS
 
-| OS      | Status  | Verified                                       |
+| OS   | Status | Verified                    |
 |---------|---------|------------------------------------------------|
-| Linux   | Support | Ubuntu 22.04, Fedora Silverblue 39, Arch Linux |
-| Windows | Support | Windows 11                                     |
+| Linux  | Support | Ubuntu 22.04, Fedora Silverblue 39, Arch Linux |
+| Windows | Support | Windows 11                   |
 
 
 ## Hardware
@@ -109,23 +109,23 @@ On older Intel GPUs, you may try [OpenCL](/docs/backend/OPENCL.md) although the 
 
 #### Verified devices
 
-| Intel GPU                     | Status  | Verified Model                        |
+| Intel GPU           | Status | Verified Model            |
 |-------------------------------|---------|---------------------------------------|
-| Intel Data Center Max Series  | Support | Max 1550, 1100                        |
-| Intel Data Center Flex Series | Support | Flex 170                              |
-| Intel Arc A-Series            | Support | Arc A770, Arc A730M, Arc A750         |
-| Intel Arc B-Series            | Support | Arc B580                              |
-| Intel built-in Arc GPU        | Support | built-in Arc GPU in Meteor Lake, Arrow Lake, Lunar Lake |
-| Intel iGPU                    | Support | iGPU in 13700k, 13400, i5-1250P, i7-1260P, i7-1165G7  |
+| Intel Data Center Max Series | Support | Max 1550, 1100            |
+| Intel Data Center Flex Series | Support | Flex 170               |
+| Intel Arc A-Series      | Support | Arc A770, Arc A730M, Arc A750     |
+| Intel Arc B-Series      | Support | Arc B580               |
+| Intel built-in Arc GPU    | Support | built-in Arc GPU in Meteor Lake, Arrow Lake, Lunar Lake |
+| Intel iGPU          | Support | iGPU in 13700k, 13400, i5-1250P, i7-1260P, i7-1165G7 |
 
 *Notes:*
 
 - **Memory**
-  - The device memory is a limitation when running a large model. The loaded model size, *`llm_load_tensors: buffer_size`*, is displayed in the log when running `./bin/llama-completion`.
-  - Please make sure the GPU shared memory from the host is large enough to account for the model's size. For e.g. the *llama-2-7b.Q4_0* requires at least 8.0GB for integrated GPU and 4.0GB for discrete GPU.
+ - The device memory is a limitation when running a large model. The loaded model size, *`llm_load_tensors: buffer_size`*, is displayed in the log when running `./bin/llama-completion`.
+ - Please make sure the GPU shared memory from the host is large enough to account for the model's size. For e.g. the *llama-2-7b.Q4_0* requires at least 8.0GB for integrated GPU and 4.0GB for discrete GPU.
 
 - **Execution Unit (EU)**
-  - If the iGPU has less than 80 EUs, the inference speed will likely be too slow for practical use.
+ - If the iGPU has less than 80 EUs, the inference speed will likely be too slow for practical use.
 
 ### Other Vendor GPU
 
@@ -169,7 +169,7 @@ docker run -it --rm -v "/path/to/models:/models" --device /dev/dri/renderD128:/d
 
 1. **Install GPU drivers**
 
-  - **Intel GPU**
+ - **Intel GPU**
 
 Intel data center GPUs drivers installation guide and download page can be found here: [Get intel dGPU Drivers](https://dgpu-docs.intel.com/driver/installation.html#ubuntu-install-steps).
 
@@ -201,21 +201,21 @@ Platform #0: Intel(R) OpenCL HD Graphics
  `-- Device #0: Intel(R) Iris(R) Xe Graphics [0x9a49]
 ```
 
-2. **Install Intel® oneAPI Base toolkit**
+2. **Install Intel oneAPI Base toolkit**
 
 SYCL backend depends on:
-  - Intel® oneAPI DPC++/C++ compiler/running-time.
-  - Intel® oneAPI DPC++/C++ library (oneDPL).
-  - Intel® oneAPI Deep Neural Network Library (oneDNN).
-  - Intel® oneAPI Math Kernel Library (oneMKL).
+ - Intel oneAPI DPC++/C++ compiler/running-time.
+ - Intel oneAPI DPC++/C++ library (oneDPL).
+ - Intel oneAPI Deep Neural Network Library (oneDNN).
+ - Intel oneAPI Math Kernel Library (oneMKL).
 
 - **For Intel GPU**
 
-All above are included in both **Intel® oneAPI Base toolkit** and **Intel® Deep Learning Essentials** packages.
+All above are included in both **Intel oneAPI Base toolkit** and **Intel Deep Learning Essentials** packages.
 
-It's recommended to install **Intel® Deep Learning Essentials** which only provides the necessary libraries with less size.
+It's recommended to install **Intel Deep Learning Essentials** which only provides the necessary libraries with less size.
 
-The **Intel® oneAPI Base toolkit** and **Intel® Deep Learning Essentials** can be obtained from the official [Intel® oneAPI Base Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html) page.
+The **Intel oneAPI Base toolkit** and **Intel Deep Learning Essentials** can be obtained from the official [Intel oneAPI Base Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html) page.
 
 Please follow the instructions for downloading and installing the Toolkit for Linux, and preferably keep the default installation values unchanged, notably the installation path *(`/opt/intel/oneapi` by default)*.
 
@@ -245,8 +245,8 @@ When targeting an intel GPU, the user should expect one or more devices among th
 [level_zero:gpu][level_zero:0] Intel(R) oneAPI Unified Runtime over Level-Zero, Intel(R) Arc(TM) A770 Graphics 12.55.8 [1.3.29735+27]
 [level_zero:gpu][level_zero:1] Intel(R) oneAPI Unified Runtime over Level-Zero, Intel(R) UHD Graphics 730 12.2.0 [1.3.29735+27]
 [opencl:cpu][opencl:0] Intel(R) OpenCL, 13th Gen Intel(R) Core(TM) i5-13400 OpenCL 3.0 (Build 0) [2025.20.8.0.06_160000]
-[opencl:gpu][opencl:1] Intel(R) OpenCL Graphics, Intel(R) Arc(TM) A770 Graphics OpenCL 3.0 NEO  [24.39.31294]
-[opencl:gpu][opencl:2] Intel(R) OpenCL Graphics, Intel(R) UHD Graphics 730 OpenCL 3.0 NEO  [24.39.31294]
+[opencl:gpu][opencl:1] Intel(R) OpenCL Graphics, Intel(R) Arc(TM) A770 Graphics OpenCL 3.0 NEO [24.39.31294]
+[opencl:gpu][opencl:2] Intel(R) OpenCL Graphics, Intel(R) UHD Graphics 730 OpenCL 3.0 NEO [24.39.31294]
 ```
 
 ### II. Build llama.cpp
@@ -303,11 +303,11 @@ This command will only display the selected backend that is supported by SYCL. T
 ```
 found 2 SYCL devices:
 
-|  |                  |                                             |Compute   |Max compute|Max work|Max sub|               |
-|ID|       Device Type|                                         Name|capability|units      |group   |group  |Global mem size|
+| |         |                       |Compute  |Max compute|Max work|Max sub|        |
+|ID|    Device Type|                     Name|capability|units   |group  |group |Global mem size|
 |--|------------------|---------------------------------------------|----------|-----------|--------|-------|---------------|
-| 0|[level_zero:gpu:0]|               Intel(R) Arc(TM) A770 Graphics|       1.3|        512|    1024|     32|    16225243136|
-| 1|[level_zero:gpu:1]|                    Intel(R) UHD Graphics 770|       1.3|         32|     512|     32|    53651849216|
+| 0|[level_zero:gpu:0]|        Intel(R) Arc(TM) A770 Graphics|    1.3|    512|  1024|   32|  16225243136|
+| 1|[level_zero:gpu:1]|          Intel(R) UHD Graphics 770|    1.3|     32|   512|   32|  53651849216|
 ```
 
 #### Choose level-zero devices
@@ -345,10 +345,10 @@ There are two device selection modes:
 
 In two device selection modes, the default SYCL backend is level_zero, you can choose other backend supported by SYCL by setting environment variable ONEAPI_DEVICE_SELECTOR.
 
-| Device selection | Parameter                              |
+| Device selection | Parameter               |
 |------------------|----------------------------------------|
-| Single device    | --split-mode none --main-gpu DEVICE_ID |
-| Multiple devices | --split-mode layer (default)           |
+| Single device  | --split-mode none --main-gpu DEVICE_ID |
+| Multiple devices | --split-mode layer (default)      |
 
 Examples:
 
@@ -388,19 +388,19 @@ Intel GPU drivers instructions guide and download page can be found here: [Get I
 
 If you already have a recent version of Microsoft Visual Studio, you can skip this step. Otherwise, please refer to the official download page for [Microsoft Visual Studio](https://visualstudio.microsoft.com/).
 
-3. Install Intel® oneAPI Base toolkit
+3. Install Intel oneAPI Base toolkit
 
 SYCL backend depends on:
-  - Intel® oneAPI DPC++/C++ compiler/running-time.
-  - Intel® oneAPI DPC++/C++ library (oneDPL).
-  - Intel® oneAPI Deep Neural Network Library (oneDNN).
-  - Intel® oneAPI Math Kernel Library (oneMKL).
+ - Intel oneAPI DPC++/C++ compiler/running-time.
+ - Intel oneAPI DPC++/C++ library (oneDPL).
+ - Intel oneAPI Deep Neural Network Library (oneDNN).
+ - Intel oneAPI Math Kernel Library (oneMKL).
 
-All above are included in both **Intel® oneAPI Base toolkit** and **Intel® Deep Learning Essentials** packages.
+All above are included in both **Intel oneAPI Base toolkit** and **Intel Deep Learning Essentials** packages.
 
-It's recommended to install **Intel® Deep Learning Essentials** which only provides the necessary libraries with less size.
+It's recommended to install **Intel Deep Learning Essentials** which only provides the necessary libraries with less size.
 
-The **Intel® oneAPI Base toolkit** and **Intel® Deep Learning Essentials** can be obtained from the official [Intel® oneAPI Base Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html) page.
+The **Intel oneAPI Base toolkit** and **Intel Deep Learning Essentials** can be obtained from the official [Intel oneAPI Base Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit.html) page.
 
 Please follow the instructions for downloading and installing the Toolkit for Windows, and preferably keep the default installation values unchanged, notably the installation path *(`C:\Program Files (x86)\Intel\oneAPI` by default)*.
 
@@ -433,9 +433,9 @@ There should be one or more *level-zero* GPU devices displayed as **[ext_oneapi_
 
 Output (example):
 ```
-[opencl:acc:0] Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2  [2023.16.10.0.17_160000]
+[opencl:acc:0] Intel(R) FPGA Emulation Platform for OpenCL(TM), Intel(R) FPGA Emulation Device OpenCL 1.2 [2023.16.10.0.17_160000]
 [opencl:cpu:1] Intel(R) OpenCL, 11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz OpenCL 3.0 (Build 0) [2023.16.10.0.17_160000]
-[opencl:gpu:2] Intel(R) OpenCL Graphics, Intel(R) Iris(R) Xe Graphics OpenCL 3.0 NEO  [31.0.101.5186]
+[opencl:gpu:2] Intel(R) OpenCL Graphics, Intel(R) Iris(R) Xe Graphics OpenCL 3.0 NEO [31.0.101.5186]
 [ext_oneapi_level_zero:gpu:0] Intel(R) Level-Zero, Intel(R) Iris(R) Xe Graphics 1.3 [1.3.28044]
 ```
 
@@ -465,10 +465,10 @@ On the oneAPI command line window, step into the llama.cpp main directory and ru
 @call "C:\Program Files (x86)\Intel\oneAPI\setvars.bat" intel64 --force
 
 # Option 1: Use FP32 (recommended for better performance in most cases)
-cmake -B build -G "Ninja" -DGGML_SYCL=ON -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=icx  -DCMAKE_BUILD_TYPE=Release
+cmake -B build -G "Ninja" -DGGML_SYCL=ON -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=icx -DCMAKE_BUILD_TYPE=Release
 
 # Option 2: Or FP16
-cmake -B build -G "Ninja" -DGGML_SYCL=ON -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=icx  -DCMAKE_BUILD_TYPE=Release -DGGML_SYCL_F16=ON
+cmake -B build -G "Ninja" -DGGML_SYCL=ON -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=icx -DCMAKE_BUILD_TYPE=Release -DGGML_SYCL_F16=ON
 
 cmake --build build --config Release -j
 ```
@@ -507,9 +507,9 @@ You can use Visual Studio to open the `llama.cpp` folder directly as a CMake pro
 *Notes:*
 - For a minimal experimental setup, you can build only the inference executable using:
 
-    ```Powershell
-    cmake --build build --config Release -j --target llama-completion
-    ```
+  ```Powershell
+  cmake --build build --config Release -j --target llama-completion
+  ```
 
 ##### - Generating a Visual Studio Solution
 
@@ -525,8 +525,8 @@ If you prefer to use the Intel C++ Compiler only for `ggml-sycl`, ensure that `g
 
 ```Powershell
 cmake -B build -G "Visual Studio 17 2022" -A x64 -DGGML_SYCL=ON -DCMAKE_BUILD_TYPE=Release \
-      -DSYCL_INCLUDE_DIR="C:\Program Files (x86)\Intel\oneAPI\compiler\latest\include" \
-      -DSYCL_LIBRARY_DIR="C:\Program Files (x86)\Intel\oneAPI\compiler\latest\lib"
+   -DSYCL_INCLUDE_DIR="C:\Program Files (x86)\Intel\oneAPI\compiler\latest\include" \
+   -DSYCL_LIBRARY_DIR="C:\Program Files (x86)\Intel\oneAPI\compiler\latest\lib"
 ```
 
 If successful the build files have been written to: *path/to/llama.cpp/build*
@@ -559,9 +559,9 @@ Once it is completed, final results will be in **build/Release/bin**
 
 - You can avoid specifying `SYCL_INCLUDE_DIR` and `SYCL_LIBRARY_DIR` in the CMake command by setting the environment variables:
 
-    - `SYCL_INCLUDE_DIR_HINT`
+  - `SYCL_INCLUDE_DIR_HINT`
 
-    - `SYCL_LIBRARY_DIR_HINT`
+  - `SYCL_LIBRARY_DIR_HINT`
 
 - Above instruction has been tested with Visual Studio 17 Community edition and oneAPI 2025.0. We expect them to work also with future version if the instructions are adapted accordingly.
 
@@ -591,11 +591,11 @@ build\bin\llama-ls-sycl-device.exe
 This command will only display the selected backend that is supported by SYCL. The default backend is level_zero. For example, in a system with 2 *Intel GPU* it would look like the following:
 ```
 found 2 SYCL devices:
-|  |                  |                                             |Compute   |Max compute|Max work|Max sub|               |
-|ID|       Device Type|                                         Name|capability|units      |group   |group  |Global mem size|
+| |         |                       |Compute  |Max compute|Max work|Max sub|        |
+|ID|    Device Type|                     Name|capability|units   |group  |group |Global mem size|
 |--|------------------|---------------------------------------------|----------|-----------|--------|-------|---------------|
-| 0|[level_zero:gpu:0]|               Intel(R) Arc(TM) A770 Graphics|       1.3|        512|    1024|     32|    16225243136|
-| 1|[level_zero:gpu:1]|                    Intel(R) UHD Graphics 770|       1.3|         32|     512|     32|    53651849216|
+| 0|[level_zero:gpu:0]|        Intel(R) Arc(TM) A770 Graphics|    1.3|    512|  1024|   32|  16225243136|
+| 1|[level_zero:gpu:1]|          Intel(R) UHD Graphics 770|    1.3|     32|   512|   32|  53651849216|
 
 ```
 
@@ -628,10 +628,10 @@ There are two device selection modes:
 
 In two device selection modes, the default SYCL backend is level_zero, you can choose other backend supported by SYCL by setting environment variable ONEAPI_DEVICE_SELECTOR.
 
-| Device selection | Parameter                              |
+| Device selection | Parameter               |
 |------------------|----------------------------------------|
-| Single device    | --split-mode none --main-gpu DEVICE_ID |
-| Multiple devices | --split-mode layer (default)           |
+| Single device  | --split-mode none --main-gpu DEVICE_ID |
+| Multiple devices | --split-mode layer (default)      |
 
 Examples:
 
@@ -667,24 +667,24 @@ use 1 SYCL GPUs: [0] with Max compute units:512
 
 #### Build
 
-| Name               | Value                                 | Function                                    |
+| Name        | Value                 | Function                  |
 |--------------------|---------------------------------------|---------------------------------------------|
-| GGML_SYCL          | ON (mandatory)                        | Enable build with SYCL code path.           |
-| GGML_SYCL_TARGET   | INTEL *(default)*                     | Set the SYCL target device type.            |
-| GGML_SYCL_DEVICE_ARCH | Optional                           | Set the SYCL device architecture. Setting the device architecture can improve the performance. See the table [--offload-arch](https://github.com/intel/llvm/blob/sycl/sycl/doc/design/OffloadDesign.md#--offload-arch) for a list of valid architectures. |
-| GGML_SYCL_F16      | OFF *(default)* \|ON *(optional)*     | Enable FP16 build with SYCL code path. (1.) |
-| GGML_SYCL_GRAPH    | OFF *(default)* \|ON *(Optional)*     | Enable build with [SYCL Graph extension](https://github.com/intel/llvm/blob/sycl/sycl/doc/extensions/experimental/sycl_ext_oneapi_graph.asciidoc). |
-| GGML_SYCL_DNN      | ON *(default)* \|OFF *(Optional)*     | Enable build with oneDNN.                   |
-| CMAKE_C_COMPILER   | `icx` *(Linux)*, `icx/cl` *(Windows)* | Set `icx` compiler for SYCL code path.      |
-| CMAKE_CXX_COMPILER | `icpx` *(Linux)*, `icx` *(Windows)*   | Set `icpx/icx` compiler for SYCL code path. |
+| GGML_SYCL     | ON (mandatory)            | Enable build with SYCL code path.      |
+| GGML_SYCL_TARGET  | INTEL *(default)*           | Set the SYCL target device type.      |
+| GGML_SYCL_DEVICE_ARCH | Optional              | Set the SYCL device architecture. Setting the device architecture can improve the performance. See the table [--offload-arch](https://github.com/intel/llvm/blob/sycl/sycl/doc/design/OffloadDesign.md#--offload-arch) for a list of valid architectures. |
+| GGML_SYCL_F16   | OFF *(default)* \|ON *(optional)*   | Enable FP16 build with SYCL code path. (1.) |
+| GGML_SYCL_GRAPH  | OFF *(default)* \|ON *(Optional)*   | Enable build with [SYCL Graph extension](https://github.com/intel/llvm/blob/sycl/sycl/doc/extensions/experimental/sycl_ext_oneapi_graph.asciidoc). |
+| GGML_SYCL_DNN   | ON *(default)* \|OFF *(Optional)*   | Enable build with oneDNN.          |
+| CMAKE_C_COMPILER  | `icx` *(Linux)*, `icx/cl` *(Windows)* | Set `icx` compiler for SYCL code path.   |
+| CMAKE_CXX_COMPILER | `icpx` *(Linux)*, `icx` *(Windows)*  | Set `icpx/icx` compiler for SYCL code path. |
 
 1. FP32 or FP16 have different performance impact to LLM. Recommended to test them for better prompt processing performance on your models. You need to rebuild the code after change `GGML_SYCL_F16=OFF/ON`.
 
 #### Runtime
 
-| Name              | Value            | Function                                                                                                                  |
+| Name       | Value      | Function                                                         |
 |-------------------|------------------|---------------------------------------------------------------------------------------------------------------------------|
-| GGML_SYCL_DEBUG   | 0 (default) or 1 | Enable log function by macro: GGML_SYCL_DEBUG                                                                             |
+| GGML_SYCL_DEBUG  | 0 (default) or 1 | Enable log function by macro: GGML_SYCL_DEBUG                                       |
 | GGML_SYCL_DISABLE_OPT | 0 (default) or 1 | Disable optimize features for Intel GPUs. (Recommended to 1 for intel devices older than Gen 10) |
 | GGML_SYCL_DISABLE_GRAPH | 0 or 1 (default) | Disable running computations through SYCL Graphs feature. Disabled by default because SYCL Graph is still on development, no better performance. |
 | GGML_SYCL_DISABLE_DNN | 0 (default) or 1 | Disable running computations through oneDNN and always use oneMKL. |
@@ -699,51 +699,51 @@ use 1 SYCL GPUs: [0] with Max compute units:512
 
 ## Q&A
 
-- Error:  `error while loading shared libraries: libsycl.so: cannot open shared object file: No such file or directory`.
+- Error: `error while loading shared libraries: libsycl.so: cannot open shared object file: No such file or directory`.
 
-  - Potential cause: Unavailable oneAPI installation or not set ENV variables.
-  - Solution: Install *oneAPI base toolkit* and enable its ENV through: `source /opt/intel/oneapi/setvars.sh`.
+ - Potential cause: Unavailable oneAPI installation or not set ENV variables.
+ - Solution: Install *oneAPI base toolkit* and enable its ENV through: `source /opt/intel/oneapi/setvars.sh`.
 
 - General compiler error:
 
-  - Remove **build** folder or try a clean-build.
+ - Remove **build** folder or try a clean-build.
 
 - I can **not** see `[ext_oneapi_level_zero:gpu]` afer installing the GPU driver on Linux.
 
-  Please double-check with `sudo sycl-ls`.
+ Please double-check with `sudo sycl-ls`.
 
-  If it's present in the list, please add video/render group to your user then **logout/login** or restart your system:
+ If it's present in the list, please add video/render group to your user then **logout/login** or restart your system:
 
-  ```
-  sudo usermod -aG render $USER
-  sudo usermod -aG video $USER
-  ```
-  Otherwise, please double-check the GPU driver installation steps.
+ ```
+ sudo usermod -aG render $USER
+ sudo usermod -aG video $USER
+ ```
+ Otherwise, please double-check the GPU driver installation steps.
 
 - Can I report Ollama issue on Intel GPU to llama.cpp SYCL backend?
 
-  No. We can't support Ollama issue directly, because we aren't familiar with Ollama.
+ No. We can't support Ollama issue directly, because we aren't familiar with Ollama.
 
-  Suggest reproducing on llama.cpp and report similar issue to llama.cpp. We will support it.
+ Suggest reproducing on llama.cpp and report similar issue to llama.cpp. We will support it.
 
-  It's same for other projects including llama.cpp SYCL backend.
+ It's same for other projects including llama.cpp SYCL backend.
 
 - `Native API failed. Native API returns: 39 (UR_RESULT_ERROR_OUT_OF_DEVICE_MEMORY)`, `ggml_backend_sycl_buffer_type_alloc_buffer: can't allocate 3503030272 Bytes of memory on device`, or `failed to allocate SYCL0 buffer`
 
-  You are running out of Device Memory.
+ You are running out of Device Memory.
 
-  |Reason|Solution|
-  |-|-|
-  | The default context is too big. It leads to excessive memory usage.|Set `-c 8192` or a smaller value.|
-  | The model is too big and requires more memory than what is available.|Choose a smaller model or change to a smaller quantization, like Q5 -> Q4;<br>Alternatively, use more than one device to load model.|
+ |Reason|Solution|
+ |-|-|
+ | The default context is too big. It leads to excessive memory usage.|Set `-c 8192` or a smaller value.|
+ | The model is too big and requires more memory than what is available.|Choose a smaller model or change to a smaller quantization, like Q5 -> Q4;<br>Alternatively, use more than one device to load model.|
 
 - `ggml_backend_sycl_buffer_type_alloc_buffer: can't allocate 5000000000 Bytes of memory on device`
 
-  You need to enable to support 4GB memory malloc by:
-  ```
-    export UR_L0_ENABLE_RELAXED_ALLOCATION_LIMITS=1
-    set UR_L0_ENABLE_RELAXED_ALLOCATION_LIMITS=1
-  ```
+ You need to enable to support 4GB memory malloc by:
+ ```
+  export UR_L0_ENABLE_RELAXED_ALLOCATION_LIMITS=1
+  set UR_L0_ENABLE_RELAXED_ALLOCATION_LIMITS=1
+ ```
 
 ### **GitHub contribution**:
 Please add the `SYCL :` prefix/tag in issues/PRs titles to help the SYCL contributors to check/address them without delay.

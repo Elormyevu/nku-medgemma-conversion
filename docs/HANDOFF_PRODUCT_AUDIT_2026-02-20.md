@@ -26,40 +26,40 @@ Most important risks:
 
 ### Backend / Python
 - `./.audit_venv/bin/pytest -q -rs`
-  - Result: `68 passed, 1 skipped`
-  - Skip reason: real MedGemma load unavailable due missing `llama_cpp` native library in current test env.
+ - Result: `68 passed, 1 skipped`
+ - Skip reason: real MedGemma load unavailable due missing `llama_cpp` native library in current test env.
 - `PYTHONPATH=. ../../.audit_venv/bin/pytest -q security_pytest_suite.py` in `cloud/inference_api`
-  - Result: `74 passed`
+ - Result: `74 passed`
 
 ### Android / Frontend + App Runtime
 - `./gradlew :app:assembleDebug :app:testDebugUnitTest :app:lintDebug`
-  - Result: `BUILD SUCCESSFUL`
+ - Result: `BUILD SUCCESSFUL`
 - JVM unit report:
-  - `mobile/android/app/build/reports/tests/testDebugUnitTest/index.html:23` shows `193` tests, `0` failures.
+ - `mobile/android/app/build/reports/tests/testDebugUnitTest/index.html:23` shows `193` tests, `0` failures.
 - Connected instrumentation:
-  - `./gradlew :app:connectedDebugAndroidTest`
-  - Result: success with 1 skip.
-  - `mobile/android/app/build/outputs/androidTest-results/connected/debug/TEST-nku_pixel7(AVD) - 15-_app-.xml:2` shows `tests="14" failures="0" skipped="1"`.
-  - Skipped test:
-    - `mobile/android/app/build/outputs/androidTest-results/connected/debug/TEST-nku_pixel7(AVD) - 15-_app-.xml:20`
-    - `medGemma_sideloadedModel_isDiscoverableAndTrusted` skipped because no sideloaded trusted 1GB+ model was available.
+ - `./gradlew :app:connectedDebugAndroidTest`
+ - Result: success with 1 skip.
+ - `mobile/android/app/build/outputs/androidTest-results/connected/debug/TEST-nku_pixel7(AVD) - 15-_app-.xml:2` shows `tests="14" failures="0" skipped="1"`.
+ - Skipped test:
+  - `mobile/android/app/build/outputs/androidTest-results/connected/debug/TEST-nku_pixel7(AVD) - 15-_app-.xml:20`
+  - `medGemma_sideloadedModel_isDiscoverableAndTrusted` skipped because no sideloaded trusted 1GB+ model was available.
 - Lint:
-  - `mobile/android/app/build/reports/lint-results-debug.txt` => `No issues found.`
+ - `mobile/android/app/build/reports/lint-results-debug.txt` => `No issues found.`
 
 ### Packaging / Distribution Validation
 - APK contents check:
-  - `app-debug.apk` and `app-release-unsigned.apk` include HeAR TFLite assets, not MedGemma GGUF.
+ - `app-debug.apk` and `app-release-unsigned.apk` include HeAR TFLite assets, not MedGemma GGUF.
 - AAB contents check:
-  - `app-release.aab` includes `medgemma/assets/medgemma-4b-it-q4_k_m.gguf`.
-  - `zipinfo` shows size `2489894304` bytes.
+ - `app-release.aab` includes `medgemma/assets/medgemma-4b-it-q4_k_m.gguf`.
+ - `zipinfo` shows size `2489894304` bytes.
 
 ### Security Tooling
 - `./.audit_venv/bin/pip-audit -r cloud/inference_api/requirements.txt`
-  - Found: `diskcache 5.6.3 CVE-2025-69872`.
+ - Found: `diskcache 5.6.3 CVE-2025-69872`.
 - `./.audit_venv/bin/pip-audit -r requirements.txt`
-  - Could not complete due dependency resolution failure for `jaxlib==0.4.38` under Python 3.14.
+ - Could not complete due dependency resolution failure for `jaxlib==0.4.38` under Python 3.14.
 - `./.audit_venv/bin/bandit -q -r cloud src tests`
-  - Summary: Medium `7`, Low `119`, High `0`.
+ - Summary: Medium `7`, Low `119`, High `0`.
 
 ---
 
@@ -67,23 +67,23 @@ Most important risks:
 
 ### Confirmed
 - AAB model delivery is implemented (MedGemma in asset pack), consistent with production distribution intent.
-  - Evidence: AAB contains `medgemma/assets/medgemma-4b-it-q4_k_m.gguf`.
+ - Evidence: AAB contains `medgemma/assets/medgemma-4b-it-q4_k_m.gguf`.
 - APK direct install path does not contain MedGemma model payload.
-  - Evidence: APK contains HeAR `.tflite` assets and native libs; no `.gguf` model payload.
+ - Evidence: APK contains HeAR `.tflite` assets and native libs; no `.gguf` model payload.
 - Confidence gating at 75% is implemented in `ClinicalReasoner`.
-  - `mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt:79`
+ - `mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt:79`
 
 ### Mismatches / Drift
 - Submission writeup still describes cloud translation fallback behavior in stage table.
-  - `kaggle_submission_writeup.md:36` and `kaggle_submission_writeup.md:38`
+ - `kaggle_submission_writeup.md:36` and `kaggle_submission_writeup.md:38`
 - Mobile runtime currently does not wire cloud translation client for unsupported languages; it passes raw input through.
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:315`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:315`
 - UI still surfaces an “Internet Required” warning dialog for cloud-only language helper flow.
-  - `mobile/android/app/src/main/java/com/nku/app/LocalizedStrings.kt:369`
-  - `mobile/android/app/src/main/java/com/nku/app/screens/HomeScreen.kt:116`
+ - `mobile/android/app/src/main/java/com/nku/app/LocalizedStrings.kt:369`
+ - `mobile/android/app/src/main/java/com/nku/app/screens/HomeScreen.kt:116`
 - README says Event Detector is “always loaded,” but runtime is lazy-init on first respiratory use.
-  - Claim: `README.md:109`
-  - Runtime: `mobile/android/app/src/main/java/com/nku/app/RespiratoryDetector.kt:170`
+ - Claim: `README.md:109`
+ - Runtime: `mobile/android/app/src/main/java/com/nku/app/RespiratoryDetector.kt:170`
 
 ---
 
@@ -110,12 +110,12 @@ Recommendation:
 
 Evidence:
 - Camera instrumentation uses generated bitmap frames:
-  - `mobile/android/app/src/androidTest/java/com/nku/app/CameraTriageInstrumentedTest.kt:14`
-  - `mobile/android/app/src/androidTest/java/com/nku/app/CameraTriageInstrumentedTest.kt:33`
+ - `mobile/android/app/src/androidTest/java/com/nku/app/CameraTriageInstrumentedTest.kt:14`
+ - `mobile/android/app/src/androidTest/java/com/nku/app/CameraTriageInstrumentedTest.kt:33`
 - Respiratory instrumentation uses generated sine-wave audio:
-  - `mobile/android/app/src/androidTest/java/com/nku/app/RespiratoryPipelineInstrumentedTest.kt:28`
+ - `mobile/android/app/src/androidTest/java/com/nku/app/RespiratoryPipelineInstrumentedTest.kt:28`
 - `NkuInferenceEngineTest` (JVM) only covers enum/data-class logic:
-  - `mobile/android/app/src/test/java/com/nku/app/NkuInferenceEngineTest.kt:7`
+ - `mobile/android/app/src/test/java/com/nku/app/NkuInferenceEngineTest.kt:7`
 
 Impact:
 - Functional code paths are exercised, but real optical/acoustic capture variance (lighting/noise/device-specific camera/mic behavior) is not fully validated.
@@ -130,16 +130,16 @@ Recommendation:
 
 Evidence:
 - Sideload docs/tests depend on shared Download path:
-  - `README.md:174`
-  - `MODEL_DISTRIBUTION.md:10`
-  - `mobile/android/app/src/androidTest/java/com/nku/app/ModelIntegrationInstrumentedTest.kt:24`
+ - `README.md:174`
+ - `MODEL_DISTRIBUTION.md:10`
+ - `mobile/android/app/src/androidTest/java/com/nku/app/ModelIntegrationInstrumentedTest.kt:24`
 - Runtime search includes Download path:
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:154`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:154`
 - Runtime permission request only asks camera + mic:
-  - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:109`
+ - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:109`
 - Manifest declares media/external permissions, but shell validation showed access failure in app context:
-  - `mobile/android/app/src/main/AndroidManifest.xml:16`
-  - Runtime check during audit: `adb shell run-as com.nku.app ls /sdcard/Download` -> `Permission denied`.
+ - `mobile/android/app/src/main/AndroidManifest.xml:16`
+ - Runtime check during audit: `adb shell run-as com.nku.app ls /sdcard/Download` -> `Permission denied`.
 
 Impact:
 - Reviewer/device-specific failures are likely if sideload guidance expects generic shared Download readability.
@@ -154,11 +154,11 @@ Recommendation:
 
 Evidence:
 - Cloud allows `or` but not `om`:
-  - `cloud/inference_api/security.py:44`
+ - `cloud/inference_api/security.py:44`
 - Mobile language list uses `om` for Oromo:
-  - `mobile/android/app/src/main/java/com/nku/app/LocalizedStrings.kt:33`
+ - `mobile/android/app/src/main/java/com/nku/app/LocalizedStrings.kt:33`
 - Invalid cloud language defaults silently to Twi/English:
-  - `cloud/inference_api/main.py:479`
+ - `cloud/inference_api/main.py:479`
 
 Runtime confirmation:
 - `validate_language('om')` -> invalid
@@ -177,13 +177,13 @@ Recommendation:
 
 Evidence:
 - Writeup stage table still indicates cloud fallback path:
-  - `kaggle_submission_writeup.md:36`
-  - `kaggle_submission_writeup.md:38`
-  - `kaggle_submission_writeup.md:92`
+ - `kaggle_submission_writeup.md:36`
+ - `kaggle_submission_writeup.md:38`
+ - `kaggle_submission_writeup.md:92`
 - Runtime path for unsupported ML Kit language does direct pass-through:
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:315`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:315`
 - Current distribution doc already states pass-through in shipped build:
-  - `MODEL_DISTRIBUTION.md:4`
+ - `MODEL_DISTRIBUTION.md:4`
 
 Impact:
 - Reviewer confusion and credibility risk if docs differ from executable behavior.
@@ -240,18 +240,18 @@ Recommendation:
 
 Implemented controls (positive):
 - Mobile prompt sanitizer with pattern checks, homoglyph normalization, zero-width stripping, base64 detection, output validation/truncation:
-  - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:47`
-  - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:311`
+ - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:47`
+ - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:311`
 - Sensor symptom text is sanitized + delimiter-wrapped before prompt embedding:
-  - `mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt:285`
+ - `mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt:285`
 - Cloud input validator and prompt protector include injection defenses + safe templates:
-  - `cloud/inference_api/security.py:55`
-  - `cloud/inference_api/security.py:304`
+ - `cloud/inference_api/security.py:55`
+ - `cloud/inference_api/security.py:304`
 - Cloud rate limiting, API key guard, security headers, CORS config are present:
-  - `cloud/inference_api/main.py:128`
-  - `cloud/inference_api/main.py:116`
-  - `cloud/inference_api/security.py:410`
-  - `cloud/inference_api/security.py:644`
+ - `cloud/inference_api/main.py:128`
+ - `cloud/inference_api/main.py:116`
+ - `cloud/inference_api/security.py:410`
+ - `cloud/inference_api/security.py:644`
 
 Test coverage:
 - `security_pytest_suite.py` passed (`74` tests), including injection scenarios (regex/leetspeak/homoglyph/base64).
@@ -265,11 +265,11 @@ Residual risk:
 
 Verified optimizations:
 - Model lifecycle unload + explicit GC after large GGUF use:
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:258`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:258`
 - Respiratory models lazy-init to reduce cold-start burden:
-  - `mobile/android/app/src/main/java/com/nku/app/RespiratoryDetector.kt:179`
+ - `mobile/android/app/src/main/java/com/nku/app/RespiratoryDetector.kt:179`
 - SHA validation cache avoids repeated full-file hash recomputation when unchanged:
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:101`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:101`
 
 Gaps:
 - No reproducible on-device benchmark artifacts generated in this run for end-to-end latency/RAM under real model inference (due unavailable real MedGemma runtime load in Python tests and no trusted sideloaded model execution in Android instrumentation).
@@ -283,9 +283,9 @@ Recommendation:
 
 Validated:
 - Compose UI instrumentation suite passed (Home screen flow tests included):
-  - `mobile/android/app/build/reports/androidTests/connected/debug/index.html:22`
+ - `mobile/android/app/build/reports/androidTests/connected/debug/index.html:22`
 - Lint clean:
-  - `mobile/android/app/build/reports/lint-results-debug.txt`
+ - `mobile/android/app/build/reports/lint-results-debug.txt`
 
 Risk notes:
 - “Internet Required” translation dialog path may confuse users in a build that currently pass-throughs unsupported languages offline.
@@ -299,10 +299,10 @@ Risk notes:
 2. If testing APK-only route, use documented fallback path that is guaranteed readable by app (update docs first per P1 finding).
 3. Ensure emulator/device has sufficient free storage headroom (>4GB recommended).
 4. Explicitly verify these artifacts in review evidence:
-   - AAB contains `medgemma/assets/medgemma-4b-it-q4_k_m.gguf`
-   - Connected tests pass and model integration test is either:
-     - executed with real sideloaded trusted model and passes, or
-     - explicitly skipped with rationale and separate manual verification attached.
+  - AAB contains `medgemma/assets/medgemma-4b-it-q4_k_m.gguf`
+  - Connected tests pass and model integration test is either:
+   - executed with real sideloaded trusted model and passes, or
+   - explicitly skipped with rationale and separate manual verification attached.
 
 ---
 

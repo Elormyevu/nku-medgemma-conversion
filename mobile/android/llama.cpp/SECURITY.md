@@ -4,11 +4,11 @@
  - [**Requirements**](#requirements)
  - [**Covered Topics**](#covered-topics)
  - [**Using llama.cpp securely**](#using-llamacpp-securely)
-   - [Untrusted models](#untrusted-models)
-   - [Untrusted inputs](#untrusted-inputs)
-   - [Data privacy](#data-privacy)
-   - [Untrusted environments or networks](#untrusted-environments-or-networks)
-   - [Multi-Tenant environments](#multi-tenant-environments)
+  - [Untrusted models](#untrusted-models)
+  - [Untrusted inputs](#untrusted-inputs)
+  - [Data privacy](#data-privacy)
+  - [Untrusted environments or networks](#untrusted-environments-or-networks)
+  - [Multi-Tenant environments](#multi-tenant-environments)
 
 ## Reporting a vulnerability
 
@@ -39,10 +39,10 @@ Only vulnerabilities that fall within these parts of the project are considered 
 - `ggml/**/*`
 - `gguf-py/**/*`
 - `tools/server/*`, **excluding** the following topics:
-    - Web UI
-    - Features marked as experimental
-    - Features not recommended for use in untrusted environments (e.g., router, MCP)
-    - Bugs that can lead to Denial-of-Service attack
+  - Web UI
+  - Features marked as experimental
+  - Features not recommended for use in untrusted environments (e.g., router, MCP)
+  - Bugs that can lead to Denial-of-Service attack
 
 Note that none of the topics under [Using llama.cpp securely](#using-llamacpp-securely) are considered vulnerabilities in LLaMA C++.
 
@@ -68,10 +68,10 @@ For maximum security when handling untrusted inputs, you may need to employ the 
 * Pre-analysis: Check how the model performs by default when exposed to prompt injection (e.g. using [fuzzing for prompt injection](https://github.com/FonduAI/awesome-prompt-injection?tab=readme-ov-file#tools)). This will give you leads on how hard you will have to work on the next topics.
 * Updates: Keep both LLaMA C++ and your libraries updated with the latest security patches.
 * Input Sanitation: Before feeding data to the model, sanitize inputs rigorously. This involves techniques such as:
-    * Validation: Enforce strict rules on allowed characters and data types.
-    * Filtering: Remove potentially malicious scripts or code fragments.
-    * Encoding: Convert special characters into safe representations.
-    * Verification: Run tooling that identifies potential script injections (e.g. [models that detect prompt injection attempts](https://python.langchain.com/docs/guides/safety/hugging_face_prompt_injection)).
+  * Validation: Enforce strict rules on allowed characters and data types.
+  * Filtering: Remove potentially malicious scripts or code fragments.
+  * Encoding: Convert special characters into safe representations.
+  * Verification: Run tooling that identifies potential script injections (e.g. [models that detect prompt injection attempts](https://python.langchain.com/docs/guides/safety/hugging_face_prompt_injection)).
 
 ### Data privacy
 

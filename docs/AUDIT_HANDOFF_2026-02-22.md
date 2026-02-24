@@ -1,7 +1,7 @@
 # Nku Sentinel Audit Handoff
 
-Date: February 22, 2026  
-Project root: `/Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My Drive/0AntigravityProjects/nku-impact-challenge-1335`  
+Date: February 22, 2026 
+Project root: `/Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My Drive/0AntigravityProjects/nku-impact-challenge-1335` 
 Prepared by: Codex (read-only audit, no functional code changes requested)
 
 ## 1) Executive Summary
@@ -137,8 +137,8 @@ Risk:
 Recommendations:
 
 - Decide intended architecture and enforce one truth:
-  - If strict English-only reasoning is required, implement/restore pre-reasoning translation for supported languages.
-  - If passthrough is intended, update docs/submission language to match implementation.
+ - If strict English-only reasoning is required, implement/restore pre-reasoning translation for supported languages.
+ - If passthrough is intended, update docs/submission language to match implementation.
 - Add integration tests for multilingual symptom input verifying expected transform behavior.
 
 ### F-003: Voice symptom capture uses device locale instead of selected app language
@@ -179,8 +179,8 @@ Risk:
 Recommendations:
 
 - Split into two tests:
-  - deterministic negative test (no model, assert explicit fallback state),
-  - deterministic positive test in pre-release lane with provisioned known-good artifact.
+ - deterministic negative test (no model, assert explicit fallback state),
+ - deterministic positive test in pre-release lane with provisioned known-good artifact.
 - Fail release gate if positive path test not executed.
 
 ## P2 (Medium)
@@ -287,9 +287,9 @@ Recommendations:
 
 - Track upstream fix availability and pin patched version immediately when available.
 - Add operational hardening controls:
-  - run service as non-root,
-  - read-only filesystem except required cache dir,
-  - strict container image provenance/scanning in CI.
+ - run service as non-root,
+ - read-only filesystem except required cache dir,
+ - strict container image provenance/scanning in CI.
 
 ## P3 (Low)
 
@@ -333,24 +333,24 @@ Recommendations:
 Strengths:
 
 - Cloud input validation has multi-layer pattern checks and unicode normalization:
-  - `cloud/inference_api/security.py:54`
-  - `cloud/inference_api/security.py:151`
-  - `cloud/inference_api/security.py:172`
+ - `cloud/inference_api/security.py:54`
+ - `cloud/inference_api/security.py:151`
+ - `cloud/inference_api/security.py:172`
 - Prompt boundary delimiter model and output leakage checks:
-  - `cloud/inference_api/security.py:313`
-  - `cloud/inference_api/security.py:392`
+ - `cloud/inference_api/security.py:313`
+ - `cloud/inference_api/security.py:392`
 - API key gate and rate limiting exist by default:
-  - `cloud/inference_api/main.py:131`
-  - `cloud/inference_api/main.py:451`
-  - `cloud/inference_api/security.py:559`
+ - `cloud/inference_api/main.py:131`
+ - `cloud/inference_api/main.py:451`
+ - `cloud/inference_api/security.py:559`
 
 Residual risks:
 
 - Security suite discoverability/import-path issue (F-008).
 - Dependency CVE (F-009).
 - Deployment misconfig possibility if `DEBUG=true` in production:
-  - `cloud/inference_api/config.py:87`
-  - `cloud/inference_api/main.py:147`
+ - `cloud/inference_api/config.py:87`
+ - `cloud/inference_api/main.py:147`
 
 ## 7) Performance and Reliability Summary
 
@@ -358,8 +358,8 @@ Observed positives:
 
 - Android app compiles and runs on emulator without startup crash.
 - Thermal/memory fallback path is implemented:
-  - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:375`
-  - `mobile/android/app/src/main/java/com/nku/app/ThermalManager.kt:132`
+ - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:375`
+ - `mobile/android/app/src/main/java/com/nku/app/ThermalManager.kt:132`
 
 Gaps:
 
@@ -369,11 +369,11 @@ Gaps:
 Recommended performance controls:
 
 - Add benchmark baselines for:
-  - cold start,
-  - model load latency,
-  - median/95p inference latency,
-  - memory peak during model load and inference,
-  - thermal throttling incidence.
+ - cold start,
+ - model load latency,
+ - median/95p inference latency,
+ - memory peak during model load and inference,
+ - thermal throttling incidence.
 
 ## 8) Claim-to-Code Alignment Risks
 
@@ -414,16 +414,16 @@ Relevant docs:
 ## 10) Validation Checklist for Next Owner
 
 - Hash/provenance:
-  - `./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.nku.app.ModelIntegrationInstrumentedTest#medGemma_sideloadedModel_isDiscoverableAndTrusted --rerun-tasks`
+ - `./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.nku.app.ModelIntegrationInstrumentedTest#medGemma_sideloadedModel_isDiscoverableAndTrusted --rerun-tasks`
 - Mobile build/lint/unit:
-  - `./gradlew clean testDebugUnitTest lintDebug assembleDebug`
+ - `./gradlew clean testDebugUnitTest lintDebug assembleDebug`
 - Full connected tests:
-  - `./gradlew connectedDebugAndroidTest --rerun-tasks`
+ - `./gradlew connectedDebugAndroidTest --rerun-tasks`
 - Backend tests:
-  - `.venv/bin/python3.13 -m pytest -q`
-  - `PYTHONPATH=cloud/inference_api .venv/bin/python3.13 -m pytest cloud/inference_api/security_pytest_suite.py -q`
+ - `.venv/bin/python3.13 -m pytest -q`
+ - `PYTHONPATH=cloud/inference_api .venv/bin/python3.13 -m pytest cloud/inference_api/security_pytest_suite.py -q`
 - Vulnerability scan:
-  - `.venv/bin/pip-audit -r cloud/inference_api/requirements.txt`
+ - `.venv/bin/pip-audit -r cloud/inference_api/requirements.txt`
 
 ## 11) Audit Limitations and Assumptions
 

@@ -28,7 +28,7 @@ import torch
 
 MODEL_PATH = os.getenv("GRANITE_MODEL")
 if not MODEL_PATH:
-    raise ValueError("env var GRANITE_MODEL is unset!")
+  raise ValueError("env var GRANITE_MODEL is unset!")
 
 encoder_tensors = torch.load(os.path.join(MODEL_PATH, "llava.clip"))
 projector_tensors = torch.load(os.path.join(MODEL_PATH, "llava.projector"))
@@ -55,70 +55,70 @@ Now, we need to write a config for the visual encoder. In order to convert the m
 
 ```json
 {
-    "_name_or_path": "siglip-model",
-    "architectures": [
-      "SiglipVisionModel"
-    ],
-    "image_grid_pinpoints": [
-        [384,384],
-        [384,768],
-        [384,1152],
-        [384,1536],
-        [384,1920],
-        [384,2304],
-        [384,2688],
-        [384,3072],
-        [384,3456],
-        [384,3840],
-        [768,384],
-        [768,768],
-        [768,1152],
-        [768,1536],
-        [768,1920],
-        [1152,384],
-        [1152,768],
-        [1152,1152],
-        [1536,384],
-        [1536,768],
-        [1920,384],
-        [1920,768],
-        [2304,384],
-        [2688,384],
-        [3072,384],
-        [3456,384],
-        [3840,384]
-    ],
-    "mm_patch_merge_type": "spatial_unpad",
-    "hidden_size": 1152,
-    "image_size": 384,
-    "intermediate_size": 4304,
-    "model_type": "siglip_vision_model",
-    "num_attention_heads": 16,
-    "num_hidden_layers": 27,
-    "patch_size": 14,
-    "layer_norm_eps": 1e-6,
-    "hidden_act": "gelu_pytorch_tanh",
-    "projection_dim": 0,
-    "vision_feature_layer": [-24, -20, -12, -1]
+  "_name_or_path": "siglip-model",
+  "architectures": [
+   "SiglipVisionModel"
+  ],
+  "image_grid_pinpoints": [
+    [384,384],
+    [384,768],
+    [384,1152],
+    [384,1536],
+    [384,1920],
+    [384,2304],
+    [384,2688],
+    [384,3072],
+    [384,3456],
+    [384,3840],
+    [768,384],
+    [768,768],
+    [768,1152],
+    [768,1536],
+    [768,1920],
+    [1152,384],
+    [1152,768],
+    [1152,1152],
+    [1536,384],
+    [1536,768],
+    [1920,384],
+    [1920,768],
+    [2304,384],
+    [2688,384],
+    [3072,384],
+    [3456,384],
+    [3840,384]
+  ],
+  "mm_patch_merge_type": "spatial_unpad",
+  "hidden_size": 1152,
+  "image_size": 384,
+  "intermediate_size": 4304,
+  "model_type": "siglip_vision_model",
+  "num_attention_heads": 16,
+  "num_hidden_layers": 27,
+  "patch_size": 14,
+  "layer_norm_eps": 1e-6,
+  "hidden_act": "gelu_pytorch_tanh",
+  "projection_dim": 0,
+  "vision_feature_layer": [-24, -20, -12, -1]
 }
 ```
 
 At this point you should have something like this:
 ```bash
 $ ls $ENCODER_PATH
-config.json             llava.projector         pytorch_model.bin
+config.json       llava.projector     pytorch_model.bin
 ```
 
 Now convert the components to GGUF; Note that we also override the image mean/std dev to `[.5,.5,.5]` since we use the SigLIP visual encoder - in the transformers model, you can find these numbers in the `preprocessor_config.json`.
 ```bash
 $ python convert_image_encoder_to_gguf.py \
-    -m $ENCODER_PATH \
-    --llava-projector $ENCODER_PATH/llava.projector \
-    --output-dir $ENCODER_PATH \
-    --clip-model-is-vision \
-    --clip-model-is-siglip \
-    --image-mean 0.5 0.5 0.5 \
-    --image-std 0.5 0.5 0.5
+  -m $ENCODER_PATH \
+  --llava-projector $ENCODER_PATH/llava.projector \
+  --output-dir $ENCODER_PATH \
+  --clip-model-is-vision \
+  --clip-model-is-siglip \
+  --image-mean 0.5 0.5 0.5 \
+  --image-std 0.5 0.5 0.5
 ```
 
 This will create the first GGUF file at `$ENCODER_PATH/mmproj-model-f16.gguf`; we will refer to the absolute path of this file as the `$VISUAL_GGUF_PATH.`
@@ -138,11 +138,11 @@ import transformers
 
 MODEL_PATH = os.getenv("GRANITE_MODEL")
 if not MODEL_PATH:
-    raise ValueError("env var GRANITE_MODEL is unset!")
+  raise ValueError("env var GRANITE_MODEL is unset!")
 
 LLM_EXPORT_PATH = os.getenv("LLM_EXPORT_PATH")
 if not LLM_EXPORT_PATH:
-    raise ValueError("env var LLM_EXPORT_PATH is unset!")
+  raise ValueError("env var LLM_EXPORT_PATH is unset!")
 
 tokenizer = transformers.AutoTokenizer.from_pretrained(MODEL_PATH)
 
@@ -180,7 +180,7 @@ Build llama cpp normally; you should have a target binary named `llama-mtmd-cli`
 
 ```bash
 $ ./build/bin/llama-mtmd-cli -m $LLM_GGUF_PATH \
-    --mmproj $VISUAL_GGUF_PATH \
-    -c 16384 \
-    --temp 0
+  --mmproj $VISUAL_GGUF_PATH \
+  -c 16384 \
+  --temp 0
 ```

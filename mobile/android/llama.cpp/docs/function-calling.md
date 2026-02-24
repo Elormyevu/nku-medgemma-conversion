@@ -8,18 +8,18 @@
 Function calling is supported for all models (see https://github.com/ggml-org/llama.cpp/pull/9639):
 
 - Native tool call formats supported:
-  - Llama 3.1 / 3.3 (including builtin tools support - tool names for `wolfram_alpha`, `web_search` / `brave_search`, `code_interpreter`), Llama 3.2
-  - Functionary v3.1 / v3.2
-  - Hermes 2/3, Qwen 2.5
-  - Qwen 2.5 Coder
-  - Mistral Nemo
-  - Firefunction v2
-  - Command R7B
-  - DeepSeek R1 (WIP / seems reluctant to call any tools?)
+ - Llama 3.1 / 3.3 (including builtin tools support - tool names for `wolfram_alpha`, `web_search` / `brave_search`, `code_interpreter`), Llama 3.2
+ - Functionary v3.1 / v3.2
+ - Hermes 2/3, Qwen 2.5
+ - Qwen 2.5 Coder
+ - Mistral Nemo
+ - Firefunction v2
+ - Command R7B
+ - DeepSeek R1 (WIP / seems reluctant to call any tools?)
 
 - Generic tool call is supported when the template isn't recognized by native format handlers (you'll see `Chat format: Generic` in the logs).
-  - Use `--chat-template-file` to override the template when appropriate (see examples below)
-  - Generic support may consume more tokens and be less efficient than a model's native format.
+ - Use `--chat-template-file` to override the template when appropriate (see examples below)
+ - Generic support may consume more tokens and be less efficient than a model's native format.
 
 - Multiple/parallel tool calling is supported on some models but disabled by default, enable it by passing `"parallel_tool_calls": true` in the completion endpoint payload.
 
@@ -295,27 +295,27 @@ llama-server --jinja -fa -hf bartowski/Llama-3.3-70B-Instruct-GGUF:Q4_K_M
 # Native support for DeepSeek R1 works best w/ our template override (official template is buggy, although we do work around it)
 
 llama-server --jinja -fa -hf bartowski/DeepSeek-R1-Distill-Qwen-7B-GGUF:Q6_K_L \
-    --chat-template-file models/templates/llama-cpp-deepseek-r1.jinja
+  --chat-template-file models/templates/llama-cpp-deepseek-r1.jinja
 
 llama-server --jinja -fa -hf bartowski/DeepSeek-R1-Distill-Qwen-32B-GGUF:Q4_K_M \
-    --chat-template-file models/templates/llama-cpp-deepseek-r1.jinja
+  --chat-template-file models/templates/llama-cpp-deepseek-r1.jinja
 
 # Native support requires the right template for these GGUFs:
 
 llama-server --jinja -fa -hf bartowski/functionary-small-v3.2-GGUF:Q4_K_M
-    --chat-template-file models/templates/meetkai-functionary-medium-v3.2.jinja
+  --chat-template-file models/templates/meetkai-functionary-medium-v3.2.jinja
 
 llama-server --jinja -fa -hf bartowski/Hermes-2-Pro-Llama-3-8B-GGUF:Q4_K_M \
-    --chat-template-file models/templates/NousResearch-Hermes-2-Pro-Llama-3-8B-tool_use.jinja
+  --chat-template-file models/templates/NousResearch-Hermes-2-Pro-Llama-3-8B-tool_use.jinja
 
 llama-server --jinja -fa -hf bartowski/Hermes-3-Llama-3.1-8B-GGUF:Q4_K_M \
-    --chat-template-file models/templates/NousResearch-Hermes-3-Llama-3.1-8B-tool_use.jinja
+  --chat-template-file models/templates/NousResearch-Hermes-3-Llama-3.1-8B-tool_use.jinja
 
 llama-server --jinja -fa -hf bartowski/firefunction-v2-GGUF -hff firefunction-v2-IQ1_M.gguf \
-    --chat-template-file models/templates/fireworks-ai-llama-3-firefunction-v2.jinja
+  --chat-template-file models/templates/fireworks-ai-llama-3-firefunction-v2.jinja
 
 llama-server --jinja -fa -hf bartowski/c4ai-command-r7b-12-2024-GGUF:Q6_K_L \
-    --chat-template-file models/templates/CohereForAI-c4ai-command-r7b-12-2024-tool_use.jinja
+  --chat-template-file models/templates/CohereForAI-c4ai-command-r7b-12-2024-tool_use.jinja
 
 # Generic format support
 llama-server --jinja -fa -hf bartowski/phi-4-GGUF:Q4_0
@@ -335,58 +335,58 @@ Test in CLI (or with any library / software that can use OpenAI-compatible API b
 
 ```bash
 curl http://localhost:8080/v1/chat/completions -d '{
-    "model": "gpt-3.5-turbo",
-    "tools": [
-        {
-        "type":"function",
-        "function":{
-            "name":"python",
-            "description":"Runs code in an ipython interpreter and returns the result of the execution after 60 seconds.",
-            "parameters":{
-            "type":"object",
-            "properties":{
-                "code":{
-                "type":"string",
-                "description":"The code to run in the ipython interpreter."
-                }
-            },
-            "required":["code"]
-            }
+  "model": "gpt-3.5-turbo",
+  "tools": [
+    {
+    "type":"function",
+    "function":{
+      "name":"python",
+      "description":"Runs code in an ipython interpreter and returns the result of the execution after 60 seconds.",
+      "parameters":{
+      "type":"object",
+      "properties":{
+        "code":{
+        "type":"string",
+        "description":"The code to run in the ipython interpreter."
         }
-        }
-    ],
-    "messages": [
-        {
-        "role": "user",
-        "content": "Print a hello world message with python."
-        }
-    ]
+      },
+      "required":["code"]
+      }
+    }
+    }
+  ],
+  "messages": [
+    {
+    "role": "user",
+    "content": "Print a hello world message with python."
+    }
+  ]
 }'
 
 
 curl http://localhost:8080/v1/chat/completions -d '{
-    "model": "gpt-3.5-turbo",
-    "messages": [
-        {"role": "system", "content": "You are a chatbot that uses tools/functions. Dont overthink things."},
-        {"role": "user", "content": "What is the weather in Istanbul?"}
-    ],
-    "tools": [{
-        "type":"function",
-        "function":{
-            "name":"get_current_weather",
-            "description":"Get the current weather in a given location",
-            "parameters":{
-                "type":"object",
-                "properties":{
-                    "location":{
-                        "type":"string",
-                        "description":"The city and country/state, e.g. `San Francisco, CA`, or `Paris, France`"
-                    }
-                },
-                "required":["location"]
-            }
-        }
-    }]
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {"role": "system", "content": "You are a chatbot that uses tools/functions. Dont overthink things."},
+    {"role": "user", "content": "What is the weather in Istanbul?"}
+  ],
+  "tools": [{
+    "type":"function",
+    "function":{
+      "name":"get_current_weather",
+      "description":"Get the current weather in a given location",
+      "parameters":{
+        "type":"object",
+        "properties":{
+          "location":{
+            "type":"string",
+            "description":"The city and country/state, e.g. `San Francisco, CA`, or `Paris, France`"
+          }
+        },
+        "required":["location"]
+      }
+    }
+  }]
 }'
 ```
 
@@ -396,28 +396,28 @@ curl http://localhost:8080/v1/chat/completions -d '{
 ```json
 {
 "choices": [
+  {
+  "finish_reason": "tool",
+  "index": 0,
+  "message": {
+    "content": null,
+    "tool_calls": [
     {
-    "finish_reason": "tool",
-    "index": 0,
-    "message": {
-        "content": null,
-        "tool_calls": [
-        {
-            "name": "python",
-            "arguments": "{\"code\":\" \\nprint(\\\"Hello, World!\\\")\"}"
-        }
-        ],
-        "role": "assistant"
+      "name": "python",
+      "arguments": "{\"code\":\" \\nprint(\\\"Hello, World!\\\")\"}"
     }
-    }
+    ],
+    "role": "assistant"
+  }
+  }
 ],
 "created": 1727287211,
 "model": "gpt-3.5-turbo",
 "object": "chat.completion",
 "usage": {
-    "completion_tokens": 16,
-    "prompt_tokens": 44,
-    "total_tokens": 60
+  "completion_tokens": 16,
+  "prompt_tokens": 44,
+  "total_tokens": 60
 },
 "id": "chatcmpl-Htbgh9feMmGM0LEH2hmQvwsCxq3c6Ni8"
 }

@@ -1,7 +1,7 @@
 # Nku Comprehensive Product Audit Report
 
-Date: 2026-02-11  
-Repository: `1411ea8` on `main`  
+Date: 2026-02-11 
+Repository: `1411ea8` on `main` 
 Scope: Android frontend, backend API, performance/efficiency, security (including prompt injection), architecture, docs/spec conformance, QA/ops readiness
 
 ---
@@ -144,45 +144,45 @@ Scope: Android frontend, backend API, performance/efficiency, security (includin
 
 ```mermaid
 flowchart TB
-    User["CHW / Patient"]
-    UI["Android UI (Jetpack Compose)\nMainActivity + Screens"]
-    Sensors["Sensor Layer\nRPPGProcessor + PallorDetector + EdemaDetector"]
-    Face["FaceDetectorHelper\n(MediaPipe)"]
-    Fusion["SensorFusion"]
-    Reasoner["ClinicalReasoner\nPrompt Builder + Rule Fallback"]
-    Engine["NkuInferenceEngine\nNku Cycle Orchestrator"]
-    Prompt["PromptSanitizer"]
-    SmolLM["SmolLM JNI"]
-    Llama["llama.cpp native"]
-    Models["Model Files\nmedgemma-4b-iq1_m.gguf\ntranslategemma-4b-iq1_m.gguf"]
-    TTS["NkuTTS\nAndroid System TTS"]
-    DB["Room DB\nNkuDatabase + ScreeningDao"]
-    Export["CSV Export\nScreeningExporter + FileProvider"]
-    CloudClient["CloudInferenceClient (Debug only)"]
-    CloudAPI["Cloud Inference API\nFlask + llama-cpp-python"]
+  User["CHW / Patient"]
+  UI["Android UI (Jetpack Compose)\nMainActivity + Screens"]
+  Sensors["Sensor Layer\nRPPGProcessor + PallorDetector + EdemaDetector"]
+  Face["FaceDetectorHelper\n(MediaPipe)"]
+  Fusion["SensorFusion"]
+  Reasoner["ClinicalReasoner\nPrompt Builder + Rule Fallback"]
+  Engine["NkuInferenceEngine\nNku Cycle Orchestrator"]
+  Prompt["PromptSanitizer"]
+  SmolLM["SmolLM JNI"]
+  Llama["llama.cpp native"]
+  Models["Model Files\nmedgemma-4b-iq1_m.gguf\ntranslategemma-4b-iq1_m.gguf"]
+  TTS["NkuTTS\nAndroid System TTS"]
+  DB["Room DB\nNkuDatabase + ScreeningDao"]
+  Export["CSV Export\nScreeningExporter + FileProvider"]
+  CloudClient["CloudInferenceClient (Debug only)"]
+  CloudAPI["Cloud Inference API\nFlask + llama-cpp-python"]
 
-    User --> UI
-    UI --> Sensors
-    UI --> Face
-    Face --> Sensors
-    Sensors --> Fusion
-    UI --> Fusion
-    Fusion --> Reasoner
-    Reasoner --> Engine
-    Engine --> Prompt
-    Prompt --> Engine
-    Engine --> SmolLM
-    SmolLM --> Llama
-    Llama --> Models
-    Engine --> TTS
+  User --> UI
+  UI --> Sensors
+  UI --> Face
+  Face --> Sensors
+  Sensors --> Fusion
+  UI --> Fusion
+  Fusion --> Reasoner
+  Reasoner --> Engine
+  Engine --> Prompt
+  Prompt --> Engine
+  Engine --> SmolLM
+  SmolLM --> Llama
+  Llama --> Models
+  Engine --> TTS
 
-    UI --> DB
-    DB --> Export
+  UI --> DB
+  DB --> Export
 
-    UI -.optional debug path.- CloudClient
-    CloudClient -.HTTP.- CloudAPI
+  UI -.optional debug path.- CloudClient
+  CloudClient -.HTTP.- CloudAPI
 
-    Reasoner -.fallback when models unavailable.- UI
+  Reasoner -.fallback when models unavailable.- UI
 ```
 
 Mermaid source file: `audit_artifacts/2026-02-11/architecture_map.mmd`
@@ -196,8 +196,8 @@ Mermaid source file: `audit_artifacts/2026-02-11/architecture_map.mmd`
 - `python3 -m pytest -q` -> collection errors due duplicate nested test trees and optional deps
 - `./gradlew test` (in `mobile/android`) -> failed in this environment: Java runtime missing
 - Targeted runtime checks confirmed:
-  - Cloud `/triage` rejects client-style `prompt` payload (`missing required fields: symptoms`)
-  - Prompt validator accepts delimiter-injection payload with `<<<USER_INPUT>>>`
+ - Cloud `/triage` rejects client-style `prompt` payload (`missing required fields: symptoms`)
+ - Prompt validator accepts delimiter-injection payload with `<<<USER_INPUT>>>`
 
 ### Coverage Caveats
 - Could not execute Android unit/instrumented tests in this environment due missing JRE/Android runtime.
@@ -208,10 +208,10 @@ Mermaid source file: `audit_artifacts/2026-02-11/architecture_map.mmd`
 
 ## 7) Priority Fix Order (Risk-First)
 
-1. Restore deterministic MedGemma path (model packaging + extraction/load call + health check in UI).  
-2. Correct NkuCycle prompt flow (don’t sanitize full generated system prompt; separate user symptom sanitization from system instructions).  
-3. Fix cloud fallback contract alignment (request/response schema + Android INTERNET permission if debug path is required).  
-4. Harden prompt-injection defenses (delimiter escaping, stronger output validation, adversarial tests).  
-5. Close privacy/compliance gaps (`allowBackup`, record completeness, migration strategy).  
+1. Restore deterministic MedGemma path (model packaging + extraction/load call + health check in UI). 
+2. Correct NkuCycle prompt flow (don’t sanitize full generated system prompt; separate user symptom sanitization from system instructions). 
+3. Fix cloud fallback contract alignment (request/response schema + Android INTERNET permission if debug path is required). 
+4. Harden prompt-injection defenses (delimiter escaping, stronger output validation, adversarial tests). 
+5. Close privacy/compliance gaps (`allowBackup`, record completeness, migration strategy). 
 6. Resolve doc drift and language coverage truthfulness.
 

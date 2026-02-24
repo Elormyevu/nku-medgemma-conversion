@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing to Nku! This project aims to bring offline medical AI to underserved communities in Pan-Africa.
 
-##  Priority Areas
+## Priority Areas
 
 We especially welcome contributions in these areas:
 
@@ -26,7 +26,7 @@ We especially welcome contributions in these areas:
 - **Accessibility**: Screen reader support, high contrast modes
 - **Offline-first UX**: Better feedback for users without connectivity
 
-## ️ Development Setup
+## Development Setup
 
 ### Prerequisites
 - Android Studio Ladybug (2024.2.1+)
@@ -60,7 +60,7 @@ cd mobile/android
 ./gradlew connectedAndroidTest
 ```
 
-##  Coding Standards
+## Coding Standards
 
 ### Kotlin
 - Follow [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html)
@@ -77,7 +77,7 @@ cd mobile/android
 - Prefix: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`
 - Example: `feat(inference): add KleidiAI acceleration for Cortex-A76`
 
-##  Pull Request Process
+## Pull Request Process
 
 1. **Fork** the repository
 2. **Create a branch** from `main`: `git checkout -b feat/my-feature`
@@ -95,7 +95,7 @@ cd mobile/android
 - [ ] All tests pass locally
 - [ ] No new warnings
 
-##  Benchmark Artifact Policy
+## Benchmark Artifact Policy
 
 > **Frozen as of v1.0 submission (February 2026)**
 
@@ -104,7 +104,7 @@ cd mobile/android
 - Benchmark artifacts must record: device model, Android version, SDK build, model quantization variant, and commit SHA.
 - Deprecated artifacts may only be retained for historical reference and must remain clearly labeled.
 
-##  Bug Reports
+## Bug Reports
 
 Use the [GitHub Issues](https://github.com/Elormyevu/nku-medgemma-conversion/issues) template:
 
@@ -114,7 +114,7 @@ Use the [GitHub Issues](https://github.com/Elormyevu/nku-medgemma-conversion/iss
 4. **Device info**: Phone model, Android version, RAM
 5. **Logs**: Relevant logcat output
 
-##  Feature Requests
+## Feature Requests
 
 Open an issue with the `enhancement` label:
 
@@ -123,13 +123,13 @@ Open an issue with the `enhancement` label:
 3. **Alternatives**: What other approaches did you consider?
 4. **Impact**: Who benefits from this feature?
 
-##  Contact
+## Contact
 
 - **GitHub Issues**: For bugs and features
 - **Discussions**: For questions and ideas
 - **Email**: [project maintainer email]
 
-##  License
+## License
 
 By contributing, you agree that your contributions will be licensed under the Apache License 2.0.
 

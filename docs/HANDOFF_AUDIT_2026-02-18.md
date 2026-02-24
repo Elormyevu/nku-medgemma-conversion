@@ -1,13 +1,13 @@
 # Nku Audit + Fix Handoff (MedGemma Impact Challenge)
 
-Date: 2026-02-18 (EST)  
-Workspace: `/Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My Drive/0AntigravityProjects/nku-impact-challenge-1335`  
-Branch: `main`  
+Date: 2026-02-18 (EST) 
+Workspace: `/Users/elormyevudza/Library/CloudStorage/GoogleDrive-wizzyevu@gmail.com/My Drive/0AntigravityProjects/nku-impact-challenge-1335` 
+Branch: `main` 
 Scope: full review handoff for sensor integration, model integration, frontend/backend behavior, security, and performance signals.
 
 ## 1) Executive Summary
 
-This pass addressed all five reported findings and added additional hardening work across cloud and Android paths.  
+This pass addressed all five reported findings and added additional hardening work across cloud and Android paths. 
 The project now has stronger auditability, safer prompt-injection handling, more truthful translation behavior claims, and improved Android runtime test coverage for respiratory model execution.
 
 Important caveat: this environment still cannot prove full physical-device camera/microphone behavior under real field conditions. Emulator/instrumented coverage improved, but physical hardware validation remains an open risk before final challenge submission.
@@ -19,16 +19,16 @@ Benchmark artifact mismatch could undermine submission credibility.
 
 ### Fix
 - Added explicit deprecation/provenance metadata to backup artifact:
-  - `benchmark/medqa_benchmark_results_backup.json` (`artifact_status: "deprecated"`, provenance note, canonical artifact pointer)
+ - `benchmark/medqa_benchmark_results_backup.json` (`artifact_status: "deprecated"`, provenance note, canonical artifact pointer)
 - Added benchmark artifact policy:
-  - `benchmark/README.md`
+ - `benchmark/README.md`
 
 ### Verification
 - Backup file now self-labels as non-canonical.
 - Canonical files are documented as:
-  - `benchmark/medqa_benchmark_results.json`
-  - `benchmark/medqa_iq2xs_results.json`
-  - `benchmark/medqa_q2k_results.json`
+ - `benchmark/medqa_benchmark_results.json`
+ - `benchmark/medqa_iq2xs_results.json`
+ - `benchmark/medqa_q2k_results.json`
 
 ---
 
@@ -37,15 +37,15 @@ Mobile app previously implied cloud translation fallback but shipped behavior pa
 
 ### Fix
 - Runtime behavior made explicit and truthful:
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt`
-    - unsupported language: on-device unavailable -> raw pass-through with explicit UI/log message
-    - removed misleading "cloud" progress paths in shipped mobile flow
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt`
+  - unsupported language: on-device unavailable -> raw pass-through with explicit UI/log message
+  - removed misleading "cloud" progress paths in shipped mobile flow
 - Translator docs/comments aligned to actual shipped behavior:
-  - `mobile/android/app/src/main/java/com/nku/app/NkuTranslator.kt`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuTranslator.kt`
 - Public docs claims aligned:
-  - `README.md`
-  - `docs/ARCHITECTURE.md`
-  - `kaggle_submission_writeup.md`
+ - `README.md`
+ - `docs/ARCHITECTURE.md`
+ - `kaggle_submission_writeup.md`
 
 ### Verification
 - Code path now consistently routes unsupported languages to offline pass-through.
@@ -58,11 +58,11 @@ Cloud TranslateGemma defaults were placeholders and non-resolvable in default de
 
 ### Fix
 - Replaced placeholder defaults with deployable defaults in:
-  - `cloud/inference_api/config.py`
-    - `translategemma_repo` default -> `mradermacher/medgemma-4b-it-GGUF`
-    - `translategemma_file` default -> `medgemma-4b-it.Q2_K.gguf`
+ - `cloud/inference_api/config.py`
+  - `translategemma_repo` default -> `mradermacher/medgemma-4b-it-GGUF`
+  - `translategemma_file` default -> `medgemma-4b-it.Q2_K.gguf`
 - Added regression test:
-  - `tests/test_config.py`
+ - `tests/test_config.py`
 
 ### Verification
 - `tests/test_config.py` asserts defaults are not placeholder strings and are non-empty.
@@ -75,17 +75,17 @@ Regex-only prompt protection allowed common leetspeak obfuscation bypasses.
 
 ### Fix
 - Added leetspeak normalization for detection in cloud validator:
-  - `cloud/inference_api/security.py`
-    - `LEETSPEAK_MAP`
-    - `_normalize_leetspeak`
-    - dual-check in `_check_injection_patterns` on raw + leet-normalized text
+ - `cloud/inference_api/security.py`
+  - `LEETSPEAK_MAP`
+  - `_normalize_leetspeak`
+  - dual-check in `_check_injection_patterns` on raw + leet-normalized text
 - Added cloud tests:
-  - `tests/test_security.py`
-    - `test_leetspeak_injection_blocked`
-    - legitimate numeric medical text explicitly preserved
+ - `tests/test_security.py`
+  - `test_leetspeak_injection_blocked`
+  - legitimate numeric medical text explicitly preserved
 - Added mirrored protection on mobile:
-  - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt`
-  - `mobile/android/app/src/test/java/com/nku/app/PromptSanitizerTest.kt`
+ - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt`
+ - `mobile/android/app/src/test/java/com/nku/app/PromptSanitizerTest.kt`
 
 ### Verification
 - Attack strings like `ign0re all previous instructions` and `ignore all pr3vious instructions` are blocked in tests.
@@ -98,16 +98,16 @@ Sensor-to-model pipeline lacked hardware-backed end-to-end evidence.
 
 ### Fix
 - Added Android instrumented respiratory runtime smoke test:
-  - `mobile/android/app/src/androidTest/java/com/nku/app/RespiratoryPipelineInstrumentedTest.kt`
-  - validates detector execution with app runtime + packaged assets and asserts bounded outputs
+ - `mobile/android/app/src/androidTest/java/com/nku/app/RespiratoryPipelineInstrumentedTest.kt`
+ - validates detector execution with app runtime + packaged assets and asserts bounded outputs
 - Ensured instrumentation runner is properly configured:
-  - `mobile/android/app/build.gradle`
-    - `testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"`
+ - `mobile/android/app/build.gradle`
+  - `testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"`
 
 ### Verification
 - Connected Android tests now run and pass with this class included (9/9 pass).
 - Respiratory runtime smoke test appears in connected test report:
-  - `RespiratoryPipelineInstrumentedTest.respiratoryDetector_processAudio_runsOnDeviceRuntime`
+ - `RespiratoryPipelineInstrumentedTest.respiratoryDetector_processAudio_runsOnDeviceRuntime`
 
 ## 3) Additional Fixes Applied In This Pass
 
@@ -116,9 +116,9 @@ These were not in the five new findings list but were implemented during this re
 1. Cloud endpoint-scoped model loading
 - File: `cloud/inference_api/main.py`
 - `require_models` now accepts per-endpoint requirements:
-  - `/translate` requires translation model only
-  - `/triage` requires MedGemma only
-  - `/nku-cycle` requires both
+ - `/translate` requires translation model only
+ - `/triage` requires MedGemma only
+ - `/nku-cycle` requires both
 - Reduces avoidable endpoint downtime when only one model is needed.
 
 2. Cloud output validation gating in `/nku-cycle`
@@ -128,14 +128,14 @@ These were not in the five new findings list but were implemented during this re
 
 3. Respiratory path correctness and lifecycle hardening
 - Files:
-  - `mobile/android/app/src/main/java/com/nku/app/screens/RespiratoryScreen.kt`
-  - `mobile/android/app/src/main/java/com/nku/app/RespiratoryDetector.kt`
-  - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt`
+ - `mobile/android/app/src/main/java/com/nku/app/screens/RespiratoryScreen.kt`
+ - `mobile/android/app/src/main/java/com/nku/app/RespiratoryDetector.kt`
+ - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt`
 - Improvements:
-  - uses deep path (`processAudioDeep`) when ViT-L is available, else event detector path
-  - safer model candidate load loop with input/output verification
-  - safer file resource handling with `.use`
-  - explicit `respiratoryDetector.close()` in lifecycle cleanup
+ - uses deep path (`processAudioDeep`) when ViT-L is available, else event detector path
+ - safer model candidate load loop with input/output verification
+ - safer file resource handling with `.use`
+ - explicit `respiratoryDetector.close()` in lifecycle cleanup
 
 4. Startup/perf guardrails
 - File: `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt`
@@ -159,8 +159,8 @@ All commands run on 2026-02-18 EST from this workspace.
 
 2. Coverage
 - Command:
-  - `./.audit_venv/bin/python -m coverage run -m unittest discover -s tests`
-  - `./.audit_venv/bin/python -m coverage report -m`
+ - `./.audit_venv/bin/python -m coverage run -m unittest discover -s tests`
+ - `./.audit_venv/bin/python -m coverage report -m`
 - Result: total coverage `79%`
 
 3. Android unit tests
@@ -172,7 +172,7 @@ All commands run on 2026-02-18 EST from this workspace.
 - Command: `JAVA_HOME=... ./gradlew :app:connectedDebugAndroidTest --no-daemon --stacktrace`
 - Result: `Finished 9 tests ... BUILD SUCCESSFUL`
 - Includes respiratory runtime test:
-  - `com.nku.app.RespiratoryPipelineInstrumentedTest.respiratoryDetector_processAudio_runsOnDeviceRuntime`
+ - `com.nku.app.RespiratoryPipelineInstrumentedTest.respiratoryDetector_processAudio_runsOnDeviceRuntime`
 
 5. Android assemble
 - Command: `JAVA_HOME=... ./gradlew :app:assembleDebug --no-daemon --stacktrace`

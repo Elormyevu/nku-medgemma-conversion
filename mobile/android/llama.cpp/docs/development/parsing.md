@@ -23,34 +23,34 @@ output from a model that emits arguments as JSON.
 
 ```cpp
 auto parser = build_chat_peg_native_parser([&](common_chat_peg_native_builder & p) {
-    // Build a choice of all available tools
-    auto tool_choice = p.choice();
-    for (const auto & tool : tools) {
-        const auto & function = tool.at("function");
-        std::string name = function.at("name");
-        const auto & schema = function.at("parameters");
+  // Build a choice of all available tools
+  auto tool_choice = p.choice();
+  for (const auto & tool : tools) {
+    const auto & function = tool.at("function");
+    std::string name = function.at("name");
+    const auto & schema = function.at("parameters");
 
-        auto tool_name = p.json_member("name", "\"" + p.literal(name) + "\"");
-        auto tool_args = p.json_member("arguments", p.schema(p.json(), "tool-" + name + "-schema", schema));
+    auto tool_name = p.json_member("name", "\"" + p.literal(name) + "\"");
+    auto tool_args = p.json_member("arguments", p.schema(p.json(), "tool-" + name + "-schema", schema));
 
-        tool_choice |= p.rule("tool-" + name, "{" << tool_name << "," << tool_args << "}");
-    }
+    tool_choice |= p.rule("tool-" + name, "{" << tool_name << "," << tool_args << "}");
+  }
 
-    // Define the tool call structure: <tool_call>[{tool}]</tool_call>
-    auto tool_call = p.trigger_rule("tool-call",
-        p.sequence({
-            p.literal("<tool_call>["),
-            tool_choice,
-            p.literal("]</tool_call>")
-        })
-    );
+  // Define the tool call structure: <tool_call>[{tool}]</tool_call>
+  auto tool_call = p.trigger_rule("tool-call",
+    p.sequence({
+      p.literal("<tool_call>["),
+      tool_choice,
+      p.literal("]</tool_call>")
+    })
+  );
 
-    // Parser accepts content, optionally followed by a tool call
-    return p.sequence({
-        p.content(p.until("<tool_call>")),
-        p.optional(tool_call),
-        p.end()
-    });
+  // Parser accepts content, optionally followed by a tool call
+  return p.sequence({
+    p.content(p.until("<tool_call>")),
+    p.optional(tool_call),
+    p.end()
+  });
 });
 ```
 
@@ -121,10 +121,10 @@ some exceptions.
 
 ```cpp
 data.grammar = build_grammar([&](const common_grammar_builder & builder) {
-    foreach_function(params.tools, [&](const json & fn) {
-        builder.resolve_refs(fn.at("parameters"));
-    });
-    parser.build_grammar(builder, data.grammar_lazy);
+  foreach_function(params.tools, [&](const json & fn) {
+    builder.resolve_refs(fn.at("parameters"));
+  });
+  parser.build_grammar(builder, data.grammar_lazy);
 });
 ```
 
@@ -172,7 +172,7 @@ Most model output can be placed in one of the following categories:
 - Content only
 - Tool calling with arguments emitted as a single JSON object
 - Tool calling with arguments emitted as separate entities, either XML
-  (Qwen3-Coder, MiniMax M2) or pseudo-function calls (LFM2)
+ (Qwen3-Coder, MiniMax M2) or pseudo-function calls (LFM2)
 
 To provide broad coverage,
 [`common/chat-peg-parser.h`](/common/chat-peg-parser.h) contains builders and
@@ -190,11 +190,11 @@ content-only models with optional reasoning.
 
 ```cpp
 build_chat_peg_parser([&](common_chat_peg_parser & p) {
-    return p.sequence({
-        p.optional("<think>" + p.reasoning(p.until("</think>")) + "</think>"),
-        p.content(p.until("<tool_call>")),
-        p.end()
-    });
+  return p.sequence({
+    p.optional("<think>" + p.reasoning(p.until("</think>")) + "</think>"),
+    p.content(p.until("<tool_call>")),
+    p.end()
+  });
 });
 ```
 
@@ -226,21 +226,21 @@ models that emit tool arguments as a direct JSON object.
 
 ```cpp
 build_chat_peg_native_parser([&](common_chat_peg_native_parser & p) {
-    auto get_weather_tool = p.tool(p.sequence({
-        p.tool_open(p.literal("{")),
-        p.json_member("name", "\"" + p.tool_name(p.literal("get_weather")) + "\""),
-        p.literal(","),
-        p.json_member("arguments", p.tool_args(p.json())),
-        p.tool_close(p.literal("}"))
-    }));
+  auto get_weather_tool = p.tool(p.sequence({
+    p.tool_open(p.literal("{")),
+    p.json_member("name", "\"" + p.tool_name(p.literal("get_weather")) + "\""),
+    p.literal(","),
+    p.json_member("arguments", p.tool_args(p.json())),
+    p.tool_close(p.literal("}"))
+  }));
 
-    return p.sequence({
-        p.content(p.until("<tool_call>")),
-        p.literal("<tool_call>"),
-        get_weather_tool,
-        p.literal("</tool_call>"),
-        p.end()
-    });
+  return p.sequence({
+    p.content(p.until("<tool_call>")),
+    p.literal("<tool_call>"),
+    get_weather_tool,
+    p.literal("</tool_call>"),
+    p.end()
+  });
 });
 ```
 
@@ -265,24 +265,24 @@ tags.
 
 ```cpp
 build_chat_peg_constructed_parser([&](common_chat_peg_constructed_builder & p) {
-    auto location_arg = p.tool_arg(
-        p.tool_arg_open("<parameter name=\"" + p.tool_arg_name(p.literal("location")) + "\">"),
-        p.tool_arg_string_value(p.until("</parameter>")),
-        p.tool_arg_close(p.literal("</parameter>"))
-    );
+  auto location_arg = p.tool_arg(
+    p.tool_arg_open("<parameter name=\"" + p.tool_arg_name(p.literal("location")) + "\">"),
+    p.tool_arg_string_value(p.until("</parameter>")),
+    p.tool_arg_close(p.literal("</parameter>"))
+  );
 
-    auto get_weather_tool = p.tool(p.sequence({
-        p.tool_open("<function name=\"" + p.tool_name(p.literal("get_weather")) + "\">"),
-        location_arg,
-        p.tool_close(p.literal("</function>"))
-    }));
+  auto get_weather_tool = p.tool(p.sequence({
+    p.tool_open("<function name=\"" + p.tool_name(p.literal("get_weather")) + "\">"),
+    location_arg,
+    p.tool_close(p.literal("</function>"))
+  }));
 
-    return p.sequence({
-        p.content(p.until("<tool_call>")),
-        p.literal("<tool_call>"),
-        get_weather_tool,
-        p.literal("</tool_call>"),
-        p.end()
-    });
+  return p.sequence({
+    p.content(p.until("<tool_call>")),
+    p.literal("<tool_call>"),
+    get_weather_tool,
+    p.literal("</tool_call>"),
+    p.end()
+  });
 });
 ```

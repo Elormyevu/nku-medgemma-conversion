@@ -25,13 +25,13 @@ cmake --build build --target llama-server
 
 It's possible to override some scenario steps values with environment variables:
 
-| variable                 | description                                                                                    |
+| variable         | description                                          |
 |--------------------------|------------------------------------------------------------------------------------------------|
-| `PORT`                   | `context.server_port` to set the listening port of the server during scenario, default: `8080` |
-| `LLAMA_SERVER_BIN_PATH`  | to change the server binary path, default: `../../../build/bin/llama-server`                         |
-| `DEBUG`                  | to enable steps and server verbose mode `--verbose`                                       |
-| `N_GPU_LAYERS`           | number of model layers to offload to VRAM `-ngl --n-gpu-layers`                                |
-| `LLAMA_CACHE`            | by default server tests re-download models to the `tmp` subfolder. Set this to your cache (e.g. `$HOME/Library/Caches/llama.cpp` on Mac or `$HOME/.cache/llama.cpp` on Unix) to avoid this |
+| `PORT`          | `context.server_port` to set the listening port of the server during scenario, default: `8080` |
+| `LLAMA_SERVER_BIN_PATH` | to change the server binary path, default: `../../../build/bin/llama-server`             |
+| `DEBUG`         | to enable steps and server verbose mode `--verbose`                    |
+| `N_GPU_LAYERS`      | number of model layers to offload to VRAM `-ngl --n-gpu-layers`                |
+| `LLAMA_CACHE`      | by default server tests re-download models to the `tmp` subfolder. Set this to your cache (e.g. `$HOME/Library/Caches/llama.cpp` on Mac or `$HOME/.cache/llama.cpp` on Unix) to avoid this |
 
 To run slow tests (will download many models, make sure to set `LLAMA_CACHE` if needed):
 
@@ -74,18 +74,18 @@ server can be started in a debugger.
 Example using `gdb`:
 ```console
 $ gdb --args ../../../build/bin/llama-server \
-    --host 127.0.0.1 --port 8080 \
-    --temp 0.8 --seed 42 \
-    --hf-repo ggml-org/models --hf-file tinyllamas/stories260K.gguf \
-    --batch-size 32 --no-slots --alias tinyllama-2 --ctx-size 512 \
-    --parallel 2 --n-predict 64
+  --host 127.0.0.1 --port 8080 \
+  --temp 0.8 --seed 42 \
+  --hf-repo ggml-org/models --hf-file tinyllamas/stories260K.gguf \
+  --batch-size 32 --no-slots --alias tinyllama-2 --ctx-size 512 \
+  --parallel 2 --n-predict 64
 ```
 And a break point can be set in before running:
 ```console
 (gdb) br server.cpp:4604
 (gdb) r
 main: server is listening on http://127.0.0.1:8080 - starting the main loop
-srv  update_slots: all slots are idle
+srv update_slots: all slots are idle
 ```
 
 And then the test in question can be run in another terminal:

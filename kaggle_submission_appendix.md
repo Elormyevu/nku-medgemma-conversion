@@ -418,37 +418,37 @@ All measurements below were captured on-device using a smartphone camera.
 
 === HEART RATE (rPPG) ===
 Method: Remote photoplethysmography — green channel intensity extracted from
-  facial video, frequency analysis via DFT over a sliding window.
-  [11, 12]
+ facial video, frequency analysis via DFT over a sliding window.
+ [11, 12]
 Heart rate: 108 bpm (tachycardia: >100 bpm)
 Signal quality: good
 Confidence: 87%
 
 === ANEMIA SCREENING (Conjunctival Pallor) ===
 Method: HSV color space analysis of the palpebral conjunctiva (lower eyelid
-  inner surface). Mean saturation of conjunctival tissue pixels quantifies
-  vascular perfusion — low saturation indicates reduced hemoglobin.
-  [13, 14]
+ inner surface). Mean saturation of conjunctival tissue pixels quantifies
+ vascular perfusion — low saturation indicates reduced hemoglobin.
+ [13, 14]
 Conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10)
 Pallor index: 0.68 (0.0=healthy, 1.0=severe pallor)
 Severity: MODERATE — likely moderate anemia (Hb 7-10 g/dL)
 Tissue coverage: 38% of ROI pixels classified as conjunctival tissue
 Confidence: 82%
 Note: This is a screening heuristic, not a hemoglobin measurement.
-  Refer for laboratory hemoglobin test to confirm.
+ Refer for laboratory hemoglobin test to confirm.
 
 === JAUNDICE SCREENING (Scleral Icterus) ===
 Method: HSV color space analysis of the sclera (white of the eye). Measures
-  yellow saturation against a mapped scleral region of interest.
-  [15, 16]
+ yellow saturation against a mapped scleral region of interest.
+ [15, 16]
 Jaundice index: 0.72 (0.0=normal sclera, 1.0=severe icterus)
 Severity: SEVERE — likely severe hyperbilirubinemia (>10 mg/dL)
 Confidence: 89%
 
 === RESPIRATORY SCREENING (HeAR Cough Analysis) ===
 Method: MobileNetV3 INT8 TFLite Event Detector running Google Health Acoustic
-  Representations (HeAR) over 5 seconds of audio.
-  [27, 28]
+ Representations (HeAR) over 5 seconds of audio.
+ [27, 28]
 Respiratory risk score: 0.82 (0.0=healthy, 1.0=high risk)
 Classification: HIGH_RISK
 Confidence: 91%
@@ -456,9 +456,9 @@ Note: This is a screening tool for TB/respiratory illness risk.
 
 === PREECLAMPSIA SCREENING (Periorbital Edema) ===
 Method: Eye Aspect Ratio (EAR) computed from MediaPipe 478-landmark facial
-  mesh — periorbital edema narrows the palpebral fissure, reducing EAR.
-  Supplemented by periorbital brightness gradient analysis.
-  [17, 18]
+ mesh — periorbital edema narrows the palpebral fissure, reducing EAR.
+ Supplemented by periorbital brightness gradient analysis.
+ [17, 18]
 Eye Aspect Ratio: 2.15 (normal baseline ≈2.8, edema threshold ≤2.2)
 Periorbital puffiness score: 0.61
 Facial swelling score: 0.39
@@ -466,7 +466,7 @@ Edema index: 0.52 (0.0=normal, 1.0=significant)
 Severity: MODERATE
 Confidence: 79%
 Note: This is a novel screening heuristic. Confirm with blood pressure
-  measurement and urine protein test.
+ measurement and urine protein test.
 
 === PREGNANCY CONTEXT ===
 Patient is pregnant
@@ -503,12 +503,12 @@ URGENCY: IMMEDIATE
 
 PRIMARY_CONCERNS:
 - Moderate-to-severe preeclampsia warning signs: periorbital edema (EAR 2.15,
-  below 2.2 threshold), periorbital puffiness (0.61), persistent headache,
-  and fatigue in a 32-week pregnant patient
+ below 2.2 threshold), periorbital puffiness (0.61), persistent headache,
+ and fatigue in a 32-week pregnant patient
 - Moderate conjunctival pallor (saturation 0.08, well below healthy ≥0.20)
-  suggesting concurrent anemia (estimated Hb 7-10 g/dL)
+ suggesting concurrent anemia (estimated Hb 7-10 g/dL)
 - Tachycardia (108 bpm) may reflect anemia compensation or early
-  cardiovascular stress
+ cardiovascular stress
 - Classic triad present: edema + headache + pregnancy >20 weeks
 
 RECOMMENDATIONS:
@@ -516,7 +516,7 @@ RECOMMENDATIONS:
 - URGENT: Check for protein in urine (dipstick) if available
 - REFER TODAY: Patient should be seen at health facility within hours, not days
 - Danger signs to communicate: if she develops visual changes, severe headache,
-  epigastric pain, or reduced fetal movement - this is an emergency
+ epigastric pain, or reduced fetal movement - this is an emergency
 - For anemia: hemoglobin test at facility; do not delay referral for this
 - Keep patient resting, left lateral position preferred
 - Ensure she has transportation arranged to facility
@@ -544,9 +544,9 @@ Selecting the right quantization level required balancing two competing goals: m
 > †Each model was evaluated single-shot on the full MedQA test set (1,273 questions) and the primary care subset (707 questions) — one attempt per question, no repeated runs, no best-of-N selection. This mirrors Nku's real-world use case: a CHW presents a patient once and receives a single triage response. Single-run evaluation is the most representative measure of the model's reliability in this clinical context.
 
 **Key Findings:**
-1.  **Medical imatrix calibration outperforms naive quantization:** The IQ2_XS model (1.4 GB) calibrated with our custom 24-scenario African clinical dataset severely outperforms the larger Q2_K model (1.73 GB) by +9.1 percentage points on MedQA. This proves that domain-specific importance matrices are significantly more valuable than raw bit depth at extreme quantization levels.
-2.  **IQ1_M is near-random:** At 1.2 GB, the model fundamentally collapses. Its 32.3% MedQA score barely exceeds random guessing (25% on 4-option MCQs). The model loses its reasoning capabilities, often outputting repetitive or disjointed text when prompted.
-3.  **Q4_K_M is our "Edge Foundation" cutoff:** At 2.3 GB (71% smaller than baseline), Q4_K_M is the smallest model we are comfortable using given the high-consequence triage environment, and considering that 3GB+ RAM is widely available even on Android phones in the $60 bracket (e.g., itel A90, TECNO POP series). It successfully identifies multi-morbidity conditions (e.g., recognizing both pneumonia and severe malaria from concurrent symptoms) that the 1.3 GB IQ2_XS misses.
+1. **Medical imatrix calibration outperforms naive quantization:** The IQ2_XS model (1.4 GB) calibrated with our custom 24-scenario African clinical dataset severely outperforms the larger Q2_K model (1.73 GB) by +9.1 percentage points on MedQA. This proves that domain-specific importance matrices are significantly more valuable than raw bit depth at extreme quantization levels.
+2. **IQ1_M is near-random:** At 1.2 GB, the model fundamentally collapses. Its 32.3% MedQA score barely exceeds random guessing (25% on 4-option MCQs). The model loses its reasoning capabilities, often outputting repetitive or disjointed text when prompted.
+3. **Q4_K_M is our "Edge Foundation" cutoff:** At 2.3 GB (71% smaller than baseline), Q4_K_M is the smallest model we are comfortable using given the high-consequence triage environment, and considering that 3GB+ RAM is widely available even on Android phones in the $60 bracket (e.g., itel A90, TECNO POP series). It successfully identifies multi-morbidity conditions (e.g., recognizing both pneumonia and severe malaria from concurrent symptoms) that the 1.3 GB IQ2_XS misses.
 
 #### Full Benchmark Comparison†
 
@@ -589,10 +589,10 @@ Why not use the multimodal MedGemma 4B with raw camera images? A natural questio
 
 To empirically validate our architectural claims that the Nku pipeline (Sensors + Q4_K_M MedGemma) operates reliably within the memory constraints of lower-bound Android devices, we evaluated the application natively using Android Instrumented Tests on an AVD (Android Virtual Device) configured to mirror target African hardware (e.g., TECNO POP 7):
 
-*   **Test Environment:** `nku_tecno_3gb` AVD (Android 35, ARM64, 3072 MB RAM limit).
-*   **Execution Target:** Android Test Orchestrator (`connectedAndroidTest`).
-*   **Results:** The Android integration test suite successfully executed and passed 15/15 clinical pipeline tests (excluding one test dedicated to side-loaded model verification, which is bypassed in CI environments without the 2.3GB asset).
-*   **Verification:** `ProcessCameraProvider`, `AudioRecord`, and ML Kit instances bound and evaluated real-time buffers simultaneously without triggering OS-level termination (`OOMKiller`) or catastrophic UI lag, proving that the sensor fusion engine natively tolerates 3GB RAM caps before initiating `mmap` inference.
+*  **Test Environment:** `nku_tecno_3gb` AVD (Android 35, ARM64, 3072 MB RAM limit).
+*  **Execution Target:** Android Test Orchestrator (`connectedAndroidTest`).
+*  **Results:** The Android integration test suite successfully executed and passed 15/15 clinical pipeline tests (excluding one test dedicated to side-loaded model verification, which is bypassed in CI environments without the 2.3GB asset).
+*  **Verification:** `ProcessCameraProvider`, `AudioRecord`, and ML Kit instances bound and evaluated real-time buffers simultaneously without triggering OS-level termination (`OOMKiller`) or catastrophic UI lag, proving that the sensor fusion engine natively tolerates 3GB RAM caps before initiating `mmap` inference.
 
 This test artifact definitively validates that Nku's memory optimization strategies (adaptive memory mapping, image analysis throttling, and camera instance state-snapshotting) successfully protect the constrained edge device from crashing during intense multi-model clinical workloads.
 
@@ -651,8 +651,8 @@ Research on automated prompt optimization for medical vision-language models fou
 ```
 === HEART RATE (rPPG) ===
 Method: Remote photoplethysmography — green channel intensity extracted from
-  facial video, frequency analysis via DFT over a sliding window.
-  [11, 12]
+ facial video, frequency analysis via DFT over a sliding window.
+ [11, 12]
 Heart rate: 108 bpm (tachycardia: >100 bpm)
 Signal quality: good
 Confidence: 87%
@@ -669,7 +669,7 @@ Method: Eye Aspect Ratio (EAR) computed from MediaPipe 478-landmark facial mesh.
 Eye Aspect Ratio: 2.15 (normal baseline ≈2.8, edema threshold ≤2.2)
 Edema index: 0.52 (0.0=normal, 1.0=significant)
 Note: This is a novel screening heuristic. Confirm with blood pressure
-  measurement and urine protein test.
+ measurement and urine protein test.
 
 === PREGNANCY CONTEXT ===
 Patient is pregnant
@@ -710,14 +710,14 @@ This appendix documents the complete signal processing chain for each of Nku's f
 ```mermaid
 %%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
 graph LR
-    A[" Camera\nFrame"] --> B["RPPGProcessor\n(Green channel DFT)"]
-    A --> C["PallorDetector\n(HSV saturation)"]
-    A --> D["EdemaDetector\n(MediaPipe EAR)"]
-    B --> E["SensorFusion\n(VitalSigns)"]
-    C --> E
-    D --> E
-    E --> F["ClinicalReasoner\n(generatePrompt)"]
-    F --> G["MedGemma\nQ4_K_M"]
+  A[" Camera\nFrame"] --> B["RPPGProcessor\n(Green channel DFT)"]
+  A --> C["PallorDetector\n(HSV saturation)"]
+  A --> D["EdemaDetector\n(MediaPipe EAR)"]
+  B --> E["SensorFusion\n(VitalSigns)"]
+  C --> E
+  D --> E
+  E --> F["ClinicalReasoner\n(generatePrompt)"]
+  F --> G["MedGemma\nQ4_K_M"]
 ```
 
 All four detectors produce structured result objects with derived scores, confidence, and raw biomarker values. `SensorFusion` merges these into a single `VitalSigns` data class, and `ClinicalReasoner.generatePrompt()` serializes everything into a clinically explicit text prompt.
@@ -744,17 +744,17 @@ Source file: `RPPGProcessor.kt`
 
 Output → VitalSigns:
 ```kotlin
-heartRateBpm: Float?        // e.g. 72.0
-heartRateConfidence: Float   // e.g. 0.87
-heartRateQuality: String     // "good"
+heartRateBpm: Float?    // e.g. 72.0
+heartRateConfidence: Float  // e.g. 0.87
+heartRateQuality: String   // "good"
 ```
 
 Output → prompt:
 ```
 === HEART RATE (rPPG) ===
 Method: Remote photoplethysmography — green channel intensity extracted from
-  facial video, frequency analysis via DFT over a sliding window.
-  [11, 12]
+ facial video, frequency analysis via DFT over a sliding window.
+ [11, 12]
 Heart rate: 72 bpm (normal range: 50-100 bpm)
 Signal quality: good
 Confidence: 87%
@@ -781,27 +781,27 @@ Source file: `PallorDetector.kt`
 
 Output → VitalSigns:
 ```kotlin
-pallorScore: Float?                // e.g. 0.65
-pallorSeverity: PallorSeverity?    // MODERATE
-pallorConfidence: Float             // e.g. 0.82
-conjunctivalSaturation: Float?     // e.g. 0.08  ← RAW BIOMARKER
-conjunctivalTissueCoverage: Float? // e.g. 0.38  ← RAW BIOMARKER
+pallorScore: Float?        // e.g. 0.65
+pallorSeverity: PallorSeverity?  // MODERATE
+pallorConfidence: Float       // e.g. 0.82
+conjunctivalSaturation: Float?   // e.g. 0.08 ← RAW BIOMARKER
+conjunctivalTissueCoverage: Float? // e.g. 0.38 ← RAW BIOMARKER
 ```
 
 Output → prompt:
 ```
 === ANEMIA SCREENING (Conjunctival Pallor) ===
 Method: HSV color space analysis of the palpebral conjunctiva (lower eyelid
-  inner surface). Mean saturation of conjunctival tissue pixels quantifies
-  vascular perfusion — low saturation indicates reduced hemoglobin.
-  [13, 14]
+ inner surface). Mean saturation of conjunctival tissue pixels quantifies
+ vascular perfusion — low saturation indicates reduced hemoglobin.
+ [13, 14]
 Conjunctival saturation: 0.08 (healthy ≥0.20, pallor threshold ≤0.10)
 Pallor index: 0.65 (0.0=healthy, 1.0=severe pallor)
 Severity: MODERATE — likely moderate anemia (Hb 7-10 g/dL)
 Tissue coverage: 38% of ROI pixels classified as conjunctival tissue
 Confidence: 82%
 Note: This is a screening heuristic, not a hemoglobin measurement.
-  Refer for laboratory hemoglobin test to confirm.
+ Refer for laboratory hemoglobin test to confirm.
 ```
 
 
@@ -826,21 +826,21 @@ Source file: `EdemaDetector.kt`
 
 Output → VitalSigns:
 ```kotlin
-edemaScore: Float?            // e.g. 0.52
-edemaSeverity: EdemaSeverity?  // MODERATE
-edemaConfidence: Float         // e.g. 0.79
-eyeAspectRatio: Float?        // e.g. 2.15  ← RAW BIOMARKER
-periorbitalScore: Float?      // e.g. 0.61
-facialSwellingScore: Float?   // e.g. 0.39
+edemaScore: Float?      // e.g. 0.52
+edemaSeverity: EdemaSeverity? // MODERATE
+edemaConfidence: Float     // e.g. 0.79
+eyeAspectRatio: Float?    // e.g. 2.15 ← RAW BIOMARKER
+periorbitalScore: Float?   // e.g. 0.61
+facialSwellingScore: Float?  // e.g. 0.39
 ```
 
 Output → prompt:
 ```
 === PREECLAMPSIA SCREENING (Periorbital Edema) ===
 Method: Eye Aspect Ratio (EAR) computed from MediaPipe 478-landmark facial
-  mesh — periorbital edema narrows the palpebral fissure, reducing EAR.
-  Supplemented by periorbital brightness gradient analysis.
-  [17, 18]
+ mesh — periorbital edema narrows the palpebral fissure, reducing EAR.
+ Supplemented by periorbital brightness gradient analysis.
+ [17, 18]
 Eye Aspect Ratio: 2.15 (normal baseline ≈2.8, edema threshold ≤2.2)
 Periorbital puffiness score: 0.61
 Facial swelling score: 0.39
@@ -848,7 +848,7 @@ Edema index: 0.52 (0.0=normal, 1.0=significant)
 Severity: MODERATE
 Confidence: 79%
 Note: This is a novel screening heuristic. Confirm with blood pressure
-  measurement and urine protein test.
+ measurement and urine protein test.
 ```
 
 
@@ -872,24 +872,24 @@ Source file: `JaundiceDetector.kt`
 
 Output → VitalSigns:
 ```kotlin
-jaundiceScore: Float?              // e.g. 0.72
+jaundiceScore: Float?       // e.g. 0.72
 jaundiceSeverity: JaundiceSeverity? // SEVERE
-jaundiceConfidence: Float           // e.g. 0.89
-scleralYellowRatio: Float?          // e.g. 0.45  ← RAW BIOMARKER
+jaundiceConfidence: Float      // e.g. 0.89
+scleralYellowRatio: Float?     // e.g. 0.45 ← RAW BIOMARKER
 ```
 
 Output → prompt:
 ```
 === JAUNDICE SCREENING (Scleral Icterus) ===
 Method: HSV color space analysis of the sclera (white of the eye). Measures
-  yellow saturation against a mapped scleral region of interest.
-  [15, 16]
+ yellow saturation against a mapped scleral region of interest.
+ [15, 16]
 Scleral yellow ratio: 0.45 (normal <0.10, icterus threshold >0.20)
 Jaundice index: 0.72 (0.0=normal sclera, 1.0=severe icterus)
 Severity: SEVERE — likely severe hyperbilirubinemia (>10 mg/dL)
 Confidence: 89%
 Note: This is a screening heuristic, not a bilirubin measurement.
-  Refer for serum bilirubin and liver function tests to confirm.
+ Refer for serum bilirubin and liver function tests to confirm.
 ```
 
 
@@ -910,11 +910,11 @@ Source file: `RespiratoryDetector.kt`
 
 Output → VitalSigns:
 ```kotlin
-respiratoryRiskScore: Float?               // e.g. 0.72
-respiratoryRisk: RespiratoryRisk?          // HIGH_RISK
-respiratoryConfidence: Float               // e.g. 0.88
-coughDetected: Boolean                     // true
-respiratoryAnalysisSource: AnalysisSource  // EVENT_DETECTOR
+respiratoryRiskScore: Float?        // e.g. 0.72
+respiratoryRisk: RespiratoryRisk?     // HIGH_RISK
+respiratoryConfidence: Float        // e.g. 0.88
+coughDetected: Boolean           // true
+respiratoryAnalysisSource: AnalysisSource // EVENT_DETECTOR
 ```
 
 Output → prompt (Event Detector path):
@@ -922,16 +922,16 @@ Output → prompt (Event Detector path):
 === RESPIRATORY SCREENING (HeAR Cough Analysis) ===
 Analysis tier: HeAR Event Detector
 Method: HeAR MobileNetV3-Small — trained on 300M+ health audio clips.
-  Classifies 8 health sound event types from 2-second audio.
-  On-device via TFLite (INT8, 1.1MB). ~50ms inference.
-  [27, 28]
+ Classifies 8 health sound event types from 2-second audio.
+ On-device via TFLite (INT8, 1.1MB). ~50ms inference.
+ [27, 28]
 Respiratory risk score: 0.72 (0.0=healthy, 1.0=high risk)
 Classification: HIGH_RISK
 Cough detected: Yes
 Confidence: 88%
 Event class distribution: cough=0.72, breathe=0.18, sneeze=0.05, ...
 Note: This is a screening tool for TB/respiratory illness risk.
-  Refer for sputum test, chest X-ray, or clinical evaluation to confirm.
+ Refer for sputum test, chest X-ray, or clinical evaluation to confirm.
 ```
 
 ---
@@ -1022,9 +1022,9 @@ Verified on `nku_tecno_3gb` Android emulator (3GB RAM, API 34, x86_64) — repre
 
 ```
 02-20 22:37:28.875 NkuEngine: Loading model from:
-    /data/user/0/com.nku.app/files/models/medgemma-4b-it-q4_k_m.gguf
+  /data/user/0/com.nku.app/files/models/medgemma-4b-it-q4_k_m.gguf
 02-20 22:37:29.114 [SmolLMAndroid-Cpp]: loading model with
-    model_path = .../medgemma-4b-it-q4_k_m.gguf
+  model_path = .../medgemma-4b-it-q4_k_m.gguf
 02-20 22:37:43.573 NkuEngine: Model loaded: medgemma-4b-it-q4_k_m.gguf (attempt 1)
 02-20 22:39:59.520 NkuEngine: Model unloaded, RAM freed
 ```

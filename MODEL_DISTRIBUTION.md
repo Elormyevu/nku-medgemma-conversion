@@ -18,21 +18,21 @@ MedGemma is delivered via [Play Asset Delivery](https://developer.android.com/gu
 ```
 AAB (Android App Bundle)
 ├── base module (~140MB delivered on arm64; ~340MB compressed in bundle)
-│                               ← app code, UI, JNI runtimes, HeAR Event Detector (1.1MB TFLite in assets)
-├── asset-pack: medgemma        ← MedGemma Q4_K_M GGUF (~2.3GB)
-│   └── delivery: install-time  ← downloaded with initial install
-└── ML Kit language packs       ← ~30MB each, downloaded on demand
+│                ← app code, UI, JNI runtimes, HeAR Event Detector (1.1MB TFLite in assets)
+├── asset-pack: medgemma    ← MedGemma Q4_K_M GGUF (~2.3GB)
+│  └── delivery: install-time ← downloaded with initial install
+└── ML Kit language packs    ← ~30MB each, downloaded on demand
 ```
 
 ### Model Inventory
 
 | Component | Size | Delivery | Offline |
 |:----------|:----:|:--------:|:-------:|
-| **MedGemma Q4_K_M** | 2.3 GB | PAD (install-time) | ✅ Always |
-| **HeAR Event Detector (TFLite INT8)** | 1.1 MB | APK assets | ✅ Always |
-| **HeAR ViT-L Encoder** | ~1.2 GB | ❌ Not shipped | ❌ XLA/StableHLO conversion blocked |
-| **ML Kit (59 languages)** | ~30 MB/lang | Auto-download | ✅ After download |
-| **Google Cloud Translate API** | 0 MB | Cloud fallback integration | ❌ Requires internet for unsupported languages |
+| **MedGemma Q4_K_M** | 2.3 GB | PAD (install-time) | Always |
+| **HeAR Event Detector (TFLite INT8)** | 1.1 MB | APK assets | Always |
+| **HeAR ViT-L Encoder** | ~1.2 GB | Not shipped | XLA/StableHLO conversion blocked |
+| **ML Kit (59 languages)** | ~30 MB/lang | Auto-download | After download |
+| **Google Cloud Translate API** | 0 MB | Cloud fallback integration | Requires internet for unsupported languages |
 
 **Key point**: MedGemma and the HeAR Event Detector ship with the app via AAB/PAD. For direct APK reviewer installs without PAD, the app supports two recovery paths: trusted sideloading or native first-run model download.
 
@@ -64,9 +64,9 @@ Once Google's AI Edge toolchain supports StableHLO-to-TFLite conversion, the ViT
 
 | Strategy | Savings | Status |
 |----------|---------|--------|
-| Q4_K_M quantization (from 8GB) | ~3.5x from FP16 | ✅ Done (56% MedQA quantized, 81% of 69% unquantized) |
-| ML Kit replaces TranslateGemma | ~2GB saved | ✅ Done |
-| HeAR Event Detector INT8 | Smallest possible (1.1MB) | ✅ Done |
-| HeAR ViT-L INT8 quantization | Blocked | ❌ XLA/StableHLO conversion required first |
+| Q4_K_M quantization (from 8GB) | ~3.5x from FP16 | Done (56% MedQA quantized, 81% of 69% unquantized) |
+| ML Kit replaces TranslateGemma | ~2GB saved | Done |
+| HeAR Event Detector INT8 | Smallest possible (1.1MB) | Done |
+| HeAR ViT-L INT8 quantization | Blocked | XLA/StableHLO conversion required first |
 | Future: Q3_K_M quantization | ~350MB more | Requires accuracy validation |
 | Future: Distillation to 2B params | ~4x | Requires retraining |

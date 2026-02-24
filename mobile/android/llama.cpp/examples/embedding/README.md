@@ -22,40 +22,40 @@ The above command will output space-separated float values.
 
 ## extra parameters
 ### --embd-normalize $integer$
-| $integer$ | description         | formula |
+| $integer$ | description     | formula |
 |-----------|---------------------|---------|
-| $-1$      | none                |
-| $0$       | max absolute int16  | $\Large{{32760 * x_i} \over\max \lvert x_i\rvert}$
-| $1$       | taxicab             | $\Large{x_i \over\sum \lvert x_i\rvert}$
-| $2$       | euclidean (default) | $\Large{x_i \over\sqrt{\sum x_i^2}}$
-| $>2$      | p-norm              | $\Large{x_i \over\sqrt[p]{\sum \lvert x_i\rvert^p}}$
+| $-1$   | none        |
+| $0$    | max absolute int16 | $\Large{{32760 * x_i} \over\max \lvert x_i\rvert}$
+| $1$    | taxicab       | $\Large{x_i \over\sum \lvert x_i\rvert}$
+| $2$    | euclidean (default) | $\Large{x_i \over\sqrt{\sum x_i^2}}$
+| $>2$   | p-norm       | $\Large{x_i \over\sqrt[p]{\sum \lvert x_i\rvert^p}}$
 
 ### --embd-output-format $'string'$
-| $'string'$ | description                  |  |
+| $'string'$ | description         | |
 |------------|------------------------------|--|
-| ''         | same as before               | (default)
-| 'array'    | single embeddings            | $[[x_1,...,x_n]]$
-|            | multiple embeddings          | $[[x_1,...,x_n],[x_1,...,x_n],...,[x_1,...,x_n]]$
-| 'json'     | openai style                 |
-| 'json+'    | add cosine similarity matrix |
-| 'raw'      | plain text output            |
+| ''     | same as before        | (default)
+| 'array'  | single embeddings      | $[[x_1,...,x_n]]$
+|      | multiple embeddings     | $[[x_1,...,x_n],[x_1,...,x_n],...,[x_1,...,x_n]]$
+| 'json'   | openai style         |
+| 'json+'  | add cosine similarity matrix |
+| 'raw'   | plain text output      |
 
 ### --embd-separator $"string"$
-| $"string"$   | |
+| $"string"$  | |
 |--------------|-|
-| "\n"         | (default)
+| "\n"     | (default)
 | "<#embSep#>" | for example
-| "<#sep#>"    | other example
+| "<#sep#>"  | other example
 
 ## examples
 ### Unix-based systems (Linux, macOS, etc.):
 
 ```bash
-./llama-embedding -p 'Castle<#sep#>Stronghold<#sep#>Dog<#sep#>Cat' --pooling mean --embd-separator '<#sep#>' --embd-normalize 2  --embd-output-format '' -m './path/to/model.gguf' --n-gpu-layers 99 --log-disable 2>/dev/null
+./llama-embedding -p 'Castle<#sep#>Stronghold<#sep#>Dog<#sep#>Cat' --pooling mean --embd-separator '<#sep#>' --embd-normalize 2 --embd-output-format '' -m './path/to/model.gguf' --n-gpu-layers 99 --log-disable 2>/dev/null
 ```
 
 ### Windows:
 
 ```powershell
-llama-embedding.exe -p 'Castle<#sep#>Stronghold<#sep#>Dog<#sep#>Cat' --pooling mean --embd-separator '<#sep#>' --embd-normalize 2  --embd-output-format '' -m './path/to/model.gguf' --n-gpu-layers 99 --log-disable 2>/dev/null
+llama-embedding.exe -p 'Castle<#sep#>Stronghold<#sep#>Dog<#sep#>Cat' --pooling mean --embd-separator '<#sep#>' --embd-normalize 2 --embd-output-format '' -m './path/to/model.gguf' --n-gpu-layers 99 --log-disable 2>/dev/null
 ```

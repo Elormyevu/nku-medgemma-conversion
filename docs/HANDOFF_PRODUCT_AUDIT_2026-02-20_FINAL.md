@@ -45,10 +45,10 @@ Requested coverage included:
 
 - Command: `./.audit_venv/bin/pytest --cov=cloud/inference_api --cov-report=term-missing -q`
 - Result:
-  - `68 passed, 1 skipped`
-  - Coverage highlights:
-    - `cloud/inference_api/main.py`: 67%
-    - `cloud/inference_api/security.py`: 67%
+ - `68 passed, 1 skipped`
+ - Coverage highlights:
+  - `cloud/inference_api/main.py`: 67%
+  - `cloud/inference_api/security.py`: 67%
 
 ### 3.2 Android Build/Test/Lint
 - Command: `./gradlew :app:assembleDebug :app:assembleRelease --rerun-tasks --no-daemon`
@@ -57,19 +57,19 @@ Requested coverage included:
 - Command: `./gradlew :app:testDebugUnitTest --rerun-tasks --no-daemon`
 - Result: BUILD SUCCESSFUL
 - XML aggregate (`mobile/android/app/build/test-results/testDebugUnitTest`):
-  - `tests=193 failures=0 errors=0 skipped=0`
+ - `tests=193 failures=0 errors=0 skipped=0`
 
 - Command: `./gradlew :app:lintDebug :app:lintRelease --rerun-tasks --no-daemon`
 - Result: BUILD SUCCESSFUL
 - Reports:
-  - `mobile/android/app/build/reports/lint-results-debug.txt`: `No issues found.`
-  - `mobile/android/app/build/reports/lint-results-release.txt`: `No issues found.`
+ - `mobile/android/app/build/reports/lint-results-debug.txt`: `No issues found.`
+ - `mobile/android/app/build/reports/lint-results-release.txt`: `No issues found.`
 
 - Command (initial connected run): `./gradlew :app:connectedDebugAndroidTest --no-daemon`
 - Result artifact:
-  - `mobile/android/app/build/outputs/androidTest-results/connected/debug/TEST-nku_pixel7(AVD) - 15-_app-.xml`
-  - `tests=14 failures=0 errors=0 skipped=1`
-  - Skipped test: `medGemma_sideloadedModel_isDiscoverableAndTrusted`
+ - `mobile/android/app/build/outputs/androidTest-results/connected/debug/TEST-nku_pixel7(AVD) - 15-_app-.xml`
+ - `tests=14 failures=0 errors=0 skipped=1`
+ - Skipped test: `medGemma_sideloadedModel_isDiscoverableAndTrusted`
 
 - Command (later rerun): `./gradlew :app:connectedDebugAndroidTest --no-daemon`
 - Result: FAILED before test execution with `INSTALL_FAILED_INSUFFICIENT_STORAGE` while installing `app-debug.apk`.
@@ -77,13 +77,13 @@ Requested coverage included:
 ### 3.3 Security Tooling
 - Command: `./.audit_venv/bin/bandit -r cloud/inference_api src -x tests,cloud/inference_api/security_pytest_suite.py -f txt`
 - Result summary:
-  - High: 0
-  - Medium: 6
-  - Low: 3
+ - High: 0
+ - Medium: 6
+ - Low: 3
 
 - Command: `./.audit_venv/bin/pip-audit -r cloud/inference_api/requirements.txt`
 - Result: 1 known vulnerability
-  - `diskcache 5.6.3` -> `CVE-2025-69872`
+ - `diskcache 5.6.3` -> `CVE-2025-69872`
 
 - Command: `./.audit_venv/bin/pip-audit -r requirements.txt`
 - Result: scan could not complete in this environment due resolver failure for `jaxlib==0.4.38` under Python 3.14.
@@ -103,8 +103,8 @@ Impact:
 
 Recommendation:
 - Choose one and align all docs/code immediately:
-  - Implement real cloud fallback translation path; or
-  - Update all submission docs to explicit pass-through behavior.
+ - Implement real cloud fallback translation path; or
+ - Update all submission docs to explicit pass-through behavior.
 - Add an integration test proving the chosen behavior for one unsupported language online and offline.
 
 ## [P1] F-02: “All sensors <75% and no symptoms -> no MedGemma call” claim is not fully enforced in current triage UI execution path
@@ -142,9 +142,9 @@ Recommendation:
 Evidence:
 - Failure: `INSTALL_FAILED_INSUFFICIENT_STORAGE` during `connectedDebugAndroidTest`
 - Artifact sizes:
-  - `mobile/android/app/build/outputs/apk/debug/app-debug.apk` (~1.2G)
-  - `mobile/android/app/build/outputs/apk/release/app-release-unsigned.apk` (~1.2G)
-  - `mobile/android/app/build/outputs/bundle/release/app-release.aab` (~2.6G)
+ - `mobile/android/app/build/outputs/apk/debug/app-debug.apk` (~1.2G)
+ - `mobile/android/app/build/outputs/apk/release/app-release-unsigned.apk` (~1.2G)
+ - `mobile/android/app/build/outputs/bundle/release/app-release.aab` (~2.6G)
 
 Impact:
 - Reviewers can fail before feature evaluation.
@@ -257,15 +257,15 @@ Status: **good foundational controls, but not yet complete hardening**.
 
 Implemented controls confirmed:
 - Mobile sanitization and output validation:
-  - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:47`
-  - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:311`
+ - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:47`
+ - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:311`
 - Cloud validator/protector/rate limit:
-  - `cloud/inference_api/security.py:155`
-  - `cloud/inference_api/security.py:304`
-  - `cloud/inference_api/security.py:410`
+ - `cloud/inference_api/security.py:155`
+ - `cloud/inference_api/security.py:304`
+ - `cloud/inference_api/security.py:410`
 - Endpoint auth + security headers:
-  - `cloud/inference_api/main.py:128`
-  - `cloud/inference_api/main.py:116`
+ - `cloud/inference_api/main.py:128`
+ - `cloud/inference_api/main.py:116`
 
 Residual concerns:
 - PHI logging risk (F-09).
@@ -276,11 +276,11 @@ Residual concerns:
 
 Confirmed positives:
 - rPPG performance optimizations in place (buffer/deque, throttled DFT):
-  - `mobile/android/app/src/main/java/com/nku/app/RPPGProcessor.kt:52`, `mobile/android/app/src/main/java/com/nku/app/RPPGProcessor.kt:96`
+ - `mobile/android/app/src/main/java/com/nku/app/RPPGProcessor.kt:52`, `mobile/android/app/src/main/java/com/nku/app/RPPGProcessor.kt:96`
 - Thermal read caching exists:
-  - `mobile/android/app/src/main/java/com/nku/app/ThermalManager.kt:34`
+ - `mobile/android/app/src/main/java/com/nku/app/ThermalManager.kt:34`
 - Memory-aware MedGemma mmap loading/retry path exists:
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:231`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:231`
 
 Efficiency risks observed:
 - Very large install artifacts can block reviewer runtime validation (F-04).

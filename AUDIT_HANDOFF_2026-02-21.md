@@ -1,8 +1,8 @@
 # Nku Sentinel Audit Handoff
 
-Date: 2026-02-21  
-Auditor: Codex (GPT-5)  
-Repo: `nku-impact-challenge-1335`  
+Date: 2026-02-21 
+Auditor: Codex (GPT-5) 
+Repo: `nku-impact-challenge-1335` 
 Branch state during audit: `main...origin/main` with pre-existing doc-only local changes
 
 ## 1) Executive Summary
@@ -46,10 +46,10 @@ Highest-priority blockers before reviewer-facing validation:
 3. Security/performance static scans.
 4. Packaging and model artifact inspection.
 5. Trace-level code review of high-risk runtime paths:
-   - Sensor fusion -> prompt generation -> inference engine.
-   - Translation/fallback behavior.
-   - Thermal and memory gating.
-   - Prompt sanitization and output validation.
+  - Sensor fusion -> prompt generation -> inference engine.
+  - Translation/fallback behavior.
+  - Thermal and memory gating.
+  - Prompt sanitization and output validation.
 
 ---
 
@@ -68,13 +68,13 @@ Executed:
 
 Results:
 - Debug unit tests: 193 tests, 0 failures, 0 ignored.
-  - Evidence: `mobile/android/app/build/reports/tests/testDebugUnitTest/index.html`
+ - Evidence: `mobile/android/app/build/reports/tests/testDebugUnitTest/index.html`
 - Release unit tests: 193 tests, 0 failures, 0 ignored.
-  - Evidence: `mobile/android/app/build/reports/tests/testReleaseUnitTest/index.html`
+ - Evidence: `mobile/android/app/build/reports/tests/testReleaseUnitTest/index.html`
 - Lint debug/release: 0 errors, 1 warning (`UsableSpace` advisory).
-  - Evidence: `mobile/android/app/build/reports/lint-results-release.txt`
+ - Evidence: `mobile/android/app/build/reports/lint-results-release.txt`
 - Connected instrumentation: failed due no connected devices.
-  - Error: `DeviceException: No connected devices!`
+ - Error: `DeviceException: No connected devices!`
 
 ## Python / Backend
 
@@ -105,7 +105,7 @@ Generated artifacts:
 Content checks:
 - APKs include TFLite assets and native libs, no MedGemma `.gguf`.
 - AAB includes PAD asset pack with MedGemma GGUF:
-  - `medgemma/assets/medgemma-4b-it-q4_k_m.gguf`
+ - `medgemma/assets/medgemma-4b-it-q4_k_m.gguf`
 
 Hash checks:
 - Bundled PAD model hash: `8bcb19d3e363f7d1ab27f364032436fd702e735a6f479d6bb7b1cf066e76b443`
@@ -121,17 +121,17 @@ Hash checks:
 
 Evidence:
 - Prompt generated in UI flow:
-  - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:367`
+ - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:367`
 - Prompt sent to `runNkuCycle(...)`:
-  - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:377`
+ - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:377`
 - `runNkuCycle` sanitizes whole input:
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:306`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:306`
 - Sanitizer strips key formatting tokens and delimiters:
-  - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:60`
-  - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:63`
-  - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:269`
+ - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:60`
+ - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:63`
+ - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:269`
 - But the structured prompt depends on those sections:
-  - `mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt:295`
+ - `mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt:295`
 
 Risk:
 - Degrades or corrupts the intended sensor-to-MedGemma reasoning contract.
@@ -151,14 +151,14 @@ Recommendation:
 
 Evidence:
 - Claim in appendix:
-  - `kaggle_submission_appendix.md:930`
+ - `kaggle_submission_appendix.md:930`
 - UI gate allows run with lower confidence signals / analyzed flags:
-  - `mobile/android/app/src/main/java/com/nku/app/screens/TriageScreen.kt:61`
-  - `mobile/android/app/src/main/java/com/nku/app/screens/TriageScreen.kt:270`
+ - `mobile/android/app/src/main/java/com/nku/app/screens/TriageScreen.kt:61`
+ - `mobile/android/app/src/main/java/com/nku/app/screens/TriageScreen.kt:270`
 - Main flow still attempts MedGemma:
-  - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:377`
+ - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:377`
 - Abstention exists only in fallback rule-based path:
-  - `mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt:358`
+ - `mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt:358`
 
 Risk:
 - Behavior diverges from submission claim and expected safety threshold semantics.
@@ -174,11 +174,11 @@ Recommendation:
 
 Evidence:
 - Code expected hash:
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:60`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:60`
 - Validation use:
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:649`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:649`
 - README expected hash:
-  - `README.md:172`
+ - `README.md:172`
 - Bundled PAD file hashes to README value (`8bcb...`), not code constant (`bff1...`).
 
 Risk:
@@ -195,11 +195,11 @@ Recommendation:
 
 Evidence:
 - Claims cloud fallback translation behavior:
-  - `kaggle_submission_writeup.md:38`
-  - `kaggle_submission_writeup.md:48`
+ - `kaggle_submission_writeup.md:38`
+ - `kaggle_submission_writeup.md:48`
 - Runtime code for unsupported languages:
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:333`
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:338`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:333`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:338`
 - Comment states cloud client is optional/not wired.
 
 Risk:
@@ -219,11 +219,11 @@ Recommendation:
 
 Evidence:
 - `runNkuCycle` thermal checks are optional and only run if manager passed:
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:297`
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:311`
-  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:353`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:297`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:311`
+ - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:353`
 - Main call omits `thermalManager`:
-  - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:377`
+ - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:377`
 
 Risk:
 - Stage-level thermal checks may not run when expected.
@@ -239,11 +239,11 @@ Recommendation:
 
 Evidence:
 - Sideload integration test skips unless file exists (`assumeTrue`):
-  - `mobile/android/app/src/androidTest/java/com/nku/app/ModelIntegrationInstrumentedTest.kt:28`
+ - `mobile/android/app/src/androidTest/java/com/nku/app/ModelIntegrationInstrumentedTest.kt:28`
 - Camera path uses synthetic bitmap:
-  - `mobile/android/app/src/androidTest/java/com/nku/app/CameraTriageInstrumentedTest.kt:33`
+ - `mobile/android/app/src/androidTest/java/com/nku/app/CameraTriageInstrumentedTest.kt:33`
 - Respiratory path uses synthetic waveform:
-  - `mobile/android/app/src/androidTest/java/com/nku/app/RespiratoryPipelineInstrumentedTest.kt:29`
+ - `mobile/android/app/src/androidTest/java/com/nku/app/RespiratoryPipelineInstrumentedTest.kt:29`
 
 Risk:
 - Passing tests may not reflect real camera/mic device behavior.
@@ -259,9 +259,9 @@ Recommendation:
 
 Evidence:
 - Header-based size check only:
-  - `cloud/inference_api/security.py:679`
+ - `cloud/inference_api/security.py:679`
 - JSON parsed but no robust post-parse byte-size enforcement:
-  - `cloud/inference_api/security.py:693`
+ - `cloud/inference_api/security.py:693`
 
 Risk:
 - Large body handling edge cases can bypass intended hard limit.

@@ -25,8 +25,8 @@ Multimodal support in `llama.cpp` works by encoding images into embeddings using
 This approach keeps the multimodal components distinct from the core `libllama` library. Separating these allows for faster, independent development cycles. While many modern vision models are based on Vision Transformers (ViTs), their specific pre-processing and projection steps can vary significantly. Integrating this diverse complexity directly into `libllama` is currently challenging.
 
 Consequently, running a multimodal model typically requires two GGUF files:
-1.  The standard language model file.
-2.  A corresponding **multimodal projector (`mmproj`)** file, which handles the image encoding and projection.
+1. The standard language model file.
+2. A corresponding **multimodal projector (`mmproj`)** file, which handles the image encoding and projection.
 
 ## What is `libmtmd`?
 

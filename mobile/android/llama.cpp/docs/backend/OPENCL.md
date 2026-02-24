@@ -22,11 +22,11 @@ The llama.cpp OpenCL backend is designed to enable llama.cpp on **Qualcomm Adren
 
 ## OS
 
-| OS      | Status  | Verified                                       |
+| OS   | Status | Verified                    |
 |---------|---------|------------------------------------------------|
-| Android | Support | Snapdragon 8 Gen 3, Snapdragon 8 Elite         |
-| Windows | Support | Windows 11 Arm64 with Snapdragon X Elite       |
-| Linux   | Support | Ubuntu 22.04 WSL2 with Intel 12700H            |
+| Android | Support | Snapdragon 8 Gen 3, Snapdragon 8 Elite     |
+| Windows | Support | Windows 11 Arm64 with Snapdragon X Elite    |
+| Linux  | Support | Ubuntu 22.04 WSL2 with Intel 12700H      |
 
 ## Hardware
 
@@ -34,23 +34,23 @@ The llama.cpp OpenCL backend is designed to enable llama.cpp on **Qualcomm Adren
 
 **Verified devices**
 
-| Adreno GPU                           | Status  |
+| Adreno GPU              | Status |
 |:------------------------------------:|:-------:|
-| Adreno 750 (Snapdragon 8 Gen 3)      | Support |
-| Adreno 830 (Snapdragon 8 Elite)      | Support |
-| Adreno X85 (Snapdragon X Elite)      | Support |
+| Adreno 750 (Snapdragon 8 Gen 3)   | Support |
+| Adreno 830 (Snapdragon 8 Elite)   | Support |
+| Adreno X85 (Snapdragon X Elite)   | Support |
 
 > A6x GPUs with a recent driver and compiler are supported; they are usually found in IoT platforms.
 However, A6x GPUs in phones are likely not supported due to the outdated driver and compiler.
 
 ## DataType Supports
 
-| DataType               | Status                     |
+| DataType        | Status           |
 |:----------------------:|:--------------------------:|
-| Q4_0                   | Support                    |
-| Q6_K                   | Support, but not optimized |
-| Q8_0                   | Support                    |
-| MXFP4                  | Support                    |
+| Q4_0          | Support          |
+| Q6_K          | Support, but not optimized |
+| Q8_0          | Support          |
+| MXFP4         | Support          |
 
 ## Model Preparation
 
@@ -79,10 +79,10 @@ Hence, using the default `MXFP4_MOE` quantization (see the link above) is recomm
 
 The OpenCL backend has the following CMake options that control the behavior of the backend.
 
-| CMake options                     | Default value  | Description                               |
+| CMake options           | Default value | Description                |
 |:---------------------------------:|:--------------:|:------------------------------------------|
-| `GGML_OPENCL_EMBED_KERNELS`       | `ON`           | Embed OpenCL kernels into the executable. |
-| `GGML_OPENCL_USE_ADRENO_KERNELS`  | `ON`           | Use kernels optimized for Adreno.         |
+| `GGML_OPENCL_EMBED_KERNELS`    | `ON`      | Embed OpenCL kernels into the executable. |
+| `GGML_OPENCL_USE_ADRENO_KERNELS` | `ON`      | Use kernels optimized for Adreno.     |
 
 ## Android
 
@@ -125,11 +125,11 @@ git clone https://github.com/KhronosGroup/OpenCL-ICD-Loader && \
 cd OpenCL-ICD-Loader && \
 mkdir build_ndk26 && cd build_ndk26 && \
 cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_TOOLCHAIN_FILE=$HOME/android-sdk/ndk/26.3.11579264/build/cmake/android.toolchain.cmake \
-  -DOPENCL_ICD_LOADER_HEADERS_DIR=$HOME/android-sdk/ndk/26.3.11579264/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include \
-  -DANDROID_ABI=arm64-v8a \
-  -DANDROID_PLATFORM=24 \
-  -DANDROID_STL=c++_shared && \
+ -DCMAKE_TOOLCHAIN_FILE=$HOME/android-sdk/ndk/26.3.11579264/build/cmake/android.toolchain.cmake \
+ -DOPENCL_ICD_LOADER_HEADERS_DIR=$HOME/android-sdk/ndk/26.3.11579264/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include \
+ -DANDROID_ABI=arm64-v8a \
+ -DANDROID_PLATFORM=24 \
+ -DANDROID_STL=c++_shared && \
 ninja && \
 cp libOpenCL.so ~/android-sdk/ndk/26.3.11579264/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android
 ```
@@ -144,11 +144,11 @@ cd llama.cpp && \
 mkdir build-android && cd build-android
 
 cmake .. -G Ninja \
-  -DCMAKE_TOOLCHAIN_FILE=$HOME/android-sdk/ndk/26.3.11579264/build/cmake/android.toolchain.cmake \
-  -DANDROID_ABI=arm64-v8a \
-  -DANDROID_PLATFORM=android-28 \
-  -DBUILD_SHARED_LIBS=OFF \
-  -DGGML_OPENCL=ON
+ -DCMAKE_TOOLCHAIN_FILE=$HOME/android-sdk/ndk/26.3.11579264/build/cmake/android.toolchain.cmake \
+ -DANDROID_ABI=arm64-v8a \
+ -DANDROID_PLATFORM=android-28 \
+ -DBUILD_SHARED_LIBS=OFF \
+ -DGGML_OPENCL=ON
 
 ninja
 ```
@@ -184,19 +184,19 @@ cd ~/dev/llm
 git clone https://github.com/KhronosGroup/OpenCL-Headers && cd OpenCL-Headers
 mkdir build && cd build
 cmake .. -G Ninja `
-  -DBUILD_TESTING=OFF `
-  -DOPENCL_HEADERS_BUILD_TESTING=OFF `
-  -DOPENCL_HEADERS_BUILD_CXX_TESTS=OFF `
-  -DCMAKE_INSTALL_PREFIX="$HOME/dev/llm/opencl"
+ -DBUILD_TESTING=OFF `
+ -DOPENCL_HEADERS_BUILD_TESTING=OFF `
+ -DOPENCL_HEADERS_BUILD_CXX_TESTS=OFF `
+ -DCMAKE_INSTALL_PREFIX="$HOME/dev/llm/opencl"
 cmake --build . --target install
 
 cd ~/dev/llm
 git clone https://github.com/KhronosGroup/OpenCL-ICD-Loader && cd OpenCL-ICD-Loader
 mkdir build && cd build
 cmake .. -G Ninja `
-  -DCMAKE_BUILD_TYPE=Release `
-  -DCMAKE_PREFIX_PATH="$HOME/dev/llm/opencl" `
-  -DCMAKE_INSTALL_PREFIX="$HOME/dev/llm/opencl"
+ -DCMAKE_BUILD_TYPE=Release `
+ -DCMAKE_PREFIX_PATH="$HOME/dev/llm/opencl" `
+ -DCMAKE_INSTALL_PREFIX="$HOME/dev/llm/opencl"
 cmake --build . --target install
 ```
 
@@ -211,11 +211,11 @@ git clone https://github.com/ggml-org/llama.cpp && cd llama.cpp
 mkdir build && cd build
 
 cmake .. -G Ninja `
-  -DCMAKE_TOOLCHAIN_FILE="$HOME/dev/llm/llama.cpp/cmake/arm64-windows-llvm.cmake" `
-  -DCMAKE_BUILD_TYPE=Release `
-  -DCMAKE_PREFIX_PATH="$HOME/dev/llm/opencl" `
-  -DBUILD_SHARED_LIBS=OFF `
-  -DGGML_OPENCL=ON
+ -DCMAKE_TOOLCHAIN_FILE="$HOME/dev/llm/llama.cpp/cmake/arm64-windows-llvm.cmake" `
+ -DCMAKE_BUILD_TYPE=Release `
+ -DCMAKE_PREFIX_PATH="$HOME/dev/llm/opencl" `
+ -DBUILD_SHARED_LIBS=OFF `
+ -DGGML_OPENCL=ON
 ninja
 ```
 
@@ -236,19 +236,19 @@ cd ~/dev/llm
 git clone https://github.com/KhronosGroup/OpenCL-Headers && cd OpenCL-Headers
 mkdir build && cd build
 cmake .. -G Ninja \
-  -DBUILD_TESTING=OFF \
-  -DOPENCL_HEADERS_BUILD_TESTING=OFF \
-  -DOPENCL_HEADERS_BUILD_CXX_TESTS=OFF \
-  -DCMAKE_INSTALL_PREFIX="$HOME/dev/llm/opencl"
+ -DBUILD_TESTING=OFF \
+ -DOPENCL_HEADERS_BUILD_TESTING=OFF \
+ -DOPENCL_HEADERS_BUILD_CXX_TESTS=OFF \
+ -DCMAKE_INSTALL_PREFIX="$HOME/dev/llm/opencl"
 cmake --build . --target install
 
 cd ~/dev/llm
 git clone https://github.com/KhronosGroup/OpenCL-ICD-Loader && cd OpenCL-ICD-Loader
 mkdir build && cd build
 cmake .. -G Ninja \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_PREFIX_PATH="$HOME/dev/llm/opencl" \
-  -DCMAKE_INSTALL_PREFIX="$HOME/dev/llm/opencl"
+ -DCMAKE_BUILD_TYPE=Release \
+ -DCMAKE_PREFIX_PATH="$HOME/dev/llm/opencl" \
+ -DCMAKE_INSTALL_PREFIX="$HOME/dev/llm/opencl"
 cmake --build . --target install
 ```
 
@@ -262,10 +262,10 @@ git clone https://github.com/ggml-org/llama.cpp && cd llama.cpp
 mkdir build && cd build
 
 cmake .. -G Ninja \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_PREFIX_PATH="$HOME/dev/llm/opencl" \
-  -DBUILD_SHARED_LIBS=OFF \
-  -DGGML_OPENCL=ON
+ -DCMAKE_BUILD_TYPE=Release \
+ -DCMAKE_PREFIX_PATH="$HOME/dev/llm/opencl" \
+ -DBUILD_SHARED_LIBS=OFF \
+ -DGGML_OPENCL=ON
 ninja
 ```
 
@@ -273,7 +273,7 @@ ninja
 
 - Flash attention does not always improve performance.
 - Currently OpenCL backend works on A6xx GPUs with recent drivers and compilers (usually found in IoT platforms).
-  However, it does not work on A6xx GPUs found in phones with old drivers and compilers.
+ However, it does not work on A6xx GPUs found in phones with old drivers and compilers.
 
 ## TODO
 

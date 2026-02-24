@@ -13,11 +13,11 @@ to allow for test signatures (aka test-signing).
 
 Either use the trimmed down version (optimized for CI) from
 
-    https://github.com/snapdragon-toolchain/opencl-sdk/releases/download/v2.3.2/adreno-opencl-sdk-v2.3.2-arm64-wos.tar.xz
+  https://github.com/snapdragon-toolchain/opencl-sdk/releases/download/v2.3.2/adreno-opencl-sdk-v2.3.2-arm64-wos.tar.xz
 
 Or download the complete official version from
 
-    https://softwarecenter.qualcomm.com/catalog/item/Adreno_OpenCL_SDK?version=2.3.2
+  https://softwarecenter.qualcomm.com/catalog/item/Adreno_OpenCL_SDK?version=2.3.2
 
 Unzip/untar the archive into
 ```
@@ -28,11 +28,11 @@ c:\Qualcomm\OpenCL_SDK\2.3.2
 
 Either use the trimmed down version (optimized for CI) from
 
-    https://github.com/snapdragon-toolchain/hexagon-sdk/releases/download/v6.4.0.2/hexagon-sdk-v6.4.0.2-arm64-wos.tar.xz
+  https://github.com/snapdragon-toolchain/hexagon-sdk/releases/download/v6.4.0.2/hexagon-sdk-v6.4.0.2-arm64-wos.tar.xz
 
 Or download the complete official version from
 
-    https://softwarecenter.qualcomm.com/catalog/item/Hexagon_SDK?version=6.4.0.2
+  https://softwarecenter.qualcomm.com/catalog/item/Hexagon_SDK?version=6.4.0.2
 
 Unzip/untar the archive into
 ```
@@ -43,7 +43,7 @@ c:\Qualcomm\Hexagon_SDK\6.4.0.2
 
 Download the driver from
 
-    https://softwarecenter.qualcomm.com/catalog/item/Windows_Graphics_Driver
+  https://softwarecenter.qualcomm.com/catalog/item/Windows_Graphics_Driver
 
 After the automated installation and reboot please make sure that the GPU device shows up in the `Device Manager` (under 'Display Adapters`)
 
@@ -51,7 +51,7 @@ After the automated installation and reboot please make sure that the GPU device
 
 Download the driver from
 
-    https://softwarecenter.qualcomm.com/catalog/item/Qualcomm_HND
+  https://softwarecenter.qualcomm.com/catalog/item/Qualcomm_HND
 
 After the automated installation and reboot please make sure that the Hexagon NPU device shows up in the `Device Manager` (under `Neural Processors`).
 
@@ -78,12 +78,12 @@ Make sure test-signing is enabled after reboot
 ```
 > bcdedit /enum
 ...
-testsigning             Yes
+testsigning       Yes
 ...
 ```
 For additional details see Microsoft guide at
 
-   https://learn.microsoft.com/en-us/windows-hardware/drivers/install/the-testsigning-boot-configuration-option
+  https://learn.microsoft.com/en-us/windows-hardware/drivers/install/the-testsigning-boot-configuration-option
 
 ### Create personal certificate
 
@@ -112,7 +112,7 @@ PFX file you created above.
 
 For additional details see Microsoft guide at
 
-    https://learn.microsoft.com/en-us/windows-hardware/drivers/install/introduction-to-test-signing
+  https://learn.microsoft.com/en-us/windows-hardware/drivers/install/introduction-to-test-signing
 
 Make sure to save the PFX file, you will need it for the build procedures.
 Please note that the same certificate can be used for signing any number of builds.
@@ -137,11 +137,11 @@ Once the build is complete HTP ops libraries will be installed like this
 ```
 > dir pkg-snapdragon/lib
 ...
--a----         1/22/2026   6:01 PM         187656 libggml-htp-v73.so
--a----         1/22/2026   6:01 PM         191752 libggml-htp-v75.so
--a----         1/22/2026   6:01 PM         187656 libggml-htp-v79.so
--a----         1/22/2026   6:01 PM         187656 libggml-htp-v81.so
--a----         1/22/2026   6:01 PM           4139 libggml-htp.cat
+-a----     1/22/2026  6:01 PM     187656 libggml-htp-v73.so
+-a----     1/22/2026  6:01 PM     191752 libggml-htp-v75.so
+-a----     1/22/2026  6:01 PM     187656 libggml-htp-v79.so
+-a----     1/22/2026  6:01 PM     187656 libggml-htp-v81.so
+-a----     1/22/2026  6:01 PM      4139 libggml-htp.cat
 ```
 
 The .cat file, the signature and proper certicate installation can be verified with
@@ -154,7 +154,7 @@ Signature Index: 0 (Primary Signature)
 Hash of file (sha256): 9820C664DA59D5EAE31DBB664127FCDAEF59CDC31502496BC567544EC2F401CF
 
 Signing Certificate Chain:
-        Issued to: GGML.HTP.v1
+    Issued to: GGML.HTP.v1
 ...
 Successfully verified: .\pkg-snapdragon\lib\libggml-htp.cat
 ...

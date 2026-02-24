@@ -106,22 +106,22 @@ Example Video:
 If a draft model is combined with a draftless decoding the draftless decoding has higher precedence.
 
 ```
---draft, --draft-n, --draft-max N       number of tokens to draft for speculative decoding (default: 16)
-                                        (env: LLAMA_ARG_DRAFT_MAX)
---draft-min, --draft-n-min N            minimum number of draft tokens to use for speculative decoding
-                                        (default: 0)
-                                        (env: LLAMA_ARG_DRAFT_MIN)
+--draft, --draft-n, --draft-max N    number of tokens to draft for speculative decoding (default: 16)
+                    (env: LLAMA_ARG_DRAFT_MAX)
+--draft-min, --draft-n-min N      minimum number of draft tokens to use for speculative decoding
+                    (default: 0)
+                    (env: LLAMA_ARG_DRAFT_MIN)
 [...]
 --spec-type [none|ngram-cache|ngram-simple|ngram-map-k|ngram-map-k4v|ngram-mod]
-                                        type of speculative decoding to use when no draft model is provided
-                                        (default: none)
---spec-ngram-size-n N                   ngram size N for ngram-simple/ngram-map speculative decoding, length
-                                        of lookup n-gram (default: 12)
---spec-ngram-size-m N                   ngram size M for ngram-simple/ngram-map speculative decoding, length
-                                        of draft m-gram (default: 48)
---spec-ngram-check-rate N               ngram check rate for ngram-simple/ngram-map speculative decoding
-                                        (default: 1)
---spec-ngram-min-hits N                 minimum hits for ngram-map speculative decoding (default: 1)
+                    type of speculative decoding to use when no draft model is provided
+                    (default: none)
+--spec-ngram-size-n N          ngram size N for ngram-simple/ngram-map speculative decoding, length
+                    of lookup n-gram (default: 12)
+--spec-ngram-size-m N          ngram size M for ngram-simple/ngram-map speculative decoding, length
+                    of draft m-gram (default: 48)
+--spec-ngram-check-rate N        ngram check rate for ngram-simple/ngram-map speculative decoding
+                    (default: 1)
+--spec-ngram-min-hits N         minimum hits for ngram-map speculative decoding (default: 1)
 ```
 
 ### `--spec-type TYPE`
@@ -165,13 +165,13 @@ This option defines how often a key has to appear in the token history to be use
 Each speculative decoding implementation prints statistics.
 
 ```
-draft acceptance rate = 0.57576 (  171 accepted /   297 generated)
+draft acceptance rate = 0.57576 ( 171 accepted /  297 generated)
 statistics ngram_simple: #calls = 15, #gen drafts = 5, #acc drafts = 5, #gen tokens = 187, #acc tokens = 73
 statistics draft: #calls = 10, #gen drafts = 10, #acc drafts = 10, #gen tokens = 110, #acc tokens = 98
 ```
 
 ```
-draft acceptance rate = 0.70312 (   90 accepted /   128 generated)
+draft acceptance rate = 0.70312 (  90 accepted /  128 generated)
 statistics ngram_mod: #calls = 810, #gen drafts = 15, #acc drafts = 15, #gen tokens = 960, #acc tokens = 730, dur(b,g,a) = 0.149, 0.347, 0.005 ms
 ```
 

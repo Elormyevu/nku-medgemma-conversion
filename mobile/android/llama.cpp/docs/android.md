@@ -17,9 +17,9 @@ A minimal Android app frontend is included to showcase the binding’s core func
 For a production-ready experience that leverages advanced features such as system prompts and benchmarks, plus friendly UI features such as model management and Arm feature visualizer, check out [Arm AI Chat](https://play.google.com/store/apps/details?id=com.arm.aichat) on Google Play.
 This project is made possible through a collaborative effort by Arm's **CT-ML**, **CE-ML** and **STE** groups:
 
-| ![Home screen](https://naco-siren.github.io/ai-chat/policy/index/1-llm-starter-pack.png)  | ![System prompt](https://naco-siren.github.io/ai-chat/policy/index/5-system-prompt.png)  | !["Haiku"](https://naco-siren.github.io/ai-chat/policy/index/4-metrics.png)  |
+| ![Home screen](https://naco-siren.github.io/ai-chat/policy/index/1-llm-starter-pack.png) | ![System prompt](https://naco-siren.github.io/ai-chat/policy/index/5-system-prompt.png) | !["Haiku"](https://naco-siren.github.io/ai-chat/policy/index/4-metrics.png) |
 |:------------------------------------------------------:|:----------------------------------------------------:|:--------------------------------------------------------:|
-|                      Home screen                       |                    System prompt                     |                         "Haiku"                          |
+|           Home screen            |          System prompt           |             "Haiku"             |
 
 ## Build CLI on Android using Termux
 
@@ -59,19 +59,19 @@ Once you're ready and have cloned `llama.cpp`, invoke the following in the proje
 
 ```
 $ cmake \
-  -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake \
-  -DANDROID_ABI=arm64-v8a \
-  -DANDROID_PLATFORM=android-28 \
-  -DCMAKE_C_FLAGS="-march=armv8.7a" \
-  -DCMAKE_CXX_FLAGS="-march=armv8.7a" \
-  -DGGML_OPENMP=OFF \
-  -DGGML_LLAMAFILE=OFF \
-  -B build-android
+ -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake \
+ -DANDROID_ABI=arm64-v8a \
+ -DANDROID_PLATFORM=android-28 \
+ -DCMAKE_C_FLAGS="-march=armv8.7a" \
+ -DCMAKE_CXX_FLAGS="-march=armv8.7a" \
+ -DGGML_OPENMP=OFF \
+ -DGGML_LLAMAFILE=OFF \
+ -B build-android
 ```
 
 Notes:
-  - While later versions of Android NDK ship with OpenMP, it must still be installed by CMake as a dependency, which is not supported at this time
-  - `llamafile` does not appear to support Android devices (see: https://github.com/Mozilla-Ocho/llamafile/issues/325)
+ - While later versions of Android NDK ship with OpenMP, it must still be installed by CMake as a dependency, which is not supported at this time
+ - `llamafile` does not appear to support Android devices (see: https://github.com/Mozilla-Ocho/llamafile/issues/325)
 
 The above command should configure `llama.cpp` with the most performant options for modern devices. Even if your device is not running `armv8.7a`, `llama.cpp` includes runtime checks for available CPU features it can use.
 

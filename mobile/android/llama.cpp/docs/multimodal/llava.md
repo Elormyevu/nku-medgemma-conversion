@@ -17,8 +17,8 @@ After building, run: `./llama-mtmd-cli` to see the usage. For example:
 
 ```sh
 ./llama-mtmd-cli -m ../llava-v1.5-7b/ggml-model-f16.gguf \
-    --mmproj ../llava-v1.5-7b/mmproj-model-f16.gguf \
-    --chat-template vicuna
+  --mmproj ../llava-v1.5-7b/mmproj-model-f16.gguf \
+  --chat-template vicuna
 ```
 
 **note**: A lower temperature like 0.1 is recommended for better quality. add `--temp 0.1` to the command to do so.

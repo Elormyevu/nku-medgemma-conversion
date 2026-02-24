@@ -30,16 +30,16 @@ The core architecture consists of the following components:
 
 ```mermaid
 graph TD
-    API_User <--> server_http_context
-    server_http_context <-- router mode --> server_models
-    server_http_context <-- inference mode --> server_routes
-    server_routes -- server_task --> server_queue
-    subgraph server_context
-        server_queue --> server_slot
-        server_slot -- server_task_result --> server_response
-        server_slot[multiple server_slot]
-    end
-    server_response --> server_routes
+  API_User <--> server_http_context
+  server_http_context <-- router mode --> server_models
+  server_http_context <-- inference mode --> server_routes
+  server_routes -- server_task --> server_queue
+  subgraph server_context
+    server_queue --> server_slot
+    server_slot -- server_task_result --> server_response
+    server_slot[multiple server_slot]
+  end
+  server_response --> server_routes
 ```
 
 ### Batching
@@ -78,8 +78,8 @@ Here is an example trace of an API request for text completion:
 - The request is routed to the corresponding handler inside `server_routes`. In this case, `handle_completions_impl` is invoked.
 - The handler parses the input request, constructs a new `server_task`, and passes it to `server_res_generator`.
 - `server_res_generator` creates a new `task_result_state` for each task:
-    - `task_result_state` stays in the HTTP layer, responsible for keeping track of the current state of the response (e.g., parsing tool calls or thinking messages).
-    - `server_task` is moved into `server_queue` inside `server_context`.
+  - `task_result_state` stays in the HTTP layer, responsible for keeping track of the current state of the response (e.g., parsing tool calls or thinking messages).
+  - `server_task` is moved into `server_queue` inside `server_context`.
 - `server_context` launches the task by moving it into an available slot (see `launch_slot_with_task()`).
 - `update_slot()` processes the task as described in the "Batching" section above.
 - Results may be sent using `send_partial_response` or `send_final_response`, which creates a new `server_task_result` and pushes it to the response queue.
@@ -121,21 +121,21 @@ The SvelteKit-based Web UI is introduced in this PR: https://github.com/ggml-org
 
 ### Features
 
--   **Chat interface** with streaming responses
--   **Multi-model support** (ROUTER mode) - switch between models, auto-load on selection
--   **Modality validation** - ensures selected model supports conversation's attachments (images, audio)
--   **Conversation management** - branching, regeneration, editing with history preservation
--   **Attachment support** - images, audio, PDFs (with vision/text fallback)
--   **Configurable parameters** - temperature, top_p, etc. synced with server defaults
--   **Dark/light theme**
+-  **Chat interface** with streaming responses
+-  **Multi-model support** (ROUTER mode) - switch between models, auto-load on selection
+-  **Modality validation** - ensures selected model supports conversation's attachments (images, audio)
+-  **Conversation management** - branching, regeneration, editing with history preservation
+-  **Attachment support** - images, audio, PDFs (with vision/text fallback)
+-  **Configurable parameters** - temperature, top_p, etc. synced with server defaults
+-  **Dark/light theme**
 
 ### Tech Stack
 
--   **SvelteKit** - frontend framework with Svelte 5 runes for reactive state
--   **TailwindCSS** + **shadcn-svelte** - styling and UI components
--   **Vite** - build tooling
--   **IndexedDB** (Dexie) - local storage for conversations
--   **LocalStorage** - user settings persistence
+-  **SvelteKit** - frontend framework with Svelte 5 runes for reactive state
+-  **TailwindCSS** + **shadcn-svelte** - styling and UI components
+-  **Vite** - build tooling
+-  **IndexedDB** (Dexie) - local storage for conversations
+-  **LocalStorage** - user settings persistence
 
 ### Architecture
 
@@ -145,17 +145,17 @@ The WebUI follows a layered architecture:
 Routes → Components → Hooks → Stores → Services → Storage/API
 ```
 
--   **Stores** - reactive state management (`chatStore`, `conversationsStore`, `modelsStore`, `serverStore`, `settingsStore`)
--   **Services** - stateless API/database communication (`ChatService`, `ModelsService`, `PropsService`, `DatabaseService`)
--   **Hooks** - reusable logic (`useModelChangeValidation`, `useProcessingState`)
+-  **Stores** - reactive state management (`chatStore`, `conversationsStore`, `modelsStore`, `serverStore`, `settingsStore`)
+-  **Services** - stateless API/database communication (`ChatService`, `ModelsService`, `PropsService`, `DatabaseService`)
+-  **Hooks** - reusable logic (`useModelChangeValidation`, `useProcessingState`)
 
 For detailed architecture diagrams, see [`tools/server/webui/docs/`](webui/docs/):
 
--   `high-level-architecture.mmd` - full architecture with all modules
--   `high-level-architecture-simplified.mmd` - simplified overview
--   `data-flow-simplified-model-mode.mmd` - data flow for single-model mode
--   `data-flow-simplified-router-mode.mmd` - data flow for multi-model mode
--   `flows/*.mmd` - detailed per-domain flows (chat, conversations, models, etc.)
+-  `high-level-architecture.mmd` - full architecture with all modules
+-  `high-level-architecture-simplified.mmd` - simplified overview
+-  `data-flow-simplified-model-mode.mmd` - data flow for single-model mode
+-  `data-flow-simplified-router-mode.mmd` - data flow for multi-model mode
+-  `flows/*.mmd` - detailed per-domain flows (chat, conversations, models, etc.)
 
 ### Development
 

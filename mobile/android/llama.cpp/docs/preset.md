@@ -36,10 +36,10 @@ llama-cli -hf username/my-model-with-preset
 
 # This is equivalent to:
 llama-cli -hf username/my-model-with-preset \
-  --hf-repo-draft username/my-draft-model-GGUF \
-  --temp 0.5 \
-  --top-k 20 \
-  --top-p 0.95
+ --hf-repo-draft username/my-draft-model-GGUF \
+ --temp 0.5 \
+ --top-k 20 \
+ --top-p 0.95
 ```
 
 You can also override preset arguments by specifying them on the command line:
@@ -68,23 +68,23 @@ If you want to define multiple preset configurations for one or more GGUF models
 mmap = 1
 
 [gpt-oss-20b-hf]
-hf          = ggml-org/gpt-oss-20b-GGUF
-batch-size  = 2048
+hf     = ggml-org/gpt-oss-20b-GGUF
+batch-size = 2048
 ubatch-size = 2048
-top-p       = 1.0
-top-k       = 0
-min-p       = 0.01
-temp        = 1.0
+top-p    = 1.0
+top-k    = 0
+min-p    = 0.01
+temp    = 1.0
 chat-template-kwargs = {"reasoning_effort": "high"}
 
 [gpt-oss-120b-hf]
-hf          = ggml-org/gpt-oss-120b-GGUF
-batch-size  = 2048
+hf     = ggml-org/gpt-oss-120b-GGUF
+batch-size = 2048
 ubatch-size = 2048
-top-p       = 1.0
-top-k       = 0
-min-p       = 0.01
-temp        = 1.0
+top-p    = 1.0
+top-k    = 0
+min-p    = 0.01
+temp    = 1.0
 chat-template-kwargs = {"reasoning_effort": "high"}
 ```
 

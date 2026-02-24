@@ -246,7 +246,7 @@ Instructions for adding support for new models: [HOWTO-add-model.md](docs/develo
 - [crashr/gppm](https://github.com/crashr/gppm) – launch llama.cpp instances utilizing NVIDIA Tesla P40 or P100 GPUs with reduced idle power consumption
 - [gpustack/gguf-parser](https://github.com/gpustack/gguf-parser-go/tree/main/cmd/gguf-parser) - review/check the GGUF file and estimate the memory usage
 - [Styled Lines](https://marketplace.unity.com/packages/tools/generative-ai/styled-lines-llama-cpp-model-292902) (proprietary licensed, async wrapper of inference part for game development in Unity3d with pre-built Mobile and Web platform wrappers and a model example)
-- [unslothai/unsloth](https://github.com/unslothai/unsloth) –  exports/saves fine-tuned and trained models to GGUF (Apache-2.0)
+- [unslothai/unsloth](https://github.com/unslothai/unsloth) – exports/saves fine-tuned and trained models to GGUF (Apache-2.0)
 
 </details>
 
@@ -258,7 +258,7 @@ Instructions for adding support for new models: [HOWTO-add-model.md](docs/develo
 - [llama_cpp_canister](https://github.com/onicai/llama_cpp_canister) - llama.cpp as a smart contract on the Internet Computer, using WebAssembly
 - [llama-swap](https://github.com/mostlygeek/llama-swap) - transparent proxy that adds automatic model switching with llama-server
 - [Kalavai](https://github.com/kalavai-net/kalavai-client) - Crowdsource end to end LLM deployment at any scale
-- [llmaz](https://github.com/InftyAI/llmaz) - ☸️ Easy, advanced inference platform for large language models on Kubernetes.
+- [llmaz](https://github.com/InftyAI/llmaz) - Easy, advanced inference platform for large language models on Kubernetes.
 </details>
 
 <details>
@@ -322,49 +322,49 @@ To learn more about model quantization, [read this documentation](tools/quantize
 #### A CLI tool for accessing and experimenting with most of `llama.cpp`'s functionality.
 
 - <details open>
-    <summary>Run in conversation mode</summary>
+  <summary>Run in conversation mode</summary>
 
-    Models with a built-in chat template will automatically activate conversation mode. If this doesn't occur, you can manually enable it by adding `-cnv` and specifying a suitable chat template with `--chat-template NAME`
+  Models with a built-in chat template will automatically activate conversation mode. If this doesn't occur, you can manually enable it by adding `-cnv` and specifying a suitable chat template with `--chat-template NAME`
 
-    ```bash
-    llama-cli -m model.gguf
+  ```bash
+  llama-cli -m model.gguf
 
-    # > hi, who are you?
-    # Hi there! I'm your helpful assistant! I'm an AI-powered chatbot designed to assist and provide information to users like you. I'm here to help answer your questions, provide guidance, and offer support on a wide range of topics. I'm a friendly and knowledgeable AI, and I'm always happy to help with anything you need. What's on your mind, and how can I assist you today?
-    #
-    # > what is 1+1?
-    # Easy peasy! The answer to 1+1 is... 2!
-    ```
+  # > hi, who are you?
+  # Hi there! I'm your helpful assistant! I'm an AI-powered chatbot designed to assist and provide information to users like you. I'm here to help answer your questions, provide guidance, and offer support on a wide range of topics. I'm a friendly and knowledgeable AI, and I'm always happy to help with anything you need. What's on your mind, and how can I assist you today?
+  #
+  # > what is 1+1?
+  # Easy peasy! The answer to 1+1 is... 2!
+  ```
 
-    </details>
-
-- <details>
-    <summary>Run in conversation mode with custom chat template</summary>
-
-    ```bash
-    # use the "chatml" template (use -h to see the list of supported templates)
-    llama-cli -m model.gguf -cnv --chat-template chatml
-
-    # use a custom template
-    llama-cli -m model.gguf -cnv --in-prefix 'User: ' --reverse-prompt 'User:'
-    ```
-
-    </details>
+  </details>
 
 - <details>
-    <summary>Constrain the output with a custom grammar</summary>
+  <summary>Run in conversation mode with custom chat template</summary>
 
-    ```bash
-    llama-cli -m model.gguf -n 256 --grammar-file grammars/json.gbnf -p 'Request: schedule a call at 8pm; Command:'
+  ```bash
+  # use the "chatml" template (use -h to see the list of supported templates)
+  llama-cli -m model.gguf -cnv --chat-template chatml
 
-    # {"appointmentTime": "8pm", "appointmentDetails": "schedule a a call"}
-    ```
+  # use a custom template
+  llama-cli -m model.gguf -cnv --in-prefix 'User: ' --reverse-prompt 'User:'
+  ```
 
-    The [grammars/](grammars/) folder contains a handful of sample grammars. To write your own, check out the [GBNF Guide](grammars/README.md).
+  </details>
 
-    For authoring more complex JSON grammars, check out https://grammar.intrinsiclabs.ai/
+- <details>
+  <summary>Constrain the output with a custom grammar</summary>
 
-    </details>
+  ```bash
+  llama-cli -m model.gguf -n 256 --grammar-file grammars/json.gbnf -p 'Request: schedule a call at 8pm; Command:'
+
+  # {"appointmentTime": "8pm", "appointmentDetails": "schedule a a call"}
+  ```
+
+  The [grammars/](grammars/) folder contains a handful of sample grammars. To write your own, check out the [GBNF Guide](grammars/README.md).
+
+  For authoring more complex JSON grammars, check out https://grammar.intrinsiclabs.ai/
+
+  </details>
 
 
 ## [`llama-server`](tools/server)
@@ -372,69 +372,69 @@ To learn more about model quantization, [read this documentation](tools/quantize
 #### A lightweight, [OpenAI API](https://github.com/openai/openai-openapi) compatible, HTTP server for serving LLMs.
 
 - <details open>
-    <summary>Start a local HTTP server with default configuration on port 8080</summary>
+  <summary>Start a local HTTP server with default configuration on port 8080</summary>
 
-    ```bash
-    llama-server -m model.gguf --port 8080
+  ```bash
+  llama-server -m model.gguf --port 8080
 
-    # Basic web UI can be accessed via browser: http://localhost:8080
-    # Chat completion endpoint: http://localhost:8080/v1/chat/completions
-    ```
+  # Basic web UI can be accessed via browser: http://localhost:8080
+  # Chat completion endpoint: http://localhost:8080/v1/chat/completions
+  ```
 
-    </details>
-
-- <details>
-    <summary>Support multiple-users and parallel decoding</summary>
-
-    ```bash
-    # up to 4 concurrent requests, each with 4096 max context
-    llama-server -m model.gguf -c 16384 -np 4
-    ```
-
-    </details>
+  </details>
 
 - <details>
-    <summary>Enable speculative decoding</summary>
+  <summary>Support multiple-users and parallel decoding</summary>
 
-    ```bash
-    # the draft.gguf model should be a small variant of the target model.gguf
-    llama-server -m model.gguf -md draft.gguf
-    ```
+  ```bash
+  # up to 4 concurrent requests, each with 4096 max context
+  llama-server -m model.gguf -c 16384 -np 4
+  ```
 
-    </details>
-
-- <details>
-    <summary>Serve an embedding model</summary>
-
-    ```bash
-    # use the /embedding endpoint
-    llama-server -m model.gguf --embedding --pooling cls -ub 8192
-    ```
-
-    </details>
+  </details>
 
 - <details>
-    <summary>Serve a reranking model</summary>
+  <summary>Enable speculative decoding</summary>
 
-    ```bash
-    # use the /reranking endpoint
-    llama-server -m model.gguf --reranking
-    ```
+  ```bash
+  # the draft.gguf model should be a small variant of the target model.gguf
+  llama-server -m model.gguf -md draft.gguf
+  ```
 
-    </details>
+  </details>
 
 - <details>
-    <summary>Constrain all outputs with a grammar</summary>
+  <summary>Serve an embedding model</summary>
 
-    ```bash
-    # custom grammar
-    llama-server -m model.gguf --grammar-file grammar.gbnf
+  ```bash
+  # use the /embedding endpoint
+  llama-server -m model.gguf --embedding --pooling cls -ub 8192
+  ```
 
-    # JSON
-    llama-server -m model.gguf --grammar-file grammars/json.gbnf
-    ```
+  </details>
 
-    </details>
+- <details>
+  <summary>Serve a reranking model</summary>
+
+  ```bash
+  # use the /reranking endpoint
+  llama-server -m model.gguf --reranking
+  ```
+
+  </details>
+
+- <details>
+  <summary>Constrain all outputs with a grammar</summary>
+
+  ```bash
+  # custom grammar
+  llama-server -m model.gguf --grammar-file grammar.gbnf
+
+  # JSON
+  llama-server -m model.gguf --grammar-file grammars/json.gbnf
+  ```
+
+  </details>
 
 
 ## [`llama-perplexity`](tools/perplexity)
@@ -442,25 +442,25 @@ To learn more about model quantization, [read this documentation](tools/quantize
 #### A tool for measuring the [perplexity](tools/perplexity/README.md) [^1] (and other quality metrics) of a model over a given text.
 
 - <details open>
-    <summary>Measure the perplexity over a text file</summary>
+  <summary>Measure the perplexity over a text file</summary>
 
-    ```bash
-    llama-perplexity -m model.gguf -f file.txt
+  ```bash
+  llama-perplexity -m model.gguf -f file.txt
 
-    # [1]15.2701,[2]5.4007,[3]5.3073,[4]6.2965,[5]5.8940,[6]5.6096,[7]5.7942,[8]4.9297, ...
-    # Final estimate: PPL = 5.4007 +/- 0.67339
-    ```
+  # [1]15.2701,[2]5.4007,[3]5.3073,[4]6.2965,[5]5.8940,[6]5.6096,[7]5.7942,[8]4.9297, ...
+  # Final estimate: PPL = 5.4007 +/- 0.67339
+  ```
 
-    </details>
+  </details>
 
 - <details>
-    <summary>Measure KL divergence</summary>
+  <summary>Measure KL divergence</summary>
 
-    ```bash
-    # TODO
-    ```
+  ```bash
+  # TODO
+  ```
 
-    </details>
+  </details>
 
 [^1]: [https://huggingface.co/docs/transformers/perplexity](https://huggingface.co/docs/transformers/perplexity)
 
@@ -469,36 +469,36 @@ To learn more about model quantization, [read this documentation](tools/quantize
 #### Benchmark the performance of the inference for various parameters.
 
 - <details open>
-    <summary>Run default benchmark</summary>
+  <summary>Run default benchmark</summary>
 
-    ```bash
-    llama-bench -m model.gguf
+  ```bash
+  llama-bench -m model.gguf
 
-    # Output:
-    # | model               |       size |     params | backend    | threads |          test |                  t/s |
-    # | ------------------- | ---------: | ---------: | ---------- | ------: | ------------: | -------------------: |
-    # | qwen2 1.5B Q4_0     | 885.97 MiB |     1.54 B | Metal,BLAS |      16 |         pp512 |      5765.41 ± 20.55 |
-    # | qwen2 1.5B Q4_0     | 885.97 MiB |     1.54 B | Metal,BLAS |      16 |         tg128 |        197.71 ± 0.81 |
-    #
-    # build: 3e0ba0e60 (4229)
-    ```
+  # Output:
+  # | model        |    size |   params | backend  | threads |     test |         t/s |
+  # | ------------------- | ---------: | ---------: | ---------- | ------: | ------------: | -------------------: |
+  # | qwen2 1.5B Q4_0   | 885.97 MiB |   1.54 B | Metal,BLAS |   16 |     pp512 |   5765.41 ± 20.55 |
+  # | qwen2 1.5B Q4_0   | 885.97 MiB |   1.54 B | Metal,BLAS |   16 |     tg128 |    197.71 ± 0.81 |
+  #
+  # build: 3e0ba0e60 (4229)
+  ```
 
-    </details>
+  </details>
 
 ## [`llama-simple`](examples/simple)
 
 #### A minimal example for implementing apps with `llama.cpp`. Useful for developers.
 
 - <details>
-    <summary>Basic text completion</summary>
+  <summary>Basic text completion</summary>
 
-    ```bash
-    llama-simple -m model.gguf
+  ```bash
+  llama-simple -m model.gguf
 
-    # Hello my name is Kaitlyn and I am a 16 year old girl. I am a junior in high school and I am currently taking a class called "The Art of
-    ```
+  # Hello my name is Kaitlyn and I am a 16 year old girl. I am a junior in high school and I am currently taking a class called "The Art of
+  ```
 
-    </details>
+  </details>
 
 
 ## Contributing
@@ -531,13 +531,13 @@ To learn more about model quantization, [read this documentation](tools/quantize
 
 If your issue is with model generation quality, then please at least scan the following links and papers to understand the limitations of LLaMA models. This is especially important when choosing an appropriate model size and appreciating both the significant and subtle differences between LLaMA models and ChatGPT:
 - LLaMA:
-    - [Introducing LLaMA: A foundational, 65-billion-parameter large language model](https://ai.facebook.com/blog/large-language-model-llama-meta-ai/)
-    - [LLaMA: Open and Efficient Foundation Language Models](https://arxiv.org/abs/2302.13971)
+  - [Introducing LLaMA: A foundational, 65-billion-parameter large language model](https://ai.facebook.com/blog/large-language-model-llama-meta-ai/)
+  - [LLaMA: Open and Efficient Foundation Language Models](https://arxiv.org/abs/2302.13971)
 - GPT-3
-    - [Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+  - [Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
 - GPT-3.5 / InstructGPT / ChatGPT:
-    - [Aligning language models to follow instructions](https://openai.com/research/instruction-following)
-    - [Training language models to follow instructions with human feedback](https://arxiv.org/abs/2203.02155)
+  - [Aligning language models to follow instructions](https://openai.com/research/instruction-following)
+  - [Training language models to follow instructions with human feedback](https://arxiv.org/abs/2203.02155)
 
 ## XCFramework
 The XCFramework is a precompiled version of the library for iOS, visionOS, tvOS,
@@ -550,19 +550,19 @@ library from source. For example:
 import PackageDescription
 
 let package = Package(
-    name: "MyLlamaPackage",
-    targets: [
-        .executableTarget(
-            name: "MyLlamaPackage",
-            dependencies: [
-                "LlamaFramework"
-            ]),
-        .binaryTarget(
-            name: "LlamaFramework",
-            url: "https://github.com/ggml-org/llama.cpp/releases/download/b5046/llama-b5046-xcframework.zip",
-            checksum: "c19be78b5f00d8d29a25da41042cb7afa094cbf6280a225abe614b03b20029ab"
-        )
-    ]
+  name: "MyLlamaPackage",
+  targets: [
+    .executableTarget(
+      name: "MyLlamaPackage",
+      dependencies: [
+        "LlamaFramework"
+      ]),
+    .binaryTarget(
+      name: "LlamaFramework",
+      url: "https://github.com/ggml-org/llama.cpp/releases/download/b5046/llama-b5046-xcframework.zip",
+      checksum: "c19be78b5f00d8d29a25da41042cb7afa094cbf6280a225abe614b03b20029ab"
+    )
+  ]
 )
 ```
 The above example is using an intermediate build `b5046` of the library. This can be modified

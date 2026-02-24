@@ -34,13 +34,13 @@ The server must answer OAI Chat completion requests on `http://localhost:8080/v1
 Example:
 ```shell
 llama-server --host localhost --port 8080 \
-  --model ggml-model-q4_0.gguf \
-  --cont-batching \
-  --metrics \
-  --parallel 8 \
-  --batch-size 512 \
-  --ctx-size 4096 \
-  -ngl 33
+ --model ggml-model-q4_0.gguf \
+ --cont-batching \
+ --metrics \
+ --parallel 8 \
+ --batch-size 512 \
+ --ctx-size 4096 \
+ -ngl 33
 ```
 
 #### Run the benchmark
@@ -99,21 +99,21 @@ It aims to be used in the CI, but you can run it manually:
 
 ```shell
 LLAMA_SERVER_BIN_PATH=../../../cmake-build-release/bin/llama-server python bench.py \
-              --runner-label local \
-              --name local \
-              --branch `git rev-parse --abbrev-ref HEAD` \
-              --commit `git rev-parse HEAD` \
-              --scenario script.js \
-              --duration 5m \
-              --hf-repo ggml-org/models	 \
-              --hf-file phi-2/ggml-model-q4_0.gguf \
-              --model-path-prefix models \
-              --parallel 4 \
-              -ngl 33 \
-              --batch-size 2048 \
-              --ubatch-size	256 \
-              --ctx-size 4096 \
-              --n-prompts 200 \
-              --max-prompt-tokens 256 \
-              --max-tokens 256
+       --runner-label local \
+       --name local \
+       --branch `git rev-parse --abbrev-ref HEAD` \
+       --commit `git rev-parse HEAD` \
+       --scenario script.js \
+       --duration 5m \
+       --hf-repo ggml-org/models	 \
+       --hf-file phi-2/ggml-model-q4_0.gguf \
+       --model-path-prefix models \
+       --parallel 4 \
+       -ngl 33 \
+       --batch-size 2048 \
+       --ubatch-size	256 \
+       --ctx-size 4096 \
+       --n-prompts 200 \
+       --max-prompt-tokens 256 \
+       --max-tokens 256
 ```

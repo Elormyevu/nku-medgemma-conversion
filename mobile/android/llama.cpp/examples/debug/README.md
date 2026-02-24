@@ -9,12 +9,12 @@ model.
 
 ```shell
 llama-debug \
-  --hf-repo ggml-org/models \
-  --hf-file phi-2/ggml-model-q4_0.gguf \
-  --model phi-2-q4_0.gguf \
-  --prompt hello \
-  --save-logits \
-  --verbose
+ --hf-repo ggml-org/models \
+ --hf-file phi-2/ggml-model-q4_0.gguf \
+ --model phi-2-q4_0.gguf \
+ --prompt hello \
+ --save-logits \
+ --verbose
 ```
 The tensor data is logged as debug and required the --verbose flag. The reason
 for this is that while useful for a model with many layers there can be a lot of
@@ -35,9 +35,9 @@ $ llama-debug --help
 
 ----- example-specific params -----
 
---save-logits                           save final logits to files for verification (default: false)
---logits-output-dir PATH                directory for saving logits output files (default: data)
---tensor-filter REGEX                   filter tensor names for debug output (regex pattern, can be specified multiple times)
+--save-logits              save final logits to files for verification (default: false)
+--logits-output-dir PATH        directory for saving logits output files (default: data)
+--tensor-filter REGEX          filter tensor names for debug output (regex pattern, can be specified multiple times)
 ```
 
 ### Output Files
@@ -45,8 +45,8 @@ $ llama-debug --help
 When `--save-logits` is enabled, the following files are created in the output
 directory:
 
-* `llamacpp-<model>[-embeddings].bin`        - Binary output (logits or embeddings)
-* `llamacpp-<model>[-embeddings].txt`        - Text output (logits or embeddings, one per line)
+* `llamacpp-<model>[-embeddings].bin`    - Binary output (logits or embeddings)
+* `llamacpp-<model>[-embeddings].txt`    - Text output (logits or embeddings, one per line)
 * `llamacpp-<model>[-embeddings]-prompt.txt` - Prompt text and token IDs
 * `llamacpp-<model>[-embeddings]-tokens.bin` - Binary token IDs for programmatic comparison
 

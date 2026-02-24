@@ -2,10 +2,10 @@
 
 | Install via | Windows | Mac | Linux |
 |-------------|---------|-----|-------|
-| Winget      | ✅      |      |      |
-| Homebrew    |         | ✅   | ✅   |
-| MacPorts    |         | ✅   |      |
-| Nix         |         | ✅   | ✅   |
+| Winget   |    |   |   |
+| Homebrew  |     |  |  |
+| MacPorts  |     |  |   |
+| Nix     |     |  |  |
 
 ## Winget (Windows)
 

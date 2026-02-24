@@ -61,13 +61,13 @@ The WebUI supports two server operation modes:
 
 ### Keyboard Shortcuts
 
-| Shortcut           | Action               |
+| Shortcut      | Action        |
 | ------------------ | -------------------- |
-| `Shift+Ctrl/Cmd+O` | New chat             |
-| `Shift+Ctrl/Cmd+E` | Edit conversation    |
-| `Shift+Ctrl/Cmd+D` | Delete conversation  |
-| `Ctrl/Cmd+K`       | Search conversations |
-| `Ctrl/Cmd+B`       | Toggle sidebar       |
+| `Shift+Ctrl/Cmd+O` | New chat       |
+| `Shift+Ctrl/Cmd+E` | Edit conversation  |
+| `Shift+Ctrl/Cmd+D` | Delete conversation |
+| `Ctrl/Cmd+K`    | Search conversations |
+| `Ctrl/Cmd+B`    | Toggle sidebar    |
 
 ### Developer Experience
 
@@ -120,10 +120,10 @@ The Vite dev server proxies API requests to `http://localhost:8080` (default lla
 ```typescript
 // vite.config.ts proxy configuration
 proxy: {
-  '/v1': 'http://localhost:8080',
-  '/props': 'http://localhost:8080',
-  '/slots': 'http://localhost:8080',
-  '/models': 'http://localhost:8080'
+ '/v1': 'http://localhost:8080',
+ '/props': 'http://localhost:8080',
+ '/slots': 'http://localhost:8080',
+ '/models': 'http://localhost:8080'
 }
 ```
 
@@ -138,15 +138,15 @@ proxy: {
 
 ## Tech Stack
 
-| Layer             | Technology                      | Purpose                                                  |
+| Layer       | Technology           | Purpose                         |
 | ----------------- | ------------------------------- | -------------------------------------------------------- |
-| **Framework**     | SvelteKit + Svelte 5            | Reactive UI with runes (`$state`, `$derived`, `$effect`) |
-| **UI Components** | shadcn-svelte + bits-ui         | Accessible, customizable component library               |
-| **Styling**       | TailwindCSS 4                   | Utility-first CSS with design tokens                     |
-| **Database**      | IndexedDB (Dexie)               | Client-side storage for conversations and messages       |
-| **Build**         | Vite                            | Fast bundling with static adapter                        |
-| **Testing**       | Playwright + Vitest + Storybook | E2E, unit, and visual testing                            |
-| **Markdown**      | remark + rehype                 | Markdown processing with KaTeX and syntax highlighting   |
+| **Framework**   | SvelteKit + Svelte 5      | Reactive UI with runes (`$state`, `$derived`, `$effect`) |
+| **UI Components** | shadcn-svelte + bits-ui     | Accessible, customizable component library        |
+| **Styling**    | TailwindCSS 4          | Utility-first CSS with design tokens           |
+| **Database**   | IndexedDB (Dexie)        | Client-side storage for conversations and messages    |
+| **Build**     | Vite              | Fast bundling with static adapter            |
+| **Testing**    | Playwright + Vitest + Storybook | E2E, unit, and visual testing              |
+| **Markdown**   | remark + rehype         | Markdown processing with KaTeX and syntax highlighting  |
 
 ### Key Dependencies
 
@@ -189,14 +189,14 @@ The build process:
 2. **Static Adapter** - Outputs to `../public` (llama-server's static file directory)
 3. **Post-Build Script** - Cleans up intermediate files
 4. **Custom Plugin** - Creates `index.html.gz` with:
-   - Inlined favicon as base64
-   - GZIP compression (level 9)
-   - Deterministic output (zeroed timestamps)
+  - Inlined favicon as base64
+  - GZIP compression (level 9)
+  - Deterministic output (zeroed timestamps)
 
 ```text
-tools/server/webui/        →  build  →  tools/server/public/
-├── src/                                 ├── index.html.gz  (served by llama-server)
-├── static/                              └── (favicon inlined)
+tools/server/webui/    → build → tools/server/public/
+├── src/                 ├── index.html.gz (served by llama-server)
+├── static/               └── (favicon inlined)
 └── ...
 ```
 
@@ -205,13 +205,13 @@ tools/server/webui/        →  build  →  tools/server/public/
 ```javascript
 // svelte.config.js
 adapter: adapter({
-  pages: '../public',      // Output directory
-  assets: '../public',     // Static assets
-  fallback: 'index.html',  // SPA fallback
-  strict: true
+ pages: '../public',   // Output directory
+ assets: '../public',   // Static assets
+ fallback: 'index.html', // SPA fallback
+ strict: true
 }),
 output: {
-  bundleStrategy: 'inline' // Single-file bundle
+ bundleStrategy: 'inline' // Single-file bundle
 }
 ```
 
@@ -242,58 +242,58 @@ See: [`docs/architecture/high-level-architecture-simplified.md`](docs/architectu
 
 ```mermaid
 flowchart TB
-    subgraph Routes[" Routes"]
-        R1["/ (Welcome)"]
-        R2["/chat/[id]"]
-        RL["+layout.svelte"]
-    end
+  subgraph Routes[" Routes"]
+    R1["/ (Welcome)"]
+    R2["/chat/[id]"]
+    RL["+layout.svelte"]
+  end
 
-    subgraph Components[" Components"]
-        C_Sidebar["ChatSidebar"]
-        C_Screen["ChatScreen"]
-        C_Form["ChatForm"]
-        C_Messages["ChatMessages"]
-        C_ModelsSelector["ModelsSelector"]
-        C_Settings["ChatSettings"]
-    end
+  subgraph Components[" Components"]
+    C_Sidebar["ChatSidebar"]
+    C_Screen["ChatScreen"]
+    C_Form["ChatForm"]
+    C_Messages["ChatMessages"]
+    C_ModelsSelector["ModelsSelector"]
+    C_Settings["ChatSettings"]
+  end
 
-    subgraph Stores["️ Stores"]
-        S1["chatStore"]
-        S2["conversationsStore"]
-        S3["modelsStore"]
-        S4["serverStore"]
-        S5["settingsStore"]
-    end
+  subgraph Stores[" Stores"]
+    S1["chatStore"]
+    S2["conversationsStore"]
+    S3["modelsStore"]
+    S4["serverStore"]
+    S5["settingsStore"]
+  end
 
-    subgraph Services["⚙️ Services"]
-        SV1["ChatService"]
-        SV2["ModelsService"]
-        SV3["PropsService"]
-        SV4["DatabaseService"]
-    end
+  subgraph Services[" Services"]
+    SV1["ChatService"]
+    SV2["ModelsService"]
+    SV3["PropsService"]
+    SV4["DatabaseService"]
+  end
 
-    subgraph Storage[" Storage"]
-        ST1["IndexedDB"]
-        ST2["LocalStorage"]
-    end
+  subgraph Storage[" Storage"]
+    ST1["IndexedDB"]
+    ST2["LocalStorage"]
+  end
 
-    subgraph APIs[" llama-server"]
-        API1["/v1/chat/completions"]
-        API2["/props"]
-        API3["/models/*"]
-    end
+  subgraph APIs[" llama-server"]
+    API1["/v1/chat/completions"]
+    API2["/props"]
+    API3["/models/*"]
+  end
 
-    R1 & R2 --> C_Screen
-    RL --> C_Sidebar
-    C_Screen --> C_Form & C_Messages & C_Settings
-    C_Screen --> S1 & S2
-    C_ModelsSelector --> S3 & S4
-    S1 --> SV1 & SV4
-    S3 --> SV2 & SV3
-    SV4 --> ST1
-    SV1 --> API1
-    SV2 --> API3
-    SV3 --> API2
+  R1 & R2 --> C_Screen
+  RL --> C_Sidebar
+  C_Screen --> C_Form & C_Messages & C_Settings
+  C_Screen --> S1 & S2
+  C_ModelsSelector --> S3 & S4
+  S1 --> SV1 & SV4
+  S3 --> SV2 & SV3
+  SV4 --> ST1
+  SV1 --> API1
+  SV2 --> API3
+  SV3 --> API2
 ```
 
 ### Layer Breakdown
@@ -310,40 +310,40 @@ Components are organized in `app/` (application-specific) and `ui/` (shadcn-svel
 
 **Chat Components** (`app/chat/`):
 
-| Component          | Responsibility                                                              |
+| Component     | Responsibility                               |
 | ------------------ | --------------------------------------------------------------------------- |
-| `ChatScreen/`      | Main chat container, coordinates message list, input form, and attachments  |
-| `ChatForm/`        | Message input textarea with file upload, paste handling, keyboard shortcuts |
-| `ChatMessages/`    | Message list with branch navigation, regenerate/continue/edit actions       |
-| `ChatAttachments/` | File attachment previews, drag-and-drop, PDF/image/audio handling           |
-| `ChatSettings/`    | Parameter sliders (temperature, top-p, etc.) with server default sync       |
-| `ChatSidebar/`     | Conversation list, search, import/export, navigation                        |
+| `ChatScreen/`   | Main chat container, coordinates message list, input form, and attachments |
+| `ChatForm/`    | Message input textarea with file upload, paste handling, keyboard shortcuts |
+| `ChatMessages/`  | Message list with branch navigation, regenerate/continue/edit actions    |
+| `ChatAttachments/` | File attachment previews, drag-and-drop, PDF/image/audio handling      |
+| `ChatSettings/`  | Parameter sliders (temperature, top-p, etc.) with server default sync    |
+| `ChatSidebar/`   | Conversation list, search, import/export, navigation            |
 
 **Dialog Components** (`app/dialogs/`):
 
-| Component                       | Responsibility                                           |
+| Component            | Responsibility                      |
 | ------------------------------- | -------------------------------------------------------- |
-| `DialogChatSettings`            | Full-screen settings configuration                       |
-| `DialogModelInformation`        | Model details (context size, modalities, parallel slots) |
-| `DialogChatAttachmentPreview`   | Full preview for images, PDFs (text or page view), code  |
-| `DialogConfirmation`            | Generic confirmation for destructive actions             |
-| `DialogConversationTitleUpdate` | Edit conversation title                                  |
+| `DialogChatSettings`      | Full-screen settings configuration            |
+| `DialogModelInformation`    | Model details (context size, modalities, parallel slots) |
+| `DialogChatAttachmentPreview`  | Full preview for images, PDFs (text or page view), code |
+| `DialogConfirmation`      | Generic confirmation for destructive actions       |
+| `DialogConversationTitleUpdate` | Edit conversation title                 |
 
 **Server/Model Components** (`app/server/`, `app/models/`):
 
-| Component           | Responsibility                                            |
+| Component      | Responsibility                      |
 | ------------------- | --------------------------------------------------------- |
-| `ServerErrorSplash` | Error display when server is unreachable                  |
-| `ModelsSelector`    | Model dropdown with Loaded/Available groups (ROUTER mode) |
+| `ServerErrorSplash` | Error display when server is unreachable         |
+| `ModelsSelector`  | Model dropdown with Loaded/Available groups (ROUTER mode) |
 
 **Shared UI Components** (`app/misc/`):
 
-| Component                        | Responsibility                                                   |
+| Component            | Responsibility                          |
 | -------------------------------- | ---------------------------------------------------------------- |
-| `MarkdownContent`                | Markdown rendering with KaTeX, syntax highlighting, copy buttons |
-| `SyntaxHighlightedCode`          | Code blocks with language detection and highlighting             |
-| `ActionButton`, `ActionDropdown` | Reusable action buttons and menus                                |
-| `BadgeModality`, `BadgeInfo`     | Status and capability badges                                     |
+| `MarkdownContent`        | Markdown rendering with KaTeX, syntax highlighting, copy buttons |
+| `SyntaxHighlightedCode`     | Code blocks with language detection and highlighting       |
+| `ActionButton`, `ActionDropdown` | Reusable action buttons and menus                |
+| `BadgeModality`, `BadgeInfo`   | Status and capability badges                   |
 
 #### Hooks (`src/lib/hooks/`)
 
@@ -352,23 +352,23 @@ Components are organized in `app/` (application-specific) and `ui/` (shadcn-svel
 
 #### Stores (`src/lib/stores/`)
 
-| Store                | Responsibility                                            |
+| Store        | Responsibility                      |
 | -------------------- | --------------------------------------------------------- |
-| `chatStore`          | Message sending, streaming, abort control, error handling |
-| `conversationsStore` | CRUD for conversations, message branching, navigation     |
-| `modelsStore`        | Model list, selection, loading/unloading (ROUTER)         |
-| `serverStore`        | Server properties, role detection, modalities             |
-| `settingsStore`      | User preferences, parameter sync with server defaults     |
+| `chatStore`     | Message sending, streaming, abort control, error handling |
+| `conversationsStore` | CRUD for conversations, message branching, navigation   |
+| `modelsStore`    | Model list, selection, loading/unloading (ROUTER)     |
+| `serverStore`    | Server properties, role detection, modalities       |
+| `settingsStore`   | User preferences, parameter sync with server defaults   |
 
 #### Services (`src/lib/services/`)
 
-| Service                | Responsibility                                  |
+| Service        | Responsibility                 |
 | ---------------------- | ----------------------------------------------- |
-| `ChatService`          | API calls to`/v1/chat/completions`, SSE parsing |
-| `ModelsService`        | `/models`, `/models/load`, `/models/unload`     |
-| `PropsService`         | `/props`, `/props?model=`                       |
-| `DatabaseService`      | IndexedDB operations via Dexie                  |
-| `ParameterSyncService` | Syncs settings with server defaults             |
+| `ChatService`     | API calls to`/v1/chat/completions`, SSE parsing |
+| `ModelsService`    | `/models`, `/models/load`, `/models/unload`   |
+| `PropsService`     | `/props`, `/props?model=`            |
+| `DatabaseService`   | IndexedDB operations via Dexie         |
+| `ParameterSyncService` | Syncs settings with server defaults       |
 
 ---
 
@@ -380,29 +380,29 @@ See: [`docs/flows/data-flow-simplified-model-mode.md`](docs/flows/data-flow-simp
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant UI
-    participant Stores
-    participant DB as IndexedDB
-    participant API as llama-server
+  participant User
+  participant UI
+  participant Stores
+  participant DB as IndexedDB
+  participant API as llama-server
 
-    Note over User,API: Initialization
-    UI->>Stores: initialize()
-    Stores->>DB: load conversations
-    Stores->>API: GET /props
-    API-->>Stores: server config
-    Stores->>API: GET /v1/models
-    API-->>Stores: single model (auto-selected)
+  Note over User,API: Initialization
+  UI->>Stores: initialize()
+  Stores->>DB: load conversations
+  Stores->>API: GET /props
+  API-->>Stores: server config
+  Stores->>API: GET /v1/models
+  API-->>Stores: single model (auto-selected)
 
-    Note over User,API: Chat Flow
-    User->>UI: send message
-    Stores->>DB: save user message
-    Stores->>API: POST /v1/chat/completions (stream)
-    loop streaming
-        API-->>Stores: SSE chunks
-        Stores-->>UI: reactive update
-    end
-    Stores->>DB: save assistant message
+  Note over User,API: Chat Flow
+  User->>UI: send message
+  Stores->>DB: save user message
+  Stores->>API: POST /v1/chat/completions (stream)
+  loop streaming
+    API-->>Stores: SSE chunks
+    Stores-->>UI: reactive update
+  end
+  Stores->>DB: save assistant message
 ```
 
 ### ROUTER Mode (Multi-Model)
@@ -411,45 +411,45 @@ See: [`docs/flows/data-flow-simplified-router-mode.md`](docs/flows/data-flow-sim
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant UI
-    participant Stores
-    participant API as llama-server
+  participant User
+  participant UI
+  participant Stores
+  participant API as llama-server
 
-    Note over User,API: Initialization
-    Stores->>API: GET /props
-    API-->>Stores: {role: "router"}
-    Stores->>API: GET /models
-    API-->>Stores: models[] with status
+  Note over User,API: Initialization
+  Stores->>API: GET /props
+  API-->>Stores: {role: "router"}
+  Stores->>API: GET /models
+  API-->>Stores: models[] with status
 
-    Note over User,API: Model Selection
-    User->>UI: select model
-    alt model not loaded
-        Stores->>API: POST /models/load
-        loop poll status
-            Stores->>API: GET /models
-        end
-        Stores->>API: GET /props?model=X
+  Note over User,API: Model Selection
+  User->>UI: select model
+  alt model not loaded
+    Stores->>API: POST /models/load
+    loop poll status
+      Stores->>API: GET /models
     end
-    Stores->>Stores: validate modalities
+    Stores->>API: GET /props?model=X
+  end
+  Stores->>Stores: validate modalities
 
-    Note over User,API: Chat Flow
-    Stores->>API: POST /v1/chat/completions {model: X}
-    loop streaming
-        API-->>Stores: SSE chunks + model info
-    end
+  Note over User,API: Chat Flow
+  Stores->>API: POST /v1/chat/completions {model: X}
+  loop streaming
+    API-->>Stores: SSE chunks + model info
+  end
 ```
 
 ### Detailed Flow Diagrams
 
-| Flow          | Description                                | File                                                        |
+| Flow     | Description                | File                            |
 | ------------- | ------------------------------------------ | ----------------------------------------------------------- |
-| Chat          | Message lifecycle, streaming, regeneration | [`chat-flow.md`](docs/flows/chat-flow.md)                   |
-| Models        | Loading, unloading, modality caching       | [`models-flow.md`](docs/flows/models-flow.md)               |
-| Server        | Props fetching, role detection             | [`server-flow.md`](docs/flows/server-flow.md)               |
-| Conversations | CRUD, branching, import/export             | [`conversations-flow.md`](docs/flows/conversations-flow.md) |
-| Database      | IndexedDB schema, operations               | [`database-flow.md`](docs/flows/database-flow.md)           |
-| Settings      | Parameter sync, user overrides             | [`settings-flow.md`](docs/flows/settings-flow.md)           |
+| Chat     | Message lifecycle, streaming, regeneration | [`chat-flow.md`](docs/flows/chat-flow.md)          |
+| Models    | Loading, unloading, modality caching    | [`models-flow.md`](docs/flows/models-flow.md)        |
+| Server    | Props fetching, role detection       | [`server-flow.md`](docs/flows/server-flow.md)        |
+| Conversations | CRUD, branching, import/export       | [`conversations-flow.md`](docs/flows/conversations-flow.md) |
+| Database   | IndexedDB schema, operations        | [`database-flow.md`](docs/flows/database-flow.md)      |
+| Settings   | Parameter sync, user overrides       | [`settings-flow.md`](docs/flows/settings-flow.md)      |
 
 ---
 
@@ -482,22 +482,22 @@ Data flows in one direction, making state predictable:
 
 ```mermaid
 flowchart LR
-    subgraph UI["UI Layer"]
-        A[User Action] --> B[Component]
-    end
+  subgraph UI["UI Layer"]
+    A[User Action] --> B[Component]
+  end
 
-    subgraph State["State Layer"]
-        B --> C[Store Method]
-        C --> D[State Update]
-    end
+  subgraph State["State Layer"]
+    B --> C[Store Method]
+    C --> D[State Update]
+  end
 
-    subgraph IO["I/O Layer"]
-        C --> E[Service]
-        E --> F[API / IndexedDB]
-        F -.->|Response| D
-    end
+  subgraph IO["I/O Layer"]
+    C --> E[Service]
+    E --> F[API / IndexedDB]
+    F -.->|Response| D
+  end
 
-    D -->|Reactive| B
+  D -->|Reactive| B
 ```
 
 Components dispatch actions to stores, stores coordinate with services for I/O, and state updates reactively propagate back to the UI.
@@ -540,11 +540,11 @@ Stores handle state; services handle I/O:
 
 ```text
 ┌─────────────────┐
-│     Stores      │  Business logic, state management
+│   Stores   │ Business logic, state management
 ├─────────────────┤
-│    Services     │  API calls, database operations
+│  Services   │ API calls, database operations
 ├─────────────────┤
-│   Storage/API   │  IndexedDB, LocalStorage, HTTP
+│  Storage/API  │ IndexedDB, LocalStorage, HTTP
 └─────────────────┘
 ```
 
@@ -555,12 +555,12 @@ Single codebase handles both MODEL and ROUTER modes:
 ```typescript
 // serverStore.ts
 get isRouterMode() {
-  return this.role === ServerRole.ROUTER;
+ return this.role === ServerRole.ROUTER;
 }
 
 // Components conditionally render based on mode
 {#if isRouterMode()}
-  <ModelsSelector />
+ <ModelsSelector />
 {/if}
 ```
 
@@ -588,25 +588,25 @@ Data is persisted across sessions using two storage mechanisms:
 
 ```mermaid
 flowchart TB
-    subgraph Browser["Browser Storage"]
-        subgraph IDB["IndexedDB (Dexie)"]
-            C[Conversations]
-            M[Messages]
-        end
-        subgraph LS["LocalStorage"]
-            S[Settings Config]
-            O[User Overrides]
-            T[Theme Preference]
-        end
+  subgraph Browser["Browser Storage"]
+    subgraph IDB["IndexedDB (Dexie)"]
+      C[Conversations]
+      M[Messages]
     end
+    subgraph LS["LocalStorage"]
+      S[Settings Config]
+      O[User Overrides]
+      T[Theme Preference]
+    end
+  end
 
-    subgraph Stores["Svelte Stores"]
-        CS[conversationsStore] --> C
-        CS --> M
-        SS[settingsStore] --> S
-        SS --> O
-        SS --> T
-    end
+  subgraph Stores["Svelte Stores"]
+    CS[conversationsStore] --> C
+    CS --> M
+    SS[settingsStore] --> S
+    SS --> O
+    SS --> T
+  end
 ```
 
 - **IndexedDB**: Conversations and messages (large, structured data)
@@ -619,12 +619,12 @@ flowchart TB
 
 ### Test Types
 
-| Type          | Tool               | Location         | Command             |
+| Type     | Tool        | Location     | Command       |
 | ------------- | ------------------ | ---------------- | ------------------- |
-| **Unit**      | Vitest             | `tests/unit/`    | `npm run test:unit` |
-| **UI/Visual** | Storybook + Vitest | `tests/stories/` | `npm run test:ui`   |
-| **E2E**       | Playwright         | `tests/e2e/`     | `npm run test:e2e`  |
-| **Client**    | Vitest             | `tests/client/`. | `npm run test:unit` |
+| **Unit**   | Vitest       | `tests/unit/`  | `npm run test:unit` |
+| **UI/Visual** | Storybook + Vitest | `tests/stories/` | `npm run test:ui`  |
+| **E2E**    | Playwright     | `tests/e2e/`   | `npm run test:e2e` |
+| **Client**  | Vitest       | `tests/client/`. | `npm run test:unit` |
 
 ### Running Tests
 
@@ -633,25 +633,25 @@ flowchart TB
 npm run test
 
 # Individual test suites
-npm run test:e2e      # End-to-end (requires llama-server)
-npm run test:client   # Client-side unit tests
-npm run test:server   # Server-side unit tests
-npm run test:ui       # Storybook visual tests
+npm run test:e2e   # End-to-end (requires llama-server)
+npm run test:client  # Client-side unit tests
+npm run test:server  # Server-side unit tests
+npm run test:ui    # Storybook visual tests
 ```
 
 ### Storybook Development
 
 ```bash
-npm run storybook     # Start Storybook dev server on :6006
-npm run build-storybook  # Build static Storybook
+npm run storybook   # Start Storybook dev server on :6006
+npm run build-storybook # Build static Storybook
 ```
 
 ### Linting and Formatting
 
 ```bash
-npm run lint          # Check code style
-npm run format        # Auto-format with Prettier
-npm run check         # TypeScript type checking
+npm run lint     # Check code style
+npm run format    # Auto-format with Prettier
+npm run check     # TypeScript type checking
 ```
 
 ---
@@ -661,21 +661,21 @@ npm run check         # TypeScript type checking
 ```text
 tools/server/webui/
 ├── src/
-│   ├── lib/
-│   │   ├── components/   # UI components (app/, ui/)
-│   │   ├── hooks/        # Svelte hooks
-│   │   ├── stores/       # State management
-│   │   ├── services/     # API and database services
-│   │   ├── types/        # TypeScript interfaces
-│   │   └── utils/        # Utility functions
-│   ├── routes/           # SvelteKit routes
-│   └── styles/           # Global styles
-├── static/               # Static assets
-├── tests/                # Test files
-├── docs/                 # Architecture diagrams
-│   ├── architecture/     # High-level architecture
-│   └── flows/            # Feature-specific flows
-└── .storybook/           # Storybook configuration
+│  ├── lib/
+│  │  ├── components/  # UI components (app/, ui/)
+│  │  ├── hooks/    # Svelte hooks
+│  │  ├── stores/    # State management
+│  │  ├── services/   # API and database services
+│  │  ├── types/    # TypeScript interfaces
+│  │  └── utils/    # Utility functions
+│  ├── routes/      # SvelteKit routes
+│  └── styles/      # Global styles
+├── static/        # Static assets
+├── tests/        # Test files
+├── docs/         # Architecture diagrams
+│  ├── architecture/   # High-level architecture
+│  └── flows/      # Feature-specific flows
+└── .storybook/      # Storybook configuration
 ```
 
 ---

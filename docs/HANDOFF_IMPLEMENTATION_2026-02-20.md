@@ -260,7 +260,7 @@ Files:
 - `./gradlew :app:connectedDebugAndroidTest`
 - Result: BUILD SUCCESSFUL
 - Runtime summary: 15 tests completed, with 1 intentional skip:
-  - `ModelIntegrationInstrumentedTest.medGemma_sideloadedModel_isDiscoverableAndTrusted` skipped because optional large sideload artifact was not present.
+ - `ModelIntegrationInstrumentedTest.medGemma_sideloadedModel_isDiscoverableAndTrusted` skipped because optional large sideload artifact was not present.
 
 ## Reviewer/Challenge Readiness Notes
 - App compiles and packages in both debug and release modes.

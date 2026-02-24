@@ -13,14 +13,14 @@
 
 | Parameter | Nku Value | Literature Support | Status |
 |:----------|:----------|:-------------------|:------:|
-| **Frequency analysis** | Simplified DFT | DFT is standard for rPPG frequency extraction [1,2] | ✅ Well-supported |
-| **BPM range** | 40–200 BPM | Standard physiological range; rPPG literature typically uses 0.67–3.33 Hz (≡ 40–200 BPM) [2,3] | ✅ Well-supported |
-| **Buffer window** | 10 seconds | 10s windows are commonly used in rPPG studies for balancing temporal resolution and frequency precision [1,4] | ✅ Well-supported |
-| **Sampling rate** | 30 fps | Standard smartphone camera rate; sufficient for Nyquist criterion (max freq 3.33 Hz requires ≥6.67 fps) [5] | ✅ Well-supported |
-| **Channel** | Green channel | Verkruysse et al. (2008) demonstrated green channel yields strongest plethysmographic signal due to hemoglobin absorption at 520–580 nm [6] | ✅ Well-supported |
-| **Windowing** | Hamming window | Standard in FFT/DFT signal processing to reduce spectral leakage [2] | ✅ Well-supported |
-| **Min analysis frames** | 5s (150 frames) | Engineering estimate; 5s provides minimum ~3 heart cycles at 40 BPM | ⚠️ Reasonable estimate |
-| **Accuracy claim** | ±5 BPM | Published smartphone rPPG achieves MAE 1.32–3.95 BPM in clinical/controlled settings [8,9]; ±5 BPM is conservative | ✅ Supported by literature |
+| **Frequency analysis** | Simplified DFT | DFT is standard for rPPG frequency extraction [1,2] | Well-supported |
+| **BPM range** | 40–200 BPM | Standard physiological range; rPPG literature typically uses 0.67–3.33 Hz (≡ 40–200 BPM) [2,3] | Well-supported |
+| **Buffer window** | 10 seconds | 10s windows are commonly used in rPPG studies for balancing temporal resolution and frequency precision [1,4] | Well-supported |
+| **Sampling rate** | 30 fps | Standard smartphone camera rate; sufficient for Nyquist criterion (max freq 3.33 Hz requires ≥6.67 fps) [5] | Well-supported |
+| **Channel** | Green channel | Verkruysse et al. (2008) demonstrated green channel yields strongest plethysmographic signal due to hemoglobin absorption at 520–580 nm [6] | Well-supported |
+| **Windowing** | Hamming window | Standard in FFT/DFT signal processing to reduce spectral leakage [2] | Well-supported |
+| **Min analysis frames** | 5s (150 frames) | Engineering estimate; 5s provides minimum ~3 heart cycles at 40 BPM | Reasonable estimate |
+| **Accuracy claim** | ±5 BPM | Published smartphone rPPG achieves MAE 1.32–3.95 BPM in clinical/controlled settings [8,9]; ±5 BPM is conservative | Supported by literature |
 
 ### Published Performance Metrics for Smartphone rPPG
 
@@ -41,14 +41,14 @@
 
 | Parameter | Nku Value | Literature Support | Status |
 |:----------|:----------|:-------------------|:------:|
-| **Color space** | HSV (Hue, Saturation, Value) | HSV/HSI color space analysis of conjunctival images is validated for hemoglobin correlation [10,11] | ✅ Well-supported |
-| **Target tissue** | Palpebral conjunctiva | Clinical gold standard — conjunctiva is skin-tone-agnostic [12,13] | ✅ Well-supported |
-| **Hue range** | 0–45° + 330–360° (pink/red wrap) | Corresponds to red/pink tissue; physiologically correct for vascularized conjunctiva | ✅ Anatomically sound |
-| **Healthy saturation min** | **0.20** | Engineering estimate. Jay et al. (2024) used "high hue ratio" (HHR) rather than raw saturation [10]. No direct published validation of 0.20 as threshold. | ⚠️ **Needs field calibration** |
-| **Pallor threshold** | **0.10** | Engineering estimate. Literature confirms low saturation correlates with anemia but exact cutoff varies by camera, lighting, and skin tone [11]. | ⚠️ **Needs field calibration** |
-| **Min tissue pixel ratio** | 0.25 (25% of ROI) | Engineering estimate for image quality gating | ⚠️ Reasonable estimate |
-| **Conjunctiva sensitivity** | 1.2x boost | Engineering estimate to weight conjunctival signal | ⚠️ Reasonable estimate |
-| **Severity mapping** | NORMAL <0.3, MILD 0.3–0.5, MODERATE 0.5–0.7, SEVERE >0.7 | Arbitrary score ranges; no clinical hemoglobin-level correspondence | ⚠️ **Needs field calibration** |
+| **Color space** | HSV (Hue, Saturation, Value) | HSV/HSI color space analysis of conjunctival images is validated for hemoglobin correlation [10,11] | Well-supported |
+| **Target tissue** | Palpebral conjunctiva | Clinical gold standard — conjunctiva is skin-tone-agnostic [12,13] | Well-supported |
+| **Hue range** | 0–45° + 330–360° (pink/red wrap) | Corresponds to red/pink tissue; physiologically correct for vascularized conjunctiva | Anatomically sound |
+| **Healthy saturation min** | **0.20** | Engineering estimate. Jay et al. (2024) used "high hue ratio" (HHR) rather than raw saturation [10]. No direct published validation of 0.20 as threshold. | **Needs field calibration** |
+| **Pallor threshold** | **0.10** | Engineering estimate. Literature confirms low saturation correlates with anemia but exact cutoff varies by camera, lighting, and skin tone [11]. | **Needs field calibration** |
+| **Min tissue pixel ratio** | 0.25 (25% of ROI) | Engineering estimate for image quality gating | Reasonable estimate |
+| **Conjunctiva sensitivity** | 1.2x boost | Engineering estimate to weight conjunctival signal | Reasonable estimate |
+| **Severity mapping** | NORMAL <0.3, MILD 0.3–0.5, MODERATE 0.5–0.7, SEVERE >0.7 | Arbitrary score ranges; no clinical hemoglobin-level correspondence | **Needs field calibration** |
 
 ### Published Performance Metrics for Smartphone Conjunctival Pallor
 
@@ -71,14 +71,14 @@
 
 | Parameter | Nku Value | Literature Support | Status |
 |:----------|:----------|:-------------------|:------:|
-| **Method** | Eye Aspect Ratio (EAR) + cheek fullness | EAR is established in drowsiness detection literature [15]; adapted here for edema | ⚠️ Novel application |
-| **EAR formulation** | width / height (inverted from standard) | Standard EAR = height/width ≈ 0.3 open [15]. Nku inverts: width/height ≈ 2.8 | ⚠️ Custom formulation |
-| **Normal EAR** | **2.8** (width/height) | Equivalent to standard EAR ≈ 0.36 (1/2.8). Literature: open-eye EAR ≈ 0.30–0.36 [15,16] | ✅ Consistent with literature |
-| **Edema EAR** | **2.2** (width/height) | No direct published precedent for using EAR to detect edema. Engineering estimate. | ⚠️ **Needs field calibration** |
-| **Weighting** | Periorbital 60%, Facial 40% | Engineering estimate. Periorbital edema is a more specific clinical sign for preeclampsia [17] | ⚠️ Reasonable estimate |
-| **Cheek brightness threshold** | 0.15 | Engineering estimate for detecting tissue swelling via skin texture changes | ⚠️ **Needs field calibration** |
-| **Severity mapping** | NORMAL <0.25, MILD 0.25–0.5, MODERATE 0.5–0.75, SIGNIFICANT >0.75 | Arbitrary score ranges | ⚠️ **Needs field calibration** |
-| **Min face ratio** | 0.20 (20% of frame) | Engineering estimate for image quality gating | ⚠️ Reasonable estimate |
+| **Method** | Eye Aspect Ratio (EAR) + cheek fullness | EAR is established in drowsiness detection literature [15]; adapted here for edema | Novel application |
+| **EAR formulation** | width / height (inverted from standard) | Standard EAR = height/width ≈ 0.3 open [15]. Nku inverts: width/height ≈ 2.8 | Custom formulation |
+| **Normal EAR** | **2.8** (width/height) | Equivalent to standard EAR ≈ 0.36 (1/2.8). Literature: open-eye EAR ≈ 0.30–0.36 [15,16] | Consistent with literature |
+| **Edema EAR** | **2.2** (width/height) | No direct published precedent for using EAR to detect edema. Engineering estimate. | **Needs field calibration** |
+| **Weighting** | Periorbital 60%, Facial 40% | Engineering estimate. Periorbital edema is a more specific clinical sign for preeclampsia [17] | Reasonable estimate |
+| **Cheek brightness threshold** | 0.15 | Engineering estimate for detecting tissue swelling via skin texture changes | **Needs field calibration** |
+| **Severity mapping** | NORMAL <0.25, MILD 0.25–0.5, MODERATE 0.5–0.75, SIGNIFICANT >0.75 | Arbitrary score ranges | **Needs field calibration** |
+| **Min face ratio** | 0.20 (20% of frame) | Engineering estimate for image quality gating | Reasonable estimate |
 
 ### Published Performance Metrics for CV-Based Edema Detection
 
@@ -97,9 +97,9 @@
 
 | Detector | Modality Support | Threshold Support | Overall | Recommended Action |
 |:---------|:----------------:|:-----------------:|:-------:|:-------------------|
-| **rPPG** | ✅ Strong | ✅ Strong | ✅ **Ready** | No changes; parameters align with literature |
-| **Pallor** | ✅ Strong | ⚠️ Weak | ⚠️ **Needs calibration** | Modality validated; sat thresholds need field data |
-| **Edema** | ⚠️ Moderate | ⚠️ Weak | ⚠️ **Needs calibration** | Novel EAR application; all thresholds need field data |
+| **rPPG** | Strong | Strong | **Ready** | No changes; parameters align with literature |
+| **Pallor** | Strong | Weak | **Needs calibration** | Modality validated; sat thresholds need field data |
+| **Edema** | Moderate | Weak | **Needs calibration** | Novel EAR application; all thresholds need field data |
 
 ### Field Calibration Protocol (Recommended)
 

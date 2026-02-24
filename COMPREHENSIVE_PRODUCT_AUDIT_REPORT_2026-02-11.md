@@ -45,17 +45,17 @@ The product is **not currently in a state where the writeup/submission claims ca
 
 ### Build/test/runtime artifact audit
 - Python tests:
-  - `python3 -m pytest tests/test_api.py tests/test_security.py tests/test_integration.py -q` -> `46 passed`
-  - `python3 -m pytest tests/test_algos.py -q` -> `2 passed`
+ - `python3 -m pytest tests/test_api.py tests/test_security.py tests/test_integration.py -q` -> `46 passed`
+ - `python3 -m pytest tests/test_algos.py -q` -> `2 passed`
 - Android tests/build:
-  - `:app:testDebugUnitTest` -> `BUILD SUCCESSFUL`
-  - `:app:lintVitalRelease` -> `FAILED` (`55 errors`)
-  - `:app:assembleDebug` -> built
-  - `:app:assembleRelease` path blocked by lint fatal
+ - `:app:testDebugUnitTest` -> `BUILD SUCCESSFUL`
+ - `:app:lintVitalRelease` -> `FAILED` (`55 errors`)
+ - `:app:assembleDebug` -> built
+ - `:app:assembleRelease` path blocked by lint fatal
 - APK/manifest/dex inspection:
-  - debug + release APK permissions and contents
-  - merged debug/release manifests
-  - release dependency chain
+ - debug + release APK permissions and contents
+ - merged debug/release manifests
+ - release dependency chain
 
 ### Environment limitations affecting "100%" runtime proof
 - `adb` unavailable (`command not found`), so connected emulator/device execution could not be performed in this environment.
@@ -70,8 +70,8 @@ The product is **not currently in a state where the writeup/submission claims ca
 **Answer: No (not fully).**
 
 - Store/release path is currently blocked by lint fatal errors:
-  - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:107`
-  - `mobile/android/app/build/intermediates/lint_vital_intermediate_text_report/release/lintVitalReportRelease/lint-results-release.txt`
+ - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:107`
+ - `mobile/android/app/build/intermediates/lint_vital_intermediate_text_report/release/lintVitalReportRelease/lint-results-release.txt`
 - Emulator/device runtime validation cannot be claimed from this audit environment because no `adb` runtime execution was possible.
 - Several documentation claims (offline, packaging, localization depth) do not match code/artifact reality.
 
@@ -80,12 +80,12 @@ The product is **not currently in a state where the writeup/submission claims ca
 **Answer: Not strictly provable as "offline-only" in current packaged state.**
 
 - Release and debug manifests both include network permissions and transport components:
-  - `INTERNET`, `ACCESS_NETWORK_STATE`
-  - datatransport/CCT services in manifest
-  - Evidence: `mobile/android/app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml:18`, `:50`, `:154`, `:157`
+ - `INTERNET`, `ACCESS_NETWORK_STATE`
+ - datatransport/CCT services in manifest
+ - Evidence: `mobile/android/app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml:18`, `:50`, `:154`, `:157`
 - Release dex inspection did **not** show active `CloudInferenceClient`/cloud URL strings in current release APK (likely stripped by R8), but network-capable components still exist.
 - Debug APK contains explicit cloud endpoint and cloud client code:
-  - `https://nku-inference-api-run.app`, `CloudInferenceClient`, `Authorization: Bearer ...`
+ - `https://nku-inference-api-run.app`, `CloudInferenceClient`, `Authorization: Bearer ...`
 - Cloud client has no active call site in current app flow (dead code at present), so practical runtime may still behave locally unless library-level egress occurs.
 
 ### 3) Does every workflow in the app work as intended without errors?
@@ -106,63 +106,63 @@ The product is **not currently in a state where the writeup/submission claims ca
 
 ```mermaid
 flowchart LR
-  U[CHW / User] --> H[HomeScreen]
-  H --> C[CardioScreen]
-  H --> A[AnemiaScreen]
-  H --> P[PreeclampsiaScreen]
-  H --> T[TriageScreen]
+ U[CHW / User] --> H[HomeScreen]
+ H --> C[CardioScreen]
+ H --> A[AnemiaScreen]
+ H --> P[PreeclampsiaScreen]
+ H --> T[TriageScreen]
 
-  C --> RPPG[RPPGProcessor]
-  A --> PAL[PallorDetector]
-  P --> FD[FaceDetectorHelper]
-  FD --> EDE[EdemaDetector]
+ C --> RPPG[RPPGProcessor]
+ A --> PAL[PallorDetector]
+ P --> FD[FaceDetectorHelper]
+ FD --> EDE[EdemaDetector]
 
-  RPPG --> SF[SensorFusion]
-  PAL --> SF
-  EDE --> SF
+ RPPG --> SF[SensorFusion]
+ PAL --> SF
+ EDE --> SF
 
-  SF --> CR[ClinicalReasoner]
-  CR --> MA[MainActivity]
-  MA -->|patientInput=generatePrompt(vitals)| NE[NkuInferenceEngine]
+ SF --> CR[ClinicalReasoner]
+ CR --> MA[MainActivity]
+ MA -->|patientInput=generatePrompt(vitals)| NE[NkuInferenceEngine]
 
-  subgraph OnDeviceAI[On-device Inference]
-    PS[PromptSanitizer]
-    TG[TranslateGemma GGUF]
-    MG[MedGemma GGUF]
-    NE --> PS --> TG
-    TG --> MG
-    MG --> TG
-  end
+ subgraph OnDeviceAI[On-device Inference]
+  PS[PromptSanitizer]
+  TG[TranslateGemma GGUF]
+  MG[MedGemma GGUF]
+  NE --> PS --> TG
+  TG --> MG
+  MG --> TG
+ end
 
-  MA --> DB[(Room: nku_screenings.db)]
-  MA --> EXP[ScreeningExporter CSV]
-  EXP --> SHARE[Android Share Intent]
+ MA --> DB[(Room: nku_screenings.db)]
+ MA --> EXP[ScreeningExporter CSV]
+ EXP --> SHARE[Android Share Intent]
 
-  subgraph ModelSources[Model Resolution Order]
-    INT[filesDir/models]
-    PAD[Play Asset Delivery packs]
-    SDCARD[/sdcard/Download fallback]
-  end
-  NE --> INT
-  NE --> PAD
-  NE --> SDCARD
+ subgraph ModelSources[Model Resolution Order]
+  INT[filesDir/models]
+  PAD[Play Asset Delivery packs]
+  SDCARD[/sdcard/Download fallback]
+ end
+ NE --> INT
+ NE --> PAD
+ NE --> SDCARD
 
-  MA -. debug-only class present .-> CIC[CloudInferenceClient]
-  CIC -. optional/dev path .-> API
+ MA -. debug-only class present .-> CIC[CloudInferenceClient]
+ CIC -. optional/dev path .-> API
 
-  subgraph CloudAPI[cloud/inference_api]
-    API[Flask API]
-    IV[InputValidator]
-    PP[PromptProtector]
-    RL[RateLimiter]
-    LLM[llama.cpp models]
-    API --> IV --> PP --> LLM
-    API --> RL
-  end
+ subgraph CloudAPI[cloud/inference_api]
+  API[Flask API]
+  IV[InputValidator]
+  PP[PromptProtector]
+  RL[RateLimiter]
+  LLM[llama.cpp models]
+  API --> IV --> PP --> LLM
+  API --> RL
+ end
 
-  CI[GitHub Actions] --> AB[android-build.yml]
-  CI --> SEC[security-scan.yml]
-  CI --> CORE[ci.yml]
+ CI[GitHub Actions] --> AB[android-build.yml]
+ CI --> SEC[security-scan.yml]
+ CI --> CORE[ci.yml]
 ```
 
 ---
@@ -173,55 +173,55 @@ flowchart LR
 
 1. **Release/store build currently fails (`lintVitalRelease`)**
 - Evidence:
-  - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:107`
-  - `mobile/android/app/build/intermediates/lint_vital_intermediate_text_report/release/lintVitalReportRelease/lint-results-release.txt`
+ - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:107`
+ - `mobile/android/app/build/intermediates/lint_vital_intermediate_text_report/release/lintVitalReportRelease/lint-results-release.txt`
 - Build output shows: `55 errors, 0 warnings`, task `:app:lintVitalRelease FAILED`.
 - Impact: Store build readiness claim cannot be accepted.
 
 2. **Docs/submission offline claims overstate current package reality**
 - Claims:
-  - `README.md:42`, `README.md:46`
-  - `kaggle_submission_writeup.md:32`, `:259`
-  - `technical_overview_3page.md:11`, `:65`
+ - `README.md:42`, `README.md:46`
+ - `kaggle_submission_writeup.md:32`, `:259`
+ - `technical_overview_3page.md:11`, `:65`
 - Contradictory build evidence:
-  - release manifest includes `INTERNET`, `ACCESS_NETWORK_STATE` and datatransport/CCT services:
-    - `mobile/android/app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml:18`, `:50`, `:154`, `:157`
+ - release manifest includes `INTERNET`, `ACCESS_NETWORK_STATE` and datatransport/CCT services:
+  - `mobile/android/app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml:18`, `:50`, `:154`, `:157`
 - Impact: "100% offline / zero cloud dependency" is not defensible as stated.
 
 3. **Packaging/distribution claims do not match actual artifacts**
 - Claims:
-  - PAD and small base assumptions in `MODEL_DISTRIBUTION.md:9-39`, `docs/ARCHITECTURE.md:167`, `kaggle_submission_writeup.md:105`
+ - PAD and small base assumptions in `MODEL_DISTRIBUTION.md:9-39`, `docs/ARCHITECTURE.md:167`, `kaggle_submission_writeup.md:105`
 - Actual artifact evidence:
-  - `app-debug.apk` ~2.7GB and `app-release-unsigned.apk` ~2.6GB
-  - both include embedded GGUF assets (`assets/medgemma-4b-iq1_m.gguf`, `assets/translategemma-4b-iq1_m.gguf`)
-  - no `.aab` found in outputs during audit pass
+ - `app-debug.apk` ~2.7GB and `app-release-unsigned.apk` ~2.6GB
+ - both include embedded GGUF assets (`assets/medgemma-4b-iq1_m.gguf`, `assets/translategemma-4b-iq1_m.gguf`)
+ - no `.aab` found in outputs during audit pass
 - Impact: submission claims about delivered form factor and size are materially misaligned.
 
 ### High
 
 4. **Prompt sanitization can mutate structured clinical prompt format**
 - Call chain:
-  - `MainActivity.kt` passes `clinicalReasoner.generatePrompt(currentVitals)` into `runNkuCycle(...)`:
-    - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:293-296`
-  - `runNkuCycle` sanitizes `patientInput`:
-    - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:221-223`
-  - sanitizer strips tokens like `SEVERITY:`, `URGENCY:` etc:
-    - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:58-61`, `:152-159`
-  - these tokens are intentionally generated in prompt template:
-    - `mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt:124-129`
+ - `MainActivity.kt` passes `clinicalReasoner.generatePrompt(currentVitals)` into `runNkuCycle(...)`:
+  - `mobile/android/app/src/main/java/com/nku/app/MainActivity.kt:293-296`
+ - `runNkuCycle` sanitizes `patientInput`:
+  - `mobile/android/app/src/main/java/com/nku/app/NkuInferenceEngine.kt:221-223`
+ - sanitizer strips tokens like `SEVERITY:`, `URGENCY:` etc:
+  - `mobile/android/app/src/main/java/com/nku/app/PromptSanitizer.kt:58-61`, `:152-159`
+ - these tokens are intentionally generated in prompt template:
+  - `mobile/android/app/src/main/java/com/nku/app/ClinicalReasoner.kt:124-129`
 - Impact: structured prompt contract can be degraded before inference.
 
 5. **Backend `/nku-cycle` ignores output-validation boolean**
 - In `/nku-cycle`, `validate_output` result boolean is discarded (`_, english`, `_, assessment`, `_, twi_output`):
-  - `cloud/inference_api/main.py:538-540`, `:550-552`, `:565-567`
+ - `cloud/inference_api/main.py:538-540`, `:550-552`, `:565-567`
 - Other endpoints correctly gate on `is_valid`.
 - Impact: potentially invalid/sanitized-empty outputs can propagate silently in the full cycle path.
 
 6. **Cloud auth contract mismatch between Android client and backend**
 - Backend expects `X-API-Key` when configured:
-  - `cloud/inference_api/main.py:100-106`
+ - `cloud/inference_api/main.py:100-106`
 - Android cloud client sends `Authorization: Bearer ...`:
-  - `mobile/android/app/src/main/java/com/nku/app/CloudInferenceClient.kt:72`, `:128`
+ - `mobile/android/app/src/main/java/com/nku/app/CloudInferenceClient.kt:72`, `:128`
 - Impact: if cloud fallback is activated with API key auth, requests fail or require weakened auth setup.
 
 7. **Workflow correctness not fully proven by runtime execution**
@@ -233,51 +233,51 @@ flowchart LR
 
 8. **Database stores potentially sensitive data unencrypted at rest**
 - Plain Room DB builder without SQLCipher/encryption layer:
-  - `mobile/android/app/src/main/java/com/nku/app/data/NkuDatabase.kt:35-42`
+ - `mobile/android/app/src/main/java/com/nku/app/data/NkuDatabase.kt:35-42`
 - Stored fields include symptoms/recommendations:
-  - `mobile/android/app/src/main/java/com/nku/app/data/ScreeningEntity.kt:29-34`
+ - `mobile/android/app/src/main/java/com/nku/app/data/ScreeningEntity.kt:29-34`
 - Impact: local data extraction risk on rooted/compromised devices.
 
 9. **CSV export can exfiltrate PHI-like content via share intent**
 - Exports symptoms/recommendations and shares externally:
-  - `mobile/android/app/src/main/java/com/nku/app/data/ScreeningExporter.kt:37-52`, `:64-71`
+ - `mobile/android/app/src/main/java/com/nku/app/data/ScreeningExporter.kt:37-52`, `:64-71`
 - Impact: accidental disclosure risk without consent/retention controls.
 
 10. **Camera executor lifecycle risk (potential resource leak)**
 - Single-thread executor created in composable with no explicit shutdown path:
-  - `mobile/android/app/src/main/java/com/nku/app/CameraPreview.kt:38`
+ - `mobile/android/app/src/main/java/com/nku/app/CameraPreview.kt:38`
 - Impact: unnecessary thread retention/resource churn across compose/lifecycle transitions.
 
 11. **Expensive per-pixel loops still present in edema path**
 - `getPixel()` used in nested loops in eye/cheek analysis:
-  - `mobile/android/app/src/main/java/com/nku/app/EdemaDetector.kt:251-255`, `:292-295`, `:323-330`
+ - `mobile/android/app/src/main/java/com/nku/app/EdemaDetector.kt:251-255`, `:292-295`, `:323-330`
 - Impact: CPU cost and battery/thermal pressure on low-end devices.
 
 12. **Localization claim depth mismatch**
 - Code explicitly states Tier 2 = English UI fallback:
-  - `mobile/android/app/src/main/java/com/nku/app/LocalizedStrings.kt:7-10`, `:35-67`
+ - `mobile/android/app/src/main/java/com/nku/app/LocalizedStrings.kt:7-10`, `:35-67`
 - Tier 1 override coverage is uneven (e.g., `wolofStrings`/`zuluStrings`/`xhosaStrings`/`oromoStrings`/`tigrinyaStrings` override ~22 fields vs ~96 for Hausa/Yoruba).
 - Hardcoded English strings still appear in screens (examples):
-  - `mobile/android/app/src/main/java/com/nku/app/screens/TriageScreen.kt:162`, `:178`, `:265-266`
-  - `mobile/android/app/src/main/java/com/nku/app/screens/CardioScreen.kt:212`, `:219-220`
-  - `mobile/android/app/src/main/java/com/nku/app/screens/PreeclampsiaScreen.kt:277-278`
+ - `mobile/android/app/src/main/java/com/nku/app/screens/TriageScreen.kt:162`, `:178`, `:265-266`
+ - `mobile/android/app/src/main/java/com/nku/app/screens/CardioScreen.kt:212`, `:219-220`
+ - `mobile/android/app/src/main/java/com/nku/app/screens/PreeclampsiaScreen.kt:277-278`
 - Impact: docs suggesting broad multilingual parity are overstated.
 
 13. **CI quality gates for release/security are partially non-blocking**
 - Release bundle step is `continue-on-error: true`:
-  - `.github/workflows/android-build.yml:67-69`
+ - `.github/workflows/android-build.yml:67-69`
 - Security audit step in scan workflow is non-blocking:
-  - `.github/workflows/security-scan.yml:30-32`
+ - `.github/workflows/security-scan.yml:30-32`
 - Impact: red conditions can pass without failing overall pipeline.
 
 14. **API key enforcement is optional by environment**
 - If `NKU_API_KEY` is unset, endpoints do not enforce key:
-  - `cloud/inference_api/main.py:75-77`, `:104-111`
+ - `cloud/inference_api/main.py:75-77`, `:104-111`
 - Impact: operational misconfiguration can unintentionally expose endpoints.
 
 15. **Store-readiness confidence reduced by transitive fragment mismatch**
 - Dependency graph includes `androidx.fragment:fragment:1.1.0` via Play asset delivery:
-  - release classpath snapshot output (dependency audit)
+ - release classpath snapshot output (dependency audit)
 - Aligns with lint fatal requiring >=1.3.0.
 - Impact: release build break until dependency resolution is fixed.
 

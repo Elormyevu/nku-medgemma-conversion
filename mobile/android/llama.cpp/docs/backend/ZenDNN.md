@@ -18,7 +18,7 @@
 
 ## Background
 
-**ZenDNN** (Zen Deep Neural Network Library) is AMD's high-performance deep learning inference library optimized for AMD EPYC™ CPUs. It provides optimized implementations of key deep learning primitives and operations, delivering significant performance improvements for neural network workloads on AMD Zen-based processor architectures.
+**ZenDNN** (Zen Deep Neural Network Library) is AMD's high-performance deep learning inference library optimized for AMD EPYC CPUs. It provides optimized implementations of key deep learning primitives and operations, delivering significant performance improvements for neural network workloads on AMD Zen-based processor architectures.
 
 **Llama.cpp + ZenDNN**
 
@@ -28,9 +28,9 @@ For more information about ZenDNN, visit: https://www.amd.com/en/developer/zendn
 
 ## OS
 
-| OS      | Status  | Verified                                       |
+| OS   | Status | Verified                    |
 |:-------:|:-------:|:----------------------------------------------:|
-| Linux   | Support | Ubuntu 20.04, 22.04, 24.04                     |
+| Linux  | Support | Ubuntu 20.04, 22.04, 24.04           |
 
 For the latest list of supported operating systems, see the [ZenDNN Supported OS](https://github.com/amd/ZenDNN/blob/zendnnl/README.md#15-supported-os).
 
@@ -40,18 +40,18 @@ For the latest list of supported operating systems, see the [ZenDNN Supported OS
 
 **Recommended Processors**
 
-ZenDNN is optimized for AMD EPYC™ processors and AMD Ryzen™ processors based on "Zen" microarchitecture and newer.
+ZenDNN is optimized for AMD EPYC processors and AMD Ryzen processors based on "Zen" microarchitecture and newer.
 
-| CPU Family                    | Status  | Notes                              |
+| CPU Family          | Status | Notes               |
 |:-----------------------------:|:-------:|:----------------------------------:|
-| AMD EPYC™ 9005 Series (Turin)| Support | 5th Gen - Zen 5 architecture       |
-| AMD EPYC™ 9004 Series (Genoa)| Support | 4th Gen - Zen 4 architecture       |
-| AMD EPYC™ 7003 Series (Milan)| Support | 3rd Gen - Zen 3 architecture       |
-| AMD Ryzen™ AI MAX (Strix Halo)| Support | High-performance mobile processors |
+| AMD EPYC 9005 Series (Turin)| Support | 5th Gen - Zen 5 architecture    |
+| AMD EPYC 9004 Series (Genoa)| Support | 4th Gen - Zen 4 architecture    |
+| AMD EPYC 7003 Series (Milan)| Support | 3rd Gen - Zen 3 architecture    |
+| AMD Ryzen AI MAX (Strix Halo)| Support | High-performance mobile processors |
 
 *Notes:*
 
-- Best performance is achieved on AMD EPYC™ processors with high core counts (e.g., EPYC 9005 series).
+- Best performance is achieved on AMD EPYC processors with high core counts (e.g., EPYC 9005 series).
 - ZenDNN leverages AMD's advanced CPU features including AVX2 and AVX-512 instruction sets.
 - For optimal performance, ensure your system has sufficient memory bandwidth.
 
@@ -59,22 +59,22 @@ ZenDNN is optimized for AMD EPYC™ processors and AMD Ryzen™ processors based
 
 The ZenDNN backend currently accelerates **matrix multiplication (MUL_MAT)** operations only. Other operations are handled by the standard CPU backend.
 
-| Operation    | Status  | Notes                                          |
+| Operation  | Status | Notes                     |
 |:-------------|:-------:|:----------------------------------------------:|
-| MUL_MAT      |    ✓    | Accelerated via ZenDNN LowOHA MatMul           |
+| MUL_MAT   |  ✓  | Accelerated via ZenDNN LowOHA MatMul      |
 
 *Note:* Since only MUL_MAT is accelerated, models will benefit most from ZenDNN when matrix multiplications dominate the computational workload (which is typical for transformer-based LLMs).
 
 ## DataType Supports
 
-| DataType               | Status  | Notes                                         |
+| DataType        | Status | Notes                     |
 |:----------------------:|:-------:|:---------------------------------------------:|
-| FP32                   | Support | Full precision floating point                 |
-| BF16                   | Support | BFloat16 (best performance on Zen 4/Zen 5)    |
+| FP32          | Support | Full precision floating point         |
+| BF16          | Support | BFloat16 (best performance on Zen 4/Zen 5)  |
 
 *Notes:*
 
-- **BF16** provides best performance on Zen 4 and Zen 5 EPYC™ processors (Genoa, Turin).
+- **BF16** provides best performance on Zen 4 and Zen 5 EPYC processors (Genoa, Turin).
 
 ## Linux
 
@@ -146,15 +146,15 @@ Run llama.cpp server with ZenDNN acceleration:
 
 ```sh
 # Set optimal configuration
-export OMP_NUM_THREADS=64  # Adjust to your CPU core count
-export ZENDNNL_MATMUL_ALGO=2  # Blocked AOCL BLIS for best performance
+export OMP_NUM_THREADS=64 # Adjust to your CPU core count
+export ZENDNNL_MATMUL_ALGO=2 # Blocked AOCL BLIS for best performance
 
 # Start server
 ./build/bin/llama-server \
-    -m models/Llama-3.1-8B-Instruct.BF16.gguf \
-    --host 0.0.0.0 \
-    --port 8080 \
-    -t 64
+  -m models/Llama-3.1-8B-Instruct.BF16.gguf \
+  --host 0.0.0.0 \
+  --port 8080 \
+  -t 64
 ```
 
 Access the server at `http://localhost:8080`.
@@ -168,27 +168,27 @@ Access the server at `http://localhost:8080`.
 
 ### Build Time
 
-| Name               | Value                                 | Function                                    |
+| Name        | Value                 | Function                  |
 |--------------------|---------------------------------------|---------------------------------------------|
-| GGML_ZENDNN        | ON/OFF                                | Enable ZenDNN backend support               |
-| ZENDNN_ROOT        | Path to ZenDNN installation           | Set ZenDNN installation directory           |
-| GGML_OPENMP        | ON/OFF (recommended: ON)              | Enable OpenMP for multi-threading           |
+| GGML_ZENDNN    | ON/OFF                | Enable ZenDNN backend support        |
+| ZENDNN_ROOT    | Path to ZenDNN installation      | Set ZenDNN installation directory      |
+| GGML_OPENMP    | ON/OFF (recommended: ON)       | Enable OpenMP for multi-threading      |
 
 ### Runtime
 
-| Name                    | Value                    | Function                                                          |
+| Name          | Value          | Function                             |
 |-------------------------|--------------------------|-------------------------------------------------------------------|
-| OMP_NUM_THREADS         | Number (e.g., 64)        | Set number of OpenMP threads (recommended: physical core count)   |
-| ZENDNNL_MATMUL_ALGO     | 0-5                      | Select MatMul backend algorithm (see Performance Optimization)    |
-| ZENDNNL_PROFILE_LOG_LEVEL | 0-4                    | Profiling log level (0=disabled, 4=verbose)                       |
-| ZENDNNL_ENABLE_PROFILER | 0 or 1                   | Enable detailed profiling (1=enabled)                             |
-| ZENDNNL_API_LOG_LEVEL   | 0-4                      | API log level (0=disabled, 4=verbose)                             |
+| OMP_NUM_THREADS     | Number (e.g., 64)    | Set number of OpenMP threads (recommended: physical core count)  |
+| ZENDNNL_MATMUL_ALGO   | 0-5           | Select MatMul backend algorithm (see Performance Optimization)  |
+| ZENDNNL_PROFILE_LOG_LEVEL | 0-4          | Profiling log level (0=disabled, 4=verbose)            |
+| ZENDNNL_ENABLE_PROFILER | 0 or 1          | Enable detailed profiling (1=enabled)               |
+| ZENDNNL_API_LOG_LEVEL  | 0-4           | API log level (0=disabled, 4=verbose)               |
 
 **Example**:
 
 ```sh
 export OMP_NUM_THREADS=64
-export ZENDNNL_MATMUL_ALGO=2  # Use Blocked AOCL BLIS for best performance
+export ZENDNNL_MATMUL_ALGO=2 # Use Blocked AOCL BLIS for best performance
 ./build/bin/llama-cli -m models/llama-2-7b.Q4_0.gguf -p "Test" -n 100
 ```
 
@@ -199,19 +199,19 @@ export ZENDNNL_MATMUL_ALGO=2  # Use Blocked AOCL BLIS for best performance
 ZenDNN's LowOHA MatMul supports multiple backend algorithms. For **best performance**, use the **Blocked AOCL BLIS** algorithm:
 
 ```sh
-export ZENDNNL_MATMUL_ALGO=2  # Blocked AOCL BLIS (recommended)
+export ZENDNNL_MATMUL_ALGO=2 # Blocked AOCL BLIS (recommended)
 ```
 
 **Available algorithms**:
 
-| Value | Algorithm              | Description                                    |
+| Value | Algorithm       | Description                  |
 |:-----:|:-----------------------|:----------------------------------------------|
-| 0     | Dynamic Dispatch       | Automatic backend selection (default)         |
-| 1     | AOCL BLIS              | AOCL BLIS backend                             |
-| 2     | AOCL BLIS Blocked      | **Blocked AOCL BLIS (recommended)**           |
-| 3     | OneDNN                 | OneDNN backend                                |
-| 4     | OneDNN Blocked         | Blocked OneDNN                                |
-| 5     | LibXSMM                | LibXSMM backend                               |
+| 0   | Dynamic Dispatch    | Automatic backend selection (default)     |
+| 1   | AOCL BLIS       | AOCL BLIS backend               |
+| 2   | AOCL BLIS Blocked   | **Blocked AOCL BLIS (recommended)**      |
+| 3   | OneDNN         | OneDNN backend                |
+| 4   | OneDNN Blocked     | Blocked OneDNN                |
+| 5   | LibXSMM        | LibXSMM backend                |
 
 ### Profiling and Debugging
 

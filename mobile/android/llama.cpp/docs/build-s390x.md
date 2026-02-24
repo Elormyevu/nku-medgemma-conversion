@@ -19,50 +19,50 @@ cd llama.cpp
 Building llama.cpp with BLAS support is highly recommended as it has shown to provide performance improvements. Make sure to have OpenBLAS installed in your environment.
 
 ```bash
-cmake -S . -B build             \
-    -DCMAKE_BUILD_TYPE=Release  \
-    -DGGML_BLAS=ON              \
-    -DGGML_BLAS_VENDOR=OpenBLAS
+cmake -S . -B build       \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DGGML_BLAS=ON       \
+  -DGGML_BLAS_VENDOR=OpenBLAS
 
 cmake --build build --config Release -j $(nproc)
 ```
 
 **Notes**:
 
--   For faster repeated compilation, install [ccache](https://ccache.dev/)
--   By default, VXE/VXE2 is enabled. To disable it (not recommended):
+-  For faster repeated compilation, install [ccache](https://ccache.dev/)
+-  By default, VXE/VXE2 is enabled. To disable it (not recommended):
 
-    ```bash
-    cmake -S . -B build             \
-        -DCMAKE_BUILD_TYPE=Release  \
-        -DGGML_BLAS=ON              \
-        -DGGML_BLAS_VENDOR=OpenBLAS \
-        -DGGML_VXE=OFF
+  ```bash
+  cmake -S . -B build       \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DGGML_BLAS=ON       \
+    -DGGML_BLAS_VENDOR=OpenBLAS \
+    -DGGML_VXE=OFF
 
-    cmake --build build --config Release -j $(nproc)
-    ```
+  cmake --build build --config Release -j $(nproc)
+  ```
 
--   For debug builds:
+-  For debug builds:
 
-    ```bash
-    cmake -S . -B build             \
-        -DCMAKE_BUILD_TYPE=Debug    \
-        -DGGML_BLAS=ON              \
-        -DGGML_BLAS_VENDOR=OpenBLAS
-    cmake --build build --config Debug -j $(nproc)
-    ```
+  ```bash
+  cmake -S . -B build       \
+    -DCMAKE_BUILD_TYPE=Debug  \
+    -DGGML_BLAS=ON       \
+    -DGGML_BLAS_VENDOR=OpenBLAS
+  cmake --build build --config Debug -j $(nproc)
+  ```
 
--   For static builds, add `-DBUILD_SHARED_LIBS=OFF`:
+-  For static builds, add `-DBUILD_SHARED_LIBS=OFF`:
 
-    ```bash
-    cmake -S . -B build             \
-        -DCMAKE_BUILD_TYPE=Release  \
-        -DGGML_BLAS=ON              \
-        -DGGML_BLAS_VENDOR=OpenBLAS \
-        -DBUILD_SHARED_LIBS=OFF
+  ```bash
+  cmake -S . -B build       \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DGGML_BLAS=ON       \
+    -DGGML_BLAS_VENDOR=OpenBLAS \
+    -DBUILD_SHARED_LIBS=OFF
 
-    cmake --build build --config Release -j $(nproc)
-    ```
+  cmake --build build --config Release -j $(nproc)
+  ```
 
 ## IBM zDNN Accelerator
 
@@ -75,9 +75,9 @@ You may find the official build instructions here: [Building and Installing zDNN
 ### Compilation
 
 ```bash
-cmake -S . -B build             \
-    -DCMAKE_BUILD_TYPE=Release  \
-    -DGGML_ZDNN=ON
+cmake -S . -B build       \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DGGML_ZDNN=ON
 cmake --build build --config Release -j$(nproc)
 ```
 
@@ -87,64 +87,64 @@ All models need to be converted to Big-Endian. You can achieve this in three cas
 
 1. **Use pre-converted models verified for use on IBM Z & LinuxONE (easiest)**
 
-    ![File Type - gguf](https://img.shields.io/badge/File_Type-gguf-fff)
+  ![File Type - gguf](https://img.shields.io/badge/File_Type-gguf-fff)
 
-    You can find popular models pre-converted and verified at [s390x Verified Models](https://huggingface.co/collections/taronaeo/s390x-verified-models-672765393af438d0ccb72a08) or [s390x Runnable Models](https://huggingface.co/collections/taronaeo/s390x-runnable-models-686e951824198df12416017e).
+  You can find popular models pre-converted and verified at [s390x Verified Models](https://huggingface.co/collections/taronaeo/s390x-verified-models-672765393af438d0ccb72a08) or [s390x Runnable Models](https://huggingface.co/collections/taronaeo/s390x-runnable-models-686e951824198df12416017e).
 
-    These models have already been converted from `safetensors` to `GGUF` Big-Endian and their respective tokenizers verified to run correctly on IBM z15 and later system.
+  These models have already been converted from `safetensors` to `GGUF` Big-Endian and their respective tokenizers verified to run correctly on IBM z15 and later system.
 
 2. **Convert safetensors model to GGUF Big-Endian directly (recommended)**
 
-    ![File Type - safetensors](https://img.shields.io/badge/File_Type-safetensors-da1e28)
+  ![File Type - safetensors](https://img.shields.io/badge/File_Type-safetensors-da1e28)
 
-    The model you are trying to convert must be in `safetensors` file format (for example [IBM Granite 3.3 2B](https://huggingface.co/ibm-granite/granite-3.3-2b-instruct)). Make sure you have downloaded the model repository for this case.
+  The model you are trying to convert must be in `safetensors` file format (for example [IBM Granite 3.3 2B](https://huggingface.co/ibm-granite/granite-3.3-2b-instruct)). Make sure you have downloaded the model repository for this case.
 
-    Ensure that you have installed the required packages in advance
+  Ensure that you have installed the required packages in advance
 
-    ```bash
-    pip3 install -r requirements.txt
-    ```
+  ```bash
+  pip3 install -r requirements.txt
+  ```
 
-    Convert the `safetensors` model to `GGUF`
+  Convert the `safetensors` model to `GGUF`
 
-    ```bash
-    python3 convert_hf_to_gguf.py \
-        --outfile model-name-be.f16.gguf \
-        --outtype f16 \
-        --bigendian \
-        model-directory/
-    ```
+  ```bash
+  python3 convert_hf_to_gguf.py \
+    --outfile model-name-be.f16.gguf \
+    --outtype f16 \
+    --bigendian \
+    model-directory/
+  ```
 
-    For example,
+  For example,
 
-    ```bash
-    python3 convert_hf_to_gguf.py \
-        --outfile granite-3.3-2b-instruct-be.f16.gguf \
-        --outtype f16 \
-        --bigendian \
-        granite-3.3-2b-instruct/
-    ```
+  ```bash
+  python3 convert_hf_to_gguf.py \
+    --outfile granite-3.3-2b-instruct-be.f16.gguf \
+    --outtype f16 \
+    --bigendian \
+    granite-3.3-2b-instruct/
+  ```
 
 3. **Convert existing GGUF Little-Endian model to Big-Endian**
 
-    ![File Type - gguf](https://img.shields.io/badge/File_Type-gguf-fff)
+  ![File Type - gguf](https://img.shields.io/badge/File_Type-gguf-fff)
 
-    The model you are trying to convert must be in `gguf` file format (for example [IBM Granite 3.3 2B GGUF](https://huggingface.co/ibm-granite/granite-3.3-2b-instruct-GGUF)). Make sure you have downloaded the model file for this case.
+  The model you are trying to convert must be in `gguf` file format (for example [IBM Granite 3.3 2B GGUF](https://huggingface.co/ibm-granite/granite-3.3-2b-instruct-GGUF)). Make sure you have downloaded the model file for this case.
 
-    ```bash
-    python3 gguf-py/gguf/scripts/gguf_convert_endian.py model-name.f16.gguf BIG
-    ```
+  ```bash
+  python3 gguf-py/gguf/scripts/gguf_convert_endian.py model-name.f16.gguf BIG
+  ```
 
-    For example,
+  For example,
 
-    ```bash
-    python3 gguf-py/gguf/scripts/gguf_convert_endian.py granite-3.3-2b-instruct-le.f16.gguf BIG
-    mv granite-3.3-2b-instruct-le.f16.gguf granite-3.3-2b-instruct-be.f16.gguf
-    ```
+  ```bash
+  python3 gguf-py/gguf/scripts/gguf_convert_endian.py granite-3.3-2b-instruct-le.f16.gguf BIG
+  mv granite-3.3-2b-instruct-le.f16.gguf granite-3.3-2b-instruct-be.f16.gguf
+  ```
 
-    **Notes:**
+  **Notes:**
 
-    - The GGUF endian conversion script may not support all data types at the moment and may fail for some models/quantizations. When that happens, please try manually converting the safetensors model to GGUF Big-Endian via Step 2.
+  - The GGUF endian conversion script may not support all data types at the moment and may fail for some models/quantizations. When that happens, please try manually converting the safetensors model to GGUF Big-Endian via Step 2.
 
 ## IBM Accelerators
 
@@ -186,90 +186,90 @@ IBM VXE/VXE2 SIMD acceleration depends on the BLAS implementation. It is strongl
 
 1. I'm getting the following error message while trying to load a model: `gguf_init_from_file_impl: failed to load model: this GGUF file version 50331648 is extremely large, is there a mismatch between the host and model endianness?`
 
-    Answer: Please ensure that the model you have downloaded/converted is GGUFv3 Big-Endian. These models are usually denoted with the `-be` suffix, i.e., `granite-3.3-2b-instruct-be.F16.gguf`.
+  Answer: Please ensure that the model you have downloaded/converted is GGUFv3 Big-Endian. These models are usually denoted with the `-be` suffix, i.e., `granite-3.3-2b-instruct-be.F16.gguf`.
 
-    You may refer to the [Getting GGUF Models](#getting-gguf-models) section to manually convert a `safetensors` model to `GGUF` Big Endian.
+  You may refer to the [Getting GGUF Models](#getting-gguf-models) section to manually convert a `safetensors` model to `GGUF` Big Endian.
 
 2. I'm getting extremely poor performance when running inference on a model
 
-    Answer: Please refer to the [Appendix B: SIMD Support Matrix](#appendix-b-simd-support-matrix) to check if your model quantization is supported by SIMD acceleration.
+  Answer: Please refer to the [Appendix B: SIMD Support Matrix](#appendix-b-simd-support-matrix) to check if your model quantization is supported by SIMD acceleration.
 
 3. I'm building on IBM z17 and getting the following error messages: `invalid switch -march=z17`
 
-    Answer: Please ensure that your GCC compiler is of minimum GCC 15.1.0 version, and have `binutils` updated to the latest version. If this does not fix the problem, kindly open an issue.
+  Answer: Please ensure that your GCC compiler is of minimum GCC 15.1.0 version, and have `binutils` updated to the latest version. If this does not fix the problem, kindly open an issue.
 
 4. Failing to install the `sentencepiece` package using GCC 15+
 
-    Answer: The `sentencepiece` team are aware of this as seen in [this issue](https://github.com/google/sentencepiece/issues/1108).
+  Answer: The `sentencepiece` team are aware of this as seen in [this issue](https://github.com/google/sentencepiece/issues/1108).
 
-    As a temporary workaround, please run the installation command with the following environment variables.
+  As a temporary workaround, please run the installation command with the following environment variables.
 
-    ```bash
-    export CXXFLAGS="-include cstdint"
-    ```
+  ```bash
+  export CXXFLAGS="-include cstdint"
+  ```
 
-    For example,
+  For example,
 
-    ```bash
-    CXXFLAGS="-include cstdint" pip3 install -r requirements.txt
-    ```
+  ```bash
+  CXXFLAGS="-include cstdint" pip3 install -r requirements.txt
+  ```
 
 ## Getting Help on IBM Z & LinuxONE
 
 1. **Bugs, Feature Requests**
 
-    Please file an issue in llama.cpp and ensure that the title contains "s390x".
+  Please file an issue in llama.cpp and ensure that the title contains "s390x".
 
 2. **Other Questions**
 
-    Please reach out directly to [aionz@us.ibm.com](mailto:aionz@us.ibm.com).
+  Please reach out directly to [aionz@us.ibm.com](mailto:aionz@us.ibm.com).
 
 ## Appendix A: Hardware Support Matrix
 
-|          | Support | Minimum Compiler Version |
+|     | Support | Minimum Compiler Version |
 | -------- | ------- | ------------------------ |
-| IBM z15  | ✅      |                          |
-| IBM z16  | ✅      |                          |
-| IBM z17  | ✅      | GCC 15.1.0               |
-| IBM zDNN | ✅      |                          |
+| IBM z15 |    |             |
+| IBM z16 |    |             |
+| IBM z17 |    | GCC 15.1.0        |
+| IBM zDNN |    |             |
 
--   ✅ - supported and verified to run as intended
--    - unsupported, we are unlikely able to provide support
+-  - supported and verified to run as intended
+-  - unsupported, we are unlikely able to provide support
 
 ## Appendix B: SIMD Support Matrix
 
-|            | VX/VXE/VXE2 | zDNN | Spyre |
+|      | VX/VXE/VXE2 | zDNN | Spyre |
 |------------|-------------|------|-------|
-| FP32       | ✅           | ✅    | ❓     |
-| FP16       | ✅           | ✅    | ❓     |
-| BF16       |            | ✅    | ❓     |
-| Q4_0       | ✅           | ❓    | ❓     |
-| Q4_1       | ✅           | ❓    | ❓     |
-| MXFP4      |            | ❓    | ❓     |
-| Q5_0       | ✅           | ❓    | ❓     |
-| Q5_1       | ✅           | ❓    | ❓     |
-| Q8_0       | ✅           | ❓    | ❓     |
-| Q2_K       |            | ❓    | ❓     |
-| Q3_K       | ✅           | ❓    | ❓     |
-| Q4_K       | ✅           | ❓    | ❓     |
-| Q5_K       | ✅           | ❓    | ❓     |
-| Q6_K       | ✅           | ❓    | ❓     |
-| TQ1_0      |            | ❓    | ❓     |
-| TQ2_0      |            | ❓    | ❓     |
-| IQ2_XXS    |            | ❓    | ❓     |
-| IQ2_XS     |            | ❓    | ❓     |
-| IQ2_S      |            | ❓    | ❓     |
-| IQ3_XXS    |            | ❓    | ❓     |
-| IQ3_S      |            | ❓    | ❓     |
-| IQ1_S      |            | ❓    | ❓     |
-| IQ1_M      |            | ❓    | ❓     |
-| IQ4_NL     | ✅           | ❓    | ❓     |
-| IQ4_XS     | ✅           | ❓    | ❓     |
-| FP32->FP16 |            | ❓    | ❓     |
-| FP16->FP32 |            | ❓    | ❓     |
+| FP32    |      |   |   |
+| FP16    |      |   |   |
+| BF16    |      |   |   |
+| Q4_0    |      |   |   |
+| Q4_1    |      |   |   |
+| MXFP4   |      |   |   |
+| Q5_0    |      |   |   |
+| Q5_1    |      |   |   |
+| Q8_0    |      |   |   |
+| Q2_K    |      |   |   |
+| Q3_K    |      |   |   |
+| Q4_K    |      |   |   |
+| Q5_K    |      |   |   |
+| Q6_K    |      |   |   |
+| TQ1_0   |      |   |   |
+| TQ2_0   |      |   |   |
+| IQ2_XXS  |      |   |   |
+| IQ2_XS   |      |   |   |
+| IQ2_S   |      |   |   |
+| IQ3_XXS  |      |   |   |
+| IQ3_S   |      |   |   |
+| IQ1_S   |      |   |   |
+| IQ1_M   |      |   |   |
+| IQ4_NL   |      |   |   |
+| IQ4_XS   |      |   |   |
+| FP32->FP16 |      |   |   |
+| FP16->FP32 |      |   |   |
 
--   ✅ - acceleration available
--    - acceleration unavailable, will still run using scalar implementation
--   ❓ - acceleration unknown, please contribute if you can test it yourself
+-  - acceleration available
+-  - acceleration unavailable, will still run using scalar implementation
+-  - acceleration unknown, please contribute if you can test it yourself
 
 Last Updated by **Aaron Teo (aaron.teo1@ibm.com)** on Sep 7, 2025.

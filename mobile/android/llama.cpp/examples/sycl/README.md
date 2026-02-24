@@ -30,12 +30,12 @@ Check the ID in startup log, like:
 
 ```
 found 2 SYCL devices:
-|  |                   |                                       |       |Max    |        |Max  |Global |                     |
-|  |                   |                                       |       |compute|Max work|sub  |mem    |                     |
-|ID|        Device Type|                                   Name|Version|units  |group   |group|size   |       Driver version|
+| |          |                    |    |Max  |    |Max |Global |           |
+| |          |                    |    |compute|Max work|sub |mem  |           |
+|ID|    Device Type|                  Name|Version|units |group  |group|size  |    Driver version|
 |--|-------------------|---------------------------------------|-------|-------|--------|-----|-------|---------------------|
-| 0| [level_zero:gpu:0]|                Intel Arc A770 Graphics|    1.3|    512|    1024|   32| 16225M|            1.3.29138|
-| 1| [level_zero:gpu:1]|                 Intel UHD Graphics 750|    1.3|     32|     512|   32| 62631M|            1.3.29138|
+| 0| [level_zero:gpu:0]|        Intel Arc A770 Graphics|  1.3|  512|  1024|  32| 16225M|      1.3.29138|
+| 1| [level_zero:gpu:1]|         Intel UHD Graphics 750|  1.3|   32|   512|  32| 62631M|      1.3.29138|
 
 ```
 

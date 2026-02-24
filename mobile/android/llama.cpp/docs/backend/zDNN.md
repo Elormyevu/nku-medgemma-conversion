@@ -15,27 +15,27 @@ The llama.cpp zDNN backend is designed to enable llama.cpp on IBM z17 and later 
 
 ## Software & Hardware Support
 
-| Hardware Level       | Status        | Verified                   |
+| Hardware Level    | Status    | Verified          |
 | -------------------- | ------------- | -------------------------- |
-| IBM z17 / LinuxONE 5 | Supported     | RHEL 9.6, IBM z17, 40 IFLs |
-| IBM z16 / LinuxONE 4 | Not Supported |                            |
+| IBM z17 / LinuxONE 5 | Supported   | RHEL 9.6, IBM z17, 40 IFLs |
+| IBM z16 / LinuxONE 4 | Not Supported |              |
 
 ## Data Types Supported
 
-| Data Type | Status    |
+| Data Type | Status  |
 | --------- | --------- |
-| F32       | Supported |
-| F16       | Supported |
-| BF16      | Supported |
+| F32    | Supported |
+| F16    | Supported |
+| BF16   | Supported |
 
 ## CMake Options
 
 The IBM zDNN backend has the following CMake options that control the behaviour of the backend.
 
-| CMake Option | Default Value | Description                         |
+| CMake Option | Default Value | Description             |
 | ------------ | ------------- | ----------------------------------- |
-| `GGML_ZDNN`  | `OFF`         | Compile llama.cpp with zDNN support |
-| `ZDNN_ROOT`  | `""`          | Override zDNN library lookup        |
+| `GGML_ZDNN` | `OFF`     | Compile llama.cpp with zDNN support |
+| `ZDNN_ROOT` | `""`     | Override zDNN library lookup    |
 
 ## 1. Install zDNN Library
 
@@ -59,8 +59,8 @@ git clone https://github.com/ggml-org/llama.cpp
 cd llama.cpp
 
 cmake -S . -G Ninja -B build \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DGGML_ZDNN=ON \
-    -DZDNN_ROOT=/opt/zdnn-libs
+  -DCMAKE_BUILD_TYPE=Release \
+  -DGGML_ZDNN=ON \
+  -DZDNN_ROOT=/opt/zdnn-libs
 cmake --build build --config Release -j$(nproc)
 ```

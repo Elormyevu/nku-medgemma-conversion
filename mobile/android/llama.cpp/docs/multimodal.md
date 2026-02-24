@@ -9,8 +9,8 @@ Currently, we support **image** and **audio** input. Audio is highly experimenta
 To enable it, you can use one of the 2 methods below:
 
 - Use `-hf` option with a supported model (see a list of pre-quantized model below)
-    - To load a model using `-hf` while disabling multimodal, use `--no-mmproj`
-    - To load a model using `-hf` while using a custom mmproj file, use `--mmproj local_file.gguf`
+  - To load a model using `-hf` while disabling multimodal, use `--no-mmproj`
+  - To load a model using `-hf` while using a custom mmproj file, use `--mmproj local_file.gguf`
 - Use `-m model.gguf` option with `--mmproj file.gguf` to specify text and multimodal projector respectively
 
 By default, multimodal projector will be offloaded to GPU. To disable this, add `--no-mmproj-offload`

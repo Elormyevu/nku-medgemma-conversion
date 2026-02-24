@@ -23,14 +23,14 @@ $ popd
 Convert the model to .gguf format:
 ```console
 (venv) python convert_hf_to_gguf.py models/OuteTTS-0.2-500M \
-    --outfile models/outetts-0.2-0.5B-f16.gguf --outtype f16
+  --outfile models/outetts-0.2-0.5B-f16.gguf --outtype f16
 ```
 The generated model will be `models/outetts-0.2-0.5B-f16.gguf`.
 
 We can optionally quantize this to Q8_0 using the following command:
 ```console
 $ build/bin/llama-quantize models/outetts-0.2-0.5B-f16.gguf \
-    models/outetts-0.2-0.5B-q8_0.gguf q8_0
+  models/outetts-0.2-0.5B-q8_0.gguf q8_0
 ```
 The quantized model will be `models/outetts-0.2-0.5B-q8_0.gguf`.
 
@@ -46,7 +46,7 @@ This model file is PyTorch checkpoint (.ckpt) and we first need to convert it to
 huggingface format:
 ```console
 (venv) python tools/tts/convert_pt_to_hf.py \
-    models/WavTokenizer-large-speech-75token/wavtokenizer_large_speech_320_24k.ckpt
+  models/WavTokenizer-large-speech-75token/wavtokenizer_large_speech_320_24k.ckpt
 ...
 Model has been successfully converted and saved to models/WavTokenizer-large-speech-75token/model.safetensors
 Metadata has been saved to models/WavTokenizer-large-speech-75token/index.json
@@ -55,7 +55,7 @@ Config has been saved to models/WavTokenizer-large-speech-75tokenconfig.json
 Then we can convert the huggingface format to gguf:
 ```console
 (venv) python convert_hf_to_gguf.py models/WavTokenizer-large-speech-75token \
-    --outfile models/wavtokenizer-large-75-f16.gguf --outtype f16
+  --outfile models/wavtokenizer-large-75-f16.gguf --outtype f16
 ...
 INFO:hf-to-gguf:Model successfully exported to models/wavtokenizer-large-75-f16.gguf
 ```
@@ -65,9 +65,9 @@ INFO:hf-to-gguf:Model successfully exported to models/wavtokenizer-large-75-f16.
 With both of the models generated, the LLM model and the voice decoder model,
 we can run the example:
 ```console
-$ build/bin/llama-tts -m  ./models/outetts-0.2-0.5B-q8_0.gguf \
-    -mv ./models/wavtokenizer-large-75-f16.gguf \
-    -p "Hello world"
+$ build/bin/llama-tts -m ./models/outetts-0.2-0.5B-q8_0.gguf \
+  -mv ./models/wavtokenizer-large-75-f16.gguf \
+  -p "Hello world"
 ...
 main: audio written to file 'output.wav'
 ```

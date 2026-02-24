@@ -16,7 +16,7 @@ import kotlin.coroutines.resume
  * translation API. Supports major languages (English, French, Portuguese) for fully offline operation.
  *
  * For indigenous languages not supported by ML Kit (e.g., Twi, Hausa,
- * Yoruba), the translator falls back to the Antigravity Nku Cloud API.
+ * Yoruba), the translator falls back to the Google Cloud Translate API.
  * This ensures MedGemma, an English-native reasoner, receives correctly
  * translated inputs and the user receives correctly localized outputs,
  * matching full documentation claims.
@@ -35,7 +35,7 @@ class NkuTranslator(private val context: Context) {
          * European/Asian. Only 3 African languages are available on-device:
          * Afrikaans, Swahili, and Arabic. All indigenous African languages
          * (Hausa, Yoruba, Igbo, Amharic, Zulu, Xhosa, etc.) securely fall back
-         * to the Nku Cloud API.
+         * to the Google Cloud Translate API.
          */
         private val ML_KIT_LANGUAGE_MAP: Map<String, String> = mapOf(
             // ── Official/colonial languages (on-device) ──
@@ -212,7 +212,7 @@ class NkuTranslator(private val context: Context) {
     }
 
     /**
-     * Executes translation over HTTP using the Nku Cloud API endpoints
+     * Executes translation over HTTP using the Google Cloud Translate API endpoints
      * for indigenous languages beyond ML Kit boundaries.
      */
     private suspend fun performCloudTranslation(text: String, sourceLanguage: String, targetLanguage: String): String? = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {

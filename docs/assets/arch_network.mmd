@@ -3,5 +3,5 @@ graph LR
     App["Nku Android App\n(Offline Core)"] -.->|Initialization| HF["HuggingFace Hub\n(GGUF Weights)"]
     HF --> SecGate["SHA-256 Gate\n(Model Integrity)"]
     SecGate --> App
-    App -.->|Secure Fallback| CloudAPI["Nku Cloud API\n(Indigenous Languages)"]
+    App -.->|Secure Fallback| CloudAPI["Google Cloud Translate API\n(Indigenous Languages)"]
     App -.->|CI/Dev Validation| Backend["Python Inference Engine\n(Testing Only)"]

@@ -44,7 +44,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 | What | How |
 |:-----|:----|
 | **100% On-Device Medical Inference** | All clinical reasoning runs on-device — zero cloud dependency for MedGemma |
-| **On-Device Translation** | ML Kit for 59 languages (incl. English, French, Portuguese); unsupported languages fall back to the Nku Cloud API |
+| **On-Device Translation** | ML Kit for 59 languages (incl. English, French, Portuguese); unsupported languages fall back to the Google Cloud Translate API |
 | **Ultra-Compressed** | 8GB → ~2.3GB via Q4_K_M quantization (56% MedQA on quantized model, vs. 69% unquantized) |
 | **Pan-African Languages** | 46 languages including Ewe, Hausa, Yoruba, Swahili |
 | **Budget Hardware** | Runs on $60+ Android phones (3–4GB RAM, TECNO/Infinix) via mmap |
@@ -55,7 +55,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 ## ✨ Features
 
 - 🧠 **MedGemma 4B** — Google's clinical reasoning model, quantized to ~2.3GB Q4_K_M (56% MedQA, quantized; 69% unquantized)
-- 🌐 **Android ML Kit** — On-device translation for 59 languages; unsupported languages fall back to the Nku Cloud API
+- 🌐 **Android ML Kit** — On-device translation for 59 languages; unsupported languages fall back to the Google Cloud Translate API
 - 🔊 **Android System TTS** — Device-native voice synthesis for spoken clinical results
 - 💎 **Premium UI** — Glassmorphism design with localized strings
 - ⚡ **Nku Cycle** — Memory-efficient mmap orchestration on budget devices (3–4GB RAM)
@@ -126,7 +126,7 @@ The HeAR ViT-L encoder (∼1.2GB) is architecturally supported but **NOT SHIPPED
 | **Orchestration** | ClinicalReasoner + SensorFusion + ThermalManager (42°C) |
 | **Security** | PromptSanitizer (6-layer injection protection at every model boundary) |
 | **Inference** | llama.cpp via JNI (NDK 29, ARM64 NEON) |
-| **Translation** | Android ML Kit (on-device); secure Nku Cloud API fallback for unsupported languages |
+| **Translation** | Android ML Kit (on-device); secure Google Cloud Translate API fallback for unsupported languages |
 | **TTS** | Android System TTS (NkuTTS.kt) |
 | **Quantization** | Q4_K_M (56% MedQA quantized, 81% of 69% unquantized baseline); imatrix used for IQ2_XS study |
 

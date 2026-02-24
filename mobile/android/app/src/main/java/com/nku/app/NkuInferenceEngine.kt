@@ -93,7 +93,7 @@ class NkuInferenceEngine(private val context: Context) {
 
     /**
      * Public translation API for rule-based assessment output.
-     * Delegates to ML Kit on-device translation and the Nku Cloud API fallback.
+     * Delegates to ML Kit on-device translation and the Google Cloud Translate API fallback.
      * Returns original text only if both translation layers fail.
      */
     suspend fun translateFromEnglish(text: String, targetLanguage: String): String {

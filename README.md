@@ -183,7 +183,7 @@ adb push medgemma-4b-it.Q4_K_M.gguf /sdcard/Android/data/com.nku.app/files/Downl
 
 ### Compression Pipeline
 
-We achieve **~69% model size reduction** (8GB → 2.3GB) while retaining clinically useful accuracy (56% MedQA on the quantized model, vs. 69% unquantized):
+We achieve **~71% model size reduction** (8GB → 2.3GB) while retaining clinically useful accuracy (56% MedQA on the quantized model, vs. 69% unquantized):
 
 | Stage | Format | MedGemma | Total |
 |:------|:------:|:--------:|:-----:|

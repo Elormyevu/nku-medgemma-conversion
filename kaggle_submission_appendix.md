@@ -4,7 +4,10 @@ Companion document to the Kaggle submission writeup.
 
 > [!NOTE]
 > **Demonstration Video:**
-> Watch Nku running the full offline MedGemma triage cycle in real-time here: **[https://youtube.com/shorts/07bhfCtX1O4](https://youtube.com/shorts/07bhfCtX1O4)**
+> Watch a full end-to-end demonstration of the Nku offline triage cycle running on a 3GB RAM Android emulator here: 
+> **[Nku App Triage Demonstration (YouTube Shorts)](https://youtube.com/shorts/07bhfCtX1O4)**
+> 
+> *In this video, Nku processes a simulated Malaria case. It extracts severe anemia markers (Pallor) and moderate icterus markers (Jaundice), fuses them with user-reported symptoms, and executes the 2.3GB Q4_K_M MedGemma LLM entirely on-device to produce a structured differential diagnosis.*
 
 > [!IMPORTANT]
 > **Notice for Testing on Windows Emulators**

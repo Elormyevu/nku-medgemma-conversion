@@ -1182,7 +1182,7 @@ To securely bypass this limitation while preserving rich clinical data, Nku Sent
 
 This massive efficiency gain securely unlocks over 1200 free tokens within the KV-Cache. Equipped with this latency overhead, the MedGemma model is fully empowered to engage in step-by-step clinical reasoning prior to outputting its highly structured triage UI fields.
 
-The empirical results from locally executing `scripts/evaluation/triage_benchmark.py` prove the superiority of this compressed structural pipelining. When MedGemma uses CoT to evaluate complex multimorbidity vignettes, the availability of objective sensor data provides a massive surge in diagnostic accuracy:
+The empirical results from locally executing `benchmark/nku_medgemma_benchmark.py` prove the superiority of this compressed structural pipelining. When MedGemma uses CoT to evaluate complex multimorbidity vignettes, the availability of objective sensor data provides a massive surge in diagnostic accuracy:
 
 **Detailed Benchmark Results (MedGemma-4b-it Q4_K_M):**
 

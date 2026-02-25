@@ -23,6 +23,7 @@ Companion document to the Kaggle submission writeup.
 - [Appendix H: Safety Architecture](#appendix-h-safety-architecture)
 - [Appendix I: End-to-End MedGemma Inference Proof](#appendix-i-end-to-end-medgemma-inference-proof)
 - [Appendix J: Clinical Reasoning Superiority via Prompt Compression](#appendix-j-clinical-reasoning-superiority-via-prompt-compression)
+- [Appendix K: Architectural Rationale: MedGemma vs. WHO/IMCI Guidelines](#appendix-k-architectural-rationale-medgemma-vs-whoimci-guidelines)
 - [References](#references)
 
 ---
@@ -1229,7 +1230,7 @@ These are the 20 hand-tailored, multi-morbidity stress tests utilized in the CoT
 
 ---
 
-## Appendix J: Architectural Rationale: MedGemma vs. WHO/IMCI Guidelines
+## Appendix K: Architectural Rationale: MedGemma vs. WHO/IMCI Guidelines
 
 A fundamental architectural question regarding Nku is: *Why deploy a computationally expensive LLM like MedGemma on an edge device when deterministic World Health Organization Integrated Management of Childhood Illness (WHO/IMCI) guidelines [29] already exist and require zero memory overhead?*
 

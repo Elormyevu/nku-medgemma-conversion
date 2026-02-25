@@ -752,13 +752,13 @@ This appendix documents the complete signal processing chain for each of Nku's f
 ```mermaid
 %%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
 graph TD
-    Sensors["Sensors & UI"] --> Fusion["Sensor Fusion"]
-    Fusion --> TransIn["ML Kit Translate"]
-    TransIn --> MedGemma["MedGemma Q4_K_M"]
-    MedGemma -. "OOM Fallback" .-> IMCI["WHO/IMCI Engine"]
-    MedGemma --> TransOut["Output Translate"]
+    Sensors["   Sensors & UI\n(rPPG, HeAR)   "] --> Fusion["   Sensor Fusion Logic   "]
+    Fusion --> TransIn["   ML Kit / Cloud Translate   "]
+    TransIn --> MedGemma["   MedGemma 4B Q4_K_M\n(via llama.cpp)   "]
+    MedGemma -. "   OOM Fallback   " .-> IMCI["   WHO/IMCI Rule Engine   "]
+    MedGemma --> TransOut["   Output Translation   "]
     IMCI --> TransOut
-    TransOut --> TTS["Android TTS & UI"]
+    TransOut --> TTS["   Android TTS & UI Display   "]
 ```
 
 The five detectors (PulseOximeter, Pallor, Jaundice, Edema, HeAR) produce structured result objects which `SensorFusion` merges into a single `VitalSigns` data class. This is converted into a clinically explicit text prompt and passed through the `ML Kit` translation layer before reaching `MedGemma`. If the device experiences an Out-Of-Memory (OOM) event or thermal throttling, Nku safely falls back to the deterministic `WHO/IMCI Rule Engine`. Finally, the clinical triage guidance is translated back to the community health worker's language and read aloud via Android `TTS`.

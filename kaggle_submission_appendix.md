@@ -14,22 +14,21 @@ Companion document to the Kaggle submission writeup.
 > If you are evaluating this application natively on a Windows Android emulator, please ensure your emulator is running **Android 11 (API 30) or higher**. This is required so the ARM-to-x86 translation layer is present, allowing the `arm64-v8a` optimized LLM C++ bindings to execute. For full performance, test on a physical Android device or an ARM64 native environment (e.g., Apple Silicon Mac or Snapdragon X Elite).
 
 ## Table of Contents
-- [Appendix A: Clinical Calibration Dataset (Complete)](#appendix-a-clinical-calibration-dataset-complete)
-- [Appendix B: Supported Languages (46 Total)](#appendix-b-supported-languages-46-total)
-- [Appendix C: MedGemma Reasoning Example](#appendix-c-medgemma-reasoning-example)
-- [Appendix D: Quantization & Translation Model Selection](#appendix-d-quantization--translation-model-selection)
-- [Appendix E: Why the Pipeline Provides Sufficient Context for Triage](#appendix-e-why-the-pipeline-provides-sufficient-context-for-triage)
-- [Appendix F: Sensor-to-Prompt Signal Processing Pipeline](#appendix-f-sensor-to-prompt-signal-processing-pipeline)
-- [Appendix G: Safety Architecture](#appendix-g-safety-architecture)
-- [Appendix H: End-to-End MedGemma Inference Proof](#appendix-h-end-to-end-medgemma-inference-proof)
-- [Appendix I: Clinical Reasoning Superiority via Prompt Compression](#appendix-i-clinical-reasoning-superiority-via-prompt-compression)
-- [Appendix J: Architectural Rationale: MedGemma vs. WHO/IMCI Guidelines](#appendix-j-architectural-rationale-medgemma-vs-whoimci-guidelines)
+- [Appendix B: Clinical Calibration Dataset (Complete)](#appendix-b-clinical-calibration-dataset-complete)
+- [Appendix C: Supported Languages (46 Total)](#appendix-c-supported-languages-46-total)
+- [Appendix D: MedGemma Reasoning Example](#appendix-d-medgemma-reasoning-example)
+- [Appendix E: Quantization & Translation Model Selection](#appendix-e-quantization--translation-model-selection)
+- [Appendix F: Why the Pipeline Provides Sufficient Context for Triage](#appendix-f-why-the-pipeline-provides-sufficient-context-for-triage)
+- [Appendix G: Sensor-to-Prompt Signal Processing Pipeline](#appendix-g-sensor-to-prompt-signal-processing-pipeline)
+- [Appendix H: Safety Architecture](#appendix-h-safety-architecture)
+- [Appendix I: End-to-End MedGemma Inference Proof](#appendix-i-end-to-end-medgemma-inference-proof)
+- [Appendix J: Clinical Reasoning Superiority via Prompt Compression](#appendix-j-clinical-reasoning-superiority-via-prompt-compression)
 - [References](#references)
 
 ---
 
 
-## Appendix A: Clinical Calibration Dataset (Complete)
+## Appendix B: Clinical Calibration Dataset (Complete)
 
 Source: `scripts/calibration/african_primary_care.txt`
 
@@ -381,7 +380,7 @@ Important preventive measures:
 
 ---
 
-## Appendix B: Supported Languages (46 Total)
+## Appendix C: Supported Languages (46 Total)
 
 *Note: While Google's ML Kit Translation API supports 59 global languages overall, Nku specifically curates a list of 46 African official, national, and indigenous languages relevant to its deployment context in Sub-Saharan Africa. The remaining 13 ML Kit languages are primarily European/Asian and are intentionally excluded from the CHW's language selector.*
 
@@ -431,7 +430,7 @@ Important preventive measures:
 
 ---
 
-## Appendix C: MedGemma Reasoning Example
+## Appendix D: MedGemma Reasoning Example
 
 ### Input: Nku Sentinel Sensor Readings → Clinically Explicit Prompt
 
@@ -563,7 +562,7 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 
 ---
 
-## Appendix D: Quantization & Translation Model Selection
+## Appendix E: Quantization & Translation Model Selection
 
 Selecting the right quantization level required balancing two competing goals: minimizing model size (for budget devices) and maintaining clinical accuracy (for medical reasoning). We systematically benchmarked multiple quantization levels before selecting Q4_K_M.
 
@@ -658,7 +657,7 @@ This hybrid approach eliminated ~2.3GB of TranslateGemma model weight, removed t
 
 ---
 
-## Appendix E: Why the Pipeline Provides Sufficient Context for Triage
+## Appendix F: Why the Pipeline Provides Sufficient Context for Triage
 
 ### The Core Question
 
@@ -744,7 +743,7 @@ The literature and architectural realities demonstrate that: (a) triage is subst
 
 ---
 
-## Appendix F: Sensor-to-Prompt Signal Processing Pipeline
+## Appendix G: Sensor-to-Prompt Signal Processing Pipeline
 
 This appendix documents the complete signal processing chain for each of Nku's five camera and finger-based screening modalities — from raw pixel input through biomarker extraction to the final text prompt consumed by MedGemma Q4_K_M.
 
@@ -1008,7 +1007,7 @@ Beyond sensor data, the prompt includes:
 
 ---
 
-## Appendix G: Safety Architecture
+## Appendix H: Safety Architecture
 
 Nku implements six independent safety layers to minimize risk from incorrect triage output:
 
@@ -1053,7 +1052,7 @@ Intensive edge LLM inference rapidly heats localized mobile SOC components. On $
 
 MedQA is used as a relative benchmark for quantization comparison — not as an absolute clinical accuracy claim. The key findings are: (1) the retention ratio (56%/69% = 81% retained), (2) the relative ordering of quantization methods, and (3) the primary care subset consistency (56.2% vs 56.0% overall). These relative comparisons remain valid regardless of potential benchmark contamination concerns. MedQA is the standard benchmark for medical LLMs; using an alternative would reduce comparability with published baselines.
 
-## Appendix H: End-to-End MedGemma Inference Proof
+## Appendix I: End-to-End MedGemma Inference Proof
 
 Verified on `nku_tecno_3gb` Android emulator (3GB RAM, API 34, x86_64) — representative of the TECNO POP 8 target device class.
 
@@ -1172,7 +1171,7 @@ The model's response demonstrates appropriate clinical reasoning for a symptom-o
 
 ---
 
-## Appendix I: Clinical Reasoning Superiority via Prompt Compression
+## Appendix J: Clinical Reasoning Superiority via Prompt Compression
 
 During the architectural development of Nku Sentinel, we confronted a strict limitation for on-device inference: budget 3GB RAM devices constrain the KV-Cache to exactly 2048 tokens. 
 
@@ -1225,6 +1224,7 @@ These are the 20 hand-tailored, multi-morbidity stress tests utilized in the CoT
 | **V20** | Iron deficiency pregnancy | 24 weeks pregnant, tired, craving ice, slightly pale | `HR: 88`, `Pallor_sev: MILD`, `is_pregnant: True` | YELLOW (Soon) | GREEN (Fail) | GREEN (Fail) |
 
 
+
 [⬆ Back to Table of Contents](#table-of-contents)
 
 ---
@@ -1243,7 +1243,7 @@ MedGemma 4B is required for its semantic understanding to weigh confounding vari
 ### 2. Synthesizing Extracted Continuous Biomarkers
 IMCI guidelines are designed for qualitative, binary user input (e.g., "is the child abnormally pale?"). Conversely, Nku’s hardware sensors extract continuous, floating-point quantitative data (e.g., `Conjunctival saturation: 0.08`, `Respiratory risk score: 0.82`). 
 
-You cannot seamlessly pipe AI acoustic probabilities and optical biomarker ratios into a static 1990s WHO paper flowchart. MedGemma acts as the vital **semantic bridge**, taking these complex, continuous numerical outputs from the sensors and fusing them with the qualitative story of the patient to reach a unified conclusion. As noted in Appendix E, this structured prompting achieves massive relative improvements over zero-shot base models [9].
+You cannot seamlessly pipe AI acoustic probabilities and optical biomarker ratios into a static 1990s WHO paper flowchart. The MedGemma pipeline acts as the vital **semantic bridge**, taking these complex, continuous numerical outputs from the sensors and fusing them with the qualitative story of the patient to reach a unified conclusion. As noted in Appendix F, this structured prompting achieves massive relative improvements over zero-shot base models [9].
 
 ### 3. "Chain-of-Thought" as an Educational Engine
 Deterministic rules provide binary directives: "Refer to Hospital" or "Give Paracetamol." They dictate actions without context. Community Health Workers (CHWs) are human practitioners who need to build clinical intuition over time. 
@@ -1256,6 +1256,7 @@ Crucially, Nku does not replace the IMCI standard; it encompasses it. MedGemma w
 [⬆ Back to Table of Contents](#table-of-contents)
 
 ---
+
 
 ## References
 

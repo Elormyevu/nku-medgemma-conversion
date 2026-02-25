@@ -2,6 +2,10 @@
 
 Companion document to the Kaggle submission writeup.
 
+> [!NOTE]
+> **Demonstration Video:**
+> Watch Nku running the full offline MedGemma triage cycle in real-time here: **[https://youtube.com/shorts/07bhfCtX1O4](https://youtube.com/shorts/07bhfCtX1O4)**
+
 > [!IMPORTANT]
 > **Notice for Testing on Windows Emulators**
 > If you are evaluating this application natively on a Windows Android emulator, please ensure your emulator is running **Android 11 (API 30) or higher**. This is required so the ARM-to-x86 translation layer is present, allowing the `arm64-v8a` optimized LLM C++ bindings to execute. For full performance, test on a physical Android device or an ARM64 native environment (e.g., Apple Silicon Mac or Snapdragon X Elite).

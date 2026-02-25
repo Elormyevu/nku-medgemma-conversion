@@ -1,9 +1,0 @@
-%%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
-graph TD
-    Sensors["Sensors & UI (rPPG, HeAR)"] --> Fusion["Sensor Fusion Logic"]
-    Fusion --> TransIn["ML Kit / Cloud Translate"]
-    TransIn --> MedGemma["MedGemma 4B Q4_K_M (via llama.cpp)"]
-    MedGemma -. "OOM Fallback" .-> IMCI["WHO/IMCI Rule Engine"]
-    MedGemma --> TransOut["Output Translation"]
-    IMCI --> TransOut
-    TransOut --> TTS["Android TTS & UI Display"]

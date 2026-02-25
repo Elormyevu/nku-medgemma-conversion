@@ -377,7 +377,7 @@ Important preventive measures:
 > Dhakhtarka: Calaamadahan waxay tilmaamayaan malaria. Waa in aan baadhno dhiigga.
 
 
-[⬆ Back to Table of Contents](#table-of-contents)
+[Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -427,7 +427,7 @@ Important preventive measures:
 | | | Venda | ve |
 
 
-[⬆ Back to Table of Contents](#table-of-contents)
+[Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -559,7 +559,7 @@ requires same-day clinical evaluation. This is not a "watch and wait" situation.
 ```
 
 
-[⬆ Back to Table of Contents](#table-of-contents)
+[Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -654,7 +654,7 @@ Final architecture — hybrid translation:
 This hybrid approach eliminated ~2.3GB of TranslateGemma model weight, removed the model-swapping pipeline overhead (3 load/unload cycles → 1), and expanded language coverage from ~15 to 100+ languages — while preserving the 100% offline guarantee for the primary official-language use case.
 
 
-[⬆ Back to Table of Contents](#table-of-contents)
+[Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -740,7 +740,7 @@ Nku doesn't rely on MedGemma alone. The safety architecture provides multiple co
 The literature and architectural realities demonstrate that: (a) triage is substantially easier for LLMs than MedQA, (b) LLM-based decision support reduces diagnostic errors in Sub-Saharan African clinical settings, (c) while zero-shot LLM performance degrades on real medical data, (d) structured prompting substantially improves model performance over zero-shot baselines, (e) on-device quantized models retain clinically useful accuracy, and (f) Nku's 6-layer safety architecture explicitly compensates for residual model limitations. Combined with the reality that the alternative for these CHWs is *zero* diagnostic support, the pipeline provides a well-grounded, defensible starting point for field validation.
 
 
-[⬆ Back to Table of Contents](#table-of-contents)
+[Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -1004,7 +1004,7 @@ Beyond sensor data, the prompt includes:
 | Output instructions | Static template | Forces structured `SEVERITY/URGENCY/CONCERNS/DIFFERENTIAL_DIAGNOSES/RECOMMENDATIONS` format for reliable parsing |
 
 
-[⬆ Back to Table of Contents](#table-of-contents)
+[Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -1168,7 +1168,7 @@ The model's response demonstrates appropriate clinical reasoning for a symptom-o
 - Maintained safe guardrails: Advised avoiding NSAIDs (dengue risk) and provided clear escalation criteria (lethargy, inability to keep fluids down) for facility referral.
 
 
-[⬆ Back to Table of Contents](#table-of-contents)
+[Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -1226,7 +1226,7 @@ These are the 20 hand-tailored, multi-morbidity stress tests utilized in the CoT
 
 
 
-[⬆ Back to Table of Contents](#table-of-contents)
+[Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -1257,7 +1257,7 @@ By generating explicitly listed **Primary Concerns** and **Differential Diagnose
 ### 4. IMCI as the Ultimate Deterministic Fallback
 Crucially, Nku does not replace the IMCI standard; it encompasses it. As a medically fine-tuned foundation model, MedGemma inherently encapsulates the standard clinical consensus that underpins WHO logic. More importantly, Nku's architecture explicitly utilizes the WHO/IMCI logic as its ultimate **Layer 2 Safety Fallback**. If the $60 device runs out of RAM, if the model fails to load, or if thermal throttling pauses the process, Nku gracefully drops the MedGemma inference and dynamically routes the CHW to the rule-based IMCI deterministic interface. Nku utilizes MedGemma for advanced polysymptomatic reasoning, and relies on the IMCI gold standard as its unbreakable safety net.
 
-[⬆ Back to Table of Contents](#table-of-contents)
+[Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -1328,4 +1328,4 @@ Crucially, Nku does not replace the IMCI standard; it encompasses it. As a medic
 
 [32] Mahvar F., Liu Y., Golden D., et al. "The MedGemma Impact Challenge". *Kaggle*, 2026. https://kaggle.com/competitions/med-gemma-impact-challenge
 
-[⬆ Back to Table of Contents](#table-of-contents)
+[Back to Table of Contents](#table-of-contents)

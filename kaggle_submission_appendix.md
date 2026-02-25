@@ -1245,13 +1245,13 @@ IMCI guidelines are designed for qualitative, binary user input (e.g., "is the c
 
 You cannot seamlessly pipe AI acoustic probabilities and optical biomarker ratios into a static 1990s WHO paper flowchart. The MedGemma pipeline acts as the vital **semantic bridge**, taking these complex, continuous numerical outputs from the sensors and fusing them with the qualitative story of the patient to reach a unified conclusion. As noted in Appendix F, this structured prompting achieves massive relative improvements over zero-shot base models [9].
 
-### 3. "Chain-of-Thought" as an Educational Engine
+### 3. Clinical Synthesis as an Educational Engine
 Deterministic rules provide binary directives: "Refer to Hospital" or "Give Paracetamol." They dictate actions without context. Community Health Workers (CHWs) are human practitioners who need to build clinical intuition over time. 
 
-Because Nku’s *Sensor Prompt Compression* frees up enough tokens for MedGemma to utilize Chain-of-Thought reasoning, Nku doesn’t just tell the CHW *what* to do; it explains *why* it reached that conclusion (e.g., indicating that the combination of periorbital edema and headache at 32 weeks gestation requires urgent attention). This transforms Nku from a mere triage calculator into an active, on-the-job educational tool that upskills the CHW.
+By generating explicitly listed **Primary Concerns** and **Differential Diagnoses** alongside its severity score, Nku doesn’t just tell the CHW *what* to do; it highlights *why* it reached that conclusion (e.g., identifying that the combination of periorbital edema and headache at 32 weeks gestation is a high-risk triad). Displaying these synthesized, concerning clinical features transforms Nku from a mere triage calculator into an active, on-the-job educational tool that upskills the CHW.
 
 ### 4. IMCI as the Ultimate Deterministic Fallback
-Crucially, Nku does not replace the IMCI standard; it encompasses it. MedGemma was trained on clinical texts that implicitly reflect WHO logic. More importantly, Nku's architecture explicitly utilizes the WHO/IMCI logic as its ultimate **Layer 2 Safety Fallback**. If the $60 device runs out of RAM, if the model fails to load, or if thermal throttling pauses the process, Nku gracefully drops the MedGemma inference and dynamically routes the CHW to the rule-based IMCI deterministic interface. Nku utilizes the LLM for advanced polysymptomatic reasoning, and relies on the IMCI gold standard as its unbreakable safety net.
+Crucially, Nku does not replace the IMCI standard; it encompasses it. As a medically fine-tuned foundation model, MedGemma inherently encapsulates the standard clinical consensus that underpins WHO logic. More importantly, Nku's architecture explicitly utilizes the WHO/IMCI logic as its ultimate **Layer 2 Safety Fallback**. If the $60 device runs out of RAM, if the model fails to load, or if thermal throttling pauses the process, Nku gracefully drops the MedGemma inference and dynamically routes the CHW to the rule-based IMCI deterministic interface. Nku utilizes the LLM for advanced polysymptomatic reasoning, and relies on the IMCI gold standard as its unbreakable safety net.
 
 [⬆ Back to Table of Contents](#table-of-contents)
 

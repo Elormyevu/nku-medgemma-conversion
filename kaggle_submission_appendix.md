@@ -14,16 +14,16 @@ Companion document to the Kaggle submission writeup.
 > If you are evaluating this application natively on a Windows Android emulator, please ensure your emulator is running **Android 11 (API 30) or higher**. This is required so the ARM-to-x86 translation layer is present, allowing the `arm64-v8a` optimized LLM C++ bindings to execute. For full performance, test on a physical Android device or an ARM64 native environment (e.g., Apple Silicon Mac or Snapdragon X Elite).
 
 ## Table of Contents
-- [Appendix A: Clinical Calibration Dataset (Complete)](#appendix-b-clinical-calibration-dataset-complete)
-- [Appendix B: Supported Languages (46 Total)](#appendix-c-supported-languages-46-total)
-- [Appendix C: MedGemma Reasoning Example](#appendix-d-medgemma-reasoning-example)
-- [Appendix D: Quantization & Translation Model Selection](#appendix-e-quantization--translation-model-selection)
-- [Appendix E: Why the Pipeline Provides Sufficient Context for Triage](#appendix-f-why-the-pipeline-provides-sufficient-context-for-triage)
-- [Appendix F: Sensor-to-Prompt Signal Processing Pipeline](#appendix-g-sensor-to-prompt-signal-processing-pipeline)
-- [Appendix G: Safety Architecture](#appendix-h-safety-architecture)
-- [Appendix H: End-to-End MedGemma Inference Proof](#appendix-i-end-to-end-medgemma-inference-proof)
-- [Appendix I: Clinical Reasoning Superiority via Prompt Compression](#appendix-j-clinical-reasoning-superiority-via-prompt-compression)
-- [Appendix J: Architectural Rationale: MedGemma vs. WHO/IMCI Guidelines](#appendix-k-architectural-rationale-medgemma-vs-whoimci-guidelines)
+- [Appendix A: Clinical Calibration Dataset (Complete)](#appendix-a-clinical-calibration-dataset-complete)
+- [Appendix B: Supported Languages (46 Total)](#appendix-b-supported-languages-46-total)
+- [Appendix C: MedGemma Reasoning Example](#appendix-c-medgemma-reasoning-example)
+- [Appendix D: Quantization & Translation Model Selection](#appendix-d-quantization--translation-model-selection)
+- [Appendix E: Why the Pipeline Provides Sufficient Context for Triage](#appendix-e-why-the-pipeline-provides-sufficient-context-for-triage)
+- [Appendix F: Sensor-to-Prompt Signal Processing Pipeline](#appendix-f-sensor-to-prompt-signal-processing-pipeline)
+- [Appendix G: Safety Architecture](#appendix-g-safety-architecture)
+- [Appendix H: End-to-End MedGemma Inference Proof](#appendix-h-end-to-end-medgemma-inference-proof)
+- [Appendix I: Clinical Reasoning Superiority via Prompt Compression](#appendix-i-clinical-reasoning-superiority-via-prompt-compression)
+- [Appendix J: Architectural Rationale: MedGemma vs. WHO/IMCI Guidelines](#appendix-j-architectural-rationale-medgemma-vs-whoimci-guidelines)
 - [References](#references)
 
 ---

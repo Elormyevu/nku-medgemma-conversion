@@ -94,7 +94,7 @@ Yet **nearly all Community Health Workers (CHWs) carry smartphones**.
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Nku Sentinel — Camera-Based Screening
+### Nku Sentinel — Multi-Modal Screening
 
 | Screening | Module | Method | Output |
 |:----------|:-------|:-------|:-------|

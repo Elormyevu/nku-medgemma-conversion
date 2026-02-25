@@ -4,10 +4,10 @@ Companion document to the Kaggle submission writeup.
 
 > [!NOTE]
 > **Demonstration Video:**
-> Watch a full end-to-end demonstration of the Nku offline triage cycle running on a 3GB RAM Android emulator here: 
+> Watch a full end-to-end demonstration of the Nku offline triage cycle here: 
 > **[Nku App Triage Demonstration (YouTube Shorts)](https://youtube.com/shorts/07bhfCtX1O4)**
 > 
-> *In this video, Nku processes a simulated Malaria case. It extracts severe anemia markers (Pallor) and moderate icterus markers (Jaundice), fuses them with user-reported symptoms, and executes the 2.3GB Q4_K_M MedGemma LLM entirely on-device to produce a structured differential diagnosis.*
+> *This video demonstrates Nku running on a 3GB RAM-equivalent Android emulator. It showcases the successful on-device extraction of the 2.3GB `Q4_K_M` MedGemma model, followed by successful offline clinical inference driven strictly by patient symptom inputs. Note that actual sensor demonstration (rPPG, Pallor, etc.) is unavailable within the emulator environment, though codebase integration tests confirm full functionality on physical Android devices. Field deployment is the next step to longitudinally evaluate sensor readings under variable conditions.*
 
 > [!IMPORTANT]
 > **Notice for Testing on Windows Emulators**

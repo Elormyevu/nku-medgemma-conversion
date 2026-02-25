@@ -751,10 +751,10 @@ This appendix documents the complete signal processing chain for each of Nku's f
 
 ```mermaid
 %%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
-graph TD
-    Sensors["Sensors & UI<br/>(rPPG, Conjunctival Pallor,<br/>Periorbital Edema, Scleral Icterus,<br/>HeAR Event Detector)"] --> Fusion["Sensor Fusion Logic"]
+flowchart TD
+    Sensors["Sensors & UI<br>(rPPG, Conjunctival Pallor,<br>Periorbital Edema, Scleral Icterus,<br>HeAR Event Detector)"] --> Fusion["Sensor Fusion Logic"]
     Fusion --> TransIn["ML Kit / Cloud Translate"]
-    TransIn --> MedGemma["MedGemma 4B Q4_K_M<br/>(via llama.cpp)"]
+    TransIn --> MedGemma["MedGemma 4B Q4_K_M<br>(via llama.cpp)"]
     MedGemma -. "OOM Fallback" .-> IMCI["WHO/IMCI Rule Engine"]
     MedGemma --> TransOut["Output Translation"]
     IMCI --> TransOut

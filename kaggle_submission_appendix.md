@@ -14,7 +14,7 @@ Companion document to the Kaggle submission writeup.
 > If you are evaluating this application natively on a Windows Android emulator, please ensure your emulator is running **Android 11 (API 30) or higher**. This is required so the ARM-to-x86 translation layer is present, allowing the `arm64-v8a` optimized LLM C++ bindings to execute. For full performance, test on a physical Android device or an ARM64 native environment (e.g., Apple Silicon Mac or Snapdragon X Elite).
 
 ## Table of Contents
-- [Appendix A: Clinical Calibration Dataset (Complete)](#appendix-a-clinical-calibration-dataset-complete)
+- [Appendix A: Clinical Calibration Dataset (Excerpt)](#appendix-a-clinical-calibration-dataset-excerpt)
 - [Appendix B: Supported Languages (46 Total)](#appendix-b-supported-languages-46-total)
 - [Appendix C: MedGemma Reasoning Example](#appendix-c-medgemma-reasoning-example)
 - [Appendix D: Quantization & Translation Model Selection](#appendix-d-quantization--translation-model-selection)
@@ -29,11 +29,11 @@ Companion document to the Kaggle submission writeup.
 ---
 
 
-## Appendix A: Clinical Calibration Dataset (Complete)
+## Appendix A: Clinical Calibration Dataset (Excerpt)
 
 Source: `scripts/calibration/african_primary_care.txt`
 
-This dataset generates the medical importance matrix (imatrix) for IQ2_XS quantization. It contains patient-clinician dialogue pairs across 15 medical/language sections, covering the conditions most frequently encountered by CHWs in Sub-Saharan Africa. The complete dataset is reproduced verbatim below.
+This dataset generates the medical importance matrix (imatrix) for IQ2_XS quantization. It contains patient-clinician dialogue pairs across 15 medical/language sections, covering the conditions most frequently encountered by CHWs in Sub-Saharan Africa. A representative excerpt of the dataset is reproduced verbatim below.
 
 ---
 
@@ -1239,7 +1239,7 @@ The WHO/IMCI guidelines are the global gold standard for low-resource triage. Nk
 ### 1. Handling the "Messy Reality" of Polysymptomatic Patients
 Deterministic guidelines like IMCI [29] utilize rigid decision trees. If a patient presents perfectly along a single branch (e.g., "high fever + fast breathing = suspect pneumonia"), the flowchart is highly effective. However, patients rarely present perfectly. They present with overlapping, confounding symptoms scattered across multiple IMCI domains. A decision tree breaks down when faced with complex, multi-system presentations. 
 
-MedGemma 4B is utilized for its semantic understanding to weigh these confounding variables and identify atypical edge cases. While rigid flowcharts cannot dynamically handle competing symptom clusters, recent studies show that the semantic synthesis native to LLMs allows them to achieve ~92% triage accuracy—comparable to physicians and untrained doctors [19, 20]. Nku leverages this fundamental architectural advantage to parse complex clinical narratives that break deterministic logic.
+MedGemma 4B is utilized for its semantic understanding to weigh these confounding variables and identify atypical edge cases. While rigid flowcharts cannot dynamically handle competing symptom clusters, recent studies show that the semantic synthesis native to LLMs allows them to achieve ~92% triage accuracy—comparable to physicians [19, 20]. Nku leverages this fundamental architectural advantage to parse complex clinical narratives that break deterministic logic.
 
 ### 2. Synthesizing Extracted Continuous Biomarkers
 IMCI guidelines are designed for qualitative, binary user input (e.g., "is the child abnormally pale?"). Nku’s hardware sensors extract continuous, floating-point quantitative data (e.g., `Conjunctival saturation: 0.08`, `Respiratory risk score: 0.82`). While individual sensor outputs could be thresholded into binary IMCI inputs (e.g., saturation < 0.10 → "pale: yes"), this approach has two critical limitations:

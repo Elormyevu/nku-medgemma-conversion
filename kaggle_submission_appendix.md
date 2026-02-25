@@ -745,28 +745,23 @@ The literature and architectural realities demonstrate that: (a) triage is subst
 
 ## Appendix F: Sensor-to-Prompt Signal Processing Pipeline
 
-This appendix documents the complete signal processing chain for each of Nku's four camera and finger-based screening modalities — from raw pixel input through biomarker extraction to the final text prompt consumed by MedGemma Q4_K_M.
+This appendix documents the complete signal processing chain for each of Nku's five camera and finger-based screening modalities — from raw pixel input through biomarker extraction to the final text prompt consumed by MedGemma Q4_K_M.
 
 ### F.1: Architecture Overview
 
 ```mermaid
 %%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
-graph LR
-  A[" Sensor\nInput"] --> B["PulseOximeter\n(Green channel)"]
-  A --> C["PallorDetector\n(Conjunctival HSV)"]
-  A --> J["JaundiceDetector\n(Scleral HSV)"]
-  A --> D["EdemaDetector\n(MediaPipe EAR)"]
-  A --> H["RespiratoryRisk\n(HeAR Audio)"]
-  B --> E["SensorFusion\n(VitalSigns)"]
-  C --> E
-  J --> E
-  D --> E
-  H --> E
-  E --> F["ClinicalReasoner\n(generatePrompt)"]
-  F --> G["MedGemma\nQ4_K_M"]
+graph TD
+    Sensors["Sensors & UI (rPPG, HeAR)"] --> Fusion["Sensor Fusion Logic"]
+    Fusion --> TransIn["ML Kit / Cloud Translate"]
+    TransIn --> MedGemma["MedGemma 4B Q4_K_M (via llama.cpp)"]
+    MedGemma -. "OOM Fallback" .-> IMCI["WHO/IMCI Rule Engine"]
+    MedGemma --> TransOut["Output Translation"]
+    IMCI --> TransOut
+    TransOut --> TTS["Android TTS & UI Display"]
 ```
 
-All five detectors produce structured result objects with derived scores, confidence, and raw biomarker values. `SensorFusion` merges these into a single `VitalSigns` data class, and `ClinicalReasoner.generatePrompt()` serializes everything into a clinically explicit text prompt.
+The five detectors (PulseOximeter, Pallor, Jaundice, Edema, HeAR) produce structured result objects which `SensorFusion` merges into a single `VitalSigns` data class. This is converted into a clinically explicit text prompt and passed through the `ML Kit` translation layer before reaching `MedGemma`. If the device experiences an Out-Of-Memory (OOM) event or thermal throttling, Nku safely falls back to the deterministic `WHO/IMCI Rule Engine`. Finally, the clinical triage guidance is translated back to the community health worker's language and read aloud via Android `TTS`.
 
 ---
 

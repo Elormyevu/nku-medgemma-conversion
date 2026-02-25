@@ -752,17 +752,21 @@ This appendix documents the complete signal processing chain for each of Nku's f
 ```mermaid
 %%{init: {'theme':'dark', 'themeVariables':{'fontSize':'18px'}}}%%
 graph LR
-  A[" Camera\nFrame"] --> B["PulseOximeter\n(Red channel thresholding)"]
-  A --> C["PallorDetector\n(HSV saturation)"]
+  A[" Sensor\nInput"] --> B["PulseOximeter\n(Green channel)"]
+  A --> C["PallorDetector\n(Conjunctival HSV)"]
+  A --> J["JaundiceDetector\n(Scleral HSV)"]
   A --> D["EdemaDetector\n(MediaPipe EAR)"]
+  A --> H["RespiratoryRisk\n(HeAR Audio)"]
   B --> E["SensorFusion\n(VitalSigns)"]
   C --> E
+  J --> E
   D --> E
+  H --> E
   E --> F["ClinicalReasoner\n(generatePrompt)"]
   F --> G["MedGemma\nQ4_K_M"]
 ```
 
-All four detectors produce structured result objects with derived scores, confidence, and raw biomarker values. `SensorFusion` merges these into a single `VitalSigns` data class, and `ClinicalReasoner.generatePrompt()` serializes everything into a clinically explicit text prompt.
+All five detectors produce structured result objects with derived scores, confidence, and raw biomarker values. `SensorFusion` merges these into a single `VitalSigns` data class, and `ClinicalReasoner.generatePrompt()` serializes everything into a clinically explicit text prompt.
 
 ---
 
@@ -980,7 +984,7 @@ Note: This is a screening tool for TB/respiratory illness risk.
 
 ### F.7: Confidence Gating
 
-All four modalities pass through confidence gating in `ClinicalReasoner` before reaching MedGemma:
+All five modalities pass through confidence gating in `ClinicalReasoner` before reaching MedGemma:
 
 | Condition | Prompt behavior |
 |:----------|:----------------|

@@ -54,7 +54,7 @@ class ModelIntegrationInstrumentedTest {
      * restoring them after. This avoids deleting a 2.3GB file.
      */
     private fun backupModelFiles(): List<File> {
-        val modelName = "medgemma-4b-it-q4_k_m.gguf"
+        val modelName = "medgemma-4b-q4_k_m.gguf"
         val candidates = listOf(
             File(modelDir, modelName),
             File(appExtDir, modelName),
@@ -127,7 +127,7 @@ class ModelIntegrationInstrumentedTest {
 
     @Test
     fun corrupt_undersizedGguf_isRejectedByValidator() {
-        val modelName = "medgemma-4b-it-q4_k_m.gguf"
+        val modelName = "medgemma-4b-q4_k_m.gguf"
         val fakeFile = createSyntheticGgufFile(modelDir, modelName, sizeBytes = 1024)
 
         try {
@@ -149,7 +149,7 @@ class ModelIntegrationInstrumentedTest {
     fun corrupt_wrongHeader_isRejectedByValidator() {
         // Create a file with wrong magic bytes
         modelDir.mkdirs()
-        val modelName = "medgemma-4b-it-q4_k_m.gguf"
+        val modelName = "medgemma-4b-q4_k_m.gguf"
         val fakeFile = File(modelDir, modelName)
         fakeFile.writeBytes("NOT_GGUF_HEADER_PADDING".toByteArray())
         createdFiles.add(fakeFile)

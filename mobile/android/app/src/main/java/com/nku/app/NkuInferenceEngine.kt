@@ -53,12 +53,11 @@ class NkuInferenceEngine(private val context: Context) {
         private const val TAG = "NkuEngine"
 
         // MedGemma 4B Q4_K_M — the only model used for clinical reasoning.
-        // Filename matches HuggingFace artifact (hungqbui/medgemma-4b-it-Q4_K_M-GGUF).
-        private const val MEDGEMMA_MODEL = "medgemma-4b-it-q4_k_m.gguf"
-        // SHA-256 for the pinned MedGemma Q4_K_M artifact distributed in this repo/PAD pack.
-        // Keep in sync with medgemma/src/main/assets/medgemma-4b-it-q4_k_m.gguf.
-        // F-003 Fix: Updated target hash to match shipped PAD asset pack.
-        private const val MEDGEMMA_SHA256 = "8bcb19d3e363f7d1ab27f364032436fd702e735a6f479d6bb7b1cf066e76b443"
+        // Filename matches HuggingFace artifact (wredd/medgemma-4b-gguf).
+        private const val MEDGEMMA_MODEL = "medgemma-4b-q4_k_m.gguf"
+        // SHA-256 (LFS OID) for the pinned MedGemma Q4_K_M artifact from wredd/medgemma-4b-gguf.
+        // Keep in sync with medgemma/src/main/assets/ if bundling model locally.
+        private const val MEDGEMMA_SHA256 = "bff1ff2ed6aebe1b5ecb96b5dc2ee64cd6dfdec3ea4fc2e318d74087119a0ff9"
         private const val MEDGEMMA_EXPECTED_BYTES = 2_489_894_048L  // From HuggingFace LFS metadata
         // Translation handled by Android ML Kit (not a GGUF model)
         // HeAR Event Detector: TFLite, ships in app assets (loaded by RespiratoryDetector)
@@ -66,7 +65,7 @@ class NkuInferenceEngine(private val context: Context) {
 
         // Direct Download URL fallback for Reviewers without PAD (APK install).
         // Source must match MEDGEMMA_SHA256 to satisfy trust validation.
-        private const val MEDGEMMA_DOWNLOAD_URL = "https://huggingface.co/hungqbui/medgemma-4b-it-Q4_K_M-GGUF/resolve/main/medgemma-4b-it-q4_k_m.gguf?download=true"
+        private const val MEDGEMMA_DOWNLOAD_URL = "https://huggingface.co/wredd/medgemma-4b-gguf/resolve/main/medgemma-4b-q4_k_m.gguf?download=true"
 
         // Play Asset Delivery pack names → model file mapping
         private val MODEL_PACK_MAP = mapOf(

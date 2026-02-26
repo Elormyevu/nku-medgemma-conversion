@@ -165,13 +165,13 @@ All inference models ship with the app via Play Asset Delivery (see `MODEL_DISTR
 ```bash
 # Download MedGemma Q4_K_M from HuggingFace
 # In mobile/android/medgemma/src/main/assets/
-curl -L -o medgemma-4b-it-q4_k_m.gguf "https://huggingface.co/hungqbui/medgemma-4b-it-Q4_K_M-GGUF/resolve/main/medgemma-4b-it-q4_k_m.gguf?download=true"
+curl -L -o medgemma-4b-q4_k_m.gguf "https://huggingface.co/wredd/medgemma-4b-gguf/resolve/main/medgemma-4b-q4_k_m.gguf?download=true"
 
-# Expected: 8bcb19d3e363f7d1ab27f364032436fd702e735a6f479d6bb7b1cf066e76b443
-shasum -a 256 medgemma-4b-it-q4_k_m.gguf
+# Expected: bff1ff2ed6aebe1b5ecb96b5dc2ee64cd6dfdec3ea4fc2e318d74087119a0ff9
+shasum -a 256 medgemma-4b-q4_k_m.gguf
 
 # Push to device (rename to match Kotlin constant)
-adb push medgemma-4b-it.Q4_K_M.gguf /sdcard/Android/data/com.nku.app/files/Download/medgemma-4b-it-q4_k_m.gguf
+adb push medgemma-4b-q4_k_m.gguf /sdcard/Android/data/com.nku.app/files/Download/medgemma-4b-q4_k_m.gguf
 
 # ML Kit translation packs are downloaded automatically by the app
 ```
@@ -194,7 +194,7 @@ We achieve **~71% model size reduction** (8GB → 2.3GB) while retaining clinica
 
 ### Calibration
 
-We created a **243-scenario African clinical triage calibration dataset** across 14+ African languages, used to generate an importance matrix for aggressive quantization experiments. The imatrix was used for IQ2_XS quantization (which outperformed Q2_K despite being smaller — see Appendix D). The deployed Q4_K_M model is a standard quantization from [mradermacher/medgemma-4b-it-GGUF](https://huggingface.co/mradermacher/medgemma-4b-it-GGUF).
+We created a **243-scenario African clinical triage calibration dataset** across 14+ African languages, used to generate an importance matrix for aggressive quantization experiments. The imatrix was used for IQ2_XS quantization (which outperformed Q2_K despite being smaller — see Appendix D). The deployed Q4_K_M model is from [wredd/medgemma-4b-gguf](https://huggingface.co/wredd/medgemma-4b-gguf).
 
 ```bash
 # Generate calibration imatrix (used for IQ2_XS experiments)

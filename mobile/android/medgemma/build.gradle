@@ -6,7 +6,7 @@
 //
 // To bundle the model locally for offline testing:
 //   1. Create: medgemma/src/main/assets/
-//   2. Place:  medgemma-4b-it-q4_k_m.gguf in that directory
+//   2. Place:  medgemma-4b-q4_k_m.gguf in that directory
 //   3. Rebuild: ./gradlew assembleDebug
 
 apply plugin: 'com.android.asset-pack'

@@ -37,4 +37,4 @@ As per audit finding **F-005**, synthetic emulator tests cannot fully prove real
 - [ ] **Acceptance:** The STT engine should correctly map the patient's voice or gracefully time out/ask to repeat if the SNR is too low.
 
 ## Model Validation (F-001 Verification)
-- [ ] **Clean Install Download:** Uninstall the app, reinstall it, and ensure the 2.3GB `medgemma-4b-it-q4_k_m.gguf` model downloads correctly from huggingface over Wi-Fi, validates the `8bcb19d3...` hash, and becomes active for triage.
+- [ ] **Clean Install Download:** Uninstall the app, reinstall it, and ensure the 2.3GB `medgemma-4b-q4_k_m.gguf` model downloads correctly from huggingface over Wi-Fi, validates the `bff1ff2e...` hash, and becomes active for triage.

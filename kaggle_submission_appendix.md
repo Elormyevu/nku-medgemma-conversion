@@ -596,7 +596,7 @@ Selecting the right quantization level required balancing two competing goals: m
 
 > †Single-pass evaluation — see methodology note above.
 
-Decision rationale: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The Q4_K_M model is a standard quantization (from [mradermacher/medgemma-4b-it-GGUF](https://huggingface.co/mradermacher/medgemma-4b-it-GGUF)). The other three quantization levels (IQ1_M, Q2_K, IQ2_XS) were benchmarked to validate our model selection: they confirmed that aggressive quantization below Q4 degrades accuracy below clinically useful thresholds, and that domain-specific imatrix calibration (applied to IQ2_XS) is essential at lower bit rates. Only Q4_K_M is deployed in the Nku application. With `mmap` memory mapping, the 2.3 GB Q4_K_M model runs on 3GB+ RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
+Decision rationale: Q4_K_M at 56% accuracy represents 81% of the published baseline — clinically useful for triage guidance. The Q4_K_M model is from [wredd/medgemma-4b-gguf](https://huggingface.co/wredd/medgemma-4b-gguf). The other three quantization levels (IQ1_M, Q2_K, IQ2_XS) were benchmarked to validate our model selection: they confirmed that aggressive quantization below Q4 degrades accuracy below clinically useful thresholds, and that domain-specific imatrix calibration (applied to IQ2_XS) is essential at lower bit rates. Only Q4_K_M is deployed in the Nku application. With `mmap` memory mapping, the 2.3 GB Q4_K_M model runs on 3GB+ RAM devices by paging model layers on demand via the filesystem, rather than loading the full model into memory.
 
 > **Storage Metric Note:** Nku architecture standardizes on the base-2 (1024) measurement natively utilized by Android and `ActivityManager`, which accurately calculates the deployment footprint at **2.3 GB**. Web indexing platforms (such as HuggingFace) sometimes default to base-10 (1000) calculations for UI rendering, which divides the exact same `2,456,793,024 byte` file into a displayed ~2.4 GB. The physical payload is identical.
 
@@ -1061,7 +1061,7 @@ Verified on `nku_tecno_3gb` Android emulator (3GB RAM, API 34, x86_64) — repre
 
 | Parameter | Value |
 |:----------|:------|
-| Model | `medgemma-4b-it-q4_k_m.gguf` (2.3 GB) |
+| Model | `medgemma-4b-q4_k_m.gguf` (2.3 GB) |
 | Device | Android emulator, 3GB RAM, API 34 |
 | Input | Symptom-only: "fever headache vomiting" (no sensor data) |
 | Language | English (no translation pipeline) |

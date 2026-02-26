@@ -1,0 +1,19 @@
+// Play Asset Delivery — MedGemma model pack (install-time asset)
+//
+// In production (.aab via Play Store), this pack contains the 2.3GB Q4_K_M GGUF model.
+// For APK/sideload/reviewer builds, this pack is empty — the app detects the missing
+// model at launch and auto-downloads it from HuggingFace (see NkuInferenceEngine.kt).
+//
+// To bundle the model locally for offline testing:
+//   1. Create: medgemma/src/main/assets/
+//   2. Place:  medgemma-4b-it-q4_k_m.gguf in that directory
+//   3. Rebuild: ./gradlew assembleDebug
+
+apply plugin: 'com.android.asset-pack'
+
+assetPack {
+    packName = "medgemma"
+    dynamicDelivery {
+        deliveryType = "install-time"
+    }
+}

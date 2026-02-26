@@ -23,6 +23,7 @@ configurations.all {
 android {
     namespace = 'com.nku.app'
     compileSdk = 35
+    ndkVersion = '29.0.13113456'  // Must match smollm module for native JNI builds
 
     defaultConfig {
         applicationId "com.nku.app"
